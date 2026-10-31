@@ -34,25 +34,25 @@ const NOTIF_COLORS: Record<CineNotification["type"], string> = {
   promo: "border-emerald-500/40 bg-emerald-500/5",
 };
 
-// Default demo notifications – in prod, replace with server push
+// Default notifications
 const DEFAULT_NOTIFS: CineNotification[] = [
   {
     id: "n1",
-    type: "opponent",
-    title: "Rakip seni bekliyor! ⚔️",
-    body: "Donk666 seni 1v1 düelloya davet etti. 3 dakikada kabul et yoksa lobileri kapanır.",
-    cta: "Düelloya Gir",
+    type: "promo",
+    title: "CineXOX Arenasına Hoş Geldin! 🎬",
+    body: "35mm sinema tahtasında düelloya başla, nadir filmleri bil ve ligini yükselt.",
+    cta: "Düelloya Başla",
     timestamp: new Date(Date.now() - 2 * 60 * 1000),
-    read: false,
+    read: true,
   },
   {
     id: "n2",
     type: "event",
-    title: "⚡ DC vs MARVEL Başlıyor!",
-    body: "Bu haftasonu özel DC vs MARVEL arenası açık. 2x Makara kazanmak için hemen oyna.",
-    cta: "Arene Katıl",
+    title: "⚡ DC vs MARVEL Arenası Açık!",
+    body: "Özel süper kahraman tahtalarında 2x Makara kazanmak için hemen oyna.",
+    cta: "Arenaya Katıl",
     timestamp: new Date(Date.now() - 15 * 60 * 1000),
-    read: false,
+    read: true,
   },
   {
     id: "n3",

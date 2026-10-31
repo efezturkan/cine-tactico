@@ -53,16 +53,14 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
       setSecondsElapsed((prev) => {
         const next = prev + 1;
 
-        if (next === 3) {
-          setStatusText("Benzer zevkte ve ligdeki sinefiller taranıyor...");
-        } else if (next === 6) {
-          setStatusText("Eşleşme havuzu genişletiliyor...");
-        } else if (next === 9) {
+        if (next === 1) {
+          setStatusText("Benzer zevkteki sinefiller taranıyor...");
+        } else if (next === 2) {
           setStatusText("Rakip bulundu! 35mm Perde hazırlanıyor...");
           matchTimeoutRef.current = setTimeout(() => {
             onMatchFound();
-          }, 1200);
-        } else if (next >= 12) {
+          }, 600);
+        } else if (next >= 4) {
           setShowAiFallback(true);
         }
 
@@ -135,7 +133,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
         </div>
 
         {/* 35mm Dönen Film Makarası Animasyonu (Spinning Film Reel) */}
-        <div className="relative my-6 flex items-center justify-center">
+        <div className="relative my-6 w-44 h-44 flex items-center justify-center shrink-0">
           {/* Dış Perde Halka Glow */}
           <div className="absolute w-36 h-36 rounded-full border-2 border-dashed border-amber-500/30 animate-spin" style={{ animationDuration: "14s" }} />
           <div className="absolute w-44 h-44 rounded-full border border-red-500/20 animate-spin" style={{ animationDuration: "20s", animationDirection: "reverse" }} />

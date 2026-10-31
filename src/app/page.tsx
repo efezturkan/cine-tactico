@@ -673,7 +673,6 @@ function CineXoxApp() {
     setBoard(PRESET_BOARDS[2]);
     resetGame(PRESET_BOARDS[2]);
     setCurrentView("GAME");
-    setShowDailyShare(true);
   };
 
   // Ortak Modallar Props

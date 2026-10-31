@@ -38,11 +38,20 @@ export const ShotClock: React.FC<ShotClockProps> = ({
             </div>
           ) : (
             <>
-              <span
-                className={`w-3 h-3 rounded-full animate-ping ${
-                  isPlayerX ? "bg-cyan-400" : "bg-rose-400"
-                }`}
-              />
+              <span className="relative flex h-3 w-3 items-center justify-center">
+                <span
+                  className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                    isPlayerX ? "bg-cyan-400" : "bg-rose-400"
+                  }`}
+                />
+                <span
+                  className={`relative inline-flex rounded-full h-2 w-2 ${
+                    isPlayerX
+                      ? "bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.9)]"
+                      : "bg-rose-400 shadow-[0_0_8px_rgba(244,63,94,0.9)]"
+                  }`}
+                />
+              </span>
               <span className={isPlayerX ? "text-cyan-400" : "text-rose-400"}>
                 SIRA OYUNCU {currentTurn}&apos;DE
               </span>
