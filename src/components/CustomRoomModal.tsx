@@ -97,9 +97,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       navigator.clipboard.writeText(
         `🎬 CINEXOX 1v1 DÜELLO DAVETİ! 🏆\nOda Kodu: #${roomCode}\nTema: ${currentBoard.title}\nFormat: ${
           matchFormat === "BO1" ? "Tek Maç" : "3 Maçlık Seri (BO3)"
-        }\nSüre: ${shotClock}s | Kare Çalma: ${allowSteal ? "AÇIK 🔥" : "KAPALI"} | Jokerler: ${
-          allowPowerups ? "AÇIK ✨" : "KAPALI"
-        }\n\nHemen Odaya Katıl: ${url}`
+        }\nSüre: ${shotClock}s | Kare Çalma: ${allowSteal ? "AÇIK 🔥" : "KAPALI"}\n\nHemen Odaya Katıl: ${url}`
       );
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2500);
@@ -476,31 +474,24 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   ))}
                 </div>
 
-                {/* 5. TAKTİK TOGGLE'LAR (Kare Çalma & Süper Güçler) */}
-                <div className="grid grid-cols-2 gap-2 text-left">
+                {/* 5. TAKTİK TOGGLE'LAR (Kare Çalma Kuralı) */}
+                <div className="text-left">
                   <button
                     type="button"
                     onClick={() => setAllowSteal(!allowSteal)}
-                    className={`p-2 rounded-xl border flex items-center justify-between text-xs font-black ${
+                    className={`w-full p-2.5 rounded-xl border flex items-center justify-between text-xs font-black transition-all ${
                       allowSteal
                         ? "bg-[#111e3b] border-amber-400 text-white"
                         : "bg-[#0b101f] border-zinc-800 text-zinc-500"
                     }`}
                   >
-                    <span>Kare Çalma</span>
-                    <span className="text-[10px] text-amber-400">{allowSteal ? "AÇIK" : "KAPALI"}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setAllowPowerups(!allowPowerups)}
-                    className={`p-2 rounded-xl border flex items-center justify-between text-xs font-black ${
-                      allowPowerups
-                        ? "bg-[#111e3b] border-cyan-400 text-white"
-                        : "bg-[#0b101f] border-zinc-800 text-zinc-500"
-                    }`}
-                  >
-                    <span>Jokerler</span>
-                    <span className="text-[10px] text-cyan-400">{allowPowerups ? "AÇIK" : "KAPALI"}</span>
+                    <div>
+                      <span>Kare Çalma (IMDb Steal)</span>
+                      <p className="text-[10px] text-zinc-500 font-normal">Daha yüksek IMDb puanlı filmle rakip karesini devralma</p>
+                    </div>
+                    <span className="text-[10px] font-mono font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                      {allowSteal ? "AÇIK 🔥" : "KAPALI"}
+                    </span>
                   </button>
                 </div>
 

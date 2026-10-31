@@ -15,10 +15,8 @@ import { ProfileModal } from "@/components/ProfileModal";
 import { HowToPlayModal } from "@/components/HowToPlayModal";
 import { HomeScreen } from "@/components/HomeScreen";
 import { ShopModal } from "@/components/ShopModal";
-import { SinefilProModal } from "@/components/SinefilProModal";
 import { GameModesHubModal } from "@/components/GameModesHubModal";
 import { GameSelectScreen } from "@/components/GameSelectScreen";
-import { PowerupsBar } from "@/components/PowerupsBar";
 import { MatchFoundModal } from "@/components/MatchFoundModal";
 import { MatchmakingQueueModal } from "@/components/MatchmakingQueueModal";
 import { LeaderboardModal } from "@/components/LeaderboardModal";
@@ -40,7 +38,6 @@ export default function CineXoxPage() {
   const [activeCellIndex, setActiveCellIndex] = useState<number | null>(null);
   const [muted, setMuted] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
-  const [isDoubleActive, setIsDoubleActive] = useState<boolean>(false);
   const [hintMessage, setHintMessage] = useState<string | null>(null);
 
   // Modallar
@@ -50,7 +47,6 @@ export default function CineXoxPage() {
   const [showProfile, setShowProfile] = useState<boolean>(false);
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [showShop, setShowShop] = useState<boolean>(false);
-  const [showPro, setShowPro] = useState<boolean>(false);
   const [showGameModesHub, setShowGameModesHub] = useState<boolean>(false);
   const [showMatchFound, setShowMatchFound] = useState<boolean>(false);
   const [showMatchmakingQueue, setShowMatchmakingQueue] = useState<boolean>(false);
@@ -209,9 +205,8 @@ export default function CineXoxPage() {
 
   const handleMovieChosen = (movie: Movie) => {
     if (activeCellIndex === null) return;
-    const result = submitMove(activeCellIndex, movie, undefined, isDoubleActive);
+    const result = submitMove(activeCellIndex, movie);
     if (result.success) {
-      if (isDoubleActive) setIsDoubleActive(false);
       setMovieSearchError(null);
       setActiveCellIndex(null);
     } else {
@@ -360,123 +355,17 @@ export default function CineXoxPage() {
     setProfile(p => ({
       ...p,
       reelsBalance: p.reelsBalance + amount,
-      diamondsBalance: (p.diamondsBalance || 0) + (diamonds || 0),
     }));
     setClaimedDaily(true);
   };
 
-  // Kafa Topu 2 Süper Güçleri (Jokerler)
-  const handleUseFreeze = () => {
-    if ((profile.powerups?.freezeTime || 0) <= 0) {
-      setShowShop(true);
-      return;
-    }
+  // Avatar Koleksiyonu Satın Alma (Makara ile)
+  const handleBuyAvatar = (avatarId: string, costReels: number) => {
     setProfile(p => ({
       ...p,
-      powerups: { ...p.powerups, freezeTime: p.powerups.freezeTime - 1 },
-    }));
-    addSeconds(15);
-    setHintMessage("❄️ Çekim Molası! Satranç saati +15 saniye donduruldu.");
-    setTimeout(() => setHintMessage(null), 3000);
-  };
-
-  const handleUseHint = () => {
-    if ((profile.powerups?.directorHint || 0) <= 0) {
-      setShowShop(true);
-      return;
-    }
-    setProfile(p => ({
-      ...p,
-      powerups: { ...p.powerups, directorHint: p.powerups.directorHint - 1 },
-    }));
-
-    const targetIdx = activeCellIndex !== null && cells[activeCellIndex] === null
-      ? activeCellIndex
-      : cells.findIndex(c => c === null);
-
-    if (targetIdx !== -1) {
-      const solutions = getCellSolutions(targetIdx).filter(m => !usedMovieIds.includes(m.id));
-      if (solutions.length > 0) {
-        const randomSol = solutions[Math.floor(Math.random() * solutions.length)];
-        setHintMessage(`💡 Yönetmen İpucu: Bu kareye "${randomSol.title}" (${randomSol.year}) uyar!`);
-      } else {
-        setHintMessage("💡 İpucu: İki kriterin ortak kesişimindeki kült filmleri hatırla!");
-      }
-    } else {
-      setHintMessage("💡 İpucu: Tahtadaki tüm kareler dolu!");
-    }
-    setTimeout(() => setHintMessage(null), 4500);
-  };
-
-  const handleUseBomb = () => {
-    if ((profile.powerups?.bombRetake || 0) <= 0) {
-      setShowShop(true);
-      return;
-    }
-    const opponentCellIdx = cells.findIndex(c => c !== null && c.answeredBy === "O");
-    if (opponentCellIdx !== -1) {
-      setProfile(p => ({
-        ...p,
-        powerups: { ...p.powerups, bombRetake: p.powerups.bombRetake - 1 },
-      }));
-      bombCell(opponentCellIdx);
-      setHintMessage("💣 Çekim Tekrarı (Bomba)! Rakibin karesi patlatıldı ve boşaltıldı.");
-    } else {
-      alert("Patlatılacak rakip karesi bulunamadı!");
-    }
-    setTimeout(() => setHintMessage(null), 3000);
-  };
-
-  const handleUseDouble = () => {
-    if ((profile.powerups?.doublePoints || 0) <= 0) {
-      setShowShop(true);
-      return;
-    }
-    setProfile(p => ({
-      ...p,
-      powerups: { ...p.powerups, doublePoints: p.powerups.doublePoints - 1 },
-    }));
-    setIsDoubleActive(true);
-    setHintMessage("⚡ Gişe Rekoru Aktif! Sıradaki hamlenden 2x kombo puanı kazanacaksın.");
-    setTimeout(() => setHintMessage(null), 3000);
-  };
-
-  // Market & Bakiye İşlemleri
-  const handleUpdateBalance = (reelsDelta: number, diamondsDelta: number) => {
-    setProfile(p => ({
-      ...p,
-      reelsBalance: p.reelsBalance + reelsDelta,
-      diamondsBalance: (p.diamondsBalance || 0) + diamondsDelta,
-    }));
-  };
-
-  const handleBuyPowerup = (key: keyof PowerupInventory, costReels: number, costDiamonds: number) => {
-    setProfile(p => ({
-      ...p,
-      reelsBalance: p.reelsBalance - costReels,
-      diamondsBalance: (p.diamondsBalance || 0) - costDiamonds,
-      powerups: {
-        ...p.powerups,
-        [key]: (p.powerups[key] || 0) + 1,
-      },
-    }));
-  };
-
-  const handleBuyAvatar = (avatarId: string, costReels: number, costDiamonds: number) => {
-    setProfile(p => ({
-      ...p,
-      reelsBalance: p.reelsBalance - costReels,
-      diamondsBalance: (p.diamondsBalance || 0) - costDiamonds,
+      reelsBalance: Math.max(0, p.reelsBalance - costReels),
       avatarId,
-      unlockedAvatars: [...(p.unlockedAvatars || []), avatarId],
-    }));
-  };
-
-  const handleBuyStreakFreeze = (costDiamonds: number) => {
-    setProfile(p => ({
-      ...p,
-      diamondsBalance: (p.diamondsBalance || 0) - costDiamonds,
-      streakProtected: true,
+      unlockedAvatars: [...(p.unlockedAvatars || ["avatar_director", "avatar_actor"]), avatarId],
     }));
   };
 
@@ -1063,19 +952,6 @@ export default function CineXoxPage() {
             allowSteal={allowSteal}
           />
 
-          {/* Oyun İçi Jokerler (Bot Karşılaşması veya Jokerli Özel Oda) */}
-          {(mode === "VS_BOT" || (mode === "ONLINE_ROOM" && allowPowerups)) && (
-            <PowerupsBar
-              powerups={profile.powerups}
-              onUseFreeze={handleUseFreeze}
-              onUseHint={handleUseHint}
-              onUseBomb={handleUseBomb}
-              onUseDouble={handleUseDouble}
-              onOpenShop={() => setShowShop(true)}
-              isDoubleActive={isDoubleActive}
-            />
-          )}
-
           {/* Joker / İpucu Bildirim Kartı */}
           {hintMessage && (
             <div className="w-full max-w-md mx-auto my-1.5 p-2.5 rounded-2xl bg-amber-400/20 border border-amber-400/50 text-amber-300 text-xs font-black text-center flex items-center justify-center gap-2 animate-in fade-in shadow-lg">
@@ -1171,36 +1047,22 @@ export default function CineXoxPage() {
         reelsBalance={profile.reelsBalance}
         diamondsBalance={profile.diamondsBalance}
         dailyStreak={profile.dailyStreak}
-        streakProtected={profile.streakProtected}
         onClaimDaily={handleClaimDailyReward}
         claimedDaily={claimedDaily}
         claimedQuestIds={claimedQuestIds}
-        onClaimQuest={(qId, reels, diamonds) => {
+        onClaimQuest={(qId, reels) => {
           setClaimedQuestIds(p => [...p, qId]);
-          handleClaimDailyReward(reels, diamonds);
+          handleClaimDailyReward(reels);
         }}
       />
 
-      {/* Market (Shop) Modalı */}
+      {/* Sinefil İkon Pazarı (Avatar Koleksiyonu) Modalı */}
       <ShopModal
         isOpen={showShop}
         onClose={() => setShowShop(false)}
         profile={profile}
-        onUpdateBalance={handleUpdateBalance}
-        onBuyPowerup={handleBuyPowerup}
+        onSelectAvatar={(avatarId) => handleUpdateProfile({ avatarId })}
         onBuyAvatar={handleBuyAvatar}
-        onBuyStreakFreeze={handleBuyStreakFreeze}
-      />
-
-      {/* Sinefil Pro VIP Modalı */}
-      <SinefilProModal
-        isOpen={showPro}
-        onClose={() => setShowPro(false)}
-        isPro={profile.isPro}
-        onActivatePro={() => {
-          setProfile(p => ({ ...p, isPro: true }));
-          setShowPro(false);
-        }}
       />
 
       {/* Oyun Modları Arenası & Olasılık Modalı */}

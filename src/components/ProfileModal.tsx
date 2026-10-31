@@ -446,26 +446,67 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </button>
             </div>
 
-            {/* Avatar Seçici Açılır Paneli */}
+            {/* Avatar Seçici Açılır Paneli (Puanla Kilit Açma & Seçme) */}
             {showAvatarPicker && (
               <div className="w-full p-3 rounded-2xl bg-[#10182b] border border-amber-400/30 mb-3 animate-in fade-in zoom-in-95">
-                <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block mb-2 text-center">
-                  Avatar Seç
-                </span>
-                <div className="grid grid-cols-6 gap-2">
-                  {AVATAR_OPTIONS.map(a => (
-                    <button
-                      key={a.id}
-                      onClick={() => handleSelectAvatar(a.id)}
-                      className={`aspect-square rounded-xl bg-gradient-to-tr ${a.iconBg} flex items-center justify-center text-xl transition-transform border ${
-                        selectedAvatar === a.id
-                          ? "ring-2 ring-amber-400 scale-105 border-white"
-                          : "border-transparent opacity-60 hover:opacity-100"
-                      }`}
-                    >
-                      {a.emoji}
-                    </button>
-                  ))}
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-400">
+                    Sinefil İkonları (Avatar Seç / Aç)
+                  </span>
+                  <span className="text-[10px] font-mono font-bold text-amber-300">
+                    🎟️ {profile.reelsBalance.toLocaleString()} Makara
+                  </span>
+                </div>
+                <div className="grid grid-cols-4 gap-2">
+                  {AVATAR_OPTIONS.map(a => {
+                    const isUnlocked = (profile.unlockedAvatars || ["avatar_director", "avatar_actor"]).includes(a.id) || a.cost === 0;
+                    const isSelected = selectedAvatar === a.id;
+                    const canAfford = profile.reelsBalance >= a.cost;
+
+                    return (
+                      <button
+                        key={a.id}
+                        type="button"
+                        onClick={() => {
+                          if (isUnlocked) {
+                            handleSelectAvatar(a.id);
+                          } else {
+                            if (canAfford) {
+                              audio.playVictory();
+                              const newUnlocked = [...(profile.unlockedAvatars || ["avatar_director", "avatar_actor"]), a.id];
+                              onUpdateProfile({
+                                reelsBalance: profile.reelsBalance - a.cost,
+                                unlockedAvatars: newUnlocked,
+                                avatarId: a.id,
+                              });
+                              setSelectedAvatar(a.id);
+                              setShowAvatarPicker(false);
+                            } else {
+                              audio.playError();
+                              alert(`Yetersiz Makara! "${a.label}" için ${a.cost} Makara gerekiyor (Mevcut bakiyen: ${profile.reelsBalance}).`);
+                            }
+                          }
+                        }}
+                        className={`p-2 rounded-xl bg-gradient-to-tr ${a.iconBg} flex flex-col items-center justify-center text-xl transition-all border relative active:scale-95 ${
+                          isSelected
+                            ? "ring-2 ring-amber-400 scale-105 border-white shadow-lg"
+                            : isUnlocked
+                            ? "border-transparent opacity-90 hover:opacity-100"
+                            : "border-transparent opacity-60 hover:opacity-90"
+                        }`}
+                        title={`${a.label} (${isUnlocked ? "Açık" : `${a.cost} Makara`})`}
+                      >
+                        <span>{a.emoji}</span>
+                        <span className="text-[9px] font-black text-white truncate max-w-full mt-0.5">{a.label}</span>
+                        {!isUnlocked && (
+                          <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px] rounded-xl flex flex-col items-center justify-center text-amber-300 font-black text-[9px]">
+                            <Lock className="w-3.5 h-3.5 mb-0.5 text-zinc-300" />
+                            <span>{a.cost} 🎟️</span>
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}

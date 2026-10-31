@@ -147,13 +147,24 @@ export interface UserProfile {
   ambience?: CinemaAmbience;  // Sinema Salonu Işık ve Loşluk Ayarları
 }
 
-export const AVATAR_OPTIONS = [
-  { id: "avatar_director", label: "Yönetmen", emoji: "🎬", iconBg: "from-amber-500 to-rose-500" },
-  { id: "avatar_actor", label: "Yıldız Oyuncu", emoji: "🌟", iconBg: "from-indigo-500 to-cyan-500" },
-  { id: "avatar_noir", label: "Kara Film Dedektifi", emoji: "🕵️", iconBg: "from-zinc-700 to-zinc-900" },
-  { id: "avatar_scifi", label: "Uzay Gezgini", emoji: "🚀", iconBg: "from-cyan-500 to-blue-600" },
-  { id: "avatar_critics", label: "Festival Jürisi", emoji: "🧐", iconBg: "from-yellow-400 to-amber-600" },
-  { id: "avatar_popcorn", label: "Mısır Sever", emoji: "🍿", iconBg: "from-rose-500 to-pink-500" },
+export interface AvatarOption {
+  id: string;
+  label: string;
+  emoji: string;
+  iconBg: string;
+  cost: number;
+  description: string;
+}
+
+export const AVATAR_OPTIONS: AvatarOption[] = [
+  { id: "avatar_director", label: "Yönetmen", emoji: "🎬", iconBg: "from-amber-500 to-rose-500", cost: 0, description: "Kadrajın efendisi" },
+  { id: "avatar_actor", label: "Yıldız Oyuncu", emoji: "🌟", iconBg: "from-indigo-500 to-cyan-500", cost: 0, description: "Işıklar altında bir yıldız" },
+  { id: "avatar_noir", label: "Dedektif", emoji: "🕵️", iconBg: "from-zinc-700 to-zinc-900", cost: 150, description: "Karanlık sokaklar & neo-noir" },
+  { id: "avatar_scifi", label: "Uzay Gezgini", emoji: "🚀", iconBg: "from-cyan-500 to-blue-600", cost: 250, description: "Yıldızlararası vizyon" },
+  { id: "avatar_critics", label: "Festival Jürisi", emoji: "🧐", iconBg: "from-yellow-400 to-amber-600", cost: 350, description: "Cannes & Venedik seçkisi" },
+  { id: "avatar_popcorn", label: "Mısır Sever", emoji: "🍿", iconBg: "from-rose-500 to-pink-500", cost: 150, description: "Keyifli gişe izleyicisi" },
+  { id: "avatar_camera", label: "35mm Kameraman", emoji: "🎥", iconBg: "from-amber-600 to-yellow-700", cost: 450, description: "Analog film tutkunu" },
+  { id: "avatar_oscar", label: "Altın Heykelcik", emoji: "🏆", iconBg: "from-amber-400 to-yellow-500", cost: 600, description: "Akademi prestiji" },
 ];
 
 export function calculateRank(wins: number): { title: string; level: number; nextWins: number } {

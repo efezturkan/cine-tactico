@@ -73,7 +73,7 @@ export interface CustomRoomSettings {
   themeId: string;
   category: string;
   allowCellStealing: boolean;                 // Clash Royale tarzı daha yüksek IMDb puanıyla kare çalma
-  allowPowerups: boolean;                     // Kafa Topu 2 tarzı joker kullanımı
+  allowPowerups?: boolean;                    // Joker kullanımı (İsteğe bağlı)
   bannedDirectors?: string[];                 // Stratejik Ban/Pick
   entryFee?: { type: "FREE" | "REELS" | "DIAMONDS"; amount: number };
   prizePool?: string;
