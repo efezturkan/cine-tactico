@@ -73,23 +73,75 @@ export function validateMove(
 }
 
 /**
- * MASTER SPECIFICATION v3.0 Rarity Hesaplama Algoritması:
- * Temel Puan: 10 Puan
- * Nadirlik Bonusu:
+ * HÜCRE BAZLI EDİTORYAL VE GÖRELİ HAVUZ RARITY MOTORU:
+ * MASTER_SPECIFICATION_v3.md ve DATA_GOVERNANCE.md standardı:
+ * 1. Film başına sabit değer üretmez; ilgili hücre kesişimindeki geçerli havuz (N) üzerinden hesaplar.
+ * 2. Anti-inflation: Yetersiz veri havuzunda (N < 3) asla "Legendary" üretmez (tavan: Rare +5).
+ * 3. Yapay/uydurma popülerlik skorları yerine doğrulanmış ödül ve gişe verisiyle göreli sıralar.
+ * 
+ * Puan Tablosu:
  * - Common (+0) -> 10 Puan
  * - Uncommon (+2) -> 12 Puan
  * - Rare (+5) -> 15 Puan
  * - Epic (+8) -> 18 Puan
  * - Legendary (+12) -> 22 Puan
  */
-export function calculateMovieRarity(movie: Movie): {
+export function calculateCellRarity(
+  movie: Movie,
+  validPool?: Movie[]
+): {
   tier: RarityTier;
   bonus: number;
   totalPoints: number;
   rarityPercentile: number;
 } {
-  let obscurityScore = 50;
+  // 1. Havuz tabanlı dinamik hesaplama
+  if (validPool && validPool.length > 0) {
+    const totalValid = validPool.length;
 
+    // Yetersiz Veri Havuzu Koruması (Anti-Inflation)
+    if (totalValid < 3) {
+      // 1 veya 2 filmli dar hücrelerde rastgele Legendary üretilmez; tavan seviye RARE'dir
+      const isBlockbuster = movie.boxOfficeCategory === "BLOCKBUSTER";
+      const tier: RarityTier = isBlockbuster ? "UNCOMMON" : "RARE";
+      const tierMeta = RARITY_TIERS[tier];
+      return {
+        tier,
+        bonus: tierMeta.bonus,
+        totalPoints: BASE_CELL_POINTS + tierMeta.bonus,
+        rarityPercentile: isBlockbuster ? 40 : 25,
+      };
+    }
+
+    // Havuz içindeki filmleri nesnel gişe ve ödül bilinirliğine göre sırala
+    const sortedPool = [...validPool].sort((a, b) => {
+      const weightA = (a.boxOfficeCategory === "BLOCKBUSTER" ? 3 : 1) * (a.hasOscar ? 1.5 : 1) + (a.year >= 2000 ? 1 : 0);
+      const weightB = (b.boxOfficeCategory === "BLOCKBUSTER" ? 3 : 1) * (b.hasOscar ? 1.5 : 1) + (b.year >= 2000 ? 1 : 0);
+      return weightB - weightA;
+    });
+
+    const rank = sortedPool.findIndex(m => m.id === movie.id);
+    const safeRank = rank >= 0 ? rank : Math.floor(totalValid / 2);
+    const percentile = (safeRank / totalValid) * 100;
+
+    let tier: RarityTier = "COMMON";
+    if (percentile >= 90) tier = "LEGENDARY";
+    else if (percentile >= 75) tier = "EPIC";
+    else if (percentile >= 50) tier = "RARE";
+    else if (percentile >= 25) tier = "UNCOMMON";
+    else tier = "COMMON";
+
+    const tierMeta = RARITY_TIERS[tier];
+    return {
+      tier,
+      bonus: tierMeta.bonus,
+      totalPoints: BASE_CELL_POINTS + tierMeta.bonus,
+      rarityPercentile: Math.round(percentile),
+    };
+  }
+
+  // 2. Havuzsuz yedek editoryal hesaplama (Geriye dönük uyumluluk)
+  let obscurityScore = 50;
   if (movie.boxOfficeCategory === "INDIE") obscurityScore -= 25;
   if (movie.boxOfficeCategory === "BLOCKBUSTER") obscurityScore += 30;
   if (movie.year < 2000) obscurityScore -= 15;
@@ -113,6 +165,9 @@ export function calculateMovieRarity(movie: Movie): {
     rarityPercentile: percentile,
   };
 }
+
+// Geriye dönük uyumluluk için alias
+export const calculateMovieRarity = calculateCellRarity;
 
 /**
  * Standart Türkçe karakter, noktalama ve aksan duyarsız normalizasyon (DATA_GOVERNANCE.md standardı)

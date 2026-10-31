@@ -5,10 +5,11 @@ import { GameBoard, PlayerSymbol, CellAnswer, GameMode, Movie, BotDifficulty } f
 import {
   validateMove,
   findMatchingMovies,
+  calculateCellRarity,
   calculateMovieRarity,
   validateActorIntersection,
 } from "@/engine/validator";
-import { evaluateBoardState, evaluateReverseBoardState } from "@/engine/rules";
+import { evaluateBoardState, evaluateReverseBoardState, resolveFotoFinish } from "@/engine/rules";
 import { calculateBotMove, getBotThinkingDelay, getRandomThinkingPhrase } from "@/engine/bot-ai";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
@@ -130,14 +131,19 @@ export function useGameSession(
             if (board.boardMode === "REVERSE_CAST") {
               const revEval = evaluateReverseBoardState(nextCells, scoreRarityX, scoreRarityO);
               if (revEval.winner !== null) {
-                setWinner(revEval.winner);
-                setIsTimerActive(false);
-                handleVictoryEffects(revEval.winner);
+                if (revEval.winner === "DRAW" || revEval.winner === "GOLDEN_REEL") {
+                  setIsGoldenReelActive(true);
+                  setIsTimerActive(false);
+                } else {
+                  setWinner(revEval.winner);
+                  setIsTimerActive(false);
+                  handleVictoryEffects(revEval.winner);
+                }
               }
             } else {
               const evalResult = evaluateBoardState(nextCells);
               if (evalResult.winner !== null) {
-                if (evalResult.winner === "DRAW") {
+                if (evalResult.winner === "DRAW" || evalResult.winner === "GOLDEN_REEL") {
                   setIsGoldenReelActive(true);
                   setIsTimerActive(false);
                 } else {
@@ -236,17 +242,17 @@ export function useGameSession(
         };
       }
 
-      // Hamle geçerli: Kombo & Rarity Hesaplaması
+      // Hamle geçerli: Hücre içi havuz üzerinden Rarity & Puan Hesaplaması
       const newCombo = comboStreak + 1;
       setComboStreak(newCombo);
 
-      const baseScore = 200;
-      const timeBonus = Math.floor(secondsRemainingRef.current * 15);
-      const comboMultiplier = 1 + (newCombo - 1) * 0.4;
-      const doubleMultiplier = isDouble ? 2 : 1;
-      const points = Math.round((baseScore + timeBonus) * comboMultiplier * doubleMultiplier);
+      const rIdx = Math.floor(cellIndex / 3);
+      const cIdx = cellIndex % 3;
+      const validPool = findMatchingMovies(board.rows[rIdx], board.cols[cIdx]);
+      const rarity = calculateCellRarity(movie, validPool);
 
-      const rarity = calculateMovieRarity(movie);
+      // Spec v3: Temel Puan (10) + Nadirlik Bonusu (0/2/5/8/12)
+      const points = rarity.totalPoints;
       const updatedRarityX = activePlayer === "X" ? scoreRarityX + rarity.totalPoints : scoreRarityX;
       const updatedRarityO = activePlayer === "O" ? scoreRarityO + rarity.totalPoints : scoreRarityO;
 
@@ -282,16 +288,21 @@ export function useGameSession(
       if (board.boardMode === "REVERSE_CAST") {
         const revEval = evaluateReverseBoardState(newCells, updatedRarityX, updatedRarityO);
         if (revEval.winner !== null) {
-          setWinner(revEval.winner);
-          setIsTimerActive(false);
-          handleVictoryEffects(revEval.winner);
+          if (revEval.winner === "DRAW" || revEval.winner === "GOLDEN_REEL") {
+            setIsGoldenReelActive(true);
+            setIsTimerActive(false);
+          } else {
+            setWinner(revEval.winner);
+            setIsTimerActive(false);
+            handleVictoryEffects(revEval.winner);
+          }
         } else {
           switchTurn();
         }
       } else {
         const boardEvaluation = evaluateBoardState(newCells);
         if (boardEvaluation.winner !== null) {
-          if (boardEvaluation.winner === "DRAW") {
+          if (boardEvaluation.winner === "DRAW" || boardEvaluation.winner === "GOLDEN_REEL") {
             // ALTIN MAKARA (Sudden Death) TETİKLENİR!
             setIsGoldenReelActive(true);
             setIsTimerActive(false);
@@ -406,9 +417,14 @@ export function useGameSession(
       // Ters Kadraj: En çok hücreyi kapatan kazanır
       const revEval = evaluateReverseBoardState(newCells, updatedRarityX, updatedRarityO);
       if (revEval.winner !== null) {
-        setWinner(revEval.winner);
-        setIsTimerActive(false);
-        handleVictoryEffects(revEval.winner);
+        if (revEval.winner === "DRAW" || revEval.winner === "GOLDEN_REEL") {
+          setIsGoldenReelActive(true);
+          setIsTimerActive(false);
+        } else {
+          setWinner(revEval.winner);
+          setIsTimerActive(false);
+          handleVictoryEffects(revEval.winner);
+        }
       } else {
         switchTurn();
       }
@@ -450,7 +466,7 @@ export function useGameSession(
 
   // Altın Makara Süre Bitimi: Foto-finiş (Foto-finish) kararı!
   const resolveGoldenReelTimeout = useCallback(() => {
-    const finalWinner: PlayerSymbol = scoreRarityX >= scoreRarityO ? "X" : "O";
+    const finalWinner = resolveFotoFinish(scoreRarityX, scoreRarityO);
     setWinner(finalWinner);
     setIsGoldenReelActive(false);
     handleVictoryEffects(finalWinner);

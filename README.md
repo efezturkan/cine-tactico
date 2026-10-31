@@ -10,6 +10,17 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Realtime-3ECF8E?logo=supabase)](https://supabase.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+<p align="center">
+  <img src="public/mockup.jpg" alt="Cine-XOX Oyun Ekranı" width="380" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</p>
+
+---
+
+### 🎯 Nasıl Oynanır? (10 Saniyede Özet)
+1. **Matrisi İncele**: 3x3 tahtanın her satır ve sütununda bir sinema kriteri bulunur (Örn: *Yönetmen: Christopher Nolan* × *Aktör: Leonardo DiCaprio*).
+2. **Kesişimi Bul**: 12 saniyelik Blitz süresi bitmeden iki kritere de uyan filmi (*Inception*) yaz.
+3. **Kareyi Mühürle & Kazan**: Doğru film kareyi kilitler. Klasik XOX gibi yatay, dikey veya çapraz **3'lü hat kuran maçı kazanır!**
+
 ---
 
 ## 🏛️ Mimari Katmanlar
@@ -88,7 +99,7 @@ cp .env.example .env.local
 # 3. Geliştirme sunucusunu başlatın
 npm run dev
 
-# 4. Birim testlerini çalıştırın (38/38 Test)
+# 4. Birim ve Güvenlik Testlerini Çalıştırın (59/59 Test)
 npm test
 
 # 5. TypeScript tip denetimini yapın
@@ -116,14 +127,12 @@ npx cap open android
 
 ---
 
-## 🧪 Test Kapsamı
+## 🧪 Test Kapsamı (59/59 Test %100 Başarı)
 
-Test paketi `src/tests/game-engine.test.ts` üzerinden çalıştırılır ve şunları doğrular:
-- 8 farklı kazanma çizgisi tespiti ve tam tahtada beraberlik (`DRAW`).
-- 13 tematik tahtanın tamamında 9 hücrenin çözülebilirliği.
-- Yapay zeka botunun zorluk derecelerine göre kazanma ve bloklama taktikleri.
-- Mühürlü hücrelerin (`LOCKED_NEUTRAL`) korunumu.
-- Türkçe karakter normalizasyonu ve Levenshtein mesafeli yazım toleransı.
+Test paketi `npm test` komutuyla 3 bağımsız suiti tek seferde doğrular:
+1. **Oyun Motoru & Bot AI (38 Test)**: 8 kazanma kombinasyonu, 13 hazır tahta çözülebilirliği, bot taktiksel karar motoru, mühürlü hücreler ve Levenshtein aktör toleransı.
+2. **Anti-Cheat & Arama Sızıntı Koruması (11 Test)**: Minimum karakter kuralları ve tür/yıl/yönetmen bazlı film listelemeyi engelleyen metadata koruması.
+3. **SSR Modal HTML Güvenlik Denetimi (10 Test)**: Arama kartlarında adil oyunu bozacak ipuçlarının (tür, yıl, Oscar, gişe) DOM'a asla sızmadığının sunucu tarafı render doğrulaması.
 
 ---
 

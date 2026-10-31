@@ -31,5 +31,7 @@ next-env.d.ts
 local.properties
 *.orig
 .vercel
+.agents/
+skills-lock.json
 .env*
 !.env.example

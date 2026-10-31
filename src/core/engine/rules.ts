@@ -15,11 +15,15 @@ export const WINNING_LINES: readonly [number, number, number][] = [
 ];
 
 export interface WinCheckResult {
-  winner: PlayerSymbol | "DRAW" | null;
+  winner: PlayerSymbol | "DRAW" | "GOLDEN_REEL" | null;
   line: [number, number, number] | null;
 }
 
-export function evaluateBoardState(cells: readonly (CellAnswer | null)[]): WinCheckResult {
+export function evaluateBoardState(
+  cells: readonly (CellAnswer | null)[],
+  enableGoldenReel: boolean = false
+): WinCheckResult {
+  // 1. ANINDA GALİBİYET: 3'lü hat her şeyden önce gelir (Spec v3 Madde 80 & 199)
   for (const combo of WINNING_LINES) {
     const [a, b, c] = combo;
     const cellA = cells[a];
@@ -31,6 +35,7 @@ export function evaluateBoardState(cells: readonly (CellAnswer | null)[]): WinCh
       cellB &&
       cellC &&
       cellA.answeredBy !== "NEUTRAL" &&
+      !cellA.isLockedNeutral &&
       cellA.answeredBy === cellB.answeredBy &&
       cellB.answeredBy === cellC.answeredBy
     ) {
@@ -38,12 +43,62 @@ export function evaluateBoardState(cells: readonly (CellAnswer | null)[]): WinCh
     }
   }
 
+  // 2. 9 Hücre de sonuçlandı mı? (Kazanılmış veya sahipsiz kilitli)
   const isFull = cells.every(cell => cell !== null);
   if (isFull) {
+    if (enableGoldenReel) {
+      return { winner: "GOLDEN_REEL", line: null };
+    }
     return { winner: "DRAW", line: null };
   }
 
   return { winner: null, line: null };
+}
+
+/**
+ * ALTIN MAKARA (SUDDEN DEATH) FOTO-FİNİŞ KARARI:
+ * 12 saniyelik tek soruda iki taraf da bilemezse, maç boyunca
+ * toplanan toplam Rarity puanları kıyaslanır. Beraberlik oranı %0'dır.
+ */
+export function resolveFotoFinish(
+  scoreRarityX: number,
+  scoreRarityO: number
+): PlayerSymbol {
+  if (scoreRarityX > scoreRarityO) return "X";
+  if (scoreRarityO > scoreRarityX) return "O";
+  // Eşitlik durumunda varsayılan olarak ilk hamle sahibi (X) kazanır
+  return "X";
+}
+
+/**
+ * SAHİPSİZ HÜCRE EMNİYETİ (DEADLOCK PREVENTION):
+ * İki oyuncu da bir hücrede 1'er kez yanlış yaptığında (veya süresini tükettiğinde)
+ * o hücre kilitlenir ve LOCKED_NEUTRAL olarak sahipsiz kalır.
+ */
+export function isCellDeadlocked(
+  attemptsForCell: { X?: boolean; O?: boolean } | undefined
+): boolean {
+  if (!attemptsForCell) return false;
+  return Boolean(attemptsForCell.X && attemptsForCell.O);
+}
+
+export function createLockedNeutralCell(cellIndex: number): CellAnswer {
+  return {
+    movie: {
+      id: `neutral_locked_${cellIndex}`,
+      title: "Sahipsiz Hücre",
+      year: 0,
+      director: "Kilitli",
+      cast: [],
+      genres: [],
+      hasOscar: false,
+    },
+    answeredBy: "NEUTRAL",
+    isLockedNeutral: true,
+    timestamp: Date.now(),
+    pointsEarned: 0,
+    rarityScore: 0,
+  };
 }
 
 /**

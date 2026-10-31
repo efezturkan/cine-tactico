@@ -1,6 +1,12 @@
 import { MOVIES_DATABASE } from "../data/movies";
 import { PRESET_BOARDS, getRandomBoard, createRandomizedBoard, getRandomOpponent } from "../data/boards";
-import { WINNING_LINES, evaluateBoardState } from "../engine/rules";
+import {
+  WINNING_LINES,
+  evaluateBoardState,
+  resolveFotoFinish,
+  isCellDeadlocked,
+  createLockedNeutralCell,
+} from "../engine/rules";
 import {
   validateMove,
   findMatchingMovies,
@@ -10,6 +16,7 @@ import {
   normalizeCinemaString,
   calculateLevenshteinDistance,
   validateActorIntersection,
+  calculateCellRarity,
 } from "../engine/validator";
 import { calculateBotMove, getBotThinkingDelay } from "../engine/bot-ai";
 
@@ -294,6 +301,75 @@ runTest("validateActorIntersection alakasız aktörü kesin olarak reddeder", ()
   const darkKnight = MOVIES_DATABASE.find(m => m.id === "m_dark_knight")!;
   const result = validateActorIntersection("Brad Pitt", inception, darkKnight);
   return !result.isValid;
+});
+
+// 11. FAZ 2 Kural Motoru, Deadlock, Altın Makara & Göreli Rarity Testleri
+runTest("evaluateBoardState 9 hücre dolup 3'lü hat yoksa GOLDEN_REEL durumunu tetikler", () => {
+  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!;
+  // Klasik beraberlik tahtası (3'lü hat yok)
+  const drawPattern: ("X" | "O")[] = ["X", "O", "X", "X", "O", "O", "O", "X", "X"];
+  const drawCells = drawPattern.map((p, idx) => ({
+    movie: inception,
+    answeredBy: p,
+    timestamp: idx,
+  }));
+  const result = evaluateBoardState(drawCells, true);
+  return result.winner === "GOLDEN_REEL" && result.line === null;
+});
+
+runTest("resolveFotoFinish Foto-Finiş'te toplam Rarity puanı yüksek olanı galip ilan eder", () => {
+  // X: 45 puan, O: 30 puan -> Kazanan X
+  const winX = resolveFotoFinish(45, 30);
+  // X: 22 puan, O: 40 puan -> Kazanan O
+  const winO = resolveFotoFinish(22, 40);
+  // Eşitlik durumunda (0% beraberlik kuralı) -> X
+  const drawTie = resolveFotoFinish(35, 35);
+  return winX === "X" && winO === "O" && drawTie === "X";
+});
+
+runTest("isCellDeadlocked iki taraf da yanlış yaptığında true döner ve createLockedNeutralCell kilitler", () => {
+  const oneWrong = isCellDeadlocked({ X: true, O: false });
+  const bothWrong = isCellDeadlocked({ X: true, O: true });
+  const lockedCell = createLockedNeutralCell(3);
+
+  return (
+    !oneWrong &&
+    bothWrong &&
+    lockedCell.isLockedNeutral === true &&
+    lockedCell.answeredBy === "NEUTRAL" &&
+    lockedCell.pointsEarned === 0
+  );
+});
+
+runTest("calculateCellRarity dar havuzda (N < 3) Anti-Inflation kuralıyla asla Legendary üretmez", () => {
+  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!;
+  const prestige = MOVIES_DATABASE.find(m => m.id === "m_prestige")!;
+  const narrowPool = [inception, prestige]; // Toplam 2 film
+
+  const rarityInception = calculateCellRarity(inception, narrowPool);
+  const rarityPrestige = calculateCellRarity(prestige, narrowPool);
+
+  // N < 3 durumunda tavan seviye RARE olmalı, Legendary üretilmemeli
+  return (
+    rarityInception.tier !== "LEGENDARY" &&
+    rarityPrestige.tier !== "LEGENDARY" &&
+    rarityInception.bonus <= 5 &&
+    rarityPrestige.bonus <= 5
+  );
+});
+
+runTest("calculateCellRarity geniş havuzda Spec v3 puan tablosunu uygular", () => {
+  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!;
+  const darkKnight = MOVIES_DATABASE.find(m => m.id === "m_dark_knight")!;
+  const prestige = MOVIES_DATABASE.find(m => m.id === "m_prestige")!;
+  const memento = MOVIES_DATABASE.find(m => m.id === "m_memento") || { ...prestige, id: "m_indie_test", boxOfficeCategory: "INDIE" as const };
+  const broadPool = [inception, darkKnight, prestige, memento];
+
+  const commonRes = calculateCellRarity(inception, broadPool);
+  return (
+    [0, 2, 5, 8, 12].includes(commonRes.bonus) &&
+    commonRes.totalPoints === 10 + commonRes.bonus
+  );
 });
 
 console.log("\n=================================================");
