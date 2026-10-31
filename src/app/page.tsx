@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Header } from "@/components/Header";
 import { ShotClock } from "@/components/ShotClock";
 import { XoxBoard } from "@/components/XoxBoard";
@@ -25,8 +25,16 @@ import NotificationPanel, { NotifToast, useNotifications } from "@/components/No
 import { ActorSearchModal } from "@/components/ActorSearchModal";
 import { GoldenReelModal } from "@/components/GoldenReelModal";
 import { useGameSession } from "@/hooks/useXoxGame";
+import { useRealtimeMatch } from "@/hooks/useRealtimeMatch";
+import {
+  createRealtimeRoom,
+  joinRealtimeRoom,
+  syncProfileToSupabase,
+  finishRealtimeGame,
+  isSupabaseConfigured,
+} from "@/lib/supabase";
 import { PRESET_BOARDS, getRandomBoard, createRandomizedBoard, getRandomOpponent, BotOpponentProfile, BOT_OPPONENTS, getBoardForMode } from "@/data/boards";
-import { GameMode, Movie, BotDifficulty, CustomRoomSettings, GameBoard, ContentPoolType } from "@/types/game";
+import { GameMode, Movie, BotDifficulty, CustomRoomSettings, GameBoard, ContentPoolType, PlayerSymbol } from "@/types/game";
 import { UserProfile, PowerupInventory, DEFAULT_AMBIENCE, AMBIENCE_THEMES, CinemaAmbience, AmbienceTheme } from "@/types/profile";
 import { audio } from "@/utils/audio";
 import { Users, Bot, Swords, Calendar, Shuffle, Zap, Flame, Share2, ShieldAlert, ArrowLeft, Lightbulb, Flag, Lock } from "lucide-react";
@@ -210,6 +218,42 @@ function CineXoxPageContent() {
 
   const isMatchInProgress = winner === null && cells.some(c => c !== null);
 
+  // URL Davet Linki ile Odaya Katılım (?room=TRNY-XXXX)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const roomParam = params.get("room");
+    if (roomParam && isSupabaseConfigured) {
+      const clean = roomParam.trim().toUpperCase();
+      joinRealtimeRoom(clean, profile).then(res => {
+        if (res.success && res.room) {
+          setCustomRoomCode(clean);
+          setMode("ONLINE_ROOM");
+          setBoard(res.room.board_data);
+          resetGame(res.room.board_data);
+          setCurrentView("GAME");
+        }
+      });
+    }
+  }, []);
+
+  // Supabase Gerçek Zamanlı Çok Oyunculu Senkronizasyonu
+  const isHost = mode === "ONLINE_ROOM" && customRoomCode !== null && currentTurn === "X";
+
+  const handleRemoteMove = useCallback(
+    (cellIndex: number, movie: Movie, playerSymbol: PlayerSymbol) => {
+      submitMove(cellIndex, movie, playerSymbol);
+    },
+    [submitMove]
+  );
+
+  const { broadcastMove } = useRealtimeMatch({
+    roomCode: mode === "ONLINE_ROOM" ? customRoomCode : null,
+    userProfile: profile,
+    isHost,
+    onRemoteMoveReceived: handleRemoteMove,
+  });
+
   // Lobi veya diğer ekranlara dönüldüğünde tüm ses ve arka plan osilatörlerini derhal durdur
   useEffect(() => {
     if (currentView !== "GAME") {
@@ -228,7 +272,7 @@ function CineXoxPageContent() {
           : ["L", "W", "L", "W", "W"];
         const updatedLast5 = [...currentLast5.slice(1), outcome] as ("W" | "L" | "D")[];
 
-        return {
+        const updated = {
           ...prev,
           totalMatches: prev.totalMatches + 1,
           wins: isWin ? prev.wins + 1 : prev.wins,
@@ -237,6 +281,15 @@ function CineXoxPageContent() {
           highestCombo: Math.max(prev.highestCombo, comboStreak),
           lastFiveMatches: updatedLast5,
         };
+
+        if (isSupabaseConfigured) {
+          syncProfileToSupabase(updated);
+          if (mode === "ONLINE_ROOM" && customRoomCode) {
+            finishRealtimeGame(customRoomCode, winner);
+          }
+        }
+
+        return updated;
       });
     }
   }, [winner]);
@@ -254,6 +307,9 @@ function CineXoxPageContent() {
     const result = submitMove(targetIdx, movie);
     if (result.success) {
       setMovieSearchError(null);
+      if (mode === "ONLINE_ROOM" && customRoomCode) {
+        broadcastMove(targetIdx, movie, currentTurn, result.stolen);
+      }
     } else {
       audio.playError();
       const failMsg = result.message || "Hatalı tahmin! Sıra rakibe geçti.";
@@ -410,6 +466,10 @@ function CineXoxPageContent() {
     setMode("ONLINE_ROOM");
     setBoard(selectedBoard);
     resetGame(selectedBoard);
+
+    if (isSupabaseConfigured) {
+      createRealtimeRoom(settings.roomCode, profile, selectedBoard, settings);
+    }
   };
 
   const handleClaimDailyReward = (amount: number) => {
@@ -690,6 +750,7 @@ function CineXoxPageContent() {
         <CustomRoomModal
           isOpen={showCustomLobby}
           onClose={() => setShowCustomLobby(false)}
+          currentUser={profile}
           onCreateRoom={(settings, selectedBoard) => {
             handleCreateCustomRoom(settings, selectedBoard);
             const bIdx = PRESET_BOARDS.findIndex(b => b.id === selectedBoard.id);
@@ -1126,6 +1187,7 @@ function CineXoxPageContent() {
       <CustomRoomModal
         isOpen={showCustomLobby}
         onClose={() => setShowCustomLobby(false)}
+        currentUser={profile}
         onCreateRoom={handleCreateCustomRoom}
       />
 

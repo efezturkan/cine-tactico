@@ -460,7 +460,7 @@ export function useGameSession(
   // Altın Makara (Sudden Death) Cevap Çözümleme
   const resolveGoldenReelAnswer = useCallback(
     (movie: Movie, playerSymbol: PlayerSymbol) => {
-      if (movie.hasOscar || movie.imdbRating >= 8.0) {
+      if (movie.hasOscar || movie.boxOfficeCategory === "BLOCKBUSTER") {
         setWinner(playerSymbol);
         setIsGoldenReelActive(false);
         handleVictoryEffects(playerSymbol);

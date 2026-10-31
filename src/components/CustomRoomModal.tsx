@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import { CustomRoomSettings, GameBoard } from "@/types/game";
+import { UserProfile } from "@/types/profile";
 import { PRESET_BOARDS } from "@/data/boards";
+import { isSupabaseConfigured, joinRealtimeRoom } from "@/lib/supabase";
 import { audio } from "@/utils/audio";
 import {
   Trophy,
@@ -51,12 +53,14 @@ interface CustomRoomModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreateRoom: (settings: CustomRoomSettings, selectedBoard: GameBoard) => void;
+  currentUser?: UserProfile;
 }
 
 export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
   isOpen,
   onClose,
   onCreateRoom,
+  currentUser,
 }) => {
   // 1. Ana Sekme: 1v1 Özel Oda vs 8 Kişilik Turnuva
   const [mainTab, setMainTab] = useState<"1V1_ROOM" | "TOURNAMENT">("1V1_ROOM");
@@ -162,13 +166,41 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     }
 
     audio.playPowerup();
+
+    // Supabase bağlıysa sunucudan gerçek odayı ve kurucusunun seçtiği tahtayı getir
+    if (isSupabaseConfigured && currentUser) {
+      joinRealtimeRoom(cleanCode, currentUser).then(res => {
+        if (res.success && res.room) {
+          onCreateRoom(res.room.settings, res.room.board_data);
+          onClose();
+        } else {
+          // Oda bulunamadıysa varsayılan ayarlarla odaya katılımı başlat
+          const settings: CustomRoomSettings = {
+            roomCode: cleanCode,
+            roomName: "Özel Odaya Katılım",
+            roomType: "1V1_ROOM",
+            isPublic: false,
+            matchFormat: "BO1",
+            shotClockSeconds: 12,
+            themeId: PRESET_BOARDS[0].id,
+            category: PRESET_BOARDS[0].title,
+            allowCellStealing: false,
+            allowPowerups: false,
+          };
+          onCreateRoom(settings, PRESET_BOARDS[0]);
+          onClose();
+        }
+      });
+      return;
+    }
+
     const settings: CustomRoomSettings = {
       roomCode: cleanCode,
       roomName: "Özel Odaya Katılım",
       roomType: "1V1_ROOM",
       isPublic: false,
       matchFormat: "BO1",
-      shotClockSeconds: 20,
+      shotClockSeconds: 12,
       themeId: PRESET_BOARDS[0].id,
       category: PRESET_BOARDS[0].title,
       allowCellStealing: false,

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { PlayerSymbol, GameBoard, CellAnswer, Movie } from "@/types/game";
-import { findMatchingMovies } from "@/engine/validator";
+import { findMatchingMovies, getSharedActors } from "@/engine/validator";
 import {
   Crown,
   RotateCcw,
@@ -84,23 +84,32 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   const isVictory = winner === "X";
   const isDraw = winner === "DRAW";
 
-  // Oyuncunun (X) verdiği cevapların ortalama nadirlik (rarity) skorunu hesapla
+  // Oyuncunun (X) verdiği cevapların ortalama nadirlik (rarity) bonusunu hesapla
   const playerAnswers = cells.filter(c => c && c.answeredBy === "X");
   const rarityScore = playerAnswers.length > 0
     ? Math.round(
         playerAnswers.reduce((acc, c) => {
-          const rating = c?.movie?.imdbRating || 7.5;
-          const r = Math.max(6, Math.min(48, Math.round(38 - (rating - 7) * 8)));
-          return acc + r;
+          const bonus = c?.rarityScore ?? (c?.movie?.hasOscar ? 5 : 8);
+          return acc + bonus;
         }, 0) / playerAnswers.length
       )
-    : 19;
+    : 5;
+
+  const isReverseCast = board.boardMode === "REVERSE_CAST";
 
   const validMoviesForSelected =
-    selectedCell !== null
+    selectedCell !== null && !isReverseCast
       ? findMatchingMovies(
           board.rows[Math.floor(selectedCell / 3)],
           board.cols[selectedCell % 3]
+        )
+      : [];
+
+  const validActorsForSelected =
+    selectedCell !== null && isReverseCast
+      ? getSharedActors(
+          board.rows[Math.floor(selectedCell / 3)].value,
+          board.cols[selectedCell % 3].value
         )
       : [];
 
@@ -183,7 +192,11 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                       : "bg-[#0b101f] border-zinc-800 text-zinc-500"
                   }`}
                 >
-                  {cell ? cell.movie.title : "Boş"}
+                  {cell?.isLockedNeutral
+                    ? "🔒 Sahipsiz"
+                    : cell
+                    ? cell.actorName || cell.movie.title
+                    : "Boş"}
                 </button>
               ))}
             </div>
@@ -197,27 +210,39 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                   </span>
                 </div>
                 <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-                  {validMoviesForSelected.map(m => {
-                    const letterboxdSearchUrl = `https://letterboxd.com/search/${encodeURIComponent(m.title)}/`;
-                    return (
+                  {isReverseCast ? (
+                    validActorsForSelected.map((actor, aIdx) => (
                       <div
-                        key={m.id}
-                        className="text-[10px] p-2 rounded-xl bg-[#121c33] border border-zinc-800 text-zinc-200 flex items-center justify-between gap-2"
+                        key={aIdx}
+                        className="text-[10px] p-2 rounded-xl bg-[#121c33] border border-zinc-800 text-cyan-200 flex items-center justify-between gap-2"
                       >
-                        <span className="font-bold truncate">{m.title} ({m.year})</span>
-                        <a
-                          href={letterboxdSearchUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-[9px] font-black transition-all"
-                          title="Letterboxd'da İncele & Watchlist'e At"
-                        >
-                          <span>Letterboxd</span>
-                          <ExternalLink className="w-2.5 h-2.5" />
-                        </a>
+                        <span className="font-bold truncate">🎭 {actor}</span>
+                        <span className="text-[8px] font-mono text-cyan-400 font-bold">Ortak Aktör</span>
                       </div>
-                    );
-                  })}
+                    ))
+                  ) : (
+                    validMoviesForSelected.map(m => {
+                      const letterboxdSearchUrl = `https://letterboxd.com/search/${encodeURIComponent(m.title)}/`;
+                      return (
+                        <div
+                          key={m.id}
+                          className="text-[10px] p-2 rounded-xl bg-[#121c33] border border-zinc-800 text-zinc-200 flex items-center justify-between gap-2"
+                        >
+                          <span className="font-bold truncate">{m.title} ({m.year})</span>
+                          <a
+                            href={letterboxdSearchUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-[9px] font-black transition-all"
+                            title="Letterboxd'da İncele & Watchlist'e At"
+                          >
+                            <span>Letterboxd</span>
+                            <ExternalLink className="w-2.5 h-2.5" />
+                          </a>
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               </div>
             )}
