@@ -133,6 +133,7 @@ export interface UserProfile {
   draws: number;
   highestCombo: number;
   dailyStreak: number;
+  lastStreakDateUtc?: string; // ISO 8601 YYYY-MM-DD (UTC Server Time Authority)
   streakProtected?: boolean; // Duolingo Seri Koruması
   favoriteGenre: string;
   favoriteDirector?: string;

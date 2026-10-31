@@ -75,6 +75,6 @@ export interface CustomRoomSettings {
   allowCellStealing: boolean;                 // Clash Royale tarzı daha yüksek IMDb puanıyla kare çalma
   allowPowerups?: boolean;                    // Joker kullanımı (İsteğe bağlı)
   bannedDirectors?: string[];                 // Stratejik Ban/Pick
-  entryFee?: { type: "FREE" | "REELS" | "DIAMONDS"; amount: number };
+  entryFee?: { type: "FREE" | "REELS"; amount: number };
   prizePool?: string;
 }

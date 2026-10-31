@@ -36,6 +36,8 @@ import {
   Sparkles,
   Sun,
   Moon,
+  Trash2,
+  ShieldCheck,
   Lightbulb,
   Palette,
   Sliders,
@@ -704,6 +706,48 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <span className="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
                   AKTİF ✓
                 </span>
+              </div>
+
+              {/* 8. VERİ VE GİZLİLİK KONTROLÜ */}
+              <div className="p-2.5 rounded-xl bg-[#0a0f1d] border border-zinc-800/80 space-y-2 mt-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-zinc-300 text-[11px] font-bold">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Gizlilik & Yerel Veri</span>
+                  </div>
+                  <a
+                    href="/privacy"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[10px] text-amber-400 hover:underline font-bold"
+                  >
+                    Politika ↗
+                  </a>
+                </div>
+                <p className="text-[9.5px] text-zinc-500 leading-tight">
+                  Uygulama sunucuya hiçbir kişisel veri göndermez. Sadece cihazınızdaki tema tercihleri saklanır.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      const ok = window.confirm("Cihazınızdaki tüm yerel ambiyans ve oyun ayarları sıfırlanacaktır. Onaylıyor musunuz?");
+                      if (ok) {
+                        try {
+                          localStorage.removeItem("cinexox_ambience");
+                          localStorage.removeItem("cinetactico_ambience");
+                        } catch {
+                          // ignore
+                        }
+                        window.location.reload();
+                      }
+                    }
+                  }}
+                  className="w-full py-1.5 px-2 rounded-lg bg-red-950/40 hover:bg-red-900/60 border border-red-800/40 text-red-300 text-[10px] font-bold flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  <Trash2 className="w-3 h-3 text-red-400" />
+                  Yerel Oyun Verilerini Sıfırla
+                </button>
               </div>
             </div>
           </div>
