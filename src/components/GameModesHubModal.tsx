@@ -35,6 +35,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<"ACTIVE_MODES" | "COMING_SOON" | "COMBINATIONS">("ACTIVE_MODES");
   const [modeFilter, setModeFilter] = useState<"ALL" | "CLASSIC" | "COSTARS" | "REVERSE" | "CONCEPT">("ALL");
+  const [registeredTitle, setRegisteredTitle] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -382,12 +383,15 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
                 <button
                   onClick={() => {
                     audio.playSelect();
-                    alert(`${game.title} için ön kayıt alındı! Geliştirme tamamlandığında bildirim alacaksın.`);
+                    setRegisteredTitle(game.title);
+                    setTimeout(() => setRegisteredTitle(null), 3000);
                   }}
                   className="mt-1 py-1.5 px-3 rounded-xl bg-[#15223e] hover:bg-[#1a2b4f] border border-sky-500/30 text-zinc-300 font-bold text-xs flex items-center justify-center gap-1.5 self-start active:scale-95"
                 >
                   <Eye className="w-3 h-3 text-cyan-400" />
-                  <span>Prototipi İncele</span>
+                  <span>
+                    {registeredTitle === game.title ? "✓ Ön Kayıt Alındı!" : "Prototipi İncele"}
+                  </span>
                 </button>
               </div>
             ))}

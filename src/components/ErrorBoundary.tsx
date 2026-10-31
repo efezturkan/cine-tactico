@@ -27,7 +27,14 @@ export class ErrorBoundary extends Component<Props, State> {
 
   private handleReset = () => {
     try {
-      localStorage.clear();
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.startsWith("cinexox_") || key.startsWith("cinetactico_") || key.startsWith("sb-"))) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(k => localStorage.removeItem(k));
       sessionStorage.clear();
     } catch {
       // ignore

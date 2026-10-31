@@ -105,6 +105,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [linkMessage, setLinkMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
   const [nameLoading, setNameLoading] = useState<boolean>(false);
+  const [avatarNotice, setAvatarNotice] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen && isSupabaseConfigured) {
@@ -537,6 +538,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     🎟️ {profile.reelsBalance.toLocaleString()} Makara
                   </span>
                 </div>
+                {avatarNotice && (
+                  <div className="mb-2 p-2 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-black text-center animate-in fade-in">
+                    {avatarNotice}
+                  </div>
+                )}
                 <div className="grid grid-cols-4 gap-2">
                   {AVATAR_OPTIONS.map(a => {
                     const isUnlocked = (profile.unlockedAvatars || ["avatar_director", "avatar_actor"]).includes(a.id) || a.cost === 0;
@@ -563,7 +569,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                               setShowAvatarPicker(false);
                             } else {
                               audio.playError();
-                              alert(`Yetersiz Makara! "${a.label}" için ${a.cost} Makara gerekiyor (Mevcut bakiyen: ${profile.reelsBalance}).`);
+                              setAvatarNotice(`Yetersiz Makara! "${a.label}" için ${a.cost} Makara gerekiyor (Bakiye: ${profile.reelsBalance}).`);
+                              setTimeout(() => setAvatarNotice(null), 3000);
                             }
                           }
                         }}

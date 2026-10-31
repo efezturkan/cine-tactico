@@ -20,6 +20,7 @@ import {
   Film,
   Zap,
   ExternalLink,
+  Shuffle,
 } from "lucide-react";
 import { audio } from "@/utils/audio";
 
@@ -325,18 +326,32 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
               </div>
             </div>
 
-            {/* BUTON: PLAY AGAIN (Sarı Devasa Tekrar Oyna Butonu) */}
-            <button
-              type="button"
-              onClick={() => {
-                audio.playSelect();
-                onPlayAgain();
-              }}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-black font-black text-sm flex items-center justify-center gap-2 shadow-xl active:scale-[0.98] transition-all mb-2.5"
-            >
-              <RotateCcw className="w-4 h-4 stroke-[3]" />
-              <span>⚡ HEMEN YENİ MAÇ (PLAY AGAIN)</span>
-            </button>
+            {/* BUTON: PLAY AGAIN & NEXT BOARD (Tekrar Oyna & Farklı Tahta) */}
+            <div className="grid grid-cols-2 gap-2 w-full mb-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  audio.playSelect();
+                  onPlayAgain();
+                }}
+                className="py-3 px-2 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-400 text-black font-black text-xs flex items-center justify-center gap-1.5 shadow-xl active:scale-[0.98] transition-all"
+              >
+                <RotateCcw className="w-3.5 h-3.5 stroke-[3]" />
+                <span>TEKRAR OYNA</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  audio.playSelect();
+                  onNextBoard();
+                }}
+                className="py-3 px-2 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-black text-xs flex items-center justify-center gap-1.5 shadow-xl active:scale-[0.98] transition-all"
+              >
+                <Shuffle className="w-3.5 h-3.5 stroke-[3]" />
+                <span>FARKLI TAHTA</span>
+              </button>
+            </div>
 
             {/* VİRAL 35MM FİLM KARTI (LETTERBOXD & INSTAGRAM STORY İÇİN) */}
             <button

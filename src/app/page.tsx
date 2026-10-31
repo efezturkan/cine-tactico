@@ -118,7 +118,15 @@ function CineXoxApp() {
     ambience: DEFAULT_AMBIENCE,
   });
 
-  const [claimedDaily, setClaimedDaily] = useState<boolean>(false);
+  const [claimedDaily, setClaimedDaily] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      const todayUtc = new Date().toISOString().slice(0, 10);
+      return localStorage.getItem("cinexox_last_streak_utc") === todayUtc;
+    } catch {
+      return false;
+    }
+  });
   const [claimedQuestIds, setClaimedQuestIds] = useState<string[]>([]);
 
   // LocalStorage senkronizasyonu (Çevrimdışı ve Misafir Oyuncu Koruması)
@@ -382,8 +390,19 @@ function CineXoxApp() {
     setActiveCellIndex(index);
   };
 
+  // Sıra değiştiğinde, oyun bittiğinde veya Altın Makara devreye girdiğinde açık arama modalını güvenle kapat
+  useEffect(() => {
+    setActiveCellIndex(null);
+    setMovieSearchError(null);
+  }, [currentTurn, winner, isGoldenReelActive]);
+
   const handleMovieChosen = (movie: Movie) => {
     if (activeCellIndex === null) return;
+    if (mode === "VS_BOT" && currentTurn === "O") return;
+    if (mode === "ONLINE_ROOM") {
+      const mySymbol: PlayerSymbol = isHost ? "X" : "O";
+      if (currentTurn !== mySymbol) return;
+    }
     const targetIdx = activeCellIndex;
     setActiveCellIndex(null);
     const result = submitMove(targetIdx, movie);
@@ -403,6 +422,11 @@ function CineXoxApp() {
 
   const handleActorChosen = (actorName: string) => {
     if (activeCellIndex === null) return;
+    if (mode === "VS_BOT" && currentTurn === "O") return;
+    if (mode === "ONLINE_ROOM") {
+      const mySymbol: PlayerSymbol = isHost ? "X" : "O";
+      if (currentTurn !== mySymbol) return;
+    }
     const targetIdx = activeCellIndex;
     setActiveCellIndex(null);
     const result = submitActorMove(targetIdx, actorName);
@@ -587,6 +611,15 @@ function CineXoxApp() {
     setClaimedDaily(true);
   };
 
+  const handleClaimQuest = (qId: string, reels: number) => {
+    audio.playPowerup();
+    setClaimedQuestIds(p => [...p, qId]);
+    setProfile(p => ({
+      ...p,
+      reelsBalance: p.reelsBalance + reels,
+    }));
+  };
+
   const handleBuyAvatar = (avatarId: string, costReels: number) => {
     setProfile(p => ({
       ...p,
@@ -736,10 +769,7 @@ function CineXoxApp() {
     onJoinCustomRoom: handleJoinCustomRoom,
     onCloseQuests: () => setShowQuests(false),
     onClaimDailyReward: handleClaimDailyReward,
-    onClaimQuest: (qId: string, reels: number) => {
-      setClaimedQuestIds(p => [...p, qId]);
-      handleClaimDailyReward(reels);
-    },
+    onClaimQuest: handleClaimQuest,
     onCloseShop: () => setShowShop(false),
     onSelectAvatar: (avatarId: string) => handleUpdateProfile({ avatarId }),
     onBuyAvatar: handleBuyAvatar,

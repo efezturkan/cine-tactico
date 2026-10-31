@@ -26,6 +26,7 @@ export const QuickMatchSetupModal: React.FC<QuickMatchSetupModalProps> = ({
   const [selectedMode, setSelectedMode] = useState<"CLASSIC" | "SINEFIL">("CLASSIC");
   const [contentPool, setContentPool] = useState<ContentPoolType>("HYBRID");
   const [difficulty, setDifficulty] = useState<"EASY" | "NORMAL" | "HARD">("NORMAL");
+  const [infoNotice, setInfoNotice] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -34,7 +35,8 @@ export const QuickMatchSetupModal: React.FC<QuickMatchSetupModalProps> = ({
   const handleSelectMode = (mode: "CLASSIC" | "SINEFIL") => {
     audio.playSelect();
     if (mode === "SINEFIL" && isSinefilLocked) {
-      alert("🏆 Sinefil Modu ilk 3 maçınızı tamamladıktan sonra açılır! (Şimdilik önizleme yapabilirsiniz)");
+      setInfoNotice("🏆 Sinefil Modu ilk 3 maçtan sonra açılır! (Önizleme aktif)");
+      setTimeout(() => setInfoNotice(null), 3000);
     }
     setSelectedMode(mode);
   };
@@ -78,6 +80,12 @@ export const QuickMatchSetupModal: React.FC<QuickMatchSetupModalProps> = ({
         <p className="text-[11px] text-zinc-400 mb-4 font-bold">
           3 saniyede tercihlerini belirle ve kuyruğa gir.
         </p>
+
+        {infoNotice && (
+          <div className="mb-3 px-3 py-2 rounded-xl bg-amber-400/20 border border-amber-400/50 text-amber-300 text-xs font-black animate-in fade-in text-center">
+            {infoNotice}
+          </div>
+        )}
 
         {/* 1. SEÇİM: MOD (Klasik vs Sinefil) */}
         <div className="mb-4">
