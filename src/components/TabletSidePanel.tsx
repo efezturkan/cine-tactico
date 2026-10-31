@@ -38,7 +38,7 @@ export const TabletSidePanel: React.FC<TabletSidePanelProps> = ({
           </li>
           <li className="flex items-start gap-1.5">
             <span className="text-amber-400 font-bold">&bull;</span>
-            Süre: 20 saniye. Süresi bitenin sırası devredilir.
+            Süre: 12 saniye (Blitz). Süresi bitenin sırası rakibe geçer.
           </li>
         </ul>
       </div>

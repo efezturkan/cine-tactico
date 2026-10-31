@@ -261,7 +261,7 @@ export function useGameSession(
       botTimeoutRef.current = null;
       setIsBotThinking(false);
 
-      const decision = calculateBotMove(board, cells, usedMovieIds, botDifficulty, "O");
+      const decision = calculateBotMove(board, cells, usedMovieIds, botDifficulty, "O", allowCellStealing);
 
       if (decision && decision.movie) {
         submitMove(decision.cellIndex, decision.movie, "O");
@@ -278,7 +278,7 @@ export function useGameSession(
         botTimeoutRef.current = null;
       }
     };
-  }, [isActive, mode, currentTurn, winner, board, cells, usedMovieIds, botDifficulty, submitMove, switchTurn]);
+  }, [isActive, mode, currentTurn, winner, board, cells, usedMovieIds, botDifficulty, allowCellStealing, submitMove, switchTurn]);
 
   const resetGame = useCallback(
     (newBoard?: GameBoard) => {

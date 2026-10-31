@@ -30,10 +30,11 @@ export function evaluateBoardState(cells: readonly (CellAnswer | null)[]): WinCh
       cellA &&
       cellB &&
       cellC &&
+      cellA.answeredBy !== "NEUTRAL" &&
       cellA.answeredBy === cellB.answeredBy &&
       cellB.answeredBy === cellC.answeredBy
     ) {
-      return { winner: cellA.answeredBy, line: combo };
+      return { winner: cellA.answeredBy as PlayerSymbol, line: combo };
     }
   }
 
@@ -43,4 +44,37 @@ export function evaluateBoardState(cells: readonly (CellAnswer | null)[]): WinCh
   }
 
   return { winner: null, line: null };
+}
+
+/**
+ * TERS KADRAJ (ORTAK OYUNCU) KAZANMA KOŞULU:
+ * 3'lü hat aranmaz. 9 hücre sonuçlandığında en çok hücreyi kazanan kazanır.
+ * Eşitlikte toplam Rarity puanı karşılaştırılır.
+ */
+export function evaluateReverseBoardState(
+  cells: readonly (CellAnswer | null)[],
+  totalRarityX: number = 0,
+  totalRarityO: number = 0
+): WinCheckResult {
+  const isFull = cells.every(cell => cell !== null);
+  if (!isFull) {
+    return { winner: null, line: null };
+  }
+
+  let countX = 0;
+  let countO = 0;
+
+  for (const c of cells) {
+    if (c?.answeredBy === "X") countX++;
+    if (c?.answeredBy === "O") countO++;
+  }
+
+  if (countX > countO) return { winner: "X", line: null };
+  if (countO > countX) return { winner: "O", line: null };
+
+  if (totalRarityX > totalRarityO) return { winner: "X", line: null };
+  if (totalRarityO > totalRarityX) return { winner: "O", line: null };
+
+  // Foto-finiş mutlak kuralı: 0% beraberlik (ilk hamle sahibi / X kazanır)
+  return { winner: "X", line: null };
 }

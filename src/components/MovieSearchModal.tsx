@@ -2,9 +2,9 @@
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Criterion, Movie, ContentPoolType } from "@/types/game";
+import { Criterion, Movie, ContentPoolType, CellAnswer } from "@/types/game";
 import { MOVIES_DATABASE } from "@/data/movies";
-import { Search, X, Film, Star, Award, Tv } from "lucide-react";
+import { Search, X, Film, Star, Award, Tv, Sparkles, AlertCircle } from "lucide-react";
 import { audio } from "@/utils/audio";
 
 interface MovieSearchModalProps {
@@ -16,6 +16,7 @@ interface MovieSearchModalProps {
   onSelectMovie: (movie: Movie) => void;
   contentPool?: ContentPoolType;
   errorMessage?: string | null;
+  targetOccupant?: CellAnswer | null;
 }
 
 // Phase 2: MVP typographic-first mode (no TMDB poster dependency)
@@ -55,6 +56,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
   onSelectMovie,
   contentPool = "HYBRID",
   errorMessage,
+  targetOccupant,
 }) => {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -130,6 +132,25 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
           </button>
         </div>
 
+        {/* Kare Çalma Bilgilendirme Rozeti */}
+        {targetOccupant && (
+          <div className="mt-3 p-2.5 rounded-xl bg-gradient-to-r from-rose-950/80 via-zinc-900/90 to-amber-950/70 border border-rose-500/50 text-rose-200 text-xs font-bold flex items-center justify-between gap-2 shadow-lg">
+            <div className="flex items-center gap-2 min-w-0">
+              <Sparkles className="w-4 h-4 text-amber-400 shrink-0 animate-pulse" />
+              <div className="min-w-0">
+                <span className="text-[10px] uppercase font-black tracking-wider text-amber-400 block">Kare Çalma Düellosu</span>
+                <span className="truncate block text-zinc-200">
+                  Mevcut Film: <b className="text-white">{targetOccupant.movie.title}</b>
+                </span>
+              </div>
+            </div>
+            <div className="shrink-0 px-2 py-1 rounded-lg bg-black/60 border border-amber-400/40 text-amber-400 font-mono font-black text-xs flex items-center gap-1">
+              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+              <span>&gt; {targetOccupant.movie.imdbRating}</span>
+            </div>
+          </div>
+        )}
+
         {/* Hızlı Arama Input (Sadece Film / Dizi Adı) */}
         <div className="relative my-3">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
@@ -167,15 +188,21 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
           ) : (
             filteredMovies.map(movie => {
               const isUsed = usedMovieIds.includes(movie.id);
+              const isStealTargetLower = targetOccupant ? movie.imdbRating <= targetOccupant.movie.imdbRating : false;
+              const isDisabled = isUsed || isStealTargetLower;
 
               return (
                 <button
                   key={movie.id}
-                  disabled={isUsed}
+                  disabled={isDisabled}
                   onClick={() => onSelectMovie(movie)}
                   className={`w-full p-2.5 rounded-2xl flex items-center justify-between text-left transition-all border ${
                     isUsed
                       ? "opacity-40 bg-zinc-950 border-zinc-900 cursor-not-allowed"
+                      : isStealTargetLower
+                      ? "opacity-50 bg-zinc-950/60 border-zinc-800/80 cursor-not-allowed"
+                      : targetOccupant
+                      ? "bg-rose-950/20 hover:bg-rose-900/30 border-rose-500/30 hover:border-rose-400/70 active:scale-[0.99] shadow-sm"
                       : "bg-zinc-900/80 hover:bg-zinc-800 border-cinema-border hover:border-amber-400/60 active:scale-[0.99] shadow-sm"
                   }`}
                 >
@@ -194,7 +221,13 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                       <div className="text-[11px] text-zinc-400 truncate mt-0.5">
                         Tür: {movie.genres.join(" · ")}
                       </div>
-                      <div className="flex items-center gap-2 mt-1.5 text-[10px] font-bold text-zinc-400">
+                      <div className="flex items-center gap-2 mt-1.5 text-[10px] font-bold text-zinc-400 flex-wrap">
+                        {/* IMDb Puanı */}
+                        <span className="flex items-center gap-0.5 text-amber-300 bg-amber-400/10 px-1.5 py-0.5 rounded border border-amber-400/20 font-mono font-bold text-[10px]">
+                          <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
+                          {movie.imdbRating}
+                        </span>
+
                         {movie.hasOscar && (
                           <span className="flex items-center gap-0.5 text-yellow-400 bg-yellow-400/10 px-1.5 py-0.5 rounded border border-yellow-400/20">
                             <Award className="w-2.5 h-2.5" /> Oscar
@@ -215,6 +248,14 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                     {isUsed ? (
                       <span className="text-[10px] font-bold text-zinc-500 px-2 py-1 rounded bg-zinc-800">
                         Kullanıldı
+                      </span>
+                    ) : isStealTargetLower ? (
+                      <span className="text-[9px] font-mono font-bold text-rose-400/70 px-2 py-1 rounded bg-rose-950/30 border border-rose-900/40">
+                        Puan Düşük ({movie.imdbRating})
+                      </span>
+                    ) : targetOccupant ? (
+                      <span className="text-xs font-black text-rose-400 group-hover:text-rose-300 px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center gap-1 shadow-sm">
+                        <Sparkles className="w-3 h-3 text-rose-400" /> Çal &rarr;
                       </span>
                     ) : (
                       <span className="text-xs font-black text-amber-400 group-hover:text-amber-300 px-3 py-1.5 rounded-xl bg-amber-400/10 border border-amber-400/20">

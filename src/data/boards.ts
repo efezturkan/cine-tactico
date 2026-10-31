@@ -1,5 +1,5 @@
 import { GameBoard, BotDifficulty } from "@/types/game";
-import { findMatchingMovies } from "@/engine/validator";
+import { findMatchingMovies, getSharedActors } from "@/engine/validator";
 
 export interface BotOpponentProfile {
   name: string;
@@ -234,6 +234,221 @@ export const PRESET_BOARDS: GameBoard[] = [
         label: "2010 Sonrası",
         subLabel: "Modern Çıkışlı",
         value: "2010s+",
+      },
+    ],
+    validCounts: {},
+  },
+  // --- SİNEFİL KONSEPT (CULT THEMES) MODU ---
+  {
+    id: "board_concept_mindbending",
+    title: "Sinefil Konsept: Zihin Bükücüler & Kurgu Dehaları",
+    boardMode: "CINE_CONCEPT",
+    difficulty: "HARD",
+    rows: [
+      {
+        id: "rc_1",
+        type: "THEME",
+        label: "Ters Köşe (Plot Twist)",
+        subLabel: "Şok Edici Finaller",
+        value: "PLOT_TWIST",
+      },
+      {
+        id: "rc_2",
+        type: "THEME",
+        label: "Neo-Noir (Karanlık Şehir)",
+        subLabel: "Yağmurlu Geceler & Yozlaşma",
+        value: "NEO_NOIR",
+      },
+      {
+        id: "rc_3",
+        type: "THEME",
+        label: "İntikam (Revenge)",
+        subLabel: "Kan Davası & Hesaplaşma",
+        value: "REVENGE",
+      },
+    ],
+    cols: [
+      {
+        id: "cc_1",
+        type: "DIRECTOR",
+        label: "Christopher Nolan",
+        subLabel: "Zaman & Zihin Ustası",
+        value: "Christopher Nolan",
+      },
+      {
+        id: "cc_2",
+        type: "AWARD",
+        label: "Oscar Kazandı",
+        subLabel: "Akademi Ödüllü",
+        value: "OSCAR",
+      },
+      {
+        id: "cc_3",
+        type: "RATING",
+        label: "8.0+ Puan (Efsane)",
+        subLabel: "Top 250 Klasiği",
+        value: "IMDB_8_PLUS",
+      },
+    ],
+    validCounts: {},
+  },
+  {
+    id: "board_concept_survival_heist",
+    title: "Sinefil Konsept: Adrenalin & Kaçış",
+    boardMode: "CINE_CONCEPT",
+    difficulty: "MEDIUM",
+    rows: [
+      {
+        id: "rc_4",
+        type: "THEME",
+        label: "Büyük Soygun (Heist)",
+        subLabel: "Kusursuz Plan & Deha",
+        value: "HEIST",
+      },
+      {
+        id: "rc_5",
+        type: "THEME",
+        label: "Karanlık Gelecek (Distopya)",
+        subLabel: "Yıkık Uygarlıklar",
+        value: "DYSTOPIA",
+      },
+      {
+        id: "rc_6",
+        type: "THEME",
+        label: "Derin Uzay (Space)",
+        subLabel: "Sonsuz Karanlık",
+        value: "SPACE",
+      },
+    ],
+    cols: [
+      {
+        id: "cc_4",
+        type: "DECADE",
+        label: "2010 Sonrası",
+        subLabel: "Modern Sinema",
+        value: "2010s+",
+      },
+      {
+        id: "cc_5",
+        type: "AWARD",
+        label: "Oscar Kazandı",
+        subLabel: "Akademi Ödüllü",
+        value: "OSCAR",
+      },
+      {
+        id: "cc_6",
+        type: "RATING",
+        label: "8.0+ Puan (Efsane)",
+        subLabel: "Kült Başyapıt",
+        value: "IMDB_8_PLUS",
+      },
+    ],
+    validCounts: {},
+  },
+
+  // --- TERS KADRAJ (ORTAK OYUNCU) MODU ---
+  {
+    id: "board_reverse_nolan_titans",
+    title: "Ters Kadraj: Nolan & Yıldızlar Kadrosu",
+    boardMode: "REVERSE_CAST",
+    difficulty: "HARD",
+    rows: [
+      {
+        id: "rr_1",
+        type: "MOVIE_INTERSECTION",
+        label: "Inception",
+        subLabel: "2010 • Christopher Nolan",
+        value: "Inception",
+      },
+      {
+        id: "rr_2",
+        type: "MOVIE_INTERSECTION",
+        label: "The Dark Knight",
+        subLabel: "2008 • Christopher Nolan",
+        value: "The Dark Knight",
+      },
+      {
+        id: "rr_3",
+        type: "MOVIE_INTERSECTION",
+        label: "Interstellar",
+        subLabel: "2014 • Christopher Nolan",
+        value: "Interstellar",
+      },
+    ],
+    cols: [
+      {
+        id: "cr_1",
+        type: "MOVIE_INTERSECTION",
+        label: "Oppenheimer",
+        subLabel: "2023 • Christopher Nolan",
+        value: "Oppenheimer",
+      },
+      {
+        id: "cr_2",
+        type: "MOVIE_INTERSECTION",
+        label: "The Dark Knight Rises",
+        subLabel: "2012 • Christopher Nolan",
+        value: "The Dark Knight Rises",
+      },
+      {
+        id: "cr_3",
+        type: "MOVIE_INTERSECTION",
+        label: "Batman Begins (Batman Başlıyor)",
+        subLabel: "2005 • Christopher Nolan",
+        value: "Batman Begins (Batman Başlıyor)",
+      },
+    ],
+    validCounts: {},
+  },
+  {
+    id: "board_reverse_mafia_cult",
+    title: "Ters Kadraj: Suç Dehaları & Mafya Hanedanı",
+    boardMode: "REVERSE_CAST",
+    difficulty: "HARD",
+    rows: [
+      {
+        id: "rr_4",
+        type: "MOVIE_INTERSECTION",
+        label: "Once Upon a Time in Hollywood",
+        subLabel: "2019 • Tarantino",
+        value: "Once Upon a Time in Hollywood",
+      },
+      {
+        id: "rr_5",
+        type: "MOVIE_INTERSECTION",
+        label: "Goodfellas",
+        subLabel: "1990 • Scorsese",
+        value: "Goodfellas",
+      },
+      {
+        id: "rr_6",
+        type: "MOVIE_INTERSECTION",
+        label: "Taxi Driver",
+        subLabel: "1976 • Scorsese",
+        value: "Taxi Driver",
+      },
+    ],
+    cols: [
+      {
+        id: "cr_4",
+        type: "MOVIE_INTERSECTION",
+        label: "The Irishman",
+        subLabel: "2019 • Scorsese",
+        value: "The Irishman",
+      },
+      {
+        id: "cr_5",
+        type: "MOVIE_INTERSECTION",
+        label: "Killers of the Flower Moon",
+        subLabel: "2023 • Scorsese",
+        value: "Killers of the Flower Moon",
+      },
+      {
+        id: "cr_6",
+        type: "MOVIE_INTERSECTION",
+        label: "The Godfather Part II (Baba 2)",
+        subLabel: "1974 • Coppola",
+        value: "The Godfather Part II (Baba 2)",
       },
     ],
     validCounts: {},
@@ -608,8 +823,13 @@ export function createRandomizedBoard(baseBoard: GameBoard): GameBoard {
   const newValidCounts: Record<string, number> = {};
   shuffledRows.forEach((row, rIdx) => {
     shuffledCols.forEach((col, cIdx) => {
-      const validMovies = findMatchingMovies(row, col);
-      newValidCounts[`${rIdx}_${cIdx}`] = validMovies.length;
+      if (row.type === "MOVIE_INTERSECTION" && col.type === "MOVIE_INTERSECTION") {
+        const shared = getSharedActors(row.value, col.value);
+        newValidCounts[`${rIdx}_${cIdx}`] = shared.length;
+      } else {
+        const validMovies = findMatchingMovies(row, col);
+        newValidCounts[`${rIdx}_${cIdx}`] = validMovies.length;
+      }
     });
   });
 
@@ -623,19 +843,33 @@ export function createRandomizedBoard(baseBoard: GameBoard): GameBoard {
 }
 
 /**
- * Mod türüne göre ("CLASSIC" veya "SINEFIL") uygun tahtayı getirir.
+ * Mod türüne göre ("CLASSIC", "REVERSE_CAST", "CINE_CONCEPT" veya "SINEFIL") uygun tahtayı getirir.
  */
 export function getBoardForMode(
-  mode: "CLASSIC" | "SINEFIL",
+  mode: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL",
   excludeIndex?: number
 ): { board: GameBoard; index: number } {
-  const sinefilIds = ["board_sinefil_oscar", "board_thriller_masters", "board_dune_scifi"];
-  const classicIds = ["board_master_1", "board_master_titans", "board_90s_cult", "board_master_2"];
+  let matchingIndices: number[] = [];
 
-  const targetIds = mode === "SINEFIL" ? sinefilIds : classicIds;
-  let matchingIndices = PRESET_BOARDS.map((b, idx) => ({ b, idx }))
-    .filter(item => targetIds.includes(item.b.id))
-    .map(item => item.idx);
+  if (mode === "REVERSE_CAST") {
+    matchingIndices = PRESET_BOARDS.map((b, idx) => ({ b, idx }))
+      .filter(item => item.b.boardMode === "REVERSE_CAST")
+      .map(item => item.idx);
+  } else if (mode === "CINE_CONCEPT") {
+    matchingIndices = PRESET_BOARDS.map((b, idx) => ({ b, idx }))
+      .filter(item => item.b.boardMode === "CINE_CONCEPT")
+      .map(item => item.idx);
+  } else if (mode === "SINEFIL") {
+    const sinefilIds = ["board_sinefil_oscar", "board_thriller_masters", "board_dune_scifi"];
+    matchingIndices = PRESET_BOARDS.map((b, idx) => ({ b, idx }))
+      .filter(item => sinefilIds.includes(item.b.id) || item.b.boardMode === "CINE_CONCEPT")
+      .map(item => item.idx);
+  } else {
+    // CLASSIC
+    matchingIndices = PRESET_BOARDS.map((b, idx) => ({ b, idx }))
+      .filter(item => item.b.boardMode === "CLASSIC" || !item.b.boardMode)
+      .map(item => item.idx);
+  }
 
   if (matchingIndices.length === 0) {
     matchingIndices = PRESET_BOARDS.map((_, i) => i);

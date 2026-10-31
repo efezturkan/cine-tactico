@@ -26,10 +26,11 @@ const SHOW_EXTERNAL_POSTERS = false;
 
 const CellMoviePoster: React.FC<{
   movie: Movie;
-  answeredBy: PlayerSymbol;
+  answeredBy: PlayerSymbol | "NEUTRAL";
   isWinning?: boolean;
 }> = ({ movie, answeredBy }) => {
   const [imgFailed, setImgFailed] = useState(false);
+  const isNeutral = answeredBy === "NEUTRAL";
   const isPlayerX = answeredBy === "X";
 
   // Türe göre dinamik atmosfer gradyanı
@@ -82,12 +83,12 @@ const CellMoviePoster: React.FC<{
         <div
           className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-black text-[10px] shadow-lg backdrop-blur-sm"
           style={{
-            background: isPlayerX ? "#06b6d4" : "#8b151b",
+            background: isNeutral ? "#3f3f46" : isPlayerX ? "#06b6d4" : "#8b151b",
             color: "white",
-            border: `1.5px solid ${isPlayerX ? "rgba(6,182,212,0.7)" : "rgba(139,21,27,0.7)"}`,
+            border: `1.5px solid ${isNeutral ? "#71717a" : isPlayerX ? "rgba(6,182,212,0.7)" : "rgba(139,21,27,0.7)"}`,
           }}
         >
-          {answeredBy}
+          {isNeutral ? "🔒" : answeredBy}
         </div>
       </div>
 
@@ -166,6 +167,14 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-teal-400/15 border border-teal-400/40 flex items-center justify-center text-teal-400 shadow-sm shrink-0 mb-1">
           <Calendar className="w-4 h-4" />
+        </div>
+      );
+    } else if (crit.type === "THEME") {
+      badgeLabel = "🌀 KÜLT TEMA";
+      badgeColor = "text-purple-300";
+      iconElement = (
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-500/25 border border-purple-400/50 flex items-center justify-center text-purple-300 font-mono font-black text-[12px] shadow-sm shrink-0 mb-1">
+          🎬
         </div>
       );
     } else if (crit.type === "FRANCHISE") {

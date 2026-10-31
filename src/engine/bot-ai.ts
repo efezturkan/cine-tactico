@@ -1,5 +1,5 @@
 import { CellAnswer, GameBoard, Movie, PlayerSymbol } from "@/types/game";
-import { findMatchingMovies } from "./validator";
+import { findMatchingMovies, getSharedActors } from "./validator";
 import { WINNING_LINES } from "./rules";
 
 export type BotDifficulty = "EASY" | "MEDIUM" | "HARD";
@@ -7,6 +7,7 @@ export type BotDifficulty = "EASY" | "MEDIUM" | "HARD";
 export interface BotMoveDecision {
   cellIndex: number;
   movie: Movie | null;
+  actorName?: string;
 }
 
 /**
@@ -91,16 +92,32 @@ export function calculateBotMove(
   cells: readonly (CellAnswer | null)[],
   usedMovieIds: string[],
   difficulty: BotDifficulty = "MEDIUM",
-  botSymbol: PlayerSymbol = "O"
+  botSymbol: PlayerSymbol = "O",
+  allowCellStealing: boolean = false
 ): BotMoveDecision | null {
+  const opponentSymbol: PlayerSymbol = botSymbol === "X" ? "O" : "X";
+
   const emptyCellIndices: number[] = [];
   cells.forEach((cell, idx) => {
     if (cell === null) emptyCellIndices.push(idx);
   });
 
-  if (emptyCellIndices.length === 0) return null;
+  // TERS KADRAJ (ORTAK OYUNCU) MODU:
+  if (board.boardMode === "REVERSE_CAST") {
+    const playable = emptyCellIndices.map(idx => {
+      const r = Math.floor(idx / 3);
+      const c = idx % 3;
+      const actors = getSharedActors(board.rows[r].value, board.cols[c].value);
+      return { idx, actors };
+    }).filter(p => p.actors.length > 0);
 
-  const opponentSymbol: PlayerSymbol = botSymbol === "X" ? "O" : "X";
+    if (playable.length === 0) return null;
+
+    // Hedef hücre seçimi:
+    const target = playable[Math.floor(Math.random() * playable.length)];
+    const chosenActor = target.actors[Math.floor(Math.random() * target.actors.length)];
+    return { cellIndex: target.idx, movie: null, actorName: chosenActor };
+  }
 
   // 1. BOT TEK HAMLEDE KAZANABİLİYOR MU? (HARD %100, MEDIUM %90, EASY %40)
   const shouldWin =
@@ -125,6 +142,21 @@ export function calculateBotMove(
               difficulty === "HARD"
                 ? [...movies].sort((x, y) => y.imdbRating - x.imdbRating)[0]
                 : movies[Math.floor(Math.random() * movies.length)];
+            return { cellIndex: candidate, movie: chosenMovie };
+          }
+        }
+      }
+
+      // Steal Modu: Rakibin karesini çalarak zafer hattı tamamlama
+      if (allowCellStealing && botMarks === 2 && vals.some(v => v?.answeredBy === opponentSymbol)) {
+        const candidate = [a, b, c].find(idx => cells[idx]?.answeredBy === opponentSymbol);
+        if (candidate !== undefined) {
+          const oppRating = cells[candidate]!.movie.imdbRating;
+          const movies = getAvailableMoviesForCell(board, candidate, usedMovieIds).filter(
+            m => m.imdbRating > oppRating
+          );
+          if (movies.length > 0) {
+            const chosenMovie = [...movies].sort((x, y) => y.imdbRating - x.imdbRating)[0];
             return { cellIndex: candidate, movie: chosenMovie };
           }
         }
@@ -159,18 +191,46 @@ export function calculateBotMove(
           }
         }
       }
+
+      // Steal Modu: Rakibin 2'li hattındaki bir kareyi çalarak tehdidi bozma
+      if (allowCellStealing && opponentMarks === 2) {
+        const candidate = [a, b, c].find(idx => cells[idx]?.answeredBy === opponentSymbol);
+        if (candidate !== undefined) {
+          const oppRating = cells[candidate]!.movie.imdbRating;
+          const movies = getAvailableMoviesForCell(board, candidate, usedMovieIds).filter(
+            m => m.imdbRating > oppRating
+          );
+          if (movies.length > 0) {
+            const chosenMovie = [...movies].sort((x, y) => y.imdbRating - x.imdbRating)[0];
+            return { cellIndex: candidate, movie: chosenMovie };
+          }
+        }
+      }
     }
   }
 
-  // 3. OYNANABİLİR TÜM BOŞ KARELERİ VE FİLMLERİNİ DERLE
-  const playableCells = emptyCellIndices
-    .map(idx => ({
-      idx,
-      movies: getAvailableMoviesForCell(board, idx, usedMovieIds),
-    }))
+  // 3. OYNANABİLİR TÜM KARELERİ VE FİLMLERİNİ DERLE (Boş veya Çalınabilir Kareler)
+  const candidateIndices = [...emptyCellIndices];
+  if (allowCellStealing) {
+    cells.forEach((cell, idx) => {
+      if (cell && cell.answeredBy === opponentSymbol && !candidateIndices.includes(idx)) {
+        candidateIndices.push(idx);
+      }
+    });
+  }
+
+  const playableCells = candidateIndices
+    .map(idx => {
+      const occupant = cells[idx];
+      let movies = getAvailableMoviesForCell(board, idx, usedMovieIds);
+      if (occupant) {
+        movies = movies.filter(m => m.imdbRating > occupant.movie.imdbRating);
+      }
+      return { idx, movies };
+    })
     .filter(item => item.movies.length > 0);
 
-  // Tahtada geçerli filmi olan hiçbir boş kare kalmadıysa
+  // Tahtada geçerli filmi olan hiçbir kare kalmadıysa
   if (playableCells.length === 0) {
     return null;
   }

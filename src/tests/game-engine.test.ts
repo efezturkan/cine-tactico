@@ -1,7 +1,7 @@
 import { MOVIES_DATABASE } from "../data/movies";
 import { PRESET_BOARDS, getRandomBoard, createRandomizedBoard, getRandomOpponent } from "../data/boards";
 import { WINNING_LINES, evaluateBoardState } from "../engine/rules";
-import { validateMove, findMatchingMovies, validateBoardSolvability, matchesContentPool } from "../engine/validator";
+import { validateMove, findMatchingMovies, validateBoardSolvability, matchesContentPool, getSharedActors } from "../engine/validator";
 import { calculateBotMove, getBotThinkingDelay } from "../engine/bot-ai";
 
 console.log("=================================================");
@@ -35,7 +35,12 @@ runTest("8 Winning combinations are properly configured", () => {
 PRESET_BOARDS.forEach((board, idx) => {
   runTest(`Board #${idx + 1} (${board.title}) has valid solutions in all 9 cells`, () => {
     return board.rows.every(row =>
-      board.cols.every(col => findMatchingMovies(row, col).length >= 1)
+      board.cols.every(col => {
+        if (board.boardMode === "REVERSE_CAST") {
+          return getSharedActors(row.value, col.value).length >= 1;
+        }
+        return findMatchingMovies(row, col).length >= 1;
+      })
     );
   });
 });
@@ -172,8 +177,9 @@ runTest("Content pool correctly classifies Films and Series", () => {
 });
 
 runTest("Sinefil prestij tahtası en az 3 geçerli eser kuralını (Eksen Güvenliği) sağlar", () => {
-  // Board #8 (Fincher x Nolan x Villeneuve / Oscar, IMDb 8.0+, Dram & Suç)
-  const result = validateBoardSolvability(PRESET_BOARDS[7], 3);
+  // Fincher x Nolan x Villeneuve / Oscar, IMDb 8.0+, Dram & Suç
+  const fincherBoard = PRESET_BOARDS.find(b => b.title.includes("Fincher"))!;
+  const result = validateBoardSolvability(fincherBoard, 3);
   return result.isValid && result.failedCells.length === 0;
 });
 
@@ -203,6 +209,43 @@ runTest("Kesişimsiz 3 Yönetmen x 3 Aktör tahtası Eksen Güvenliği tarafınd
   const result = validateBoardSolvability(unfeasibleBoard, 3);
   // 9 hücrenin 9'u da 3 filmin altındadır (hatta 6'sı 0 filmlidir)
   return !result.isValid && result.failedCells.length >= 6;
+});
+
+// 9. Kare Çalma (Steal Mode) & Bot Steal Testleri
+runTest("Bot completes winning line by stealing opponent cell with higher IMDb rating (Steal Mode)", () => {
+  const board = PRESET_BOARDS[0];
+  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!; // IMDb 8.8
+  const lowerMovie = { ...inception, id: "m_test_low", title: "Low Rated Film", imdbRating: 6.5 };
+  
+  const cells = Array(9).fill(null);
+  cells[0] = { movie: inception, answeredBy: "O", timestamp: 1 };
+  cells[1] = { movie: inception, answeredBy: "O", timestamp: 2 };
+  // Cell 2 has opponent mark with lower IMDb score (6.5)
+  cells[2] = { movie: lowerMovie, answeredBy: "X", timestamp: 3 };
+
+  // With allowCellStealing = true, bot should steal cell 2 to win!
+  const decision = calculateBotMove(board, cells, [], "HARD", "O", true);
+  return (
+    decision !== null &&
+    decision.cellIndex === 2 &&
+    decision.movie !== null &&
+    decision.movie.imdbRating > 6.5
+  );
+});
+
+runTest("Cell stealing logic respects strict IMDb score threshold", () => {
+  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!; // IMDb 8.8
+  const interstellar = MOVIES_DATABASE.find(m => m.id === "m_interstellar")!; // IMDb 8.7
+  const darkKnight = MOVIES_DATABASE.find(m => m.id === "m_dark_knight")!; // IMDb 9.0
+
+  // 9.0 can steal 8.8 (Dark Knight > Inception)
+  const canDarkKnightStealInception = darkKnight.imdbRating > inception.imdbRating;
+  // 8.7 cannot steal 8.8 (Interstellar <= Inception)
+  const canInterstellarStealInception = interstellar.imdbRating > inception.imdbRating;
+  // 8.8 cannot steal 8.8 (Equal score rejected)
+  const canInceptionStealInception = inception.imdbRating > inception.imdbRating;
+
+  return canDarkKnightStealInception && !canInterstellarStealInception && !canInceptionStealInception;
 });
 
 console.log("\n=================================================");

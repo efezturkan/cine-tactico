@@ -1017,6 +1017,7 @@ function CineXoxPageContent() {
           onSelectMovie={handleMovieChosen}
           contentPool={contentPool}
           errorMessage={movieSearchError}
+          targetOccupant={cells[activeCellIndex]}
         />
       )}
 

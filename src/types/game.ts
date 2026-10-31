@@ -2,9 +2,60 @@ export type PlayerSymbol = "X" | "O";
 
 export type ContentPoolType = "FILM" | "SERIES" | "HYBRID";
 
+export type CultThemeKey =
+  | "PLOT_TWIST"
+  | "WHODUNNIT"
+  | "TIME_TRAVEL"
+  | "NON_LINEAR"
+  | "SINGLE_LOCATION"
+  | "HEIST"
+  | "REVENGE"
+  | "SURVIVAL"
+  | "DYSTOPIA"
+  | "SPACE"
+  | "AI"
+  | "NEO_NOIR"
+  | "LITERALLY_ME"
+  | "CULT_FLOP";
+
+export const CULT_THEMES_META: Record<
+  CultThemeKey,
+  { label: string; emoji: string; desc: string }
+> = {
+  PLOT_TWIST: { label: "Ters Köşe (Plot Twist)", emoji: "🌀", desc: "Finalde tüm algıyı altüst eden şok sonlar" },
+  WHODUNNIT: { label: "Katil Kim? (Whodunnit)", emoji: "🔍", desc: "Kapalı kapı ardı cinayet ve dedektif gizemi" },
+  TIME_TRAVEL: { label: "Zaman Yolculuğu", emoji: "⏳", desc: "Geçmişe, geleceğe sıçrama veya zaman kırılması" },
+  NON_LINEAR: { label: "Doğrusal Olmayan Kurgu", emoji: "🔀", desc: "Parçalı, geri dönen veya döngüsel zaman akışı" },
+  SINGLE_LOCATION: { label: "Tek Mekan", emoji: "🚪", desc: "Tüm hikayenin tek bir oda/alanda geçtiği filmler" },
+  HEIST: { label: "Büyük Soygun (Heist)", emoji: "💎", desc: "Kusursuz plan, kasa patlatma ve ekip dehası" },
+  REVENGE: { label: "İntikam (Revenge)", emoji: "⚔️", desc: "Kan davası, geri dönüş ve hesaplaşma" },
+  SURVIVAL: { label: "Hayatta Kalma (Survival)", emoji: "🏕️", desc: "Doğaya veya vahşi evrene karşı tek başına savaş" },
+  DYSTOPIA: { label: "Karanlık Gelecek (Distopya)", emoji: "🌆", desc: "Yıkık uygarlıklar veya totaliter sistemler" },
+  SPACE: { label: "Derin Uzay (Space Odyssey)", emoji: "🚀", desc: "Dünya dışı sonsuz karanlık ve uzay araçları" },
+  AI: { label: "Yapay Zeka & Sayborg", emoji: "🤖", desc: "İnsan bilinci vs. makine ve sentetik akıl" },
+  NEO_NOIR: { label: "Neo-Noir (Karanlık Şehir)", emoji: "🌧️", desc: "Yağmurlu geceler, yozlaşma ve karanlık sokaklar" },
+  LITERALLY_ME: { label: "Literally Me (Anti-Kahraman)", emoji: "🚬", desc: "Yabancılaşmış, yalnız ve melankolik figürler" },
+  CULT_FLOP: { label: "Kült Gişe Fiyaskosu (Flop)", emoji: "💸", desc: "Gişede batmış ama sinema efsanesi olmuş yapımlar" },
+};
+
+export type RarityTier = "COMMON" | "UNCOMMON" | "RARE" | "EPIC" | "LEGENDARY";
+
+export const BASE_CELL_POINTS = 10;
+
+export const RARITY_TIERS: Record<
+  RarityTier,
+  { label: string; bonus: number; badgeColor: string; minScore: number }
+> = {
+  COMMON: { label: "Çok Yaygın", bonus: 0, badgeColor: "#94a3b8", minScore: 50 },
+  UNCOMMON: { label: "Yaygın", bonus: 2, badgeColor: "#38bdf8", minScore: 30 },
+  RARE: { label: "Nadir", bonus: 5, badgeColor: "#a855f7", minScore: 15 },
+  EPIC: { label: "Çok Nadir", bonus: 8, badgeColor: "#ec4899", minScore: 5 },
+  LEGENDARY: { label: "Efsanevi", bonus: 12, badgeColor: "#f59e0b", minScore: 0 },
+};
+
 export interface Criterion {
   id: string;
-  type: "DIRECTOR" | "ACTOR" | "GENRE" | "DECADE" | "AWARD" | "RATING" | "FRANCHISE";
+  type: "DIRECTOR" | "ACTOR" | "GENRE" | "DECADE" | "AWARD" | "RATING" | "FRANCHISE" | "THEME" | "MOVIE_INTERSECTION";
   label: string;
   subLabel?: string;
   value: string;
@@ -23,6 +74,7 @@ export interface Movie {
   hasOscar: boolean;
   boxOfficeCategory?: "BLOCKBUSTER" | "INDIE" | "STANDARD";
   franchise?: "DC" | "MARVEL" | "LOTR" | "HARRY_POTTER" | "DUNE" | "STAR_WARS" | "OTHER" | string;
+  themes?: (CultThemeKey | string)[];
   mediaType?: "FILM" | "SERIES";
   posterUrl?: string;
   overview?: string;
@@ -41,20 +93,27 @@ export interface Movie {
 
 export interface CellAnswer {
   movie: Movie;
-  answeredBy: PlayerSymbol;
+  actorName?: string; // Ters Kadraj modu için
+  answeredBy: PlayerSymbol | "NEUTRAL";
   timestamp: number;
   pointsEarned?: number;
+  rarityTier?: RarityTier;
+  rarityScore?: number;
   comboCount?: number;
+  isLockedNeutral?: boolean; // Deadlock: İki taraf da yanlış yapınca kilitlenen sahipsiz kare
 }
 
 export interface GameBoard {
   id: string;
   title: string;
+  boardMode?: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT";
   difficulty: "EASY" | "MEDIUM" | "HARD";
   rows: Criterion[];
   cols: Criterion[];
   validCounts: Record<string, number>;
 }
+
+export type CoreGameMode = "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT";
 
 export type GameMode = "PASS_AND_PLAY" | "VS_BOT" | "ONLINE_ROOM" | "DAILY_SOLO";
 
