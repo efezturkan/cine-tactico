@@ -1,17 +1,29 @@
 import { supabase, isSupabaseConfigured } from "../supabase/client";
 import { UserProfile } from "@/types/profile";
 
-export async function syncProfileToSupabase(profile: UserProfile): Promise<void> {
+/**
+ * Synchronizes user stats to Supabase profiles table.
+ * Uses auth.users(id) UUID for secure RLS compliance.
+ */
+export async function syncProfileToSupabase(
+  profile: UserProfile,
+  authUserId?: string
+): Promise<void> {
   if (!isSupabaseConfigured || !supabase) return;
 
   try {
+    const userRes = await supabase.auth.getUser();
+    const actualId = authUserId || userRes.data?.user?.id;
+    if (!actualId) return;
+
     await supabase.from("profiles").upsert(
       {
-        user_id: profile.username,
+        id: actualId,
+        user_id: actualId,
         username: profile.username,
         avatar_id: profile.avatarId,
         rank_title: profile.rankTitle || "Bilet Kontrolörü 🍿",
-        rating: 1000 + (profile.wins * 25) - (profile.losses * 12),
+        rating: Math.max(0, 1000 + profile.wins * 25 - profile.losses * 12),
         wins: profile.wins,
         losses: profile.losses,
         draws: profile.draws,
@@ -21,7 +33,7 @@ export async function syncProfileToSupabase(profile: UserProfile): Promise<void>
         letterboxd_username: profile.letterboxdUsername || null,
         updated_at: new Date().toISOString(),
       },
-      { onConflict: "user_id" }
+      { onConflict: "id" }
     );
   } catch {
     // Non-blocking background sync

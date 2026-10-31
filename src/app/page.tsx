@@ -9,6 +9,7 @@ import {
   joinRealtimeRoom,
   syncProfileToSupabase,
   finishRealtimeGame,
+  archiveMatchSession,
   isSupabaseConfigured,
   ensureAnonymousSession,
 } from "@/backend";
@@ -326,6 +327,18 @@ function CineXoxApp() {
 
       if (isSupabaseConfigured) {
         syncProfileToSupabase(updated);
+        archiveMatchSession({
+          room_code: customRoomCode || undefined,
+          outcome: winner === "X" ? "VICTORY_X" : winner === "O" ? "VICTORY_O" : "DRAW",
+          game_mode: mode,
+          board_id: board.id,
+          board_title: board.title,
+          moves_count: cells.filter((c) => c !== null).length,
+          score_rarity_x: scoreRarityX,
+          score_rarity_o: 0,
+          total_arcade_score: totalArcadeScore,
+          final_cells: cells,
+        });
         if (mode === "ONLINE_ROOM" && customRoomCode) {
           finishRealtimeGame(customRoomCode, winner);
         }
