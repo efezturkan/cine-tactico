@@ -2,8 +2,8 @@
 
 **Document:** MASTER-PROGRESS.md  
 **Last Updated:** 31 October 2026  
-**Current Phase:** PHASE 3 — Native Mobile Builds Established  
-**Gate Status:** PHASE 3B Passed (Capacitor 8.6.0 installed, iOS App.app compiled with Xcode 26.6, 27/27 tests PASS)  
+**Current Phase:** PHASE 3 — Simulator QA & Mobile Optimization Complete  
+**Gate Status:** PHASE 3C Passed (iOS simulator verified PID:41011, touch delay eliminated, rubber-banding disabled, 27/27 tests PASS)  
 
 ---
 
@@ -16,7 +16,7 @@
 | **Phase 2** | Data Normalization & UI Decoupling | `CINE-TACTICO-PHASE-2-IMPLEMENTATION.md` | **DONE** | 97 unique records with verified Wikidata QIDs, 0 dead cells, IMDb purged from UI, typographic cards active, 27/27 tests PASS, build clean |
 | **Phase 3A** | Capacitor Compatibility Preflight | `CINE-TACTICO-PHASE-3A-CAPACITOR-PREFLIGHT.md` | **DONE** | Compatibility verified, READY WITH CONDITIONS decision issued |
 | **Phase 3B** | Capacitor Integration & Native Builds | `CINE-TACTICO-PHASE-3B-CAPACITOR-INTEGRATION.md` | **DONE** | Capacitor 8.6.0, iOS Simulator build SUCCEEDED with Xcode 26.6, Taptic Engine haptics integrated |
-| **Phase 3C** | Simulator & Physical QA | Real device / simulator test report | **IN PROGRESS** | Ready for iOS Simulator boot and verification |
+| **Phase 3C** | Simulator & Physical QA | `CINE-TACTICO-PHASE-3C-SIMULATOR-QA.md` | **DONE** | iPhone 16e simulator booted & running (PID:41011), zero tap-delay, overscroll disabled, screenshots captured |
 | **Phase 3** | Automated & Physical QA | Real device test report | **NOT STARTED** | Pending Phase 1 native build |
 | **Phase 4** | Security, Privacy & Compliance | Store compliance & legal audit report | **IN PROGRESS** | TMDB attribution & account deletion planned |
 | **Phase 5** | Store Account & Financial Prep | Owner store accounts & budget ready | **BLOCKED** | Owner action required ($25 Google, $99 Apple) |

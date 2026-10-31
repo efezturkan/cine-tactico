@@ -41,6 +41,7 @@ import {
   Sliders,
   Eye,
   RotateCcw,
+  Lock,
 } from "lucide-react";
 import { audio } from "@/utils/audio";
 

@@ -479,7 +479,7 @@ export default function CineXoxPage() {
           }}
           onOpenPro={() => {
             audio.playSelect();
-            setShowPro(true);
+            setShowShop(true);
           }}
           onOpenGameModesHub={() => {
             audio.playSelect();
@@ -582,36 +582,23 @@ export default function CineXoxPage() {
           isOpen={showQuests}
           onClose={() => setShowQuests(false)}
           reelsBalance={profile.reelsBalance}
-          diamondsBalance={profile.diamondsBalance}
           dailyStreak={profile.dailyStreak}
-          streakProtected={profile.streakProtected}
           onClaimDaily={handleClaimDailyReward}
           claimedDaily={claimedDaily}
           claimedQuestIds={claimedQuestIds}
-          onClaimQuest={(qId, reels, diamonds) => {
+          onClaimQuest={(qId, reels) => {
             setClaimedQuestIds(p => [...p, qId]);
-            handleClaimDailyReward(reels, diamonds);
+            handleClaimDailyReward(reels);
           }}
         />
 
+        {/* Sinefil İkon Pazarı (Avatar Koleksiyonu) Modalı */}
         <ShopModal
           isOpen={showShop}
           onClose={() => setShowShop(false)}
           profile={profile}
-          onUpdateBalance={handleUpdateBalance}
-          onBuyPowerup={handleBuyPowerup}
+          onSelectAvatar={(avatarId) => handleUpdateProfile({ avatarId })}
           onBuyAvatar={handleBuyAvatar}
-          onBuyStreakFreeze={handleBuyStreakFreeze}
-        />
-
-        <SinefilProModal
-          isOpen={showPro}
-          onClose={() => setShowPro(false)}
-          isPro={profile.isPro}
-          onActivatePro={() => {
-            setProfile(p => ({ ...p, isPro: true }));
-            setShowPro(false);
-          }}
         />
 
         <GameModesHubModal
@@ -1009,7 +996,6 @@ export default function CineXoxPage() {
           resetGame();
           setCurrentView("HOME");
         }}
-        onDoubleReward={() => handleUpdateBalance(55, 5)}
       />
 
       <MatchFoundModal
@@ -1045,7 +1031,6 @@ export default function CineXoxPage() {
         isOpen={showQuests}
         onClose={() => setShowQuests(false)}
         reelsBalance={profile.reelsBalance}
-        diamondsBalance={profile.diamondsBalance}
         dailyStreak={profile.dailyStreak}
         onClaimDaily={handleClaimDailyReward}
         claimedDaily={claimedDaily}

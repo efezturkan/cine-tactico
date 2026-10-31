@@ -114,17 +114,12 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
           </span>
           <h2 className="text-lg font-black text-white mt-1">Görevler & Günlük Ödüller</h2>
 
-          {/* Duolingo Streak Barı */}
+          {/* Günlük Seri Rozeti */}
           <div className="flex items-center justify-center gap-3 mt-2">
-            <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-black">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-black">
               <Flame className="w-4 h-4 fill-rose-400 animate-pulse" />
               <span>{dailyStreak} Günlük Seri</span>
             </div>
-            {streakProtected && (
-              <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[11px] font-bold">
-                <Shield className="w-3.5 h-3.5" /> Kalkan Aktif
-              </div>
-            )}
           </div>
         </div>
 
