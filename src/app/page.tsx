@@ -641,7 +641,7 @@ function CineXoxPageContent() {
 
   if (currentView === "HOME") {
     return (
-      <main className="min-h-screen bg-[#07080b] flex flex-col items-center">
+      <main className="min-h-[100dvh] bg-[#07080b] flex flex-col items-center">
         <HomeScreen
           profile={profile}
           onStartGame={handleStartFromHome}
@@ -863,7 +863,7 @@ function CineXoxPageContent() {
 
   return (
     <div
-      className="min-h-screen text-white flex flex-col font-sans select-none antialiased transition-colors duration-500 relative"
+      className="min-h-[100dvh] text-white flex flex-col font-sans select-none antialiased transition-colors duration-500 relative"
       style={{
         backgroundColor: gameTheme?.bgColor || "#07080b",
         filter: `brightness(${Math.min(1.1, Math.max(0.65, safeGameDimness / 85))})`,

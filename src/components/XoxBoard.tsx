@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React from "react";
 import { GameBoard, CellAnswer, PlayerSymbol, Criterion, Movie } from "@/types/game";
 import { audio } from "@/utils/audio";
-import { Clapperboard, Award, Star, Calendar, Film, Shield, Sparkles } from "lucide-react";
+import { Clapperboard, Award, Calendar, Film, Shield, Sparkles, Lock, User, Compass } from "lucide-react";
 
 interface XoxBoardProps {
   board: GameBoard;
@@ -17,9 +16,8 @@ interface XoxBoardProps {
 }
 
 /**
- * Hücre içi film afişi bileşeni.
- * Görsel yüklenemediğinde veya 404 verdiğinde patlak resim yerine
- * şık ve sinematik tipografik kart tasarımı gösterir.
+ * Hücre içi film plakası bileşeni.
+ * 35mm tipografik şerit tasarımıyla sinematik kart görünümü sunar.
  */
 const CellMoviePoster: React.FC<{
   cellData: CellAnswer;
@@ -48,8 +46,8 @@ const CellMoviePoster: React.FC<{
   if (isNeutral) {
     return (
       <div className="relative w-full h-full flex flex-col items-center justify-center p-1 bg-zinc-950/95 border border-zinc-800 rounded-xl select-none">
-        <span className="text-lg">🔒</span>
-        <span className="text-[9px] sm:text-[10px] font-black text-zinc-400 uppercase tracking-widest mt-1">
+        <Lock className="w-5 h-5 text-zinc-500 mb-1" />
+        <span className="text-[9px] sm:text-[10px] font-black text-zinc-400 uppercase tracking-widest">
           Sahipsiz
         </span>
         <span className="text-[7px] text-zinc-500 font-mono">0 Puan</span>
@@ -64,7 +62,7 @@ const CellMoviePoster: React.FC<{
         <div
           className={`absolute inset-0 bg-gradient-to-b ${getGenreGradient()} flex flex-col items-center justify-center p-2 text-center`}
         >
-          <span className="text-sm mb-0.5">🎭</span>
+          <User className="w-4 h-4 text-cyan-400 mb-1" />
           <span className="text-[10px] sm:text-xs font-black text-cyan-200 line-clamp-2 uppercase leading-tight tracking-wide drop-shadow">
             {actorName}
           </span>
@@ -150,7 +148,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
     let badgeColor: string;
 
     if (crit.type === "DIRECTOR") {
-      badgeLabel = "🎬 YÖNETMEN";
+      badgeLabel = "YÖNETMEN";
       badgeColor = "text-amber-400";
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-amber-500/25 to-rose-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 font-mono font-black text-[11px] shadow-sm shrink-0 mb-1">
@@ -158,7 +156,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
         </div>
       );
     } else if (crit.type === "ACTOR") {
-      badgeLabel = "⭐ BAŞROL";
+      badgeLabel = "BAŞROL";
       badgeColor = "text-cyan-400";
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-cyan-500/25 to-blue-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 font-mono font-black text-[11px] shadow-sm shrink-0 mb-1">
@@ -166,7 +164,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
         </div>
       );
     } else if (crit.type === "AWARD") {
-      badgeLabel = "🏆 ÖDÜL";
+      badgeLabel = "ÖDÜL";
       badgeColor = "text-yellow-400";
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-400/15 border border-amber-400/40 flex items-center justify-center text-amber-400 shadow-sm shrink-0 mb-1">
@@ -174,7 +172,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
         </div>
       );
     } else if (crit.type === "DECADE") {
-      badgeLabel = "📅 DÖNEM";
+      badgeLabel = "DÖNEM";
       badgeColor = "text-teal-400";
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-teal-400/15 border border-teal-400/40 flex items-center justify-center text-teal-400 shadow-sm shrink-0 mb-1">
@@ -182,7 +180,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
         </div>
       );
     } else if (crit.type === "MOVIE_INTERSECTION") {
-      badgeLabel = "🎬 FİLM";
+      badgeLabel = "FİLM";
       badgeColor = "text-amber-400";
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 font-black text-[11px] shadow-sm shrink-0 mb-1">
@@ -190,15 +188,15 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
         </div>
       );
     } else if (crit.type === "THEME") {
-      badgeLabel = "🌀 KÜLT TEMA";
+      badgeLabel = "KÜLT TEMA";
       badgeColor = "text-purple-300";
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-500/25 border border-purple-400/50 flex items-center justify-center text-purple-300 font-mono font-black text-[12px] shadow-sm shrink-0 mb-1">
-          🎬
+          <Compass className="w-4 h-4 text-purple-400" />
         </div>
       );
     } else if (crit.type === "FRANCHISE") {
-      badgeLabel = "⚡ EVREN";
+      badgeLabel = "EVREN";
       badgeColor = "text-rose-400";
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-rose-500/15 border border-rose-500/40 flex items-center justify-center text-rose-400 shadow-sm shrink-0 mb-1">
@@ -206,7 +204,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
         </div>
       );
     } else {
-      badgeLabel = "🎭 FİLM TÜRÜ";
+      badgeLabel = "TÜR";
       badgeColor = "text-purple-400";
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-500/15 border border-purple-500/40 flex items-center justify-center text-purple-400 shadow-sm shrink-0 mb-1">
@@ -327,8 +325,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                 cellShadow = "0 0 12px rgba(139,21,27,0.3)";
               }
 
-              const isStealable = allowSteal && isOccupied && cellData?.answeredBy !== currentTurn && winner === null;
-              const isDisabled = winner !== null || (isOccupied && !isStealable);
+              const isDisabled = winner !== null || isOccupied;
 
               return (
                 <button
@@ -340,20 +337,13 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                   }}
                   className={`aspect-square relative rounded-xl overflow-hidden transition-all transform active:scale-95 group ${cellRing} ${
                     isWinning ? "scale-[1.03] z-10" : ""
-                  } ${isStealable ? "ring-2 ring-rose-500/80 animate-pulse hover:scale-[1.02]" : ""}`}
+                  }`}
                   style={{
                     background: cellBg,
                     border: `1.5px solid ${cellBorder}`,
                     boxShadow: cellShadow,
                   }}
                 >
-                  {/* Kare Çalma İpucu Rozeti */}
-                  {isStealable && (
-                    <div className="absolute top-1 left-1 z-20 bg-rose-600/90 text-white text-[8px] font-black px-1.5 py-0.5 rounded shadow-lg backdrop-blur-sm uppercase tracking-wider flex items-center gap-0.5">
-                      <Sparkles className="w-2 h-2" />
-                      <span>ÇAL</span>
-                    </div>
-                  )}
                   {/* Boş Kare Köşe İşaretleri (35mm Slayt Çerçevesi) */}
                   {!isOccupied && (
                     <>

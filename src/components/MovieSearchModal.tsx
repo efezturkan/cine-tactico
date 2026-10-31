@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Criterion, Movie, ContentPoolType, CellAnswer } from "@/types/game";
 import { MOVIES_DATABASE } from "@/data/movies";
-import { Search, X, Film, ShieldCheck } from "lucide-react";
+import { Search, X, Film, ShieldCheck, AlertTriangle } from "lucide-react";
 import { audio } from "@/utils/audio";
 
 interface MovieSearchModalProps {
@@ -78,7 +78,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-lg bg-cinema-card border border-cinema-border rounded-t-3xl sm:rounded-2xl p-4 sm:p-5 shadow-2xl flex flex-col max-h-[90vh] sm:max-h-[82vh]">
+      <div className="w-full max-w-lg bg-cinema-card border border-cinema-border rounded-t-3xl sm:rounded-2xl p-4 sm:p-5 shadow-2xl flex flex-col max-h-[90dvh] sm:max-h-[82vh]">
         {/* Kare Hedefi & Kriter Kartları */}
         <div className="flex items-start justify-between pb-3 border-b border-cinema-border">
           <div>
@@ -138,7 +138,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
         {/* Hatalı Kesişim Bildirimi (Non-blocking / İki Kriter Uyuşmazlığı) */}
         {errorMessage && (
           <div className="mb-3 p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-bold flex items-center gap-2 animate-bounce">
-            <span className="text-sm shrink-0">⚠️</span>
+            <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
             <span className="leading-tight">{errorMessage}</span>
           </div>
         )}

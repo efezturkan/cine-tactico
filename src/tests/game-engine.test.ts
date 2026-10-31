@@ -1,5 +1,6 @@
 import { MOVIES_DATABASE } from "../data/movies";
-import { PRESET_BOARDS, getRandomBoard, createRandomizedBoard, getRandomOpponent } from "../data/boards";
+import { PRESET_BOARDS, getRandomBoard, createRandomizedBoard, getRandomOpponent, getBoardForMode } from "../data/boards";
+import { MatchRecord } from "../types/profile";
 import {
   WINNING_LINES,
   evaluateBoardState,
@@ -443,6 +444,53 @@ runTest("5. Aynı tahta tekrar kullanıldığında (lazy memoization) önceki he
   const secondAccess = JSON.stringify(revBoard.validCounts);
   const thirdAccess = JSON.stringify(revBoard.validCounts);
   return firstAccess === secondAccess && secondAccess === thirdAccess && !firstAccess.includes('"0_0":0');
+});
+
+// 13. getBoardForMode ve Arena Mod Eşleşmesi Testleri
+runTest("6. getBoardForMode('REVERSE_CAST') yalnızca Ters Kadraj tahtası üretir", () => {
+  const { board } = getBoardForMode("REVERSE_CAST");
+  return board.boardMode === "REVERSE_CAST" && board.rows.every(r => r.type === "MOVIE_INTERSECTION");
+});
+
+runTest("7. getBoardForMode('CINE_CONCEPT') yalnızca Sinefil Konsept tahtası üretir", () => {
+  const { board } = getBoardForMode("CINE_CONCEPT");
+  return board.boardMode === "CINE_CONCEPT";
+});
+
+runTest("8. getBoardForMode('CLASSIC') klasik XOX düello tahtası üretir", () => {
+  const { board } = getBoardForMode("CLASSIC");
+  return !board.boardMode || board.boardMode === "CLASSIC";
+});
+
+runTest("9. MatchRecord 9 hücreyi, tahtayı ve Letterboxd verilerini eksiksiz serileştirir", () => {
+  const board = PRESET_BOARDS[0];
+  const mockCells = Array(9).fill(null).map((_, i) => ({
+    answeredBy: i % 2 === 0 ? ("X" as const) : ("O" as const),
+    movie: MOVIES_DATABASE[i],
+    rarityScore: 8,
+  }));
+  const record: MatchRecord = {
+    id: "m_test_1",
+    timestamp: Date.now(),
+    outcome: "VICTORY",
+    mode: "CLASSIC",
+    modeLabel: "Klasik Düello",
+    opponent: { name: "NolanZihni", avatarId: "avatar_director" },
+    trophyDelta: 25,
+    scoreRarity: 35,
+    totalArcadeScore: 1950,
+    board,
+    cells: mockCells,
+  };
+  const serialized = JSON.stringify(record);
+  const parsed = JSON.parse(serialized);
+  return (
+    parsed.id === "m_test_1" &&
+    parsed.cells.length === 9 &&
+    parsed.board.rows.length === 3 &&
+    parsed.board.cols.length === 3 &&
+    parsed.outcome === "VICTORY"
+  );
 });
 
 console.log("\n=================================================");

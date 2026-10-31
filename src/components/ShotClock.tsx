@@ -16,7 +16,7 @@ interface ShotClockProps {
 export const ShotClock: React.FC<ShotClockProps> = ({
   currentTurn,
   secondsRemaining,
-  totalSeconds = 12,
+  totalSeconds = 15,
   winner,
   isBotThinking = false,
   botStatusMessage,

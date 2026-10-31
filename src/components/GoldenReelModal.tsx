@@ -5,7 +5,7 @@ import { PlayerSymbol, Movie } from "@/types/game";
 import { MOVIES_DATABASE } from "@/data/movies";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
-import { Sparkles, Trophy, Film, Send, Clock, X } from "lucide-react";
+import { Sparkles, Trophy, Film, Send, Clock, X, AlertTriangle } from "lucide-react";
 
 interface GoldenReelModalProps {
   isOpen: boolean;
@@ -155,15 +155,17 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
 
         {/* Hata Bildirimi */}
         {errorMessage && (
-          <div className="text-rose-400 text-xs font-bold my-1">
-            ⚠️ {errorMessage}
+          <div className="text-rose-400 text-xs font-bold my-1 flex items-center justify-center gap-1.5">
+            <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+            <span>{errorMessage}</span>
           </div>
         )}
 
         {/* Foto-finiş Süre Doldu Mesajı */}
         {isPhotoFinish ? (
-          <div className="my-3 p-3 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-200 text-sm font-black animate-bounce">
-            ⏱️ Süre Doldu! Foto-finiş kararı hesaplanıyor...
+          <div className="my-3 p-3 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-200 text-sm font-black animate-bounce flex items-center justify-center gap-2">
+            <Clock className="w-4 h-4 animate-spin text-amber-400" />
+            <span>Süre Doldu! Foto-finiş kararı hesaplanıyor...</span>
           </div>
         ) : (
           /* Arama / Film Yazma Alanı */
