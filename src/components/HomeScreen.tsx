@@ -552,9 +552,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   <span className="text-[8px] font-mono font-black uppercase text-purple-400 tracking-wider">
                     SİNEMA ZEVK DNA&apos;SI
                   </span>
-                  <span className="text-[7.5px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold">
-                    LETTERBOXD HAZIR
-                  </span>
+                  {profile.letterboxdUsername ? (
+                    <span className="text-[7.5px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold">
+                      @{profile.letterboxdUsername} &middot; ONAYLI ✓
+                    </span>
+                  ) : (
+                    <span className="text-[7.5px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold">
+                      LETTERBOXD BAĞLA
+                    </span>
+                  )}
                 </div>
                 <span className="text-xs font-black text-white block truncate mt-0.5">
                   {profile.tasteDna?.cinemaAesthetic || "Karanlık Zihinler & Bilim Kurgu"}

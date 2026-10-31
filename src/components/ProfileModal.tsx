@@ -206,7 +206,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         </div>
 
         {activeTab === "DNA" ? (
-          <TasteDnaCard tasteDna={profile.tasteDna} username={profile.username} />
+          <TasteDnaCard
+            tasteDna={profile.tasteDna}
+            username={profile.username}
+            letterboxdUsername={profile.letterboxdUsername}
+            onUpdateLetterboxd={(handle) => onUpdateProfile({ letterboxdUsername: handle })}
+          />
         ) : activeTab === "AMBIENCE" ? (
           /* ── SİNEMA SALONU AMBİYANS & IŞIK AYARLARI ─── */
           <div className="flex flex-col gap-3.5 animate-in fade-in duration-200">
