@@ -98,34 +98,37 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       ? Math.round((profile.wins / profile.totalMatches) * 100)
       : 0;
 
-  const ambience = profile.ambience || DEFAULT_AMBIENCE;
-  const activeTheme = AMBIENCE_THEMES[ambience.theme] || AMBIENCE_THEMES.velvet_red;
+  const ambience = { ...DEFAULT_AMBIENCE, ...(profile?.ambience || {}) };
+  const activeTheme = (ambience.theme && AMBIENCE_THEMES[ambience.theme]) || AMBIENCE_THEMES.velvet_red;
 
   // Köşe ve vurgu rengi — Temaya göre otomatik veya kullanıcının özel seçtiği renk
   const effectiveCornerColor =
-    ambience.cornerAccent && ambience.cornerAccent !== "AUTO"
+    ambience.cornerAccent && ambience.cornerAccent !== "AUTO" && CORNER_ACCENT_COLORS[ambience.cornerAccent]
       ? CORNER_ACCENT_COLORS[ambience.cornerAccent].color
-      : activeTheme.secondaryAccent || "#f59e0b";
+      : activeTheme?.secondaryAccent || "#f59e0b";
 
   const effectiveHudBorder =
-    ambience.cornerAccent && ambience.cornerAccent !== "AUTO"
+    ambience.cornerAccent && ambience.cornerAccent !== "AUTO" && CORNER_ACCENT_COLORS[ambience.cornerAccent]
       ? CORNER_ACCENT_COLORS[ambience.cornerAccent].border
-      : activeTheme.hudBorder || "rgba(217,119,6,0.3)";
+      : activeTheme?.hudBorder || "rgba(217,119,6,0.3)";
+
+  const safeDimness = typeof ambience.dimness === "number" && !isNaN(ambience.dimness) ? ambience.dimness : 85;
+  const safeGlow = typeof ambience.glowIntensity === "number" && !isNaN(ambience.glowIntensity) ? ambience.glowIntensity : 65;
 
   return (
     <div
       className="w-full max-w-md mx-auto min-h-screen text-white flex flex-col justify-between relative select-none antialiased overflow-x-hidden transition-colors duration-500 sm:my-6 sm:rounded-[36px] sm:border sm:border-zinc-800/80 sm:shadow-[0_0_80px_rgba(0,0,0,0.85)]"
       style={{
-        backgroundColor: activeTheme.bgColor,
-        filter: `brightness(${Math.min(1.1, Math.max(0.65, ambience.dimness / 85))})`,
+        backgroundColor: activeTheme?.bgColor || "#07080b",
+        filter: `brightness(${Math.min(1.1, Math.max(0.65, safeDimness / 85))})`,
       }}
     >
       {/* ── Top Dynamic Projector Beam (Kişiselleştirilebilir Projeksiyon Hüzmesi) ─── */}
       <div
         className="absolute top-0 left-1/6 right-1/6 h-48 pointer-events-none z-0 blur-3xl transition-all duration-700"
         style={{
-          background: `radial-gradient(ellipse at top, ${activeTheme.glowRgba}, transparent 75%)`,
-          opacity: ambience.glowIntensity / 100,
+          background: `radial-gradient(ellipse at top, ${activeTheme?.glowRgba || "rgba(139, 21, 27, 0.45)"}, transparent 75%)`,
+          opacity: safeGlow / 100,
         }}
       />
 

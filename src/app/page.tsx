@@ -25,11 +25,13 @@ import NotificationPanel, { NotifToast, useNotifications } from "@/components/No
 import { useGameSession } from "@/hooks/useXoxGame";
 import { PRESET_BOARDS, getRandomBoard, createRandomizedBoard, getRandomOpponent, BotOpponentProfile, BOT_OPPONENTS, getBoardForMode } from "@/data/boards";
 import { GameMode, Movie, BotDifficulty, CustomRoomSettings, GameBoard, ContentPoolType } from "@/types/game";
-import { UserProfile, PowerupInventory, DEFAULT_AMBIENCE, AMBIENCE_THEMES, CinemaAmbience } from "@/types/profile";
+import { UserProfile, PowerupInventory, DEFAULT_AMBIENCE, AMBIENCE_THEMES, CinemaAmbience, AmbienceTheme } from "@/types/profile";
 import { audio } from "@/utils/audio";
 import { Users, Bot, Swords, Calendar, Shuffle, Zap, Flame, Share2, ShieldAlert, ArrowLeft, Lightbulb, Flag, Lock } from "lucide-react";
 
-export default function CineXoxPage() {
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+
+function CineXoxPageContent() {
   const [currentView, setCurrentView] = useState<"HOME" | "GAME_SELECT" | "GAME">("HOME");
   const [boardIndex, setBoardIndex] = useState<number>(() => Math.floor(Math.random() * PRESET_BOARDS.length));
   const [contentPool, setContentPool] = useState<ContentPoolType>("FILM");
@@ -108,7 +110,16 @@ export default function CineXoxPage() {
       const saved = localStorage.getItem("cinexox_ambience") || localStorage.getItem("cinetactico_ambience");
       if (saved) {
         const parsed = JSON.parse(saved);
-        setProfile(prev => ({ ...prev, ambience: parsed }));
+        if (parsed && typeof parsed === "object") {
+          setProfile(prev => ({
+            ...prev,
+            ambience: {
+              ...DEFAULT_AMBIENCE,
+              ...parsed,
+              theme: parsed.theme && parsed.theme in AMBIENCE_THEMES ? (parsed.theme as AmbienceTheme) : DEFAULT_AMBIENCE.theme,
+            },
+          }));
+        }
       }
     } catch {
       // ignore
@@ -228,14 +239,15 @@ export default function CineXoxPage() {
 
   const handleMovieChosen = (movie: Movie) => {
     if (activeCellIndex === null) return;
-    const result = submitMove(activeCellIndex, movie);
+    const targetIdx = activeCellIndex;
+    setActiveCellIndex(null); // Modalı kapat (Hatalı tahmin veya doğru hamlede sıra değiştiği için açık kalmaz)
+    const result = submitMove(targetIdx, movie);
     if (result.success) {
       setMovieSearchError(null);
-      setActiveCellIndex(null);
     } else {
       audio.playError();
-      const failMsg = result.message || "Bu film seçilen iki kriteri aynı anda sağlamıyor! Tekrar dene.";
-      setMovieSearchError(failMsg);
+      const failMsg = result.message || "Hatalı tahmin! Sıra rakibe geçti.";
+      setMovieSearchError(null);
       setHintMessage(`❌ ${failMsg}`);
       setTimeout(() => setHintMessage(null), 3500);
     }
@@ -722,23 +734,25 @@ export default function CineXoxPage() {
     );
   }
 
-  const gameAmbience = profile.ambience || DEFAULT_AMBIENCE;
-  const gameTheme = AMBIENCE_THEMES[gameAmbience.theme] || AMBIENCE_THEMES.velvet_red;
+  const gameAmbience = { ...DEFAULT_AMBIENCE, ...(profile?.ambience || {}) };
+  const gameTheme = (gameAmbience.theme && AMBIENCE_THEMES[gameAmbience.theme]) || AMBIENCE_THEMES.velvet_red;
+  const safeGameDimness = typeof gameAmbience.dimness === "number" && !isNaN(gameAmbience.dimness) ? gameAmbience.dimness : 85;
+  const safeGameGlow = typeof gameAmbience.glowIntensity === "number" && !isNaN(gameAmbience.glowIntensity) ? gameAmbience.glowIntensity : 65;
 
   return (
     <div
       className="min-h-screen text-white flex flex-col font-sans select-none antialiased transition-colors duration-500 relative"
       style={{
-        backgroundColor: gameTheme.bgColor,
-        filter: `brightness(${Math.min(1.1, Math.max(0.65, gameAmbience.dimness / 85))})`,
+        backgroundColor: gameTheme?.bgColor || "#07080b",
+        filter: `brightness(${Math.min(1.1, Math.max(0.65, safeGameDimness / 85))})`,
       }}
     >
       {/* Top Dynamic Projector Beam in Game */}
       <div
         className="absolute top-0 left-1/4 right-1/4 h-48 pointer-events-none z-0 blur-3xl transition-all duration-700"
         style={{
-          background: `radial-gradient(ellipse at top, ${gameTheme.glowRgba}, transparent 75%)`,
-          opacity: (gameAmbience.glowIntensity / 100),
+          background: `radial-gradient(ellipse at top, ${gameTheme?.glowRgba || "rgba(139, 21, 27, 0.45)"}, transparent 75%)`,
+          opacity: safeGameGlow / 100,
         }}
       />
       {/* Top Header */}
@@ -1164,5 +1178,13 @@ export default function CineXoxPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function CineXoxPage() {
+  return (
+    <ErrorBoundary>
+      <CineXoxPageContent />
+    </ErrorBoundary>
   );
 }

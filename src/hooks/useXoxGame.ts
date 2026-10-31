@@ -125,9 +125,13 @@ export function useGameSession(
       }
 
       if (usedMovieIds.includes(movie.id)) {
+        audio.playError();
+        haptic.error();
+        setComboStreak(0);
+        switchTurn(); // Faul: Sıra rakibe geçer!
         return {
           success: false,
-          message: "Bu film maçta daha önce kullanıldı. Başka bir yapım seçmelisin!",
+          message: "Bu film maçta daha önce kullanıldı! Hatalı hamle, sıra rakibe geçti.",
         };
       }
 
@@ -138,9 +142,10 @@ export function useGameSession(
         audio.playError();
         haptic.error();
         setComboStreak(0);
+        switchTurn(); // Faul: Sıra rakibe geçer!
         return {
           success: false,
-          message: "Film seçilen kriterlere uymuyor! Kriterleri tekrar kontrol et.",
+          message: "Hatalı Tahmin! Film seçilen kriterlere uymuyor, sıra rakibe geçti.",
         };
       }
 
@@ -312,6 +317,7 @@ export function useGameSession(
     isBotThinking,
     botStatusMessage,
     submitMove,
+    switchTurn,
     resetGame,
     setBoard,
     getCellSolutions: (cellIndex: number) => {
