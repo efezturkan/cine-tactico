@@ -7,7 +7,7 @@
 **Platform Hedefi:** Web, iOS, Android (Capacitor Hibrit Native)  
 **Oyun Türü:** Sinema Kültürü + Taktiksel Rekabet (XOX) + Sosyal Düello  
 **Temel Yaklaşım:** Single Player (Bot) ve Multiplayer (Canlı/Lobi) Ortak Oyun Motoru  
-**Tarih:** 31 Ekim 2026  
+**Tarih:** 31 Ekim 2026 (FAZ 0 Mimari ve Kural Konsolidasyonu Eklenmiştir)  
 
 ---
 
@@ -65,19 +65,21 @@ CineXOX, Letterboxd gibi sinema günlüğü ve film keşif ürünlerinin yerine 
 3x3 toplam 9 hücre. Satırlar ve sütunlar birbirinden bağımsız kriterler içerir (Yönetmen, Oyuncu, Tür, Dönem, Oscar, vb.).  
 *Örnek:* Christopher Nolan × Leonardo DiCaprio = *Inception*.
 
-### Hamle Sistemi
+### Hamle Sistemi & Hak Modeli
 - Oyuncular sırayla oynar.
 - Her hamle için 15 saniye shot-clock bulunur.
 - Oyuncu boş bir hücre seçer. Manuel cevap giriş alanı açılır.
 - Oyuncu film adını yazar (otomatik tamamlama/öneri destekli).
 - Sistem cevabı doğrular.
-- **Doğru cevap:** Hücreyi oyuncuya kazandırır (X veya O damgası ve Rarity puanı yanar).
-- **Yanlış cevap:** Hücre boş kalır ve sıra rakibe geçer. Yanlış cevap verilen hücre rakibe devredilmez.
-- **Sahipsiz Hücre Emniyeti (Deadlock Prevention):** Her hücre için her iki oyuncunun da sırayla 1'er kez cevap deneme hakkı vardır. İki oyuncu da aynı hücrede yanlış cevap verirse, o hücre **SONUÇLANDIRILMIŞ VE SAHİPSİZ (KİLİTLİ)** olarak işaretlenir. Böylece sonsuz döngü engellenir.
+- **Doğru cevap:** Hücreyi oyuncuya kazandırır (X veya O damgası ve Rarity puanı mühürlenir). Hücre bir kez kazanıldıktan sonra asla çalınamaz veya değiştirilemez (**Kare Çalma / Cell Stealing iptal edilmiştir**).
+- **Yanlış cevap:** Hücre boş kalır ve sıra rakibe geçer. Yanlış cevap verilen hücre rakibe devredilmez; ancak yanlış yapan oyuncunun o hücredeki **deneme hakkı tükenir** (`attempts[player] = true`).
+- **Zaman Aşımı (Shot-Clock Timeout):** 15 saniye dolduğunda geçerli hamle yapılmamışsa, bu durum 1 yanlış deneme hakkı olarak sayılır ve sıra rakibe geçer.
+- **Sahipsiz Hücre Emniyeti (Deadlock Prevention):** Her hücre için her iki oyuncunun da sırayla 1'er kez cevap deneme hakkı vardır. İki oyuncu da aynı hücrede yanlış cevap verirse veya süresini tüketirse, o hücre **SONUÇLANDIRILMIŞ VE SAHİPSİZ / KİLİTLİ (`LOCKED_NEUTRAL`)** olarak işaretlenir. Hücre karartılır, asma kilit simgesi alır ve o maç için kapatılır. Böylece sonsuz döngü engellenir.
+- **Film Tekrar Kullanım Yasağı:** Bir maç boyunca herhangi bir hücrede kullanılmış bir film, başka bir hücrede tekrar kullanılamaz; girilirse hatalı hamle sayılır.
 
 ### Kazanma Koşulu
 - 8 kazanma hattından (3 yatay, 3 dikey, 2 çapraz) birini ilk tamamlayan oyuncu maçı ANINDA kazanır.
-- 3'lü hat oluştuğunda oyun biter; hücre puanları ve rarity skorları bu galibiyeti geçersiz kılamaz.
+- 3'lü hat oluştuğunda oyun biter; hücre puanları ve rarity skorları bu galibiyeti **ASLA GEÇERSİZ KILAMAZ** (Spec v3 Madde 80 & Madde 199).
 
 ### Tahta Sonuçlandığında (Altın Makara)
 9 hücrenin tamamı kazanılmış veya sahipsiz kalmışsa ve 3'lü hat oluşmamışsa **Altın Makara (Sudden Death)** devreye girer.
@@ -105,6 +107,10 @@ Nadirlik Bonusu:
 - *The Prestige*: 15 puan (Rare)
 - *Following*: 22 puan (Legendary)
 
+### Hesaplama İlkesi ve Güvenlik (Anti-Inflation)
+- **Film Başına Sabit Rarity Yasaktır:** Bir film bir kesişimde popüler iken başka bir kesişimde çok nadirdir. Rarity, ilgili hücrenin (satır × sütun) geçerli çözüm havuzu içindeki bilinirlik sırasına göre hesaplanır.
+- **Yetersiz Veri Havuzu Koruması:** Eğer bir hücrenin toplam geçerli film sayısı $N < 3$ ise veya veri havuzu yetersizse, sisteme rastgele **Legendary üretme yasağı** getirilmiştir. Bu tür kısıtlı hücrelerde tavan seviye **Rare (+5)** ile sınırlandırılır.
+
 ### Maç Sonucuna Etkisi
 1. Kazanılan her hücrenin toplam puanını yükseltir.
 2. **3'lü hat çıkmayan maçlarda toplam puan kazananı belirler.**  
@@ -119,11 +125,13 @@ Oyuncuya iki film gösterilir. Görevi, **bu iki filmde ortak olarak yer alan bi
 *Örnek:* *Inception* × *The Dark Knight Rises* $\rightarrow$ Ortak: *Tom Hardy*, *Cillian Murphy*, *Marion Cotillard*, *Michael Caine*.
 
 ### Cevap Sistemi (Manuel Hatırlama İlkesi)
-- **Hazır oyuncu çipleri / butonları BULUNMAZ.**
-- Çoktan seçmeli sistem KESİNLİKLE kullanılmaz.
+- **Hazır oyuncu çipleri / butonları BULUNMAZ.** Çoktan seçmeli sistem KESİNLİKLE kullanılmaz.
 - Oyuncu klavye ile aktörün adını **kendisi yazar**.
-- Yazım toleransı ve alternatif isim doğrulaması (fuzzy matching) uygulanır.
-- Klavye açıldığında tahta ve süre göstergesi görünür kalır.
+- **Doğrulama Hiyerarşisi:**
+  1. Önce normalize edilmiş tam isim eşleşmesi (`normalize(input) === normalize(target)`).
+  2. Eşleşmezse tescilli takma ad (alias) kontrolü (`"Leo DiCaprio"` $\rightarrow$ `"Leonardo DiCaprio"`).
+  3. Son çare olarak 6+ karakterli isimlerde kontrollü 1 harf yazım hatası toleransı (fuzzy-matching). Belirsiz veya çoklu eşleşmeler otomatik kabul edilmez.
+- **Klavye Açıldığında Ekran Koruması:** Klavye açıldığında tahta ve shot-clock göstergesi görünür kalır (modern `100dvh` ve dinamik ölçekleme ile).
 
 ### Hamle ve Kazanma Koşulları
 - Sırayla 15 saniye shot-clock.
@@ -165,12 +173,34 @@ Klasik Düello ile tamamen aynı XOX kuralları geçerlidir: 15 saniye, sıralı
 
 Klasik Düello ve Sinefil Konsept modlarında 9 hücre sonuçlandığı halde 3'lü hat çıkmamışsa devreye girer.
 
-### Sinematik Akış
-1. Tahta kararır.
-2. 35mm perde kapanış animasyonu oynar, haptic çift titreşim verir.
-3. Altın film makarası çılgınca döner ve anons patlar: **"🚨 KİLİTLENME! ALTIN MAKARA DEVREDE!"**
-4. Ortada tek bir ortak final sorusu açılır (Örn: *Quentin Tarantino × 1990'lar*).
-5. İki oyuncunun 12 saniyelik buzzer-beater süresi başlar.
+### Sinematik Akış ve Durum Makinesi
+```
+                  [9 Hücre Sonuçlandı]
+                            │
+              3'lü Hat Tamamlandı mı?
+                 ├─── EVET ───> [Normal Galibiyet İlanı]
+                 │
+                HAYIR
+                 │
+                 ▼
+     [🚨 KİLİTLENME! ALTIN MAKARA DEVREDE!]
+  (Tahta kararır, 35mm perde kapanış animasyonu, çift haptic)
+                 │
+                 ▼
+  [Ortak Final Sorusu Açılır (Tek Kesişim)]
+       (12 Saniyelik Buzzer-Beater)
+                 │
+       ┌─────────┴─────────┐
+       ▼                   ▼
+[İlk Geçerli Cevap]  [12s Süre Doldu / İki Taraf da Bilemedi]
+       │                   │
+[ANINDA GALİBİYET]         ▼
+                     [🏁 FOTO-FİNİŞ]
+              (Maç boyu kazanılan hücrelerin
+               toplam Rarity puanları kıyaslanır)
+                           │
+              Yüksek Rarity Puanı Olan Kazanır!
+```
 
 ### Sonuç ve Foto-Finiş Kuralı
 - İlk geçerli doğru cevabı gönderen oyuncu maçı anında kazanır.
@@ -180,32 +210,65 @@ Klasik Düello ve Sinefil Konsept modlarında 9 hücre sonuçlandığı halde 3'
 
 # 4. SINGLE PLAYER & MULTIPLAYER ORTAK MİMARİSİ
 
-- Tek oyun motoru (`rules.ts`, `validator.ts`) her iki deneyimi de yönetir.
-- Bot Seviyeleri:
+- Tek oyun motoru (`rules.ts`, `validator.ts`) her iki deneyimi de yönetir. Motor UI'dan ve ağdan tamamen izole deterministik saf fonksiyonlardan oluşur.
+- **Bot Seviyeleri:**
   - **Easy:** Yaygın popüler filmleri bilir, taktiksel hatalar yapar.
   - **Medium:** Kendi hattını kurar, rakibin 2'li hattını engeller.
-  - **Cinephile:** Geniş kült film havuzu, daha nadir cevaplar.
+  - **Cinephile (Hard):** Geniş kült film havuzu, daha nadir cevaplar.
 - Bot maçları gerçek oyuncu istatistiklerinden ayrı tutulur.
+- **Multiplayer Geçiş Sınırları:** 
+  - İlk aşamada Single Player (Bot) ve Pass & Play (Aynı Cihazda İki Kişi) modları %100 offline olarak tamamlanacaktır.
+  - Gerçek bir backend seçilip bağlanmadan sahte "çevrimiçi oda açıldı" illüzyonlarına izin verilmez.
+  - Çok oyunculu modlar sunucu tarafı otorite (Server-Authoritative State, senkron shot-clock deadline, 30s reconnect grace period) ile Faz 5'te hayata geçirilecektir.
 
 ---
 
-# 5. DEĞİŞTİRİLEMEZ 15 ÜRÜN KARARI
+# 5. 35MM SİNEMATİK TASARIM SİSTEMİ (GÖRSEL KİMLİK)
+
+İlk sürümde üçüncü taraf telifli poster ve görseller kullanılmayacaktır. Oyun özgün, minimalist bir 35mm analog sinema estetiği taşır.
+
+### 5.1 Renk Paleti (35mm Velvet Screening Room)
+- `cinema-dark` (`#07080B`): Derin film bazı siyahı
+- `cinema-card` (`#0E1018`): Film karesi kart zemini
+- `cinema-border` (`#1A1C24`): Hassas çerçeve kenarlığı
+- `cinema-red` (`#8B151B`): Kadife perde bordosu (Primary Accent)
+- `cinema-amber` (`#D97706`): Kodak film kehribarı (Vurgu)
+- `cinema-gold` (`#F59E0B`): Ödül ve Rarity altını
+- `cinema-text` (`#F8FAFC`): Koyu zemin üzerinde fildişi metin okunurluğu
+
+### 5.2 Tipografik Hücre Tasarımı (Criterion / A24 Plaka Estetiği)
+- Hücre kenarlarında 35mm film perforasyon delikleri (sprocket holes).
+- Poster yerine: Kalın başlık, vizyon yılı, yönetmen künyesi ve türe özel loş analog gren dokusu.
+- Doğru bilinen hücrede: Kabartmalı **[ X ]** veya **[ O ]** mühür damgası ve yaldızlı Rarity rozeti (`[RARE +5]`).
+- Kilitli hücrede: Mat kurşuni zemin ve asma kilit simgesi (`Lock`).
+
+### 5.3 Vektörel İkon Standardı (Lucide-React)
+İşletim sistemi emojileri (🍿, 🎬, 🏆 vb.) kaldırılmış; yerlerine tek tip `lucide-react` SVG ikonları (`Clapperboard`, `Ticket`, `Trophy`, `Award`, `Sparkles`, `Timer`, `Search`, `Lock`, `Swords`, `Zap`) tanımlanmıştır.
+
+### 5.4 Erişilebilirlik ve Ses
+- WCAG 2.1 AA kontrast oranı (`4.5:1`).
+- `prefers-reduced-motion` desteği (titreme ve makara dönüş animasyonlarını kapatma).
+- Web Audio API ses susturma durumunda osilatörlerin tamamen askıya alınması (sıfır CPU/pil tüketimi).
+
+---
+
+# 6. DEĞİŞTİRİLEMEZ 15 ÜRÜN KARARI
 
 1. Üç ana oyun modu korunur (Klasik, Ters Kadraj, Konsept).
 2. Klasik Düello ve Sinefil Konsept 3'lü hat mantığını kullanır.
-3. Yanlış cevap verilen hücre boş kalır (rakibe devredilmez).
-4. İki oyuncu da bilemezse hücre sahipsiz kilitlenir (deadlock engellenir).
-5. Rarity hücre puanını ve hatsız maç sonucunu doğrudan belirler.
+3. Yanlış cevap verilen hücre boş kalır (rakibe devredilmez, kare çalınamaz).
+4. İki oyuncu da bilemezse hücre sahipsiz kilitlenir (`LOCKED_NEUTRAL`, deadlock engellenir).
+5. Rarity hücre puanını ve hatsız maç sonucunu doğrudan belirler; film başına sabit olamaz.
 6. 3'lü hat, rarity/puan üstünlüğünden daima önce gelir.
-7. Ters Kadraj'da hazır oyuncu çipleri bulunmaz; oyuncu yazar.
-8. Ters Kadraj manuel cevap girişine dayanır (15 saniye).
+7. Ters Kadraj'da hazır oyuncu çipleri bulunmaz; oyuncu klavyeyle yazar.
+8. Ters Kadraj manuel cevap girişine dayanır (15 saniye, kontrollü normalizasyon).
 9. Ters Kadraj'da Altın Makara bulunmaz.
-10. Altın Makara'da iki oyuncu da bilemezse Rarity puanı kazananı belirler.
-11. Single Player ve Multiplayer ortak oyun motoruyla paralel geliştirilir.
+10. Altın Makara'da iki oyuncu da bilemezse Rarity puanı kazananı belirler (Foto-Finiş).
+11. Single Player ve Multiplayer ortak oyun motoruyla geliştirilir.
 12. İki deneyim tek bir doğruluk kaynağı kullanır.
 13. Bot maçları gerçek oyuncu maçlarından ayrı istatistiklendirilir.
 14. Kozmetik mağazası asla pay-to-win olamaz.
-15. Rekabetçi maç sonuçları sunucu otoritesiyle doğrulanır.
+15. Rekabetçi maç sonuçları sunucu otoritesiyle doğrulanır; sahte multiplayer illüzyonu kurulamaz.
 
 ---
-**Belge Durumu:** Onaylandı & Kilitlendi.
+**Belge Durumu:** v3.0 Onaylandı & Kilitlendi.

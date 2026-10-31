@@ -134,14 +134,15 @@ export function normalizeName(name: string): string {
 
 export function validateActorIntersection(
   actorInput: string,
-  movieA: Movie,
-  movieB: Movie
+  movieA: Movie | string,
+  movieB: Movie | string,
+  database: Movie[] = MOVIES_DATABASE
 ): { isValid: boolean; matchedActor?: string } {
   const normalizedInput = normalizeName(actorInput);
   if (!normalizedInput) return { isValid: false };
 
   // movieA ve movieB ortak oyuncularını bul
-  const shared = getSharedActors(movieA, movieB);
+  const shared = getSharedActors(movieA, movieB, database);
 
   const matched = shared.find(actor => {
     const norm = normalizeName(actor);

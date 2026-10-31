@@ -363,6 +363,86 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </div>
 
+        {/* ── 2.5. 3 ANA OYUN MODU VİTRİNİ (KLASİK / TERS KADRAJ / SİNEFİL KONSEPT) ─── */}
+        <div className="w-full space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-[10px] font-black tracking-widest uppercase text-zinc-400 font-mono">
+              ARENA MODLARI (3 SEÇENEK)
+            </span>
+            <span className="text-[9px] font-bold text-amber-400 font-mono">
+              0% BERABERLİK · FOTO-FİNİŞ
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {/* 1. Klasik Düello */}
+            <button
+              onClick={() => {
+                audio.playSelect();
+                onStartGame("CLASSIC", "NORMAL", "FILM");
+              }}
+              className="p-3 rounded-2xl text-left border transition-all active:scale-[0.98] group relative overflow-hidden bg-gradient-to-br from-amber-950/30 via-zinc-950 to-black border-amber-500/40 hover:border-amber-400"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-base">🎬</span>
+                <span className="text-[8px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                  15S BLITZ
+                </span>
+              </div>
+              <div className="text-xs font-black text-white group-hover:text-amber-300 transition-colors">
+                Klasik Düello
+              </div>
+              <div className="text-[9.5px] text-zinc-400 font-medium leading-tight mt-0.5">
+                Yönetmen/Tür × Oyuncu · 3&apos;lü Hat XOX Zaferi
+              </div>
+            </button>
+
+            {/* 2. Ters Kadraj */}
+            <button
+              onClick={() => {
+                audio.playSelect();
+                onStartGame("REVERSE_CAST", "NORMAL", "FILM");
+              }}
+              className="p-3 rounded-2xl text-left border transition-all active:scale-[0.98] group relative overflow-hidden bg-gradient-to-br from-cyan-950/30 via-zinc-950 to-black border-cyan-500/40 hover:border-cyan-400"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-base">🎭</span>
+                <span className="text-[8px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">
+                  ORTAK OYUNCU
+                </span>
+              </div>
+              <div className="text-xs font-black text-white group-hover:text-cyan-300 transition-colors">
+                Ters Kadraj
+              </div>
+              <div className="text-[9.5px] text-zinc-400 font-medium leading-tight mt-0.5">
+                Film A × Film B · Ortak Aktör Yaz · En Çok Kapatan
+              </div>
+            </button>
+
+            {/* 3. Sinefil Konsept */}
+            <button
+              onClick={() => {
+                audio.playSelect();
+                onStartGame("CINE_CONCEPT", "NORMAL", "FILM");
+              }}
+              className="p-3 rounded-2xl text-left border transition-all active:scale-[0.98] group relative overflow-hidden bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black border-purple-500/40 hover:border-purple-400"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-base">🌀</span>
+                <span className="text-[8px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-purple-400/20 text-purple-300 border border-purple-400/30">
+                  14 KÜLT TEMA
+                </span>
+              </div>
+              <div className="text-xs font-black text-white group-hover:text-purple-300 transition-colors">
+                Sinefil Konsept
+              </div>
+              <div className="text-[9.5px] text-zinc-400 font-medium leading-tight mt-0.5">
+                Plot Twist, Heist, Neo-Noir, Distopya &amp; Auteur
+              </div>
+            </button>
+          </div>
+        </div>
+
         {/* ── 3. İKİNCİL OYUN MODLARI: YAN YANA 2 DENGELİ KART (SIFIR TRUNCATE) ─── */}
         <div className="grid grid-cols-2 gap-2.5">
           {/* Kart 1: Günün Kadresi */}

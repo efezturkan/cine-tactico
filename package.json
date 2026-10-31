@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "tsx src/tests/game-engine.test.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",
@@ -14,6 +15,7 @@
     "@capacitor/core": "^8.6.0",
     "@capacitor/haptics": "^8.0.2",
     "@capacitor/ios": "^8.6.0",
+    "@supabase/supabase-js": "^2.118.0",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "framer-motion": "^11.11.9",

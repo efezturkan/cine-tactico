@@ -12,7 +12,7 @@ interface MatchmakingQueueModalProps {
   onMatchFound: () => void;
   onPlayWithAiImmediately: () => void;
   userProfile: UserProfile;
-  selectedMode: "CLASSIC" | "SINEFIL";
+  selectedMode: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL";
   contentPool: ContentPoolType;
   difficulty: "EASY" | "NORMAL" | "HARD";
 }

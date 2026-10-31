@@ -25,16 +25,17 @@ interface XoxBoardProps {
 const SHOW_EXTERNAL_POSTERS = false;
 
 const CellMoviePoster: React.FC<{
-  movie: Movie;
-  answeredBy: PlayerSymbol | "NEUTRAL";
+  cellData: CellAnswer;
   isWinning?: boolean;
-}> = ({ movie, answeredBy }) => {
+}> = ({ cellData }) => {
   const [imgFailed, setImgFailed] = useState(false);
-  const isNeutral = answeredBy === "NEUTRAL";
+  const { movie, answeredBy, actorName, rarityScore, isLockedNeutral } = cellData;
+  const isNeutral = answeredBy === "NEUTRAL" || isLockedNeutral;
   const isPlayerX = answeredBy === "X";
 
   // Türe göre dinamik atmosfer gradyanı
   const getGenreGradient = () => {
+    if (actorName) return "from-cyan-950 via-zinc-950 to-black";
     const g = (movie.genres?.[0] || "").toLowerCase();
     if (g.includes("sci-fi") || g.includes("bilim")) {
       return "from-cyan-950 via-slate-900 to-black";
@@ -48,10 +49,34 @@ const CellMoviePoster: React.FC<{
     return "from-indigo-950 via-neutral-950 to-black";
   };
 
+  if (isNeutral) {
+    return (
+      <div className="relative w-full h-full flex flex-col items-center justify-center p-1 bg-zinc-950/95 border border-zinc-800 rounded-xl select-none">
+        <span className="text-lg">🔒</span>
+        <span className="text-[9px] sm:text-[10px] font-black text-zinc-400 uppercase tracking-widest mt-1">
+          Sahipsiz
+        </span>
+        <span className="text-[7px] text-zinc-500 font-mono">0 Puan</span>
+      </div>
+    );
+  }
+
   return (
     <div className="relative w-full h-full flex flex-col justify-between p-1.5 overflow-hidden rounded-xl select-none">
-      {/* Afiş veya Sinematik Tipografik Kart */}
-      {SHOW_EXTERNAL_POSTERS && movie.posterUrl && !imgFailed ? (
+      {/* Ters Kadraj: Aktör Gösterimi */}
+      {actorName ? (
+        <div
+          className={`absolute inset-0 bg-gradient-to-b ${getGenreGradient()} flex flex-col items-center justify-center p-2 text-center`}
+        >
+          <span className="text-sm mb-0.5">🎭</span>
+          <span className="text-[10px] sm:text-xs font-black text-cyan-200 line-clamp-2 uppercase leading-tight tracking-wide drop-shadow">
+            {actorName}
+          </span>
+          <span className="text-[7.5px] text-cyan-400 font-mono mt-0.5 font-bold">
+            ORTAK AKTÖR
+          </span>
+        </div>
+      ) : SHOW_EXTERNAL_POSTERS && movie.posterUrl && !imgFailed ? (
         <Image
           src={movie.posterUrl}
           alt={movie.title}
@@ -70,7 +95,7 @@ const CellMoviePoster: React.FC<{
             {movie.title}
           </span>
           <span className="text-[8px] text-amber-300 font-mono mt-1 font-bold">
-            {movie.year}
+            {movie.year || ""}
           </span>
         </div>
       )}
@@ -78,30 +103,39 @@ const CellMoviePoster: React.FC<{
       {/* Karartma Gradyanı */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-black/30 pointer-events-none" />
 
-      {/* Üst Bar: Oyuncu Rozeti */}
-      <div className="relative z-10 flex items-center justify-end w-full">
+      {/* Üst Bar: Rarity Rozeti ve Oyuncu Rozeti */}
+      <div className="relative z-10 flex items-center justify-between w-full">
+        {rarityScore ? (
+          <div className="text-[7.5px] font-black px-1 py-0.5 rounded bg-black/80 border border-amber-500/50 text-amber-300 font-mono shadow">
+            +{rarityScore}
+          </div>
+        ) : (
+          <div />
+        )}
         <div
           className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-black text-[10px] shadow-lg backdrop-blur-sm"
           style={{
-            background: isNeutral ? "#3f3f46" : isPlayerX ? "#06b6d4" : "#8b151b",
+            background: isPlayerX ? "#06b6d4" : "#8b151b",
             color: "white",
-            border: `1.5px solid ${isNeutral ? "#71717a" : isPlayerX ? "rgba(6,182,212,0.7)" : "rgba(139,21,27,0.7)"}`,
+            border: `1.5px solid ${isPlayerX ? "rgba(6,182,212,0.7)" : "rgba(139,21,27,0.7)"}`,
           }}
         >
-          {isNeutral ? "🔒" : answeredBy}
+          {answeredBy}
         </div>
       </div>
 
-      {/* Alt Bar: Film Adı ve Yönetmen Bilgisi */}
+      {/* Alt Bar: Film Adı veya Aktör Adı */}
       <div className="relative z-10 text-left">
         <div className="font-black text-[9px] sm:text-[11px] text-white truncate drop-shadow-md leading-tight">
-          {movie.title}
+          {actorName || movie.title}
         </div>
-        <div className="text-[7.5px] sm:text-[8px] font-bold text-zinc-300 truncate drop-shadow-sm flex items-center gap-1">
-          <span>{movie.year}</span>
-          <span>·</span>
-          <span className="text-amber-400/90">{movie.director.split(" ").pop()}</span>
-        </div>
+        {!actorName && movie.year > 0 && (
+          <div className="text-[7.5px] sm:text-[8px] font-bold text-zinc-300 truncate drop-shadow-sm flex items-center gap-1">
+            <span>{movie.year}</span>
+            <span>·</span>
+            <span className="text-amber-400/90">{movie.director.split(" ").pop()}</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -167,6 +201,14 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-teal-400/15 border border-teal-400/40 flex items-center justify-center text-teal-400 shadow-sm shrink-0 mb-1">
           <Calendar className="w-4 h-4" />
+        </div>
+      );
+    } else if (crit.type === "MOVIE_INTERSECTION") {
+      badgeLabel = "🎬 FİLM";
+      badgeColor = "text-amber-400";
+      iconElement = (
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 font-black text-[11px] shadow-sm shrink-0 mb-1">
+          <Film className="w-4 h-4 text-amber-400" />
         </div>
       );
     } else if (crit.type === "THEME") {
@@ -364,8 +406,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                   {/* Dolu Kare */}
                   {isOccupied && (
                     <CellMoviePoster
-                      movie={cellData.movie}
-                      answeredBy={cellData.answeredBy}
+                      cellData={cellData}
                       isWinning={isWinning}
                     />
                   )}

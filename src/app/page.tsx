@@ -22,6 +22,8 @@ import { MatchmakingQueueModal } from "@/components/MatchmakingQueueModal";
 import { LeaderboardModal } from "@/components/LeaderboardModal";
 import { LiveAmbienceConsole } from "@/components/LiveAmbienceConsole";
 import NotificationPanel, { NotifToast, useNotifications } from "@/components/NotificationPanel";
+import { ActorSearchModal } from "@/components/ActorSearchModal";
+import { GoldenReelModal } from "@/components/GoldenReelModal";
 import { useGameSession } from "@/hooks/useXoxGame";
 import { PRESET_BOARDS, getRandomBoard, createRandomizedBoard, getRandomOpponent, BotOpponentProfile, BOT_OPPONENTS, getBoardForMode } from "@/data/boards";
 import { GameMode, Movie, BotDifficulty, CustomRoomSettings, GameBoard, ContentPoolType } from "@/types/game";
@@ -53,7 +55,7 @@ function CineXoxPageContent() {
   const [showGameModesHub, setShowGameModesHub] = useState<boolean>(false);
   const [showMatchFound, setShowMatchFound] = useState<boolean>(false);
   const [showMatchmakingQueue, setShowMatchmakingQueue] = useState<boolean>(false);
-  const [queueMode, setQueueMode] = useState<"CLASSIC" | "SINEFIL">("CLASSIC");
+  const [queueMode, setQueueMode] = useState<"CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL">("CLASSIC");
   const [queueDifficulty, setQueueDifficulty] = useState<"EASY" | "NORMAL" | "HARD">("NORMAL");
   const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
@@ -179,12 +181,19 @@ function CineXoxPageContent() {
     usedMovieIds,
     scoreX,
     scoreO,
+    scoreRarityX,
+    scoreRarityO,
+    isGoldenReelActive,
+    goldenReelQuestion,
+    submitMove,
+    submitActorMove,
+    resolveGoldenReelAnswer,
+    resolveGoldenReelTimeout,
     totalArcadeScore,
     comboStreak,
     lastEarnedPoints,
     isBotThinking,
     botStatusMessage,
-    submitMove,
     resetGame,
     setBoard,
     addSeconds,
@@ -241,13 +250,29 @@ function CineXoxPageContent() {
   const handleMovieChosen = (movie: Movie) => {
     if (activeCellIndex === null) return;
     const targetIdx = activeCellIndex;
-    setActiveCellIndex(null); // Modalı kapat (Hatalı tahmin veya doğru hamlede sıra değiştiği için açık kalmaz)
+    setActiveCellIndex(null);
     const result = submitMove(targetIdx, movie);
     if (result.success) {
       setMovieSearchError(null);
     } else {
       audio.playError();
       const failMsg = result.message || "Hatalı tahmin! Sıra rakibe geçti.";
+      setMovieSearchError(null);
+      setHintMessage(`❌ ${failMsg}`);
+      setTimeout(() => setHintMessage(null), 3500);
+    }
+  };
+
+  const handleActorChosen = (actorName: string) => {
+    if (activeCellIndex === null) return;
+    const targetIdx = activeCellIndex;
+    setActiveCellIndex(null);
+    const result = submitActorMove(targetIdx, actorName);
+    if (result.success) {
+      setMovieSearchError(null);
+    } else {
+      audio.playError();
+      const failMsg = result.message || "Hatalı aktör! Sıra rakibe geçti.";
       setMovieSearchError(null);
       setHintMessage(`❌ ${failMsg}`);
       setTimeout(() => setHintMessage(null), 3500);
@@ -429,7 +454,10 @@ function CineXoxPageContent() {
     audio.playSelect();
     setContentPool(pool);
     setQueueDifficulty(diff);
-    const resolvedMode = categoryOrMode === "SINEFIL" ? "SINEFIL" : "CLASSIC";
+    let resolvedMode: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL" = "CLASSIC";
+    if (categoryOrMode === "REVERSE_CAST") resolvedMode = "REVERSE_CAST";
+    else if (categoryOrMode === "CINE_CONCEPT") resolvedMode = "CINE_CONCEPT";
+    else if (categoryOrMode === "SINEFIL") resolvedMode = "SINEFIL";
     setQueueMode(resolvedMode);
 
     const difficultyMap: Record<"EASY" | "NORMAL" | "HARD", BotDifficulty> = {
@@ -443,7 +471,10 @@ function CineXoxPageContent() {
     setShowMatchmakingQueue(true);
   };
 
-  const executeMatchSetup = (modeType: "CLASSIC" | "SINEFIL", diff: "EASY" | "NORMAL" | "HARD") => {
+  const executeMatchSetup = (
+    modeType: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL",
+    diff: "EASY" | "NORMAL" | "HARD"
+  ) => {
     const difficultyMap: Record<"EASY" | "NORMAL" | "HARD", BotDifficulty> = {
       EASY: "EASY",
       NORMAL: "MEDIUM",
@@ -825,9 +856,11 @@ function CineXoxPageContent() {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
-                  Hızlı Taktik &middot; 3x3
-                </span>
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-black/60 border border-amber-500/30 text-[10px] font-mono font-bold" title="Canlı Rarity (Nadirlik) Puanları & Foto-finiş Üstünlüğü">
+                  <span className="text-cyan-400">X: {scoreRarityX}</span>
+                  <span className="text-zinc-600">·</span>
+                  <span className="text-rose-400">O: {scoreRarityO}</span>
+                </div>
                 {winner === null && (
                   <button
                     type="button"
@@ -1003,8 +1036,20 @@ function CineXoxPageContent() {
         />
       </div>
 
-      {/* Movie Search Modal */}
-      {activeCellIndex !== null && (
+      {/* Movie Search Modal / Actor Search Modal (Ters Kadraj) */}
+      {activeCellIndex !== null && board.boardMode === "REVERSE_CAST" ? (
+        <ActorSearchModal
+          isOpen={activeCellIndex !== null}
+          onClose={() => {
+            setMovieSearchError(null);
+            setActiveCellIndex(null);
+          }}
+          rowCrit={board.rows[Math.floor(activeCellIndex / 3)]}
+          colCrit={board.cols[activeCellIndex % 3]}
+          onSelectActor={handleActorChosen}
+          errorMessage={movieSearchError}
+        />
+      ) : activeCellIndex !== null ? (
         <MovieSearchModal
           isOpen={activeCellIndex !== null}
           onClose={() => {
@@ -1019,7 +1064,18 @@ function CineXoxPageContent() {
           errorMessage={movieSearchError}
           targetOccupant={cells[activeCellIndex]}
         />
-      )}
+      ) : null}
+
+      {/* Altın Makara (Sudden Death) Modalı */}
+      <GoldenReelModal
+        isOpen={isGoldenReelActive}
+        question={goldenReelQuestion}
+        scoreRarityX={scoreRarityX}
+        scoreRarityO={scoreRarityO}
+        currentTurn={currentTurn}
+        onSubmitAnswer={resolveGoldenReelAnswer}
+        onTimeout={resolveGoldenReelTimeout}
+      />
 
       {/* Post Game Analysis (Kazanma/Kaybetme ve Rarity Analiz Ekranı) */}
       <PostGameAnalysisModal
