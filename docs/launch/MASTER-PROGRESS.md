@@ -12,7 +12,8 @@
 | Phase | Description | Gate Requirement | Status | Evidence |
 | :--- | :--- | :--- | :--- | :--- |
 | **Phase 0** | Repository & Architecture Audit | Baseline Report (`PHASE-00-BASELINE.md`) | **DONE** | Codebase audited, test passing (27/27), clean build (171 kB), baseline committed (`7bcf24f`) |
-| **Phase 1** | Mobile Architecture & Capacitor | Native builds generated (iOS & Android) | **NOT STARTED** | Gate 0 prerequisite pending |
+| **Phase 1 (Data)** | Data & Licensing Feasibility Audit | `CINE-TACTICO-PHASE-1-DATA-FEASIBILITY.md` | **DONE** | 100 kayıt, 97/100 Wikidata eşleşme, lisans matrisi tamamlandı |
+| **Phase 1 (Mobile)** | Mobile Architecture & Capacitor | Native builds generated (iOS & Android) | **NOT STARTED** | Awaiting owner decisions from Phase 1 Data report |
 | **Phase 2** | Gameplay & Data Integrity | Core logic tests passing (27/27) | **DONE** | `src/tests/game-engine.test.ts` (27/27 passed) |
 | **Phase 3** | Automated & Physical QA | Real device test report | **NOT STARTED** | Pending Phase 1 native build |
 | **Phase 4** | Security, Privacy & Compliance | Store compliance & legal audit report | **IN PROGRESS** | TMDB attribution & account deletion planned |
