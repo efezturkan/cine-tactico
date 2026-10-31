@@ -18,9 +18,9 @@ import {
   Bell,
 } from "lucide-react";
 import { UserProfile, AVATAR_OPTIONS, AMBIENCE_THEMES, DEFAULT_AMBIENCE, CORNER_ACCENT_COLORS } from "@/types/profile";
-import { ContentPoolType } from "@/types/game";
+import { ContentPoolType } from "@/core";
 import { audio } from "@/utils/audio";
-import { QuickMatchSetupModal } from "@/components/QuickMatchSetupModal";
+import { QuickMatchSetupModal } from "@/features/multiplayer";
 
 interface HomeScreenProps {
   profile: UserProfile;

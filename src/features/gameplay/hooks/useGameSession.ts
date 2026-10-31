@@ -1,16 +1,25 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { GameBoard, PlayerSymbol, CellAnswer, GameMode, Movie, BotDifficulty } from "@/types/game";
 import {
+  GameBoard,
+  PlayerSymbol,
+  CellAnswer,
+  GameMode,
+  Movie,
+  BotDifficulty,
   validateMove,
   findMatchingMovies,
   calculateCellRarity,
   calculateMovieRarity,
   validateActorIntersection,
-} from "@/engine/validator";
-import { evaluateBoardState, evaluateReverseBoardState, resolveFotoFinish } from "@/engine/rules";
-import { calculateBotMove, getBotThinkingDelay, getRandomThinkingPhrase } from "@/engine/bot-ai";
+  evaluateBoardState,
+  evaluateReverseBoardState,
+  resolveFotoFinish,
+  calculateBotMove,
+  getBotThinkingDelay,
+  getRandomThinkingPhrase,
+} from "@/core";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import confetti from "canvas-confetti";

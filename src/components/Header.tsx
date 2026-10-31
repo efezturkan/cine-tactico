@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Volume2, VolumeX, RotateCcw, Clapperboard, Gift, HelpCircle, User, ArrowLeft, Home } from "lucide-react";
-import { PlayerSymbol } from "@/types/game";
+import { PlayerSymbol } from "@/core";
 import { AVATAR_OPTIONS } from "@/types/profile";
 
 interface HeaderProps {

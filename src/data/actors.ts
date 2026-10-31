@@ -1,5 +1,5 @@
-import { Actor } from "@/types/game";
-import { normalizeCinemaString } from "@/engine/validator";
+import { Actor } from "@/core";
+import { normalizeCinemaString } from "@/core";
 
 /**
  * CINE-XOX AKTÖR VE TAKMA AD (ALIAS) VERİTABANI

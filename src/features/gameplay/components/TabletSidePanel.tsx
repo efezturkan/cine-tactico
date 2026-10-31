@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CellAnswer, PlayerSymbol } from "@/types/game";
+import { CellAnswer, PlayerSymbol } from "@/core";
 import { Film, Trophy, Clock, Star, Award, ShieldAlert } from "lucide-react";
 
 interface TabletSidePanelProps {

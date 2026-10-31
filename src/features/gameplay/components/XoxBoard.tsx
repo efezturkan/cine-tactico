@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { GameBoard, CellAnswer, PlayerSymbol, Criterion, Movie } from "@/types/game";
+import { GameBoard, CellAnswer, PlayerSymbol, Criterion, Movie } from "@/core";
 import { audio } from "@/utils/audio";
 import { Clapperboard, Award, Calendar, Film, Shield, Sparkles, Lock, User, Compass } from "lucide-react";
 

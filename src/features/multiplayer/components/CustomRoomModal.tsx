@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { CustomRoomSettings, GameBoard } from "@/types/game";
+import { CustomRoomSettings, GameBoard } from "@/core";
 import { UserProfile } from "@/types/profile";
 import { PRESET_BOARDS } from "@/data/boards";
-import { isSupabaseConfigured, joinRealtimeRoom } from "@/lib/supabase";
+import { isSupabaseConfigured, joinRealtimeRoom } from "@/backend";
 import { audio } from "@/utils/audio";
 import {
   Trophy,

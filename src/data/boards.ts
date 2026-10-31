@@ -1,5 +1,5 @@
-import { GameBoard, BotDifficulty } from "@/types/game";
-import { findMatchingMovies, getSharedActors } from "@/engine/validator";
+import { GameBoard, BotDifficulty } from "@/core";
+import { findMatchingMovies, getSharedActors } from "@/core";
 import { calculateBoardValidCounts, ensureBoardValidCounts } from "@/core/engine/board-generator";
 
 export { ensureBoardValidCounts };

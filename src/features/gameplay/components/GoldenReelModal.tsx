@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { PlayerSymbol, Movie } from "@/types/game";
+import { PlayerSymbol, Movie } from "@/core";
 import { MOVIES_DATABASE } from "@/data/movies";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";

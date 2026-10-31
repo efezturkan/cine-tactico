@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { GameBoard, CellAnswer } from "@/types/game";
+import { GameBoard, CellAnswer } from "@/core";
 import { Share2, Copy, Check, HelpCircle, Trophy, Sparkles, X } from "lucide-react";
 import { audio } from "@/utils/audio";
 

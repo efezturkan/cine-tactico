@@ -7,8 +7,6 @@ import {
   resolveFotoFinish,
   isCellDeadlocked,
   createLockedNeutralCell,
-} from "../engine/rules";
-import {
   validateMove,
   findMatchingMovies,
   validateBoardSolvability,
@@ -18,8 +16,9 @@ import {
   calculateLevenshteinDistance,
   validateActorIntersection,
   calculateCellRarity,
-} from "../engine/validator";
-import { calculateBotMove, getBotThinkingDelay } from "../engine/bot-ai";
+  calculateBotMove,
+  getBotThinkingDelay,
+} from "../core";
 
 console.log("=================================================");
 console.log("CINEXOX UNIVERSAL GAME ENGINE TEST SUITE");

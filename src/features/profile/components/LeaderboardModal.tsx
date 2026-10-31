@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { UserProfile, AVATAR_OPTIONS } from "@/types/profile";
 import { audio } from "@/utils/audio";
-import { fetchGlobalLeaderboard, isSupabaseConfigured } from "@/lib/supabase";
+import { fetchGlobalLeaderboard, isSupabaseConfigured } from "@/backend";
 
 interface LeaderboardModalProps {
   isOpen: boolean;

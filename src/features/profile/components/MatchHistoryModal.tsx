@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import { MatchRecord, UserProfile } from "@/types/profile";
-import { GameBoard, CellAnswer } from "@/types/game";
+import { GameBoard, CellAnswer } from "@/core";
 import { PRESET_BOARDS } from "@/data/boards";
-import { findMatchingMovies, getSharedActors } from "@/engine/validator";
-import { LetterboxdShareCardModal } from "@/components/LetterboxdShareCardModal";
+import { findMatchingMovies, getSharedActors } from "@/core";
+import { LetterboxdShareCardModal } from "@/features/profile";
 import { audio } from "@/utils/audio";
 import {
   Trophy,

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PlayerSymbol } from "@/types/game";
+import { PlayerSymbol } from "@/core";
 import { Timer, AlertTriangle, Bot } from "lucide-react";
 
 interface ShotClockProps {

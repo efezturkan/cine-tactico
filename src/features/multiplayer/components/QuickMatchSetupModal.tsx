@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { X, Film, Swords, Trophy, Sparkles, Check, Lock, ChevronRight } from "lucide-react";
 import { audio } from "@/utils/audio";
-import { ContentPoolType } from "@/types/game";
+import { ContentPoolType } from "@/core";
 import { UserProfile } from "@/types/profile";
 
 interface QuickMatchSetupModalProps {

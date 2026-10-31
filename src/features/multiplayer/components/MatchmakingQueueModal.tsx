@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Film, Swords, X, Bot, RefreshCw, Zap } from "lucide-react";
 import { audio } from "@/utils/audio";
-import { ContentPoolType, BotDifficulty } from "@/types/game";
+import { ContentPoolType, BotDifficulty } from "@/core";
 import { UserProfile, AVATAR_OPTIONS } from "@/types/profile";
 
 interface MatchmakingQueueModalProps {

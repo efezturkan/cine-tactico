@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Criterion, Movie, ContentPoolType, CellAnswer } from "@/types/game";
+import { Criterion, Movie, ContentPoolType, CellAnswer } from "@/core";
 import { MOVIES_DATABASE } from "@/data/movies";
 import { Search, X, Film, ShieldCheck, AlertTriangle } from "lucide-react";
 import { audio } from "@/utils/audio";

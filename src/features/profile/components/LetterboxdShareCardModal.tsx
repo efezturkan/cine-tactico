@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { MatchRecord } from "@/types/profile";
-import { GameBoard, CellAnswer } from "@/types/game";
+import { GameBoard, CellAnswer } from "@/core";
 import { audio } from "@/utils/audio";
 import { Download, Copy, Check, X, Share2, Sparkles, ExternalLink, Trophy } from "lucide-react";
 

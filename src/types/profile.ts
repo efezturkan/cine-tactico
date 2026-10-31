@@ -1,4 +1,4 @@
-import { GameBoard, CellAnswer } from "@/types/game";
+import { GameBoard, CellAnswer } from "@/core";
 
 export type AmbienceTheme = "velvet_red" | "darkroom_red" | "kodak_amber" | "noir_silver" | "scifi_cyan";
 export type GrainLevel = "OFF" | "SUBTLE" | "VINTAGE";

@@ -1,4 +1,4 @@
-import { Movie } from "@/types/game";
+import { Movie } from "@/core";
 
 export const MOVIES_DATABASE: Movie[] = [
   // Christopher Nolan

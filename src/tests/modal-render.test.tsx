@@ -1,7 +1,7 @@
 import React from "react";
 import { renderToString } from "react-dom/server";
-import { MovieSearchModal } from "../components/MovieSearchModal";
-import { Criterion } from "../types/game";
+import { MovieSearchModal } from "../features/gameplay/components/MovieSearchModal";
+import { Criterion } from "../core";
 
 // Testing with criteria that don't share any words with Inception's metadata
 const rowCrit: Criterion = {

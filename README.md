@@ -45,13 +45,14 @@ CINE-XOX/
 │   │   ├── supabase/              # client.ts (Güvenli istemci), types.ts (DB DTO'ları)
 │   │   └── repositories/          # rooms.ts, matches.ts, profiles.ts, leaderboard.ts
 │   │
-│   ├── features/                  # 🎮 KULLANICI ÖZELLİKLERİ
-│   │   ├── gameplay/              # useGameSession hook'u, HUD ve tahta bileşenleri
-│   │   └── multiplayer/           # useRealtimeMatch hook'u, 1v1 oda ve eşleştirme
+│   ├── features/                  # 🎮 ÖZELLİK KATMANLARI (Modüler & Domain-driven)
+│   │   ├── gameplay/              # useGameSession hook'u, GameView ve oyun içi bileşenler
+│   │   ├── multiplayer/           # useRealtimeMatch hook'u ve oda modalları
+│   │   └── profile/               # Profil, Leaderboard, Savaş Geçmişi ve Dükkan modalları
 │   │
-│   ├── components/                # 🧩 ORTAK UI BİLEŞENLERİ (Header, ErrorBoundary, Konsollar)
+│   ├── components/                # 🧩 ORTAK UI BİLEŞENLERİ (HomeScreen, GameSelectScreen, Header, GlobalModals)
 │   ├── utils/                     # 🔊 Ses (Web Audio) ve Dokunsal Geri Bildirim (Capacitor Haptics)
-│   └── app/                       # 🌐 Next.js App Router (Layout ve Sayfalar)
+│   └── app/                       # 🌐 Next.js App Router (page.tsx - ince görünüm koordinatörü)
 │
 ├── supabase/                      # 🗄️ SUPABASE YAPILANDIRMASI
 │   ├── schema.sql                 # Veritabanı tabloları ve Realtime yayını

@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { PlayerSymbol, GameBoard, CellAnswer, Movie } from "@/types/game";
+import { PlayerSymbol, GameBoard, CellAnswer, Movie } from "@/core";
 import { UserProfile } from "@/types/profile";
-import { findMatchingMovies, getSharedActors } from "@/engine/validator";
-import { LetterboxdShareCardModal } from "./LetterboxdShareCardModal";
+import { findMatchingMovies, getSharedActors } from "@/core";
+import { LetterboxdShareCardModal } from "@/features/profile";
 import {
   Crown,
   RotateCcw,

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Criterion } from "@/types/game";
+import { Criterion } from "@/core";
 import { X, User, Sparkles, Send, ShieldAlert, Film } from "lucide-react";
 import { audio } from "@/utils/audio";
 
