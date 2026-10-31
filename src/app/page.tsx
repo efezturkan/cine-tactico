@@ -48,6 +48,7 @@ function CineXoxApp() {
   const [contentPool, setContentPool] = useState<ContentPoolType>("HYBRID");
   const [allowSteal, setAllowSteal] = useState<boolean>(false);
   const [customRoomCode, setCustomRoomCode] = useState<string | null>(null);
+  const [isHost, setIsHost] = useState<boolean>(false);
   const [customShotClock, setCustomShotClock] = useState<number>(12);
   const [movieSearchError, setMovieSearchError] = useState<string | null>(null);
   const [botDifficulty, setBotDifficulty] = useState<BotDifficulty>("MEDIUM");
@@ -120,9 +121,20 @@ function CineXoxApp() {
   const [claimedDaily, setClaimedDaily] = useState<boolean>(false);
   const [claimedQuestIds, setClaimedQuestIds] = useState<string[]>([]);
 
-  // LocalStorage senkronizasyonu
+  // LocalStorage senkronizasyonu (Çevrimdışı ve Misafir Oyuncu Koruması)
   useEffect(() => {
     try {
+      const savedProfile = localStorage.getItem("cinexox_player_profile");
+      if (savedProfile) {
+        const parsedProfile = JSON.parse(savedProfile);
+        if (parsedProfile && typeof parsedProfile === "object") {
+          setProfile(prev => ({
+            ...prev,
+            ...parsedProfile,
+          }));
+        }
+      }
+
       const saved = localStorage.getItem("cinexox_ambience") || localStorage.getItem("cinetactico_ambience");
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -152,6 +164,14 @@ function CineXoxApp() {
       // ignore
     }
   }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("cinexox_player_profile", JSON.stringify(profile));
+    } catch {
+      // ignore
+    }
+  }, [profile]);
 
   useEffect(() => {
     if (profile.ambience) {
@@ -228,6 +248,7 @@ function CineXoxApp() {
       const clean = roomParam.trim().toUpperCase();
       joinRealtimeRoom(clean, profile).then(res => {
         if (res.success && res.room) {
+          setIsHost(false);
           setCustomRoomCode(clean);
           setMode("ONLINE_ROOM");
           setBoard(res.room.board_data);
@@ -239,8 +260,6 @@ function CineXoxApp() {
   }, []);
 
   // Supabase Gerçek Zamanlı Çok Oyunculu Senkronizasyonu
-  const isHost = mode === "ONLINE_ROOM" && customRoomCode !== null && currentTurn === "X";
-
   const handleRemoteMove = useCallback(
     (cellIndex: number, movie: Movie, playerSymbol: PlayerSymbol) => {
       submitMove(cellIndex, movie, playerSymbol);
@@ -350,7 +369,15 @@ function CineXoxApp() {
 
   // Eylemler & Etkileşimler
   const handleCellSelect = (index: number) => {
+    // 1. Single Player (VS_BOT): Oyuncu X'tir, Bot O düşünürken hücre seçilemez
     if (mode === "VS_BOT" && currentTurn === "O") return;
+
+    // 2. Multiplayer (ONLINE_ROOM): Host X'tir, Guest O'dur. Sıra oyuncuda değilse seçilemez
+    if (mode === "ONLINE_ROOM") {
+      const mySymbol: PlayerSymbol = isHost ? "X" : "O";
+      if (currentTurn !== mySymbol) return;
+    }
+
     setMovieSearchError(null);
     setActiveCellIndex(index);
   };
@@ -412,6 +439,8 @@ function CineXoxApp() {
     } else {
       audio.stopAll();
       audio.playSelect();
+      setIsHost(false);
+      setCustomRoomCode(null);
       setCurrentView("HOME");
     }
   };
@@ -508,22 +537,35 @@ function CineXoxApp() {
         setShowCustomLobby(true);
       }
     } else {
+      setIsHost(false);
+      setCustomRoomCode(null);
       setCurrentView("HOME");
     }
   };
 
-  const handleCreateCustomRoom = (settings: CustomRoomSettings) => {
+  const handleCreateCustomRoom = (settings: CustomRoomSettings, optionalBoard?: GameBoard) => {
+    setIsHost(true);
     setCustomRoomCode(settings.roomCode);
     setCustomShotClock(settings.shotClockSeconds);
     setAllowSteal(settings.allowCellStealing);
     setMode("ONLINE_ROOM");
-    const activeBoard = PRESET_BOARDS[boardIndex];
+    const activeBoard = optionalBoard || PRESET_BOARDS[boardIndex];
     setBoard(activeBoard);
     resetGame(activeBoard);
 
     if (isSupabaseConfigured) {
       createRealtimeRoom(settings.roomCode, profile, activeBoard, settings);
     }
+  };
+
+  const handleJoinCustomRoom = (roomCode: string, settings: CustomRoomSettings, boardData: GameBoard) => {
+    setIsHost(false);
+    setCustomRoomCode(roomCode);
+    setCustomShotClock(settings.shotClockSeconds);
+    setAllowSteal(settings.allowCellStealing);
+    setMode("ONLINE_ROOM");
+    setBoard(boardData);
+    resetGame(boardData);
   };
 
   const handleClaimDailyReward = (amount: number) => {
@@ -668,6 +710,7 @@ function CineXoxApp() {
     onCloseDailyShare: () => setShowDailyShare(false),
     onCloseCustomLobby: () => setShowCustomLobby(false),
     onCreateCustomRoom: handleCreateCustomRoom,
+    onJoinCustomRoom: handleJoinCustomRoom,
     onCloseQuests: () => setShowQuests(false),
     onClaimDailyReward: handleClaimDailyReward,
     onClaimQuest: (qId: string, reels: number) => {

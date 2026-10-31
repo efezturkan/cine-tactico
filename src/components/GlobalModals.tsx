@@ -61,7 +61,8 @@ export interface GlobalModalsProps {
   onMatchFoundCountdownComplete: () => void;
   onCloseDailyShare: () => void;
   onCloseCustomLobby: () => void;
-  onCreateCustomRoom: (settings: CustomRoomSettings) => void;
+  onCreateCustomRoom: (settings: CustomRoomSettings, optionalBoard?: GameBoard) => void;
+  onJoinCustomRoom?: (roomCode: string, settings: CustomRoomSettings, board: GameBoard) => void;
   onCloseQuests: () => void;
   onClaimDailyReward: (reels: number) => void;
   onClaimQuest: (qId: string, reels: number) => void;
@@ -122,6 +123,7 @@ export function GlobalModals(props: GlobalModalsProps) {
         onClose={props.onCloseCustomLobby}
         currentUser={props.profile}
         onCreateRoom={props.onCreateCustomRoom}
+        onJoinRoom={props.onJoinCustomRoom}
       />
 
       <QuestsModal

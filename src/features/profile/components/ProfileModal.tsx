@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   UserProfile,
   AVATAR_OPTIONS,
@@ -13,6 +13,12 @@ import {
 } from "@/types/profile";
 import { TasteDnaCard } from "./TasteDnaCard";
 import { MatchHistoryModal } from "./MatchHistoryModal";
+import {
+  ensureAnonymousSession,
+  linkAnonymousAccountToEmail,
+  updateUsernameWithUniqueness,
+  isSupabaseConfigured,
+} from "@/backend";
 import {
   User,
   Trophy,
@@ -89,6 +95,26 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [showHistoryAlert, setShowHistoryAlert] = useState(false);
   const [showMatchHistory, setShowMatchHistory] = useState(false);
 
+  // Kimlik ve Hesap Bağlama Durumları
+  const [isAnonymousUser, setIsAnonymousUser] = useState<boolean>(true);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [showLinkAccount, setShowLinkAccount] = useState<boolean>(false);
+  const [linkEmail, setLinkEmail] = useState<string>("");
+  const [linkPassword, setLinkPassword] = useState<string>("");
+  const [linkLoading, setLinkLoading] = useState<boolean>(false);
+  const [linkMessage, setLinkMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [nameLoading, setNameLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isOpen && isSupabaseConfigured) {
+      ensureAnonymousSession().then(auth => {
+        setIsAnonymousUser(auth.isAnonymous);
+        setUserEmail(auth.user?.email || null);
+      });
+    }
+  }, [isOpen]);
+
   const currentAmbience: CinemaAmbience = profile.ambience || DEFAULT_AMBIENCE;
 
   const handleUpdateAmbience = (delta: Partial<CinemaAmbience>) => {
@@ -125,11 +151,55 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const favoriteDirector = profile.favoriteDirector || "Christopher Nolan";
   const favoriteMode = profile.favoriteMode || "Klasik 3x3";
 
-  const handleSaveName = () => {
-    if (tempName.trim()) {
-      onUpdateProfile({ username: tempName.trim() });
+  const handleSaveName = async () => {
+    const cleaned = tempName.trim();
+    if (!cleaned) {
+      setIsEditingName(false);
+      return;
     }
+    if (cleaned === profile.username) {
+      setIsEditingName(false);
+      return;
+    }
+
+    if (isSupabaseConfigured) {
+      setNameLoading(true);
+      setNameError(null);
+      const res = await updateUsernameWithUniqueness(cleaned);
+      setNameLoading(false);
+      if (!res.success) {
+        setNameError(res.error || "Bu kullanıcı adı alınamadı.");
+        audio.playError();
+        return;
+      }
+    }
+
+    audio.playSelect();
+    onUpdateProfile({ username: cleaned });
     setIsEditingName(false);
+    setNameError(null);
+  };
+
+  const handleLinkAccount = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!linkEmail.trim() || !linkPassword.trim()) {
+      setLinkMessage({ type: "error", text: "Lütfen e-posta ve şifre giriniz." });
+      return;
+    }
+    setLinkLoading(true);
+    setLinkMessage(null);
+    const res = await linkAnonymousAccountToEmail(linkEmail.trim(), linkPassword);
+    setLinkLoading(false);
+    if (res.success) {
+      audio.playVictory();
+      setIsAnonymousUser(false);
+      setUserEmail(linkEmail.trim());
+      setLinkMessage({ type: "success", text: "Hesabınız başarıyla bağlandı ve kalıcı hale getirildi! ⭐" });
+      setTimeout(() => setShowLinkAccount(false), 3000);
+    } else {
+      audio.playError();
+      setLinkMessage({ type: "error", text: res.error || "Hesap bağlanamadı." });
+    }
   };
 
   const handleSelectAvatar = (id: string) => {
@@ -535,7 +605,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   />
                   <button
                     onClick={handleSaveName}
-                    className="p-1 rounded-lg bg-emerald-500 text-white"
+                    disabled={nameLoading}
+                    className="p-1 rounded-lg bg-emerald-500 text-white disabled:opacity-50"
                   >
                     <Check className="w-3.5 h-3.5" />
                   </button>
@@ -556,11 +627,94 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               )}
             </div>
 
+            {nameError && (
+              <span className="text-[10px] text-rose-400 font-bold mt-1 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/30 animate-in fade-in">
+                {nameError}
+              </span>
+            )}
+
             {/* Seviye İlerleme Çubuğu */}
             <div className="w-48 h-1.5 bg-[#131f38] rounded-full mt-2 overflow-hidden border border-sky-500/20">
               <div className="w-3/4 h-full bg-gradient-to-r from-amber-400 to-yellow-300 rounded-full" />
             </div>
             <span className="text-[9px] text-zinc-500 font-bold mt-1">750 / 1000 XP</span>
+
+            {/* HESAP & KİMLİK DURUMU (Misafir vs Kayıtlı Oyuncu) */}
+            <div className="w-full my-3 p-3 rounded-2xl bg-[#0f172a] border border-zinc-800">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs ${
+                    isAnonymousUser ? "bg-amber-500/20 text-amber-400" : "bg-emerald-500/20 text-emerald-400"
+                  }`}>
+                    {isAnonymousUser ? "🎭" : "⭐"}
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-black text-white flex items-center gap-1.5">
+                      {isAnonymousUser ? "Misafir Sinefil" : "Doğrulanmış Sinefil"}
+                      <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full ${
+                        isAnonymousUser ? "bg-amber-400/10 text-amber-300 border border-amber-400/20" : "bg-emerald-400/10 text-emerald-300 border border-emerald-400/20"
+                      }`}>
+                        {isAnonymousUser ? "Anonim" : "Kayıtlı"}
+                      </span>
+                    </div>
+                    <div className="text-[9px] text-zinc-400">
+                      {isAnonymousUser
+                        ? "Verileriniz bu cihazda saklanıyor"
+                        : userEmail || "Hesabınız kalıcı olarak bağlı"}
+                    </div>
+                  </div>
+                </div>
+
+                {isAnonymousUser && (
+                  <button
+                    onClick={() => setShowLinkAccount(!showLinkAccount)}
+                    className="px-2.5 py-1.5 rounded-xl bg-amber-400/15 border border-amber-400/30 text-amber-300 text-[10px] font-black hover:bg-amber-400/25 transition-all"
+                  >
+                    {showLinkAccount ? "Kapat" : "Hesabı Kaydet 🔐"}
+                  </button>
+                )}
+              </div>
+
+              {/* Hesap Bağlama Formu */}
+              {isAnonymousUser && showLinkAccount && (
+                <form onSubmit={handleLinkAccount} className="mt-3 pt-3 border-t border-zinc-800/80 space-y-2 animate-in fade-in">
+                  <p className="text-[9px] text-zinc-400">
+                    İlerlemenizi, makara bakiyenizi ve dereceli istatistiklerinizi kaybetmemek için e-posta ile bağlayın:
+                  </p>
+                  <input
+                    type="email"
+                    placeholder="ornek@sinefil.com"
+                    value={linkEmail}
+                    onChange={(e) => setLinkEmail(e.target.value)}
+                    required
+                    className="w-full px-3 py-1.5 rounded-xl bg-[#131f38] border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400"
+                  />
+                  <input
+                    type="password"
+                    placeholder="Güçlü bir şifre (en az 6 karakter)"
+                    value={linkPassword}
+                    onChange={(e) => setLinkPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    className="w-full px-3 py-1.5 rounded-xl bg-[#131f38] border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400"
+                  />
+                  {linkMessage && (
+                    <div className={`text-[10px] font-bold p-1.5 rounded-lg text-center ${
+                      linkMessage.type === "success" ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" : "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                    }`}>
+                      {linkMessage.text}
+                    </div>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={linkLoading}
+                    className="w-full py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-zinc-950 text-[11px] font-black uppercase tracking-wider shadow hover:brightness-110 active:scale-[0.99] transition-all disabled:opacity-50"
+                  >
+                    {linkLoading ? "Bağlanıyor..." : "Hesabı E-posta ile Kilitle ✓"}
+                  </button>
+                </form>
+              )}
+            </div>
 
             {/* 3. FAVORİ YÖNETMEN SEÇİMİ */}
             <div className="w-full my-3">

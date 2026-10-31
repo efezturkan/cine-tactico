@@ -53,6 +53,7 @@ interface CustomRoomModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreateRoom: (settings: CustomRoomSettings, selectedBoard: GameBoard) => void;
+  onJoinRoom?: (roomCode: string, settings: CustomRoomSettings, selectedBoard: GameBoard) => void;
   currentUser?: UserProfile;
 }
 
@@ -60,6 +61,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
   isOpen,
   onClose,
   onCreateRoom,
+  onJoinRoom,
   currentUser,
 }) => {
   // 1. Ana Sekme: 1v1 Özel Oda vs 8 Kişilik Turnuva
@@ -171,7 +173,11 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     if (isSupabaseConfigured && currentUser) {
       joinRealtimeRoom(cleanCode, currentUser).then(res => {
         if (res.success && res.room) {
-          onCreateRoom(res.room.settings, res.room.board_data);
+          if (onJoinRoom) {
+            onJoinRoom(cleanCode, res.room.settings, res.room.board_data);
+          } else {
+            onCreateRoom(res.room.settings, res.room.board_data);
+          }
           onClose();
         } else {
           // Oda bulunamadıysa varsayılan ayarlarla odaya katılımı başlat
@@ -187,7 +193,11 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
             allowCellStealing: false,
             allowPowerups: false,
           };
-          onCreateRoom(settings, PRESET_BOARDS[0]);
+          if (onJoinRoom) {
+            onJoinRoom(cleanCode, settings, PRESET_BOARDS[0]);
+          } else {
+            onCreateRoom(settings, PRESET_BOARDS[0]);
+          }
           onClose();
         }
       });
@@ -206,7 +216,11 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       allowCellStealing: false,
       allowPowerups: false,
     };
-    onCreateRoom(settings, PRESET_BOARDS[0]);
+    if (onJoinRoom) {
+      onJoinRoom(cleanCode, settings, PRESET_BOARDS[0]);
+    } else {
+      onCreateRoom(settings, PRESET_BOARDS[0]);
+    }
     onClose();
   };
 

@@ -223,37 +223,38 @@ Klasik Düello ve Sinefil Konsept modlarında 9 hücre sonuçlandığı halde 3'
 
 ---
 
-# 5. NEO-NOIR CINE-HUD TASARIM SİSTEMİ (GÖRSEL KİMLİK & GAME FEEL)
+# 5. NEO-NOIR CINE-HUD TASARIM SİSTEMİ (ÖZET ŞARTNAME)
 
-Oyun, Letterboxd zarafetinde, ARRI/RED yönetmen monitörü estetiğinde ve Balatro tokluğunda 35mm analog sinema arcade kimliği taşır. Gözü yoran neon kirliliği ve çocuksu kaba harfler yasaktır.
+*Tam teknik detaylar, hareket eğrileri ve akustik spesifikasyon için [NEO_NOIR_CINE_HUD_MASTER_SPEC.md](file:///Users/efe/.gemini/antigravity/brain/20c8c16d-e8b6-4450-a72f-391921098fc9/NEO_NOIR_CINE_HUD_MASTER_SPEC.md) belgesi esastır.*
 
-### 5.1 Renk Paleti (Neo-Noir Slate & Cinema HUD)
+Oyun, Letterboxd tipografik asaleti, ARRI/RED yönetmen monitörü HUD disiplini ve Chess.com'un gözü dinlendiren mat zemin sadeliğini birleştiren 35mm analog sinema arcade kimliği taşır.
+
+### 5.1 Renk Paleti ve Tasarım Tokenları (Centralized Tokens)
 - `cine-void` (`#0D0F12`): Derin mat antrasit zemin; OLED siyahı, yansıma yapmaz, gözü dinlendirir.
-- `cine-slate` (`#15181E`): Kurgu masası tablası ve hücre gövdesi.
+- `cine-slate` (`#15181E`): Kurgu masası tablası ve hücre kartı gövdesi.
 - `cine-border` (`#232834`): İnce 1px çerçeve ve vizör kılcalları.
-- `optic-cyan` (`#00E5FF`): Oyuncu 1 odak rengi; kamera netleme parantezleri `[ + ]`.
-- `iris-crimson` (`#FF2A55`): Oyuncu 2 diyafram rengi; objektif diyafram halkası `[ ◎ ]`.
-- `kodak-amber` (`#FFB800`): 15s gerilim barı, 35mm emülsiyon damgası (`KODAK 5219`) ve altın Rarity rozeti.
+- `optic-cyan` (`#00E5FF`): Oyuncu 1 odak rengi; kamera netleme parantezleri `[ + ]` ve `[ + · P1 ]` damgası.
+- `iris-crimson` (`#FF2A55`): Oyuncu 2 diyafram rengi; objektif diyafram halkası `[ ◎ ]` ve `[ ◎ · P2 ]` damgası.
+- `kodak-amber` (`#FFB800`): 35mm emülsiyon damgası (`KODAK 5219`), dinamik gerilim barı ve Rarity altını.
 - `deadlock-steel` (`#333B4A`): Kilitli sahipsiz hücre kaplama rengi (`LOCKED_NEUTRAL`).
-- `text-ivory` (`#F1F5F9`): Yüksek kontrastlı fildişi film başlığı.
-- `text-muted` (`#94A3B8`): Vizyon yılı ve yönetmen künyesi (`2010 · Christopher Nolan`).
+- `text-ivory` (`#F1F5F9`) / `text-muted` (`#94A3B8`): 16.5:1 kontrastlı Criterion tarzı kristal metin hiyerarşisi.
 
-### 5.2 Hücre Anatomisi (The 35mm Film Slate)
-- **Perforasyon Delikleri:** Dikey kenarlarda lazer kesim 35mm film şeridi delikleri (*sprocket holes*).
-- **Emülsiyon Damgası:** Köşede altın sarısı teknik kod: `KODAK 5219 · FRAME #04 · [+5]`.
-- **Kahraman Tipografi:** Criterion Collection kapaklarındaki gibi asil, kalın, sıkıştırılmış display font.
-- **Soft & Cool HUD Simgesi:** Kaba harfler yerine Oyuncu 1 için kamera vizör odak parantezleri `[ + ]` (`[ ✕ · P1 ]`), Oyuncu 2 için kamera diyafram halkası `[ ◎ ]` (`[ ◎ · P2 ]`).
-- **Deadlock Durumu:** İki oyuncu da bilemediğinde mat çelik diyafram kapanır ve `LOCKED_NEUTRAL` mührü basılır.
+### 5.2 Görsel Hiyerarşi ve Hücre Anatomisi
+- **Perforasyon Kuralı:** Görsel gürültüyü önlemek için 35mm perforasyon delikleri her karede kontrolsüzce kullanılmaz; sadece tahtanın dış çerçevesinde ve doğru bilinip açılan hücrelerin kenarlarında mühür olarak yer alır.
+- **Kazanan Hat Önceliği:** 3'lü kombinasyon oluştuğunda kazanan 3 kare altın ışık huzmesiyle birbirine bağlanır (`z-index: 30`); diğer hücreler `opacity: 0.45` seviyesine çekilerek şampiyon hamle öne çıkarılır.
+- **Neon Disiplini:** Sürekli açık kalan statik neon glow yasaktır; neon vurgular yalnızca hamle anı (280ms) ve son saniye geriliminde reaktif olarak yanar.
 
-### 5.3 Game Juice & Hareket Koreografisi
-- **The Slam Stamp (280ms):** Doğru cevap verildiğinde hücreye görsel ve mühür darbeyle oturur (`scale: 1.06 -> 0.98 -> 1.0`), 40ms beyaz flaş parlar.
-- **Eriyen Gerilim Barı (Shot-Clock):** 15 saniyeden geriye eriyen lineer kehribar bar; son 4 saniyede projeksiyon ampul titremesi (*bulb flicker*) ve nabız uyarısı.
-- **Projektör Işık Köprüsü:** 3'lü hat tamamlandığında 3 karenin perforasyon deliklerinden kesintisiz neon ışık huzmesi geçer.
-- **GPU Optimizasyonu:** Yalnızca donanım hızlandırmalı `transform` ve `opacity` kullanılır; 60 FPS TBDR dostu performans.
+### 5.3 Mod Bazlı Zaman Yönetimi (Decoupled Shot-Clock)
+- **Ranked Blitz:** 15s katı shot-clock (Sunucu otoriter deadline).
+- **Solo Bot:** Esnek zamanlayıcı (Süresiz / 15s / 30s seçenekli).
+- **Pass & Play:** 30s veya Süresiz (Cihaz el değiştirme süresi).
+- **Günün Cine-XOX'u:** Tur düşmesi olmayan skor odaklı ileri kronometre (Stopwatch).
+- **Katman Ayrımı:** `ShotClock.tsx` sadece sunum katmanıdır; oyun motoru zamanı epoch ms olarak bağımsız yönetir.
 
-### 5.4 Akustik Tokluk & Haptik
-- **Web Audio API Sentezi:** Dışarıdan MP3 indirilmez; 80Hz bas mühür darbesi (*The Chess Thud of Cinema*) ve 880Hz gerilim tıkı saf osilatörlerle üretilir.
-- **Haptik:** Hücre seçiminde 10ms mikro klik; doğru cevapta 25ms tok darbe; sürenin son 3 saniyesinde kalp atışı uyarısı.
+### 5.4 Hareket ve Akustik Mimarisi
+- **GPU Hızlandırmalı Kinetik:** `transform: scale(0.96)` dokunma tepkisi, `the-slam-stamp` (280ms, 1.06x overshoot) ve 120ms flaş. `prefers-reduced-motion` tam uyumluluğu.
+- **Çok Harmonikli Ses (Multi-Harmonic Layering):** Mobil hoparlörlerin bas kaybını telafi etmek için 1200Hz transient klik, 180Hz gövde darbesi ve 75Hz sub-bas katmanlı sentezi.
+- **Fail-Silent Audio & Haptic:** Web Audio kilidi ilk kullanıcı dokunuşunda açılır; ses veya titreşim hataları oyun durumunu asla kesintiye uğratmaz.
 
 ---
 

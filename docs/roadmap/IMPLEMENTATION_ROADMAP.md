@@ -58,11 +58,55 @@
 
 ## 5. Faz 4: Neo-Noir Cine-HUD & Game Feel Revizyonu
 
-* **Mikro-Adım 4.1 (Tasarım Sistemi & CSS Motion Engine):** Neo-Noir renk tokenlarının (`cine-void`, `optic-cyan`, `iris-crimson`, `kodak-amber`) tanımlanması ve GPU hızlandırmalı CSS yaylanma/darbe animasyonlarının (`slam-stamp`, `sprocket-glow`, `tension-pulse`) `globals.css` içine eklenmesi.
-* **Mikro-Adım 4.2 (35mm Hücre Anatomisi & Vizör HUD Simgeleri):** Hücrelerin 35mm KODAK film slaytına dönüştürülmesi; kaba harfler yerine P1 Cyan odak parantezleri `[ + ]` (`[ ✕ · P1 ]`) ve P2 Crimson diyafram halkası `[ ◎ ]` (`[ ◎ · P2 ]`) filigranlarının `XoxBoard.tsx` içine işlenmesi.
-* **Mikro-Adım 4.3 (15s Eriyen Kehribar Gerilim Barı):** `ShotClock.tsx` içine son 4 saniyede projeksiyon ampul titremesi (*bulb flicker*) ve eriyen lineer gerilim barının bağlanması.
-* **Mikro-Adım 4.4 (Akustik Tokluk & Haptik):** Dış MP3 paketi indirilmeden `audio.ts` Web Audio osilatörleriyle 80Hz analog mühür bası (*The Chess Thud of Cinema*) ve gerilim tıkının sentezlenmesi.
-* **Mikro-Adım 4.5 (Mobil 100dvh & Sıfır Hata Doğrulaması):** Mobil sanal klavye açıkken `100dvh` responsive ekran koruması ve 77/77 testin yeşil kalmasının (`npm test` & `npm run build`) onaylanması.
+Şartname Referansı: `NEO_NOIR_CINE_HUD_MASTER_SPEC.md` (SPEC-CINE-HUD-2026-V4)
+
+* **Mikro-Adım 4.1 (Art Direction Lock & Design Tokens):**
+  - *Amaç:* Merkezi CSS custom properties (`--cine-void`, `--optic-cyan`, `--iris-crimson`, `--kodak-amber`) tanımlanması; Tailwind tokenlarının senkronizasyonu.
+  - *Etkilenecek Dosyalar:* `src/app/globals.css`, `tailwind.config.ts`.
+  - *Bağımlılıklar:* Yok.
+  - *Kabul Kriteri:* Kontrast ve renk semantiğinin tüm ekranlarda tutarlı olması; WCAG 2.1 AA uyumu.
+  - *Test Gereksinimi:* CSS token ayrıştırma kontrolü.
+  - *Regresyon Riski:* Düşük.
+
+* **Mikro-Adım 4.2 (Static HUD & Semantic Board Layout):**
+  - *Amaç:* 3x3 tahtanın mat 35mm film slaytlarına dönüştürülmesi; aşırı perforasyon gürültüsünün elenmesi; tipografik hiyerarşinin ve en az 96px dokunma alanlarının kurulması; kazanan 3'lü kombinasyonun görsel önceliğinin (`z-index: 30`) tanımlanması.
+  - *Etkilenecek Dosyalar:* `src/features/gameplay/components/XoxBoard.tsx`, `src/features/gameplay/components/GameView.tsx`.
+  - *Bağımlılıklar:* 4.1.
+  - *Kabul Kriteri:* Film isimlerinin kristal netliğinde okunması; hücre sembollerinin P1 `[ + ]` ve P2 `[ ◎ ]` olarak SVG render edilmesi; ARIA etiketlerinin eksiksiz olması.
+  - *Test Gereksinimi:* `modal-render.test.tsx` ve DOM snapshot testleri.
+  - *Regresyon Riski:* Orta (`onCellClick` fonksiyon parametrelerinin korunması şart).
+
+* **Mikro-Adım 4.3 (Motion System & Micro-Interactions):**
+  - *Amaç:* `transform: scale(0.96)` içe göçme, `the-slam-stamp` (280ms, 1.06x overshoot), 120ms deklanşör flaşı ve `winning-beam` animasyonlarının keyframe entegrasyonu.
+  - *Etkilenecek Dosyalar:* `src/app/globals.css`, `src/features/gameplay/components/XoxBoard.tsx`.
+  - *Bağımlılıklar:* 4.2.
+  - *Kabul Kriteri:* Bütün animasyonların sadece `transform` ve `opacity` ile çalışması (60 FPS); `prefers-reduced-motion` modunda anında geçiş sağlanması; zafer animasyonunun oyun durumunu geciktirmemesi.
+  - *Test Gereksinimi:* Reduced-motion CSS kuralları ve animasyon süresi testleri.
+  - *Regresyon Riski:* Düşük.
+
+* **Mikro-Adım 4.4 (Audio & Haptics Synthesis Engine):**
+  - *Amaç:* Web Audio API çok katmanlı transient tasarımı (1200Hz klik + 180Hz punch + 75Hz sub-bass) ve iOS Safari uyumlu fail-silent ses/haptik motorunun kurulması.
+  - *Etkilenecek Dosyalar:* `src/utils/audio.ts`, `src/utils/haptics.ts`.
+  - *Bağımlılıklar:* 4.1.
+  - *Kabul Kriteri:* İlk kullanıcı hareketinde AudioContext'in açılması; sessiz modda sıfır CPU tüketimi; mobil hoparlörlerde tok darbenin duyulması.
+  - *Test Gereksinimi:* AudioService birim testleri ve mute kontrol testleri.
+  - *Regresyon Riski:* Düşük (Fail-silent try-catch izolasyonu).
+
+* **Mikro-Adım 4.5 (Game Mode Integration & Timer Decoupling):**
+  - *Amaç:* Shot Clock görselinin (`ShotClock.tsx`) oyun motorundan ayrılması (decoupling); Solo Bot, Pass & Play ve Günün Oyunu için mod bazlı zamanlayıcı profillerinin bağlanması.
+  - *Etkilenecek Dosyalar:* `src/features/gameplay/components/ShotClock.tsx`, `src/features/gameplay/hooks/useGameSession.ts`.
+  - *Bağımlılıklar:* 4.2, 4.4.
+  - *Kabul Kriteri:* Pass & Play modunda sürenin opsiyonel olması; Günün XOX'unda ileri sayım yapılması; çok oyunculu modda istemci `setInterval`'ının otorite kabul edilmemesi.
+  - *Test Gereksinimi:* `game-engine.test.ts` ve zaman aşımı geçiş testleri.
+  - *Regresyon Riski:* Yüksek (Oyun motoru sıra değişim mantığı korunmalı).
+
+* **Mikro-Adım 4.6 (QA, Accessibility & Mobile Performance):**
+  - *Amaç:* 133 birim testin eksiksiz yeşil kalması, iOS Safari `100dvh` ve sanal klavye uyumluluğu, 60 FPS performans denetimi.
+  - *Etkilenecek Dosyalar:* Tüm oyun görünümü.
+  - *Bağımlılıklar:* 4.1 – 4.5.
+  - *Kabul Kriteri:* `npm test` %100 başarılı; `npm run build` hatasız; layout thrashing sıfır.
+  - *Test Gereksinimi:* Tam test süiti (`npm test`).
+  - *Regresyon Riski:* Sıfır (Nihai kalite kapısı).
 
 ---
 
