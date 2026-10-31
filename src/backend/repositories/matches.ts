@@ -2,41 +2,48 @@ import { supabase, isSupabaseConfigured } from "../supabase/client";
 import { MatchSessionRecord } from "../supabase/types";
 import { Movie, PlayerSymbol } from "@/core/types";
 
+export interface SubmitMoveResponse {
+  success: boolean;
+  status?: "IN_PROGRESS" | "COMPLETED";
+  winner?: PlayerSymbol | "DRAW";
+  current_turn?: PlayerSymbol;
+  player_symbol?: PlayerSymbol;
+  cell_index?: number;
+  error?: string;
+}
+
+/**
+ * Server-authoritative move submission via PostgreSQL RPC `submit_move`.
+ * Atomically checks turn, updates moves table, evaluates win lines and advances turn.
+ */
 export async function submitRealtimeMove(
   roomCode: string,
   cellIndex: number,
   movie: Movie,
-  playerSymbol: PlayerSymbol,
-  playerId: string,
+  _playerSymbol?: PlayerSymbol,
+  _playerId?: string,
   isStealing: boolean = false
-): Promise<{ success: boolean; error?: string }> {
+): Promise<SubmitMoveResponse> {
   if (!isSupabaseConfigured || !supabase) {
     return { success: false, error: "Supabase henüz yapılandırılmadı." };
   }
 
   try {
-    const { error: moveErr } = await supabase.from("room_moves").insert({
-      room_code: roomCode,
-      cell_index: cellIndex,
-      movie_id: movie.id,
-      movie_data: movie,
-      player_symbol: playerSymbol,
-      player_id: playerId,
-      is_stealing: isStealing,
+    const { data, error } = await supabase.rpc("submit_move", {
+      p_room_code: roomCode,
+      p_cell_index: cellIndex,
+      p_movie_id: movie.id,
+      p_movie_data: movie,
+      p_is_stealing: isStealing,
     });
 
-    if (moveErr) throw moveErr;
+    if (error) throw error;
 
-    const nextTurn = playerSymbol === "X" ? "O" : "X";
-    await supabase
-      .from("game_rooms")
-      .update({
-        current_turn: nextTurn,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("room_code", roomCode);
+    if (data && typeof data === "object" && !data.success) {
+      return { success: false, error: data.error || "Hamle reddedildi." };
+    }
 
-    return { success: true };
+    return (data || { success: true }) as SubmitMoveResponse;
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Hamle iletilemedi";
     return { success: false, error: msg };
