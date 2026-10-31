@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Trophy,
   Crown,
@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { UserProfile, AVATAR_OPTIONS } from "@/types/profile";
 import { audio } from "@/utils/audio";
+import { fetchGlobalLeaderboard, isSupabaseConfigured } from "@/lib/supabase";
 
 interface LeaderboardModalProps {
   isOpen: boolean;
@@ -141,10 +142,52 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
     },
   ];
 
+  const [liveLeaderboard, setLiveLeaderboard] = useState<typeof LEADERBOARD_DATA | null>(null);
+
+  useEffect(() => {
+    if (!isOpen || !isSupabaseConfigured) return;
+    fetchGlobalLeaderboard(25).then(records => {
+      if (records && records.length > 0) {
+        const mapped = records.map((r, idx) => {
+          const avatar = AVATAR_OPTIONS.find(a => a.id === r.avatar_id) || AVATAR_OPTIONS[0];
+          let league: "GRANDMASTER" | "DIAMOND" | "GOLD" | "SILVER" | "BRONZE" = "BRONZE";
+          let badgeColor = "from-amber-700 to-amber-900";
+          if (r.rating >= 2000) {
+            league = "GRANDMASTER";
+            badgeColor = "from-amber-400 to-yellow-500";
+          } else if (r.rating >= 1400) {
+            league = "DIAMOND";
+            badgeColor = "from-cyan-400 to-blue-500";
+          } else if (r.rating >= 800) {
+            league = "GOLD";
+            badgeColor = "from-yellow-400 to-amber-500";
+          } else if (r.rating >= 400) {
+            league = "SILVER";
+            badgeColor = "from-slate-300 to-slate-400";
+          }
+
+          return {
+            rank: idx + 1,
+            name: r.username,
+            title: r.rank_title || "Sinefil Düellocusu",
+            trophies: r.rating,
+            wins: r.wins,
+            avatarEmoji: avatar.emoji,
+            badgeColor,
+            league,
+          };
+        });
+        setLiveLeaderboard(mapped);
+      }
+    });
+  }, [isOpen]);
+
+  const activeData = liveLeaderboard || LEADERBOARD_DATA;
+
   const filteredData =
     activeLeague === "ALL"
-      ? LEADERBOARD_DATA
-      : LEADERBOARD_DATA.filter(item => item.league === activeLeague);
+      ? activeData
+      : activeData.filter(item => item.league === activeLeague);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
