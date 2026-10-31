@@ -87,7 +87,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
     {
       id: "w2",
       title: "Kare Çalma Ustası",
-      desc: "Daha yüksek IMDb puanıyla 3 rakip karesini çal",
+      desc: "Daha yüksek puanla 3 rakip karesini çal",
       rewardReels: 350,
       rewardDiamonds: 30,
       progress: "2/3",

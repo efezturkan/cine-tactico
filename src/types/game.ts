@@ -26,6 +26,17 @@ export interface Movie {
   mediaType?: "FILM" | "SERIES";
   posterUrl?: string;
   overview?: string;
+  /** Wikidata / external database identifiers */
+  sourceIds?: {
+    wikidata?: string;
+  };
+  /** Data provenance: tracks verification source and date */
+  provenance?: {
+    wikidata?: {
+      verified: boolean;
+      verifiedAt: string; // "YYYY-MM-DD"
+    };
+  };
 }
 
 export interface CellAnswer {

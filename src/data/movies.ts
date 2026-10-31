@@ -15,7 +15,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
     overview: "A thief who steals corporate secrets through dream-sharing technology."
-  },
+  ,
+    sourceIds: { wikidata: "Q25188" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_dark_knight",
     title: "The Dark Knight",
@@ -30,7 +32,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
     overview: "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham."
-  },
+  ,
+    sourceIds: { wikidata: "Q163872" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_oppenheimer",
     title: "Oppenheimer",
@@ -44,7 +48,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
     overview: "The story of American scientist J. Robert Oppenheimer and his role in the atomic bomb."
-  },
+  ,
+    sourceIds: { wikidata: "Q108839994" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_interstellar",
     title: "Interstellar",
@@ -58,7 +64,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
     overview: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival."
-  },
+  ,
+    sourceIds: { wikidata: "Q13417189" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_dunkirk",
     title: "Dunkirk",
@@ -72,7 +80,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/ebSnODDg9lbsMIaWg2uAbjn7TO5.jpg",
     overview: "Allied soldiers from Belgium, the British Empire, and France are surrounded by the German Army."
-  },
+  ,
+    sourceIds: { wikidata: "Q21935651" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_prestige",
     title: "The Prestige",
@@ -86,7 +96,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "STANDARD",
     posterUrl: "https://image.tmdb.org/t/p/w500/bdN3gXuIZYaJP7ftKK2sU0nPtEA.jpg",
     overview: "Two stage magicians engage in a battle to create the ultimate illusion."
-  },
+  ,
+    sourceIds: { wikidata: "Q46551" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
 
   // Quentin Tarantino
   {
@@ -102,7 +114,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
     overview: "The lives of two mob hitmen, a boxer, a gangster and his wife intertwine."
-  },
+  ,
+    sourceIds: { wikidata: "Q104123" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_once_upon_a_time",
     title: "Once Upon a Time in Hollywood",
@@ -116,7 +130,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/8j58iEBw9pOXFD2L0nt0ZXeHviB.jpg",
     overview: "A faded television actor and his stunt double strive to achieve fame and success."
-  },
+  ,
+    sourceIds: { wikidata: "Q47300912" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_inglourious_basterds",
     title: "Inglourious Basterds",
@@ -130,7 +146,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/7sfbEnaARXDDhKm0CZ7D7kyBTox.jpg",
     overview: "In Nazi-occupied France during WWII, a plan to assassinate Nazi leaders by Jewish U.S. soldiers."
-  },
+  ,
+    sourceIds: { wikidata: "Q153723" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_django_unchained",
     title: "Django Unchained",
@@ -144,7 +162,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/7oWY8vdWW7thTzWh3OKYRkWUlD5.jpg",
     overview: "With the help of a German bounty-hunter, a freed slave sets out to rescue his wife."
-  },
+  ,
+    sourceIds: { wikidata: "Q571032" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
 
   // Martin Scorsese
   {
@@ -160,7 +180,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/34m2tygAYBGqA9MXKhRDtzYd4MR.jpg",
     overview: "The true story of Jordan Belfort, from his rise to a wealthy stock-broker to his fall."
-  },
+  ,
+    sourceIds: { wikidata: "Q1392744" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_shutter_island",
     title: "Shutter Island",
@@ -174,7 +196,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/4GDy0PHYX3VRXUtwK5ysagvk2Te.jpg",
     overview: "In 1954, a U.S. Marshal investigates the disappearance of a murderer."
-  },
+  ,
+    sourceIds: { wikidata: "Q210364" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_departed",
     title: "The Departed",
@@ -188,7 +212,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/nT97ifVT2J1yMQmeq20Qblg61T.jpg",
     overview: "An undercover cop and a mole in the police attempt to identify each other."
-  },
+  ,
+    sourceIds: { wikidata: "Q172975" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_goodfellas",
     title: "Goodfellas",
@@ -202,7 +228,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "STANDARD",
     posterUrl: "https://image.tmdb.org/t/p/w500/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg",
     overview: "The story of Henry Hill and his life in the mafia."
-  },
+  ,
+    sourceIds: { wikidata: "Q42047" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_taxi_driver",
     title: "Taxi Driver",
@@ -216,7 +244,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "STANDARD",
     posterUrl: "https://image.tmdb.org/t/p/w500/ekstpH694DaGliIN7WW9XB49Qv5.jpg",
     overview: "A mentally unstable veteran works as a nighttime taxi driver in New York City."
-  },
+  ,
+    sourceIds: { wikidata: "Q47221" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_irishman",
     title: "The Irishman",
@@ -230,7 +260,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "STANDARD",
     posterUrl: "https://image.tmdb.org/t/p/w500/mbm8k3GFbXS0bA975bYFqHvgZus.jpg",
     overview: "Hitman Frank Sheeran looks back at the secrets he kept as a member of the Bufalino family."
-  },
+  ,
+    sourceIds: { wikidata: "Q29057443" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_killers_of_flower_moon",
     title: "Killers of the Flower Moon",
@@ -244,37 +276,11 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/dB6Krk806zeqd095MAmpph965ko.jpg",
     overview: "Real love crosses paths with unspeakable betrayal in the Osage Nation murders."
-  },
+  ,
+    sourceIds: { wikidata: "Q66316924" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
 
   // Denis Villeneuve
-  {
-    id: "m_dune",
-    title: "Dune",
-    originalTitle: "Dune: Part One",
-    year: 2021,
-    director: "Denis Villeneuve",
-    cast: ["Timothée Chalamet", "Zendaya", "Rebecca Ferguson", "Oscar Isaac", "Josh Brolin", "Javier Bardem"],
-    genres: ["Action", "Adventure", "Sci-Fi", "Drama"],
-    imdbRating: 8.0,
-    hasOscar: true,
-    boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
-    overview: "A noble family becomes embroiled in a war for control over the galaxy's most valuable asset."
-  },
-  {
-    id: "m_dune_2",
-    title: "Dune: Part Two",
-    originalTitle: "Dune: Part Two",
-    year: 2024,
-    director: "Denis Villeneuve",
-    cast: ["Timothée Chalamet", "Zendaya", "Rebecca Ferguson", "Austin Butler", "Florence Pugh", "Javier Bardem"],
-    genres: ["Action", "Adventure", "Sci-Fi", "Drama"],
-    imdbRating: 8.6,
-    hasOscar: false,
-    boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/czembW0Rk1Ke7lCJGzyAiVYQAvh.jpg",
-    overview: "Paul Atreides unites with Chani and the Fremen while seeking revenge."
-  },
   {
     id: "m_blade_runner_2049",
     title: "Blade Runner 2049",
@@ -288,7 +294,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
     overview: "Young Blade Runner K tracks down former Blade Runner Rick Deckard."
-  },
+  ,
+    sourceIds: { wikidata: "Q21500755" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_arrival",
     title: "Arrival",
@@ -302,7 +310,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/x2FJsf1ElAgr63Y3PNPtJrcmpoe.jpg",
     overview: "A linguist works with the military to communicate with alien lifeforms."
-  },
+  ,
+    sourceIds: { wikidata: "Q20382729" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_sicario",
     title: "Sicario",
@@ -316,7 +326,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "STANDARD",
     posterUrl: "https://image.tmdb.org/t/p/w500/iMwZScLwS2nZp2Y9P0T2Lp0tH.jpg",
     overview: "An idealistic FBI agent is enlisted to aid in the escalating war against drugs."
-  },
+  ,
+    sourceIds: { wikidata: "Q17337292" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
 
   // David Fincher
   {
@@ -332,7 +344,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
     overview: "An insomniac office worker and a soap maker form an underground fight club."
-  },
+  ,
+    sourceIds: { wikidata: "Q123784007" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_se7en",
     title: "Se7en",
@@ -346,7 +360,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/6yoghtyTpznpBik8EngEmJskVUO.jpg",
     overview: "Two detectives hunt a serial killer who uses the seven deadly sins as his motives."
-  },
+  ,
+    sourceIds: { wikidata: "Q190908" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_social_network",
     title: "The Social Network",
@@ -360,7 +376,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/n0ybibhJtQ5icDqTpTzbRytvEeV.jpg",
     overview: "As Harvard student Mark Zuckerberg creates Facebook, he faces lawsuits."
-  },
+  ,
+    sourceIds: { wikidata: "Q185888" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_gone_girl",
     title: "Gone Girl",
@@ -374,7 +392,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/qymaJhucquUwjpAC3Handb9z1eP.jpg",
     overview: "With his wife's disappearance, a man sees the spotlight turned on him."
-  },
+  ,
+    sourceIds: { wikidata: "Q14920425" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_alien_3",
     title: "Alien 3",
@@ -388,7 +408,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "STANDARD",
     posterUrl: "https://image.tmdb.org/t/p/w500/hPgu93Y74h6Lp8b1kE5e8X4m8A9.jpg",
     overview: "After her last ordeal, Ellen Ripley crash-lands on a maximum-security prison."
-  },
+  ,
+    sourceIds: { wikidata: "Q108543" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
 
   // Ridley Scott, Todd Phillips & Bong Joon-ho
   {
@@ -404,7 +426,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg",
     overview: "A former Roman General sets out to exact vengeance against the corrupt emperor."
-  },
+  ,
+    sourceIds: { wikidata: "Q128518" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_joker",
     title: "Joker",
@@ -419,7 +443,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
     overview: "During the 1980s, a failed comedian is driven insane in Gotham City."
-  },
+  ,
+    sourceIds: { wikidata: "Q42759035" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_parasite",
     title: "Parasite",
@@ -433,7 +459,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
     overview: "Greed and class discrimination threaten the relationship between the Park and Kim families."
-  },
+  ,
+    sourceIds: { wikidata: "Q61448040" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   // DC vs MARVEL Evreni & Cross-over Yıldızlar
   {
     id: "m_dark_knight_rises",
@@ -449,7 +477,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/hr0L2aueqlP2BYUblTTjmtn0hw4.jpg",
     overview: "Eight years after the Joker's reign of anarchy, Batman is forced from his exile by the terrorist Bane."
-  },
+  ,
+    sourceIds: { wikidata: "Q189330" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_thor_love_and_thunder",
     title: "Thor: Love and Thunder",
@@ -464,7 +494,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/pIkRyD18kl4F0bPpKXm74BYTGZ2.jpg",
     overview: "Thor enlists the help of Valkyrie, Korg and Jane Foster to fight Gorr the God Butcher (Christian Bale)."
-  },
+  ,
+    sourceIds: { wikidata: "Q65768604" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_guardians_galaxy",
     title: "Guardians of the Galaxy",
@@ -479,7 +511,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/r7vmZjiyZw9rpEvYSJG4FsR4oob.jpg",
     overview: "A group of intergalactic criminals must pull together to stop a fanatical warrior."
-  },
+  ,
+    sourceIds: { wikidata: "Q5887360" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_the_suicide_squad",
     title: "The Suicide Squad",
@@ -494,7 +528,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/kb4TN99qGqvRIUm9KyqwSIqa8as.jpg",
     overview: "Supervillains Harley Quinn, Bloodsport, Peacemaker join Task Force X on the remote island of Corto Maltese."
-  },
+  ,
+    sourceIds: { wikidata: "Q57317060" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_deadpool",
     title: "Deadpool",
@@ -509,7 +545,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/fSRb7vyIP8rQpL0I47P3qUsucht.jpg",
     overview: "A wisecracking mercenary gets experimented on and becomes immortal but ugly, and sets out to track down the man who ruined his looks."
-  },
+  ,
+    sourceIds: { wikidata: "Q19347291" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_green_lantern",
     title: "Green Lantern",
@@ -524,7 +562,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/o0yW4rS201G2s3i6gH4m7n4U7N4.jpg",
     overview: "Reckless test pilot Hal Jordan is granted an alien ring that bestows him with otherworldly superpowers."
-  },
+  ,
+    sourceIds: { wikidata: "Q903885" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_spider_man_into_spider_verse",
     title: "Spider-Man: Into the Spider-Verse",
@@ -539,7 +579,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg",
     overview: "Teen Miles Morales becomes the new Spider-Man, while joining other Spider-Heroes from various dimensions."
-  },
+  ,
+    sourceIds: { wikidata: "Q29588607" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_logan",
     title: "Logan",
@@ -554,7 +596,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/fnbjcRDYn6YviCcePDnGdyAkYsB.jpg",
     overview: "In a future where mutants are nearly extinct, an elderly and weary Logan leads a quiet life until a young mutant arrives."
-  },
+  ,
+    sourceIds: { wikidata: "Q24053263" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_avengers_endgame",
     title: "Avengers: Endgame",
@@ -569,7 +613,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
     overview: "After the devastating events of Infinity War, the universe is in ruins. The Avengers assemble once more to reverse Thanos' actions."
-  },
+  ,
+    sourceIds: { wikidata: "Q23781155" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   // LOTR & HARRY POTTER & DUNE EVRENLERİ
   {
     id: "m_lotr_fellowship",
@@ -585,7 +631,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cDK6.jpg",
     overview: "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring."
-  },
+  ,
+    sourceIds: { wikidata: "Q127367" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_lotr_return_king",
     title: "The Lord of the Rings: The Return of the King",
@@ -600,7 +648,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg",
     overview: "Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam."
-  },
+  ,
+    sourceIds: { wikidata: "Q131074" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_hp_azkaban",
     title: "Harry Potter and the Prisoner of Azkaban",
@@ -615,7 +665,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/aWx2k4QdrYqG4l57g3Yt3W9C5vF.jpg",
     overview: "Harry Potter, Ron and Hermione return to Hogwarts School of Witchcraft and Wizardry for their third year."
-  },
+  ,
+    sourceIds: { wikidata: "Q102448" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_hp_deathly_hallows_2",
     title: "Harry Potter and the Deathly Hallows: Part 2",
@@ -630,7 +682,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/c54HpQmuwXjHq2C9wK8a9i22V9e.jpg",
     overview: "Harry, Ron, and Hermione search for Voldemort's remaining Horcruxes in their effort to destroy the Dark Lord."
-  },
+  ,
+    sourceIds: { wikidata: "Q232009" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_dune_part_one",
     title: "Dune: Part One",
@@ -645,7 +699,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
     overview: "Paul Atreides arrives on Arrakis after his father accepts the stewardship of the dangerous planet."
-  },
+  ,
+    sourceIds: { wikidata: "Q60834962" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_dune_part_two",
     title: "Dune: Part Two",
@@ -660,7 +716,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
     overview: "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family."
-  },
+  ,
+    sourceIds: { wikidata: "Q109228991" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_thor_ragnarok",
     title: "Thor: Ragnarok",
@@ -675,7 +733,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/rzRwTcFvttcN1Z9X2bKiNd9zy9b.jpg",
     overview: "Imprisoned on the planet Sakaar, Thor must race against time to return to Asgard and stop Ragnarök."
-  },
+  ,
+    sourceIds: { wikidata: "Q22665878" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_leon_professional",
     title: "Léon: The Professional",
@@ -690,7 +750,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "INDIE",
     posterUrl: "https://image.tmdb.org/t/p/w500/wA2kG4YqA9T3YqgP7F1vA9v7g.jpg",
     overview: "12-year-old Mathilda is reluctantly taken in by Léon, a professional assassin, after her family is murdered."
-  },
+  ,
+    sourceIds: { wikidata: "Q484675" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_benjamin_button",
     title: "The Curious Case of Benjamin Button",
@@ -705,7 +767,9 @@ export const MOVIES_DATABASE: Movie[] = [
     boxOfficeCategory: "BLOCKBUSTER",
     posterUrl: "https://image.tmdb.org/t/p/w500/3Wv4W1s3xKz2Y19m8C0x2B9y.jpg",
     overview: "Tells the story of Benjamin Button, a man who starts aging backwards with bizarre consequences."
-  },
+  ,
+    sourceIds: { wikidata: "Q183239" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
 
   // Christopher Nolan (Genişletilmiş)
   {
@@ -720,7 +784,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     boxOfficeCategory: "INDIE",
     overview: "A man with short-term memory loss attempts to track down his wife's murderer."
-  },
+  ,
+    sourceIds: { wikidata: "Q8000" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_batman_begins",
     title: "Batman Begins (Batman Başlıyor)",
@@ -734,7 +800,9 @@ export const MOVIES_DATABASE: Movie[] = [
     franchise: "DC",
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "After training with his mentor, Bruce Wayne begins his fight to free crime-ridden Gotham City from corruption."
-  },
+  ,
+    sourceIds: { wikidata: "Q166262" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
 
   // Martin Scorsese (Genişletilmiş)
   {
@@ -749,7 +817,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "A tale of greed, deception, money, power, and murder between two best friends in Las Vegas."
-  },
+  ,
+    sourceIds: { wikidata: "Q327528" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_raging_bull",
     title: "Raging Bull (Kızgın Boğa)",
@@ -762,7 +832,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "STANDARD",
     overview: "The life of boxer Jake LaMotta, whose violence and temper that lead him to the top in the ring destroyed his life outside of it."
-  },
+  ,
+    sourceIds: { wikidata: "Q220780" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_the_aviator",
     title: "The Aviator (Göklerin Hakimi)",
@@ -775,7 +847,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "A biopic depicting the early years of legendary director and aviator Howard Hughes' career from the late 1920s to the mid 1940s."
-  },
+  ,
+    sourceIds: { wikidata: "Q201924" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
 
   // Quentin Tarantino (Genişletilmiş)
   {
@@ -790,7 +864,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "After awakening from a four-year coma, a former assassin wreaks vengeance on the team of assassins who betrayed her."
-  },
+  ,
+    sourceIds: { wikidata: "Q165325" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_kill_bill_2",
     title: "Kill Bill: Vol. 2",
@@ -803,7 +879,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "The Bride continues her quest of vengeance against her former boss and lover Bill."
-  },
+  ,
+    sourceIds: { wikidata: "Q928019" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_reservoir_dogs",
     title: "Reservoir Dogs (Rezervuar Köpekleri)",
@@ -816,7 +894,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     boxOfficeCategory: "INDIE",
     overview: "When a simple jewelry heist goes horribly wrong, the surviving criminals begin to suspect that one of them is a police informant."
-  },
+  ,
+    sourceIds: { wikidata: "Q72962" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
 
   // David Fincher (Genişletilmiş)
   {
@@ -831,7 +911,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "Between 1968 and 1983, a San Francisco cartoonist becomes an amateur detective obsessed with tracking down the Zodiac Killer."
-  },
+  ,
+    sourceIds: { wikidata: "Q218172" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_dragon_tattoo",
     title: "The Girl with the Dragon Tattoo (Ejderha Dövmeli Kız)",
@@ -844,7 +926,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "STANDARD",
     overview: "Journalist Mikael Blomkvist is aided in his search for a woman who has been missing for forty years by Lisbeth Salander."
-  },
+  ,
+    sourceIds: { wikidata: "Q474093" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
 
   // Denis Villeneuve (Genişletilmiş)
   {
@@ -859,7 +943,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "When Keller Dover's daughter and her friend go missing, he takes matters into his own hands as the police pursue multiple leads."
-  },
+  ,
+    sourceIds: { wikidata: "Q3404003" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_incendies",
     title: "Incendies (İçimdeki Yangın)",
@@ -872,7 +958,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     boxOfficeCategory: "INDIE",
     overview: "Twins journey to the Middle East to discover their family history and fulfill their mother's last wishes."
-  },
+  ,
+    sourceIds: { wikidata: "Q1212650" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
 
   // Sinema Tarihi Başyapıtları & Yönetmen Devleri
   {
@@ -887,7 +975,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son."
-  },
+  ,
+    sourceIds: { wikidata: "Q47703" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_godfather_2",
     title: "The Godfather Part II (Baba 2)",
@@ -900,20 +990,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands the family syndicate."
-  },
-  {
-    id: "m_gladiator",
-    title: "Gladiator (Gladyatör)",
-    originalTitle: "Gladiator",
-    year: 2000,
-    director: "Ridley Scott",
-    cast: ["Russell Crowe", "Joaquin Phoenix", "Connie Nielsen", "Oliver Reed"],
-    genres: ["Action", "Adventure", "Drama"],
-    imdbRating: 8.5,
-    hasOscar: true,
-    boxOfficeCategory: "BLOCKBUSTER",
-    overview: "A former Roman General sets out to exact vengeance against the corrupt emperor who murdered his family and sent him into slavery."
-  },
+  ,
+    sourceIds: { wikidata: "Q184768" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_alien",
     title: "Alien (Yaratık)",
@@ -926,7 +1005,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "The crew of a commercial spacecraft encounter a deadly lifeform after investigating a mysterious transmission of unknown origin."
-  },
+  ,
+    sourceIds: { wikidata: "Q103569" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_titanic",
     title: "Titanic",
@@ -939,7 +1020,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic."
-  },
+  ,
+    sourceIds: { wikidata: "Q44578" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_avatar",
     title: "Avatar",
@@ -952,7 +1035,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world."
-  },
+  ,
+    sourceIds: { wikidata: "Q24871" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_terminator_2",
     title: "Terminator 2: Judgment Day (Kıyamet Günü)",
@@ -965,7 +1050,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "A cyborg, identical to the one who failed to kill Sarah Connor, must now protect her ten-year-old son John Connor from an advanced cyborg."
-  },
+  ,
+    sourceIds: { wikidata: "Q170564" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_the_matrix",
     title: "The Matrix (Matriks)",
@@ -978,7 +1065,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence."
-  },
+  ,
+    sourceIds: { wikidata: "Q83495" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_whiplash",
     title: "Whiplash",
@@ -991,7 +1080,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "INDIE",
     overview: "A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential."
-  },
+  ,
+    sourceIds: { wikidata: "Q15648198" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_la_la_land",
     title: "La La Land (Aşıklar Şehri)",
@@ -1004,7 +1095,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations for the future."
-  },
+  ,
+    sourceIds: { wikidata: "Q20856802" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_no_country",
     title: "No Country for Old Men (İhtiyarlara Yer Yok)",
@@ -1017,7 +1110,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "STANDARD",
     overview: "Violence and mayhem ensue after a hunter stumbles upon a drug deal gone wrong and more than two million dollars in cash near the Rio Grande."
-  },
+  ,
+    sourceIds: { wikidata: "Q183081" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_the_shining",
     title: "The Shining (Cinnet)",
@@ -1030,7 +1125,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "A family heads to an isolated hotel for the winter where a sinister presence influences the father into violence."
-  },
+  ,
+    sourceIds: { wikidata: "Q186341" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_clockwork_orange",
     title: "A Clockwork Orange (Otomatik Portakal)",
@@ -1043,7 +1140,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "In the future, a sadistic gang leader is imprisoned and volunteers for a conduct-aversion experiment, but it doesn't go as planned."
-  },
+  ,
+    sourceIds: { wikidata: "Q181086" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_2001_space",
     title: "2001: A Space Odyssey",
@@ -1056,7 +1155,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "After discovering a mysterious artifact buried on the Moon, mankind seeks its origins with the help of supercomputer H.A.L. 9000."
-  },
+  ,
+    sourceIds: { wikidata: "Q103474" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   // ── KÜLT VE POPÜLER DİZİLER (TV SERIES POOL) ──
   {
     id: "s_breaking_bad",
@@ -1069,7 +1170,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "A chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing methamphetamine."
-  },
+  ,
+    sourceIds: { wikidata: "Q1079" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_better_call_saul",
     title: "Better Call Saul",
@@ -1081,7 +1184,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "The trials and tribulations of criminal lawyer Jimmy McGill in the years leading up to his fateful run-in with Walter White."
-  },
+  ,
+    sourceIds: { wikidata: "Q14925221" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_game_of_thrones",
     title: "Game of Thrones",
@@ -1093,7 +1198,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns."
-  },
+  ,
+    sourceIds: { wikidata: "Q23572" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_succession",
     title: "Succession",
@@ -1105,7 +1212,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "The Roy family is known for controlling the biggest media and entertainment company in the world."
-  },
+  ,
+    sourceIds: { wikidata: "Q30599007" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_peaky_blinders",
     title: "Peaky Blinders",
@@ -1117,7 +1226,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "A gangster family epic set in 1900s England, centering on a gang who sew razor blades in the peaks of their caps."
-  },
+  ,
+    sourceIds: { wikidata: "Q14944179" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_true_detective",
     title: "True Detective",
@@ -1129,7 +1240,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "Seasonal anthology series in which police investigations unearth the personal and professional secrets of those involved."
-  },
+  ,
+    sourceIds: { wikidata: "Q7847400" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_chernobyl",
     title: "Chernobyl",
@@ -1141,7 +1254,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "In April 1986, an explosion at the Chernobyl nuclear power plant in the USSR becomes one of the world's worst man-made catastrophes."
-  },
+  ,
+    sourceIds: { wikidata: "Q48741246" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_mindhunter",
     title: "Mindhunter",
@@ -1153,7 +1268,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "Set in the late 1970s, two FBI agents expand criminal science by delving into the psychology of murder."
-  },
+  ,
+    sourceIds: { wikidata: "Q25340152" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_severance",
     title: "Severance",
@@ -1165,7 +1282,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "Mark leads a team of office workers whose memories have been surgically divided between their work and personal lives."
-  },
+  ,
+    sourceIds: { wikidata: "Q101096725" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_the_sopranos",
     title: "The Sopranos",
@@ -1177,7 +1296,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "New Jersey mob boss Tony Soprano deals with personal and professional issues in his home and business life."
-  },
+  ,
+    sourceIds: { wikidata: "Q23628" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_stranger_things",
     title: "Stranger Things",
@@ -1189,7 +1310,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "When a young boy vanishes, a small town uncovers a mystery involving secret experiments and supernatural forces."
-  },
+  ,
+    sourceIds: { wikidata: "Q19798734" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_the_last_of_us",
     title: "The Last of Us",
@@ -1201,7 +1324,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "After a global pandemic destroys civilization, a hardened survivor takes charge of a 14-year-old girl who may be humanity's last hope."
-  },
+  ,
+    sourceIds: { wikidata: "Q87131973" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_fargo",
     title: "Fargo",
@@ -1213,7 +1338,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "Various chronicles of deception, intrigue and murder in and around frozen Minnesota."
-  },
+  ,
+    sourceIds: { wikidata: "Q222720" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "s_the_wire",
     title: "The Wire",
@@ -1225,7 +1352,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "SERIES",
     overview: "The Baltimore drug scene, as seen through the eyes of drug dealers and law enforcement."
-  },
+  ,
+    sourceIds: { wikidata: "Q478360" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_barbie",
     title: "Barbie",
@@ -1237,7 +1366,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     mediaType: "FILM",
     overview: "Barbie and Ken are having the time of their lives in the colorful and seemingly perfect world of Barbie Land."
-  },
+  ,
+    sourceIds: { wikidata: "Q104697928" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_little_women",
     title: "Little Women",
@@ -1249,7 +1380,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     mediaType: "FILM",
     overview: "Jo March reflects back and forth on her life, telling the beloved story of the March sisters."
-  },
+  ,
+    sourceIds: { wikidata: "Q56241200" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_lady_bird",
     title: "Lady Bird",
@@ -1261,7 +1394,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "FILM",
     overview: "In 2002, an artistically inclined seventeen-year-old girl comes of age in Sacramento, California."
-  },
+  ,
+    sourceIds: { wikidata: "Q27480769" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_forrest_gump",
     title: "Forrest Gump",
@@ -1273,7 +1408,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     mediaType: "FILM",
     overview: "The history of the United States from the 1950s to the '70s unfolds from the perspective of an Alabama man with an IQ of 75."
-  },
+  ,
+    sourceIds: { wikidata: "Q134773" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_saving_private_ryan",
     title: "Saving Private Ryan (Er Ryan'ı Kurtarmak)",
@@ -1285,7 +1422,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: true,
     mediaType: "FILM",
     overview: "Following the Normandy Landings, a group of U.S. soldiers go behind enemy lines to retrieve a paratrooper whose brothers have been killed in action."
-  },
+  ,
+    sourceIds: { wikidata: "Q165817" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_cast_away",
     title: "Cast Away (Yeni Hayat)",
@@ -1297,7 +1436,9 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "FILM",
     overview: "A FedEx executive undergoes a physical and emotional transformation after crash landing on a deserted island."
-  },
+  ,
+    sourceIds: { wikidata: "Q213411" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_gotg2",
     title: "Guardians of the Galaxy Vol. 2",
@@ -1310,7 +1451,9 @@ export const MOVIES_DATABASE: Movie[] = [
     mediaType: "FILM",
     franchise: "MARVEL",
     overview: "The Guardians struggle to keep together as a team while dealing with their personal family issues, notably Star-Lord's encounter with his father."
-  },
+  ,
+    sourceIds: { wikidata: "Q20001199" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_gotg3",
     title: "Guardians of the Galaxy Vol. 3",
@@ -1323,7 +1466,9 @@ export const MOVIES_DATABASE: Movie[] = [
     mediaType: "FILM",
     franchise: "MARVEL",
     overview: "Still reeling from the loss of Gamora, Peter Quill rallies his team to defend the universe and one of their own."
-  },
+  ,
+    sourceIds: { wikidata: "Q29226331" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_deadpool2",
     title: "Deadpool 2",
@@ -1336,7 +1481,9 @@ export const MOVIES_DATABASE: Movie[] = [
     mediaType: "FILM",
     franchise: "MARVEL",
     overview: "Foul-mouthed mutant mercenary Wade Wilson assembles a team of fellow mutant rogues to protect a young boy of supernatural abilities."
-  },
+  ,
+    sourceIds: { wikidata: "Q25431158" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_deadpool_wolverine",
     title: "Deadpool & Wolverine",
@@ -1349,7 +1496,9 @@ export const MOVIES_DATABASE: Movie[] = [
     mediaType: "FILM",
     franchise: "MARVEL",
     overview: "Deadpool is offered a place in the Marvel Cinematic Universe by the Time Variance Authority, but instead recruits a variant of Wolverine to save his universe."
-  },
+  ,
+    sourceIds: { wikidata: "Q102180106" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_peacemaker",
     title: "Peacemaker",
@@ -1362,7 +1511,9 @@ export const MOVIES_DATABASE: Movie[] = [
     mediaType: "SERIES",
     franchise: "DC",
     overview: "Picking up where The Suicide Squad left off, Peacemaker returns home after recovering from his encounter with Bloodsport."
-  },
+  ,
+    sourceIds: { wikidata: "Q101089777" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_free_guy",
     title: "Free Guy",
@@ -1374,5 +1525,7 @@ export const MOVIES_DATABASE: Movie[] = [
     hasOscar: false,
     mediaType: "FILM",
     overview: "A bank teller discovers that he's actually an NPC inside a brutal, open world video game."
-  }
+  ,
+    sourceIds: { wikidata: "Q38685497" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }}
 ];

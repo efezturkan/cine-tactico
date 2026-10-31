@@ -52,7 +52,7 @@ const BOARD_META = [
     colorBorder: "rgba(245,158,11,0.35)",
     tag: "OSCAR",
     badge: "Tür & Ödüller",
-    desc: "En iyi film, tür kesişimleri, IMDb 8.5+ filmlerin karanlık bulmacaları.",
+    desc: "En iyi film, tür kesişimleri, 8.5+ puanlı filmlerin karanlık bulmacaları.",
     modes: ["VS_BOT", "PASS_AND_PLAY"],
     difficulty: "ZOR",
     isLive: false,

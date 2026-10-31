@@ -54,7 +54,7 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ isOpen, onClose 
     },
     {
       title: "3. 3'lü Hat Kur & Taktiksel Çal",
-      desc: "Yatay, dikey veya çapraz 3 kareyi ilk tamamlayan maçı kazanır. 'Kare Çalma' açıkken rakibin karesini daha yüksek IMDb puanlı bir filmle geri alabilirsin!",
+      desc: "Yatay, dikey veya çapraz 3 kareyi ilk tamamlayan maçı kazanır. 'Kare Çalma' açıkken rakibin karesini daha yüksek puanlı bir filmle geri alabilirsin!",
       badge: "TAKTIK VE ZAFER",
       visual: (
         <div className="p-4 rounded-2xl bg-zinc-900/90 border border-zinc-800 text-center my-3">

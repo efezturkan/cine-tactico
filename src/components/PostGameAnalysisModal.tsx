@@ -201,7 +201,6 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                       className="text-[10px] p-1.5 rounded-lg bg-[#121c33] text-zinc-200 flex items-center justify-between"
                     >
                       <span className="font-bold truncate">{m.title} ({m.year})</span>
-                      <span className="text-amber-400 shrink-0 font-black">★ {m.imdbRating}</span>
                     </div>
                   ))}
                 </div>

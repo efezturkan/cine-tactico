@@ -224,7 +224,7 @@ export const PRESET_BOARDS: GameBoard[] = [
       {
         id: "c2_2",
         type: "RATING",
-        label: "IMDb 8.0+ Efsane",
+        label: "8.0+ Puan (Efsane)",
         subLabel: "Top 250 Seviyesi",
         value: "IMDB_8_PLUS",
       },
@@ -281,7 +281,7 @@ export const PRESET_BOARDS: GameBoard[] = [
       {
         id: "c3_3",
         type: "RATING",
-        label: "IMDb 8.0+",
+        label: "8.0+ Puan",
         value: "IMDB_8_PLUS",
       },
     ],
@@ -380,7 +380,7 @@ export const PRESET_BOARDS: GameBoard[] = [
       {
         id: "c3_dune",
         type: "RATING",
-        label: "IMDb 8.0+ Efsane",
+        label: "8.0+ Puan (Efsane)",
         value: "IMDB_8_PLUS",
       },
     ],
@@ -423,7 +423,7 @@ export const PRESET_BOARDS: GameBoard[] = [
       {
         id: "c2_90s",
         type: "RATING",
-        label: "IMDb 8.0+ Efsane",
+        label: "8.0+ Puan (Efsane)",
         value: "IMDB_8_PLUS",
       },
       {
@@ -515,7 +515,7 @@ export const PRESET_BOARDS: GameBoard[] = [
       {
         id: "c1_thrill",
         type: "RATING",
-        label: "IMDb 8.0+ Efsane",
+        label: "8.0+ Puan (Efsane)",
         value: "IMDB_8_PLUS",
       },
       {
@@ -578,7 +578,7 @@ export const PRESET_BOARDS: GameBoard[] = [
       {
         id: "c3_s_oscar",
         type: "RATING",
-        label: "IMDb 8.0+ Efsane",
+        label: "8.0+ Puan (Efsane)",
         subLabel: "Kült Başyapıtlar",
         value: "IMDB_8_PLUS",
       },

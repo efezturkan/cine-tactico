@@ -118,7 +118,7 @@ export function useGameSession(
           haptic.error();
           return {
             success: false,
-            message: `Kareyi çalmak için IMDb puanı ${currentOccupant.movie.imdbRating}'den yüksek bir film seçmelisin!`,
+            message: "Kareyi çalmak için daha yüksek puanlı bir film seçmelisin!",
           };
         }
         isStealingMove = true;

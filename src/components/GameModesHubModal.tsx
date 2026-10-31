@@ -54,7 +54,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
       color: "text-cyan-400",
       border: "border-cyan-400/40",
       bg: "bg-cyan-400/10",
-      desc: "Brad Pitt, Cillian Murphy, Robert De Niro satırları; Suç, IMDb 8.0+ ve 2010 Sonrası sütunları.",
+      desc: "Brad Pitt, Cillian Murphy, Robert De Niro satırları; Suç, 8.0+ Puan ve 2010 Sonrası sütunları.",
     },
     {
       idx: 2,
@@ -63,7 +63,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
       color: "text-purple-400",
       border: "border-purple-400/40",
       bg: "bg-purple-400/10",
-      desc: "Denis Villeneuve, David Fincher, Christopher Nolan satırları; Bilim Kurgu, Dram ve IMDb 8.0+ sütunları.",
+      desc: "Denis Villeneuve, David Fincher, Christopher Nolan satırları; Bilim Kurgu, Dram ve 8.0+ Puan sütunları.",
     },
     {
       idx: 3,
@@ -72,7 +72,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
       color: "text-rose-400",
       border: "border-rose-500/50",
       bg: "bg-gradient-to-r from-red-600/20 to-blue-600/20",
-      desc: "Christian Bale (Batman/Gorr), James Gunn, Ryan Reynolds kesişiminde DC Evreni x Marvel (MCU) x IMDb 8.0+ Efsaneleri.",
+      desc: "Christian Bale (Batman/Gorr), James Gunn, Ryan Reynolds kesişiminde DC Evreni x Marvel (MCU) x 8.0+ Puan Efsaneleri.",
     },
     {
       idx: 4,
@@ -81,7 +81,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
       color: "text-amber-300",
       border: "border-amber-400/40",
       bg: "bg-amber-500/10",
-      desc: "Denis Villeneuve, Nolan, Timothée Chalamet satırları; Bilim Kurgu, Oscar ve IMDb 8.0+ sütunları.",
+      desc: "Denis Villeneuve, Nolan, Timothée Chalamet satırları; Bilim Kurgu, Oscar ve 8.0+ Puan sütunları.",
     },
     {
       idx: 5,
@@ -90,7 +90,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
       color: "text-emerald-400",
       border: "border-emerald-400/40",
       bg: "bg-emerald-400/10",
-      desc: "Brad Pitt (Tyler Durden), Tarantino (Pulp Fiction), Fincher (Se7en) satırları; Suç, IMDb 8.0+ ve 90'lar sütunları.",
+      desc: "Brad Pitt (Tyler Durden), Tarantino (Pulp Fiction), Fincher (Se7en) satırları; Suç, 8.0+ Puan ve 90'lar sütunları.",
     },
   ];
 
@@ -100,7 +100,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
       id: "wordle",
       title: "Cine-Wordle: Günün Gizli Filmi",
       tag: "Kelime / Tahmin",
-      desc: "6 tahminde gizli filmi bul. Her denemede Tür, Yönetmen, Çıkış Yılı ve IMDb puanına göre yeşil/sarı ipuçları açılır.",
+      desc: "6 tahminde gizli filmi bul. Her denemede Tür, Yönetmen, Çıkış Yılı ve Puanına göre yeşil/sarı ipuçları açılır.",
       status: "Alfa Aşamasında",
     },
     {
@@ -133,7 +133,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
     { cat: "3. Dönem & Zaman", combos: ["Dönem (90'lar, 2000'ler, 2010+) x Tür", "Dönem x Yönetmen (Örn: Nolan'ın 2000'ler filmleri)", "Süre (150+ Dakika Epik) x Dönem", "Yıl x Bütçe"] },
     { cat: "4. Finansal & Gişe", combos: ["1 Milyar $ Hasılat x Bağımsız Stüdyo", "Düşük Bütçe (<$5M) x Yüksek Hasılat (Gişe Mucizesi)", "Bütçe ($200M+) x Flop (Gişe Batığı)"] },
     { cat: "5. Müzik & Ses", combos: ["Besteci (Hans Zimmer, Morricone) x Yönetmen", "En İyi Orijinal Şarkı Oscarı x Müzikal Türü", "İkonik Film Müziği x Bilim Kurgu"] },
-    { cat: "6. Dizi & Televizyon", combos: ["Platform (HBO, Netflix, Apple TV+) x Showrunner", "Mini Dizi x Emmy Ödülü", "IMDb 9.0+ Bölüm x Drama / Suç"] },
+    { cat: "6. Dizi & Televizyon", combos: ["Platform (HBO, Netflix, Apple TV+) x Showrunner", "Mini Dizi x Emmy Ödülü", "9.0+ Puanlı Bölüm x Drama / Suç"] },
     { cat: "7. Kültür & Coğrafya", combos: ["Kore / Asya Sineması x Gerilim", "Fransız Yeni Dalgası x Yönetmen", "Türk Bağımsız Sineması x Festival Ödüllü"] },
     { cat: "8. Uyarlama & Kaynak", combos: ["Roman Uyarlaması x Yönetmen", "Çizgi Roman / DC / Marvel x Tür", "Gerçek Hayat Hikayesi (Biyografi) x Oscar"] },
   ];

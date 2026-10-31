@@ -21,6 +21,9 @@ interface XoxBoardProps {
  * Görsel yüklenemediğinde veya 404 verdiğinde patlak resim yerine
  * şık ve sinematik tipografik kart tasarımı gösterir.
  */
+// Phase 2: MVP typographic-first mode (no TMDB poster dependency for offline & licensing safety)
+const SHOW_EXTERNAL_POSTERS = false;
+
 const CellMoviePoster: React.FC<{
   movie: Movie;
   answeredBy: PlayerSymbol;
@@ -47,7 +50,7 @@ const CellMoviePoster: React.FC<{
   return (
     <div className="relative w-full h-full flex flex-col justify-between p-1.5 overflow-hidden rounded-xl select-none">
       {/* Afiş veya Sinematik Tipografik Kart */}
-      {movie.posterUrl && !imgFailed ? (
+      {SHOW_EXTERNAL_POSTERS && movie.posterUrl && !imgFailed ? (
         <Image
           src={movie.posterUrl}
           alt={movie.title}
@@ -66,7 +69,7 @@ const CellMoviePoster: React.FC<{
             {movie.title}
           </span>
           <span className="text-[8px] text-amber-300 font-mono mt-1 font-bold">
-            {movie.year} · ⭐ {movie.imdbRating}
+            {movie.year}
           </span>
         </div>
       )}
@@ -74,12 +77,8 @@ const CellMoviePoster: React.FC<{
       {/* Karartma Gradyanı */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-black/30 pointer-events-none" />
 
-      {/* Üst Bar: IMDb Puanı & Oyuncu Rozeti */}
-      <div className="relative z-10 flex items-center justify-between w-full">
-        <span className="text-[8px] font-black text-amber-300 bg-black/70 px-1 py-0.5 rounded backdrop-blur-sm flex items-center gap-0.5 border border-amber-400/30">
-          <Star className="w-2.5 h-2.5 fill-amber-300 text-amber-300" />
-          {movie.imdbRating}
-        </span>
+      {/* Üst Bar: Oyuncu Rozeti */}
+      <div className="relative z-10 flex items-center justify-end w-full">
         <div
           className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-black text-[10px] shadow-lg backdrop-blur-sm"
           style={{
@@ -154,7 +153,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
         </div>
       );
     } else if (crit.type === "RATING") {
-      badgeLabel = "⭐ IMDb";
+      badgeLabel = "⭐ PUAN";
       badgeColor = "text-amber-300";
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-yellow-400/15 border border-yellow-400/40 flex items-center justify-center text-yellow-400 shadow-sm shrink-0 mb-1">

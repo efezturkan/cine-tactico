@@ -2,8 +2,8 @@
 
 **Document:** MASTER-PROGRESS.md  
 **Last Updated:** 31 October 2026  
-**Current Phase:** PHASE 0 — Technical Audit & Baseline Verification  
-**Gate Status:** PHASE 0 In Progress (Audit Complete, Baseline Documenting)  
+**Current Phase:** PHASE 2 — Data Normalization & Foundation Complete  
+**Gate Status:** PHASE 2 Passed (Data model updated, 97 QIDs verified, IMDb UI purged, 27/27 tests pass)  
 
 ---
 
@@ -13,8 +13,8 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **Phase 0** | Repository & Architecture Audit | Baseline Report (`PHASE-00-BASELINE.md`) | **DONE** | Codebase audited, test passing (27/27), clean build (171 kB), baseline committed (`7bcf24f`) |
 | **Phase 1 (Data)** | Data & Licensing Feasibility Audit | `CINE-TACTICO-PHASE-1-DATA-FEASIBILITY.md` | **DONE** | 100 kayıt, 97/100 Wikidata eşleşme, lisans matrisi tamamlandı |
-| **Phase 1 (Mobile)** | Mobile Architecture & Capacitor | Native builds generated (iOS & Android) | **NOT STARTED** | Awaiting owner decisions from Phase 1 Data report |
-| **Phase 2** | Gameplay & Data Integrity | Core logic tests passing (27/27) | **DONE** | `src/tests/game-engine.test.ts` (27/27 passed) |
+| **Phase 2** | Data Normalization & UI Decoupling | `CINE-TACTICO-PHASE-2-IMPLEMENTATION.md` | **DONE** | 97 unique records with verified Wikidata QIDs, 0 dead cells, IMDb purged from UI, typographic cards active, 27/27 tests PASS, build clean |
+| **Phase 3 (Mobile)** | Mobile Architecture & Capacitor | Native builds generated (iOS & Android) | **NOT STARTED** | Ready to initiate Capacitor configuration |
 | **Phase 3** | Automated & Physical QA | Real device test report | **NOT STARTED** | Pending Phase 1 native build |
 | **Phase 4** | Security, Privacy & Compliance | Store compliance & legal audit report | **IN PROGRESS** | TMDB attribution & account deletion planned |
 | **Phase 5** | Store Account & Financial Prep | Owner store accounts & budget ready | **BLOCKED** | Owner action required ($25 Google, $99 Apple) |

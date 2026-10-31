@@ -410,10 +410,10 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                                 : isDcMarvel
                                 ? "Christian Bale, James Gunn, Ryan Reynolds x DC, Marvel"
                                 : b.id === "board_90s_cult"
-                                ? "Brad Pitt, Tarantino, Fincher x Suç, 90'lar, IMDb 8.0+"
+                                ? "Brad Pitt, Tarantino, Fincher x Suç, 90'lar, 8.0+ Puan"
                                 : b.id === "board_dune_scifi"
                                 ? "Denis Villeneuve, Nolan, Chalamet x Sci-Fi, Oscar"
-                                : "Brad Pitt, Murphy, De Niro x Suç, IMDb 8.0+, 2010s+"}
+                                : "Brad Pitt, Murphy, De Niro x Suç, 8.0+ Puan, 2010s+"}
                             </p>
                           </div>
                           <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-zinc-900 text-amber-400 border border-zinc-800">

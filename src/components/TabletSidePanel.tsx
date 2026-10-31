@@ -81,10 +81,6 @@ export const TabletSidePanel: React.FC<TabletSidePanelProps> = ({
                     {item.movie.director} · {item.movie.year}
                   </div>
                   <div className="flex items-center gap-2 mt-1.5 text-[10px] font-semibold text-zinc-400">
-                    <span className="flex items-center gap-0.5 text-amber-400">
-                      <Star className="w-3 h-3 fill-amber-400" />
-                      {item.movie.imdbRating}
-                    </span>
                     {item.movie.hasOscar && (
                       <span className="flex items-center gap-0.5 text-yellow-400">
                         <Award className="w-3 h-3" /> Oscar

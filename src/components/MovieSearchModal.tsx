@@ -18,10 +18,13 @@ interface MovieSearchModalProps {
   errorMessage?: string | null;
 }
 
+// Phase 2: MVP typographic-first mode (no TMDB poster dependency)
+const SHOW_EXTERNAL_POSTERS = false;
+
 const SearchMovieThumbnail: React.FC<{ movie: Movie }> = ({ movie }) => {
   const [imgFailed, setImgFailed] = useState(false);
 
-  if (movie.posterUrl && !imgFailed) {
+  if (SHOW_EXTERNAL_POSTERS && movie.posterUrl && !imgFailed) {
     return (
       <Image
         src={movie.posterUrl}
@@ -187,10 +190,6 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                         Tür: {movie.genres.join(" · ")}
                       </div>
                       <div className="flex items-center gap-2 mt-1.5 text-[10px] font-bold text-zinc-400">
-                        <span className="flex items-center gap-0.5 text-amber-400">
-                          <Star className="w-3 h-3 fill-amber-400" />
-                          {movie.imdbRating}
-                        </span>
                         {movie.hasOscar && (
                           <span className="flex items-center gap-0.5 text-yellow-400 bg-yellow-400/10 px-1.5 py-0.5 rounded border border-yellow-400/20">
                             <Award className="w-2.5 h-2.5" /> Oscar
