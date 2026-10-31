@@ -1,3 +1,5 @@
+import { GameBoard, CellAnswer } from "@/types/game";
+
 export type AmbienceTheme = "velvet_red" | "darkroom_red" | "kodak_amber" | "noir_silver" | "scifi_cyan";
 export type GrainLevel = "OFF" | "SUBTLE" | "VINTAGE";
 export type CornerAccentOption = "AUTO" | "GOLD" | "SILVER" | "CYAN" | "RUBY";
@@ -122,6 +124,24 @@ export interface PowerupInventory {
   doublePoints: number;   // Gişe Rekoru x2 (Kafa Topu Çift Sayı)
 }
 
+export interface MatchRecord {
+  id: string;
+  timestamp: number;
+  outcome: "VICTORY" | "DEFEAT" | "DRAW";
+  mode: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "ONLINE_ROOM" | "DAILY_SOLO";
+  modeLabel: string;
+  opponent: {
+    name: string;
+    avatarId: string;
+    rankTitle?: string;
+  };
+  trophyDelta: number;
+  scoreRarity: number;
+  totalArcadeScore: number;
+  board: GameBoard;
+  cells: (CellAnswer | null)[];
+}
+
 export interface UserProfile {
   username: string;
   avatarId: string;
@@ -139,6 +159,7 @@ export interface UserProfile {
   favoriteDirector?: string;
   favoriteMode?: string;
   lastFiveMatches?: ("W" | "L" | "D")[];
+  matchHistory?: MatchRecord[]; // Clash Royale tarzı son oynanan maçların tahta dökümü
   reelsBalance: number;       // Altın / Makaralar
   diamondsBalance: number;    // Elmaslar (Reklam & Turnuva ödülü)
   powerups: PowerupInventory; // Kafa Topu 2 tarzı jokerler

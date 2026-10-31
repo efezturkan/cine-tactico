@@ -372,6 +372,57 @@ runTest("calculateCellRarity geniş havuzda Spec v3 puan tablosunu uygular", () 
   );
 });
 
+// 12. Ters Kadraj ve Tahta Geçerlilik Sayımı Testleri (Lazy Memoization & Reverse Cast Audit)
+runTest("1. Klasik Düello tahtalarının geçerli hücre sayıları doğru", () => {
+  const board1 = PRESET_BOARDS[0];
+  const counts = board1.validCounts;
+  // 9 hücre de hesaplanmış ve her biri en az 1 filme sahip olmalı
+  const has9Cells = Object.keys(counts).length === 9;
+  const allPositive = Object.values(counts).every(c => c > 0);
+  // İlk hücre Nolan x Tarantino vs DiCaprio olmalı
+  const cell0Expected = findMatchingMovies(board1.rows[0], board1.cols[0]).length;
+  return has9Cells && allPositive && counts["0_0"] === cell0Expected;
+});
+
+runTest("2. Ters Kadraj tahtalarında yalnızca film kesişimleri (ortak aktörler) sayılıyor", () => {
+  const revBoard = PRESET_BOARDS.find(b => b.boardMode === "REVERSE_CAST")!;
+  const counts = revBoard.validCounts;
+  // 0_0 hücresi: row[0] vs col[0] ortak aktör sayısı
+  const row0 = revBoard.rows[0].value;
+  const col0 = revBoard.cols[0].value;
+  const expectedShared = getSharedActors(row0, col0).length;
+  return counts["0_0"] === expectedShared && expectedShared > 0;
+});
+
+runTest("3. Ters Kadraj hücreleri yanlışlıkla sıfır hesaplanmıyor (0-Cell Hatası Önleme)", () => {
+  const revBoards = PRESET_BOARDS.filter(b => b.boardMode === "REVERSE_CAST");
+  return revBoards.every(b => {
+    const counts = b.validCounts;
+    return Object.keys(counts).length === 9 && Object.values(counts).every(count => count >= 1);
+  });
+});
+
+runTest("4. Tahta değiştirildiğinde veya karıştırıldığında hesaplama yeni tahtaya göre güncelleniyor", () => {
+  const boardA = PRESET_BOARDS[0]; // Klasik
+  const boardB = PRESET_BOARDS.find(b => b.boardMode === "REVERSE_CAST")!; // Ters Kadraj
+  const countsA = boardA.validCounts;
+  const countsB = boardB.validCounts;
+  // İki tahtanın hücre sayıları birbirinden bağımsız ve farklı olmalı
+  const areDifferent = JSON.stringify(countsA) !== JSON.stringify(countsB);
+  // Rastgele karıştırma da yeni tahtaya göre validCounts üretmeli
+  const randomizedA = createRandomizedBoard(boardA);
+  const randomizedHas9 = Object.keys(randomizedA.validCounts).length === 9;
+  return areDifferent && randomizedHas9;
+});
+
+runTest("5. Aynı tahta tekrar kullanıldığında (lazy memoization) önceki hesaplama bozulmuyor", () => {
+  const revBoard = PRESET_BOARDS.find(b => b.boardMode === "REVERSE_CAST")!;
+  const firstAccess = JSON.stringify(revBoard.validCounts);
+  const secondAccess = JSON.stringify(revBoard.validCounts);
+  const thirdAccess = JSON.stringify(revBoard.validCounts);
+  return firstAccess === secondAccess && secondAccess === thirdAccess && !firstAccess.includes('"0_0":0');
+});
+
 console.log("\n=================================================");
 console.log(`TOTAL RESULT: ${passedCount}/${totalCount} PASSED (${Math.round((passedCount / totalCount) * 100)}%)`);
 console.log("=================================================");

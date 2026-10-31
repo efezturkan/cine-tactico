@@ -35,7 +35,7 @@ import {
 } from "@/lib/supabase";
 import { PRESET_BOARDS, getRandomBoard, createRandomizedBoard, getRandomOpponent, BotOpponentProfile, BOT_OPPONENTS, getBoardForMode } from "@/data/boards";
 import { GameMode, Movie, BotDifficulty, CustomRoomSettings, GameBoard, ContentPoolType, PlayerSymbol } from "@/types/game";
-import { UserProfile, PowerupInventory, DEFAULT_AMBIENCE, AMBIENCE_THEMES, CinemaAmbience, AmbienceTheme } from "@/types/profile";
+import { UserProfile, PowerupInventory, DEFAULT_AMBIENCE, AMBIENCE_THEMES, CinemaAmbience, AmbienceTheme, MatchRecord } from "@/types/profile";
 import { audio } from "@/utils/audio";
 import { Users, Bot, Swords, Calendar, Shuffle, Zap, Flame, Share2, ShieldAlert, ArrowLeft, Lightbulb, Flag, Lock } from "lucide-react";
 
@@ -73,6 +73,7 @@ function CineXoxPageContent() {
   const [notifUnreadCount, setNotifUnreadCount] = useState<number>(2);
   const [pendingBoardIndex, setPendingBoardIndex] = useState<number>(0);
   const [pendingOpponent, setPendingOpponent] = useState<BotOpponentProfile>(() => BOT_OPPONENTS[0]);
+  const hasRecordedMatchRef = React.useRef<boolean>(false);
 
   // Kullanıcı Profili & Sinefil Kimliği (Letterboxd & CineXOX)
   const [profile, setProfile] = useState<UserProfile>({
@@ -129,6 +130,18 @@ function CineXoxPageContent() {
               ...parsed,
               theme: parsed.theme && parsed.theme in AMBIENCE_THEMES ? (parsed.theme as AmbienceTheme) : DEFAULT_AMBIENCE.theme,
             },
+          }));
+        }
+      }
+
+      // LocalStorage'dan Kayıtlı Maç Geçmişini (Match History) Yükle
+      const savedHistory = localStorage.getItem("cinexox_match_history");
+      if (savedHistory) {
+        const parsedHistory = JSON.parse(savedHistory);
+        if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
+          setProfile(prev => ({
+            ...prev,
+            matchHistory: parsedHistory,
           }));
         }
       }
@@ -261,38 +274,79 @@ function CineXoxPageContent() {
     }
   }, [currentView]);
 
-  // Maç bittiğinde kariyer istatistiğini ve son 5 maç formunu güncelle
+  // Maç bittiğinde kariyer istatistiğini, son 5 maç formunu ve Savaş Geçmişini (Match History) güncelle
   useEffect(() => {
-    if (winner !== null) {
-      setProfile(prev => {
-        const isWin = winner === "X";
-        const outcome: "W" | "L" | "D" = isWin ? "W" : winner === "O" ? "L" : "D";
-        const currentLast5 = prev.lastFiveMatches && prev.lastFiveMatches.length > 0
-          ? prev.lastFiveMatches
-          : ["L", "W", "L", "W", "W"];
-        const updatedLast5 = [...currentLast5.slice(1), outcome] as ("W" | "L" | "D")[];
-
-        const updated = {
-          ...prev,
-          totalMatches: prev.totalMatches + 1,
-          wins: isWin ? prev.wins + 1 : prev.wins,
-          losses: winner === "O" ? prev.losses + 1 : prev.losses,
-          draws: winner === "DRAW" ? prev.draws + 1 : prev.draws,
-          highestCombo: Math.max(prev.highestCombo, comboStreak),
-          lastFiveMatches: updatedLast5,
-        };
-
-        if (isSupabaseConfigured) {
-          syncProfileToSupabase(updated);
-          if (mode === "ONLINE_ROOM" && customRoomCode) {
-            finishRealtimeGame(customRoomCode, winner);
-          }
-        }
-
-        return updated;
-      });
+    if (winner === null) {
+      hasRecordedMatchRef.current = false;
+      return;
     }
-  }, [winner]);
+
+    if (hasRecordedMatchRef.current) return;
+    hasRecordedMatchRef.current = true;
+
+    setProfile(prev => {
+      const isWin = winner === "X";
+      const outcome: "W" | "L" | "D" = isWin ? "W" : winner === "O" ? "L" : "D";
+      const currentLast5 = prev.lastFiveMatches && prev.lastFiveMatches.length > 0
+        ? prev.lastFiveMatches
+        : ["L", "W", "L", "W", "W"];
+      const updatedLast5 = [...currentLast5.slice(1), outcome] as ("W" | "L" | "D")[];
+
+      const matchMode = (board.boardMode || (mode === "ONLINE_ROOM" ? "ONLINE_ROOM" : "CLASSIC")) as any;
+      const modeLabel = board.boardMode === "REVERSE_CAST"
+        ? "Ters Kadraj"
+        : board.boardMode === "CINE_CONCEPT"
+        ? "Sinefil Konsept"
+        : mode === "ONLINE_ROOM"
+        ? "Canlı Çevrimiçi Düello"
+        : "Klasik Düello";
+
+      const newRecord: MatchRecord = {
+        id: `match_${Date.now()}`,
+        timestamp: Date.now(),
+        outcome: isWin ? "VICTORY" : winner === "O" ? "DEFEAT" : "DRAW",
+        mode: matchMode,
+        modeLabel,
+        opponent: {
+          name: pendingOpponent.name || "Sinefil Bot",
+          avatarId: pendingOpponent.avatarId || "avatar_director",
+          rankTitle: pendingOpponent.rankTitle,
+        },
+        trophyDelta: isWin ? 25 : winner === "DRAW" ? 10 : 8,
+        scoreRarity: scoreRarityX,
+        totalArcadeScore: totalArcadeScore || (isWin ? 1850 : 920),
+        board: { ...board },
+        cells: [...cells],
+      };
+
+      const updatedHistory = [newRecord, ...(prev.matchHistory || [])].slice(0, 20);
+      try {
+        localStorage.setItem("cinexox_match_history", JSON.stringify(updatedHistory));
+      } catch {
+        // ignore
+      }
+
+      const updated = {
+        ...prev,
+        totalMatches: prev.totalMatches + 1,
+        wins: isWin ? prev.wins + 1 : prev.wins,
+        losses: winner === "O" ? prev.losses + 1 : prev.losses,
+        draws: winner === "DRAW" ? prev.draws + 1 : prev.draws,
+        highestCombo: Math.max(prev.highestCombo, comboStreak),
+        lastFiveMatches: updatedLast5,
+        matchHistory: updatedHistory,
+      };
+
+      if (isSupabaseConfigured) {
+        syncProfileToSupabase(updated);
+        if (mode === "ONLINE_ROOM" && customRoomCode) {
+          finishRealtimeGame(customRoomCode, winner);
+        }
+      }
+
+      return updated;
+    });
+  }, [winner, board, cells, pendingOpponent, scoreRarityX, totalArcadeScore, mode, customRoomCode, comboStreak]);
 
   const handleCellSelect = (index: number) => {
     if (mode === "VS_BOT" && currentTurn === "O") return;
@@ -1117,6 +1171,8 @@ function CineXoxPageContent() {
         winner={winner}
         board={board}
         cells={cells}
+        profile={profile}
+        totalArcadeScore={totalArcadeScore}
         onPlayAgain={() => {
           const { board: nextBoard, index: nextIdx } = getRandomBoard(boardIndex);
           const opp = getRandomOpponent(botDifficulty, pendingOpponent.name);

@@ -25,6 +25,21 @@ export function calculateBoardValidCounts(
 }
 
 /**
+ * Bir tahtanın validCounts verisini tembelce (lazy memoized) garanti eder.
+ * Daha önce hesaplanmışsa mevcut olanı döner, yoksa bir kez hesaplayıp önbelleğe yazar.
+ */
+export function ensureBoardValidCounts(
+  board: GameBoard,
+  moviesPool = MOVIES_DATABASE
+): Record<string, number> {
+  if (board.validCounts && Object.keys(board.validCounts).length === 9) {
+    return board.validCounts;
+  }
+  board.validCounts = calculateBoardValidCounts(board, moviesPool);
+  return board.validCounts;
+}
+
+/**
  * Verilen tahtanın satır ve sütun sırasını rastgele karıştırarak
  * her yeni maç bulmada dinamik bir 3x3 grid düzeni üretir.
  */

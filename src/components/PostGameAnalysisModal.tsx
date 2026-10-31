@@ -3,7 +3,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { PlayerSymbol, GameBoard, CellAnswer, Movie } from "@/types/game";
+import { UserProfile } from "@/types/profile";
 import { findMatchingMovies, getSharedActors } from "@/engine/validator";
+import { LetterboxdShareCardModal } from "./LetterboxdShareCardModal";
 import {
   Crown,
   RotateCcw,
@@ -25,6 +27,8 @@ interface PostGameAnalysisModalProps {
   winner: PlayerSymbol | "DRAW" | null;
   board: GameBoard;
   cells: (CellAnswer | null)[];
+  profile?: UserProfile;
+  totalArcadeScore?: number;
   onPlayAgain: () => void;
   onNextBoard: () => void;
   onBackToHome?: () => void;
@@ -35,6 +39,8 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   winner,
   board,
   cells,
+  profile,
+  totalArcadeScore,
   onPlayAgain,
   onNextBoard,
   onBackToHome,
@@ -42,6 +48,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
 }) => {
   const [selectedCell, setSelectedCell] = useState<number | null>(null);
   const [showAnalysis, setShowAnalysis] = useState<boolean>(false);
+  const [showViralShareModal, setShowViralShareModal] = useState<boolean>(false);
   const [isDoubleClaimed, setIsDoubleClaimed] = useState<boolean>(false);
   const [isWatchingAd, setIsWatchingAd] = useState<boolean>(false);
   const [adTimer, setAdTimer] = useState<number>(3);
@@ -331,6 +338,19 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
               <span>⚡ HEMEN YENİ MAÇ (PLAY AGAIN)</span>
             </button>
 
+            {/* VİRAL 35MM FİLM KARTI (LETTERBOXD & INSTAGRAM STORY İÇİN) */}
+            <button
+              type="button"
+              onClick={() => {
+                audio.playSelect();
+                setShowViralShareModal(true);
+              }}
+              className="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-black font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all mb-2"
+            >
+              <Sparkles className="w-4 h-4 text-black stroke-[2.5]" />
+              <span>🎞️ 35MM VİRAL KART (LETTERBOXD & INSTAGRAM)</span>
+            </button>
+
             {/* BUTON 3 & 4: SHARE & RATE US */}
             <div className="grid grid-cols-2 gap-2 w-full mb-2">
               <button
@@ -388,6 +408,19 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
           </div>
         )}
       </div>
+
+      {showViralShareModal && (
+        <LetterboxdShareCardModal
+          isOpen={showViralShareModal}
+          onClose={() => setShowViralShareModal(false)}
+          board={board}
+          cells={cells}
+          score={totalArcadeScore || (isVictory ? 1850 : 920)}
+          username={profile?.username || "Sinefil"}
+          letterboxdUsername={profile?.letterboxdUsername}
+          isVictory={isVictory}
+        />
+      )}
     </div>
   );
 };

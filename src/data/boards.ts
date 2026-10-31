@@ -1,5 +1,8 @@
 import { GameBoard, BotDifficulty } from "@/types/game";
 import { findMatchingMovies, getSharedActors } from "@/engine/validator";
+import { calculateBoardValidCounts, ensureBoardValidCounts } from "@/core/engine/board-generator";
+
+export { ensureBoardValidCounts };
 
 export interface BotOpponentProfile {
   name: string;
@@ -806,13 +809,22 @@ export const PRESET_BOARDS: GameBoard[] = [
   },
 ];
 
-// Başlangıçta tüm tahtaların geçerli film sayılarını hesapla
+// Lazy Memoization: Tahta geçerli film/aktör sayıları ilk erişimde hesaplanır,
+// import anında tüm veritabanını tarayan gereksiz senkron döngü çalıştırılmaz.
 PRESET_BOARDS.forEach(board => {
-  board.rows.forEach((row, rIdx) => {
-    board.cols.forEach((col, cIdx) => {
-      const validMovies = findMatchingMovies(row, col);
-      board.validCounts[`${rIdx}_${cIdx}`] = validMovies.length;
-    });
+  let cachedCounts: Record<string, number> | null = null;
+  Object.defineProperty(board, "validCounts", {
+    get() {
+      if (!cachedCounts) {
+        cachedCounts = calculateBoardValidCounts(board);
+      }
+      return cachedCounts;
+    },
+    set(val: Record<string, number>) {
+      cachedCounts = val;
+    },
+    configurable: true,
+    enumerable: true,
   });
 });
 
@@ -824,26 +836,16 @@ export function createRandomizedBoard(baseBoard: GameBoard): GameBoard {
   const shuffledRows = [...baseBoard.rows].sort(() => Math.random() - 0.5);
   const shuffledCols = [...baseBoard.cols].sort(() => Math.random() - 0.5);
 
-  const newValidCounts: Record<string, number> = {};
-  shuffledRows.forEach((row, rIdx) => {
-    shuffledCols.forEach((col, cIdx) => {
-      if (row.type === "MOVIE_INTERSECTION" && col.type === "MOVIE_INTERSECTION") {
-        const shared = getSharedActors(row.value, col.value);
-        newValidCounts[`${rIdx}_${cIdx}`] = shared.length;
-      } else {
-        const validMovies = findMatchingMovies(row, col);
-        newValidCounts[`${rIdx}_${cIdx}`] = validMovies.length;
-      }
-    });
-  });
-
-  return {
+  const randomizedBoard: GameBoard = {
     ...baseBoard,
     id: `${baseBoard.id}_rnd_${Math.random().toString(36).substring(2, 7)}`,
     rows: shuffledRows,
     cols: shuffledCols,
-    validCounts: newValidCounts,
+    validCounts: {},
   };
+
+  randomizedBoard.validCounts = calculateBoardValidCounts(randomizedBoard);
+  return randomizedBoard;
 }
 
 /**

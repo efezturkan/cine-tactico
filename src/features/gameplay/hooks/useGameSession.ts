@@ -288,14 +288,9 @@ export function useGameSession(
       if (board.boardMode === "REVERSE_CAST") {
         const revEval = evaluateReverseBoardState(newCells, updatedRarityX, updatedRarityO);
         if (revEval.winner !== null) {
-          if (revEval.winner === "DRAW" || revEval.winner === "GOLDEN_REEL") {
-            setIsGoldenReelActive(true);
-            setIsTimerActive(false);
-          } else {
-            setWinner(revEval.winner);
-            setIsTimerActive(false);
-            handleVictoryEffects(revEval.winner);
-          }
+          setWinner(revEval.winner as PlayerSymbol);
+          setIsTimerActive(false);
+          handleVictoryEffects(revEval.winner as PlayerSymbol);
         } else {
           switchTurn();
         }
@@ -414,17 +409,12 @@ export function useGameSession(
       };
       setCells(newCells);
 
-      // Ters Kadraj: En çok hücreyi kapatan kazanır
+      // Ters Kadraj: En çok hücreyi kapatan kazanır (Altın Makara kullanılmaz)
       const revEval = evaluateReverseBoardState(newCells, updatedRarityX, updatedRarityO);
       if (revEval.winner !== null) {
-        if (revEval.winner === "DRAW" || revEval.winner === "GOLDEN_REEL") {
-          setIsGoldenReelActive(true);
-          setIsTimerActive(false);
-        } else {
-          setWinner(revEval.winner);
-          setIsTimerActive(false);
-          handleVictoryEffects(revEval.winner);
-        }
+        setWinner(revEval.winner as PlayerSymbol);
+        setIsTimerActive(false);
+        handleVictoryEffects(revEval.winner as PlayerSymbol);
       } else {
         switchTurn();
       }

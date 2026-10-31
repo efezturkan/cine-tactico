@@ -12,6 +12,7 @@ import {
   DEFAULT_AMBIENCE,
 } from "@/types/profile";
 import { TasteDnaCard } from "./TasteDnaCard";
+import { MatchHistoryModal } from "./MatchHistoryModal";
 import {
   User,
   Trophy,
@@ -86,6 +87,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [showDirectorPicker, setShowDirectorPicker] = useState(false);
   const [showHistoryAlert, setShowHistoryAlert] = useState(false);
+  const [showMatchHistory, setShowMatchHistory] = useState(false);
 
   const currentAmbience: CinemaAmbience = profile.ambience || DEFAULT_AMBIENCE;
 
@@ -656,24 +658,18 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </div>
             </div>
 
-            {/* 6. MAÇ GEÇMİŞİ BUTONU */}
+            {/* 6. MAÇ GEÇMİŞİ BUTONU (CLASH ROYALE STYLE BATTLE LOG) */}
             <div className="w-full my-1">
               <button
                 onClick={() => {
                   audio.playSelect();
-                  setShowHistoryAlert(true);
-                  setTimeout(() => setShowHistoryAlert(false), 2500);
+                  setShowMatchHistory(true);
                 }}
-                className="w-full py-3 rounded-2xl bg-[#131f38] hover:bg-[#182747] border border-sky-500/30 text-zinc-200 font-black text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#131f38] to-[#1c2c4d] hover:from-[#182747] hover:to-[#22365e] border border-sky-500/40 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.98]"
               >
-                <History className="w-4 h-4 text-cyan-400" />
-                <span>MAÇ GEÇMİŞİ</span>
+                <History className="w-4 h-4 text-amber-400" />
+                <span>SAVAŞ GEÇMİŞİ &amp; TAHTA İNCELEMESİ</span>
               </button>
-              {showHistoryAlert && (
-                <div className="mt-1.5 p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-center text-[10px] font-bold text-cyan-300 animate-in fade-in">
-                  🎬 Son 5 maçın verileri yerel depolamada senkronize edildi.
-                </div>
-              )}
             </div>
 
             {/* 7. OYUN AYARLARI (Ses ve Haptik) */}
@@ -757,6 +753,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </div>
           </div>
         )}
+
+        {/* Clash Royale Tarzı Savaş / Maç Geçmişi Modalı */}
+        <MatchHistoryModal
+          isOpen={showMatchHistory}
+          onClose={() => setShowMatchHistory(false)}
+          profile={profile}
+        />
       </div>
     </div>
   );

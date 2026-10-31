@@ -379,7 +379,7 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "David Fincher",
     cast: ["Sigourney Weaver", "Charles S. Dutton", "Charles Dance"],
     genres: ["Action", "Sci-Fi", "Horror"],
-    themes: ["SPACE","SURVIVAL"],
+    themes: ["SPACE","SURVIVAL","CULT_FLOP"],
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "After her last ordeal, Ellen Ripley crash-lands on a maximum-security prison."
@@ -489,6 +489,7 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "James Gunn",
     cast: ["Margot Robbie", "Idris Elba", "John Cena", "Joel Kinnaman", "Sylvester Stallone"],
     genres: ["Action", "Adventure", "Comedy"],
+    themes: ["CULT_FLOP", "SURVIVAL"],
     hasOscar: false,
     franchise: "DC",
     boxOfficeCategory: "BLOCKBUSTER",
@@ -771,6 +772,7 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Martin Scorsese",
     cast: ["Robert De Niro", "Cathy Moriarty", "Joe Pesci"],
     genres: ["Biography", "Drama", "Sport"],
+    themes: ["LITERALLY_ME", "CULT_FLOP"],
     hasOscar: true,
     boxOfficeCategory: "STANDARD",
     overview: "The life of boxer Jake LaMotta, whose violence and temper that lead him to the top in the ring destroyed his life outside of it."
@@ -849,7 +851,7 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "David Fincher",
     cast: ["Jake Gyllenhaal", "Mark Ruffalo", "Robert Downey Jr.", "Anthony Edwards"],
     genres: ["Crime", "Drama", "Mystery"],
-    themes: ["WHODUNNIT","NEO_NOIR"],
+    themes: ["WHODUNNIT","NEO_NOIR","CULT_FLOP"],
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "Between 1968 and 1983, a San Francisco cartoonist becomes an amateur detective obsessed with tracking down the Zodiac Killer."
