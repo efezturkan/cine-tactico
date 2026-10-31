@@ -33,7 +33,8 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 function CineXoxPageContent() {
   const [currentView, setCurrentView] = useState<"HOME" | "GAME_SELECT" | "GAME">("HOME");
-  const [boardIndex, setBoardIndex] = useState<number>(() => Math.floor(Math.random() * PRESET_BOARDS.length));
+  // Hydration fix: Deterministic initial board index (prevents SSR vs client mismatch)
+  const [boardIndex, setBoardIndex] = useState<number>(0);
   const [contentPool, setContentPool] = useState<ContentPoolType>("FILM");
   const [mode, setMode] = useState<GameMode>("PASS_AND_PLAY");
   const [botDifficulty, setBotDifficulty] = useState<BotDifficulty>("MEDIUM");
@@ -161,8 +162,8 @@ function CineXoxPageContent() {
     }
   }, []);
 
-  // Özel Turnuva & Düello Odası Ayarları (MVP: 30-45s Casual Tempo, Steal/Powerup Kapalı)
-  const [customShotClock, setCustomShotClock] = useState<number>(35);
+  // Özel Turnuva & Düello Odası Ayarları (MVP: 12s Hızlı Blitz Tempo, Hile Koruması)
+  const [customShotClock, setCustomShotClock] = useState<number>(12);
   const [allowSteal, setAllowSteal] = useState<boolean>(false);
   const [allowPowerups, setAllowPowerups] = useState<boolean>(false);
   const [customRoomCode, setCustomRoomCode] = useState<string | null>(null);
@@ -313,7 +314,7 @@ function CineXoxPageContent() {
     audio.playSelect();
     setMode(targetMode);
     setAllowSteal(false);
-    setCustomShotClock(20);
+    setCustomShotClock(12);
     if (targetMode === "VS_BOT") {
       const { board: nextBoard, index: nextIdx } = getRandomBoard(boardIndex);
       const opp = getRandomOpponent(botDifficulty, pendingOpponent.name);
@@ -356,7 +357,7 @@ function CineXoxPageContent() {
       setMode(targetMode);
       setAllowSteal(false);
       setAllowPowerups(false);
-      setCustomShotClock(35);
+      setCustomShotClock(12);
       if (targetMode === "VS_BOT") {
         const { board: nextBoard, index: nextIdx } = getRandomBoard(boardIndex);
         const opp = getRandomOpponent(botDifficulty, pendingOpponent.name);
@@ -464,6 +465,7 @@ function CineXoxPageContent() {
     setBoard(nextBoard);
     resetGame(nextBoard);
     setMode("VS_BOT");
+    setCustomShotClock(12);
 
     setShowMatchmakingQueue(false);
     setShowMatchFound(true);

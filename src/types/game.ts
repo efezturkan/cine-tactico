@@ -69,7 +69,7 @@ export interface CustomRoomSettings {
   roomType?: "1V1_ROOM" | "TOURNAMENT";        // 1v1 Özel Oda vs 8 Kişilik Turnuva
   isPublic?: boolean;                         // Herkese Açık Lobi vs Özel Şifreli
   matchFormat: "BO1" | "BO3" | "TOURNAMENT"; // Tek Maç, 3 Maçlık Seri, Turnuva
-  shotClockSeconds: 10 | 20 | 30;             // 10s (Blitz), 20s (Standart), 30s (Taktiksel)
+  shotClockSeconds: 10 | 12 | 20 | 30;             // 12s (Standart Anti-Hile), 10s (Blitz), 20s (Geniş)
   themeId: string;
   category: string;
   allowCellStealing: boolean;                 // Clash Royale tarzı daha yüksek IMDb puanıyla kare çalma

@@ -88,7 +88,7 @@ export const Header: React.FC<HeaderProps> = ({
             title="Profil ve Ayarlar"
             className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shadow-md active:scale-95 transition-transform"
             style={{
-              background: `linear-gradient(135deg, ${currentAvatar.iconBg?.split(" ")[1] || "#1a1c24"}, #0e1018)`,
+              background: "linear-gradient(135deg, #1f2230, #0e1018)",
               border: "1.5px solid rgba(217,119,6,0.4)",
             }}
           >

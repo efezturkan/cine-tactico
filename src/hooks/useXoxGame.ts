@@ -21,7 +21,7 @@ export function useGameSession(
   initialBoard: GameBoard,
   mode: GameMode = "PASS_AND_PLAY",
   botDifficulty: BotDifficulty = "MEDIUM",
-  shotClockLimit: number = 20,
+  shotClockLimit: number = 12, // 12s Blitz (Hile ve dış kaynak aramasını önleme standardı)
   allowCellStealing: boolean = false,
   isActive: boolean = true
 ) {

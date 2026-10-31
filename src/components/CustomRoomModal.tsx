@@ -69,7 +69,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
   const [roomCode] = useState<string>(() => generateSecureRoomCode());
   const [isPublic, setIsPublic] = useState<boolean>(false); // 🔒 Özel vs 🌐 Herkese Açık
   const [matchFormat, setMatchFormat] = useState<"BO1" | "BO3">("BO1");
-  const [shotClock, setShotClock] = useState<10 | 20 | 30>(30);
+  const [shotClock, setShotClock] = useState<10 | 12 | 20>(12);
   const [selectedBoardId, setSelectedBoardId] = useState<string>(PRESET_BOARDS[0].id);
   const [allowSteal, setAllowSteal] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
@@ -501,9 +501,9 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                 {/* 4. HAMLE SÜRESİ (CHESS BLITZ SAATİ) */}
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { val: 10, label: "10s Blitz", desc: "Hızlı" },
-                    { val: 20, label: "20s Standart", desc: "Dengeli" },
-                    { val: 30, label: "30s Taktik", desc: "Ağır" },
+                    { val: 10, label: "10s Blitz", desc: "Aşırı Hızlı" },
+                    { val: 12, label: "12s Standart", desc: "Anti-Hile" },
+                    { val: 20, label: "20s Rahat", desc: "Geniş Süre" },
                   ].map(item => (
                     <button
                       key={item.val}

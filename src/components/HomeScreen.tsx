@@ -107,6 +107,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       ? CORNER_ACCENT_COLORS[ambience.cornerAccent].color
       : activeTheme?.secondaryAccent || "#f59e0b";
 
+  // Sanitize hex for alpha appending (e.g., #f59e0b18) to avoid invalid tokens
+  const safeCornerHex =
+    effectiveCornerColor && effectiveCornerColor.startsWith("#")
+      ? effectiveCornerColor
+      : activeTheme?.secondaryAccent || "#f59e0b";
+
   const effectiveHudBorder =
     ambience.cornerAccent && ambience.cornerAccent !== "AUTO" && CORNER_ACCENT_COLORS[ambience.cornerAccent]
       ? CORNER_ACCENT_COLORS[ambience.cornerAccent].border
@@ -186,7 +192,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 shadow-md relative transition-transform group-hover:scale-105"
               style={{
-                background: `linear-gradient(135deg, ${currentAvatar.iconBg?.split(" ")[1] || "#1a1c24"}, #0e1018)`,
+                background: "linear-gradient(135deg, #1f2230, #0e1018)",
                 border: `1.5px solid ${effectiveCornerColor}`,
               }}
             >
@@ -236,9 +242,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               }}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-black transition-all active:scale-95"
               style={{
-                background: `${effectiveCornerColor}18`,
-                border: `1px solid ${effectiveCornerColor}50`,
-                color: effectiveCornerColor,
+                background: `${safeCornerHex}18`,
+                border: `1px solid ${safeCornerHex}50`,
+                color: safeCornerHex,
               }}
               title="Sinefil İkon Pazarı"
             >
@@ -319,7 +325,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
                   <span>142 Sinefil Çevrimiçi</span>
                   <span className="opacity-50">&middot;</span>
-                  <span>10-15s</span>
+                  <span>12s Blitz</span>
                 </div>
 
                 {/* Başlık: CANLI DÜELLO (1v1) */}

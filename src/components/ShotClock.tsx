@@ -16,14 +16,14 @@ interface ShotClockProps {
 export const ShotClock: React.FC<ShotClockProps> = ({
   currentTurn,
   secondsRemaining,
-  totalSeconds = 20,
+  totalSeconds = 12,
   winner,
   isBotThinking = false,
   botStatusMessage,
 }) => {
   if (winner !== null) return null;
 
-  const isLowTime = secondsRemaining <= 5;
+  const isLowTime = secondsRemaining <= 4;
   const percentage = (secondsRemaining / totalSeconds) * 100;
   const isPlayerX = currentTurn === "X";
 

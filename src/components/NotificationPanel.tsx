@@ -302,7 +302,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
           {/* Footer */}
           <div className="px-4 py-2 border-t border-[#1a1c24] text-center">
             <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">
-              FRAME #{Math.floor(Math.random() * 900 + 100)} · KODAK 35mm
+              FRAME #424 · KODAK 35mm
             </span>
           </div>
         </div>
