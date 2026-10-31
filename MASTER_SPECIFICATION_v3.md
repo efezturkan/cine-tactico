@@ -223,32 +223,37 @@ Klasik Düello ve Sinefil Konsept modlarında 9 hücre sonuçlandığı halde 3'
 
 ---
 
-# 5. 35MM SİNEMATİK TASARIM SİSTEMİ (GÖRSEL KİMLİK)
+# 5. NEO-NOIR CINE-HUD TASARIM SİSTEMİ (GÖRSEL KİMLİK & GAME FEEL)
 
-İlk sürümde üçüncü taraf telifli poster ve görseller kullanılmayacaktır. Oyun özgün, minimalist bir 35mm analog sinema estetiği taşır.
+Oyun, Letterboxd zarafetinde, ARRI/RED yönetmen monitörü estetiğinde ve Balatro tokluğunda 35mm analog sinema arcade kimliği taşır. Gözü yoran neon kirliliği ve çocuksu kaba harfler yasaktır.
 
-### 5.1 Renk Paleti (35mm Velvet Screening Room)
-- `cinema-dark` (`#07080B`): Derin film bazı siyahı
-- `cinema-card` (`#0E1018`): Film karesi kart zemini
-- `cinema-border` (`#1A1C24`): Hassas çerçeve kenarlığı
-- `cinema-red` (`#8B151B`): Kadife perde bordosu (Primary Accent)
-- `cinema-amber` (`#D97706`): Kodak film kehribarı (Vurgu)
-- `cinema-gold` (`#F59E0B`): Ödül ve Rarity altını
-- `cinema-text` (`#F8FAFC`): Koyu zemin üzerinde fildişi metin okunurluğu
+### 5.1 Renk Paleti (Neo-Noir Slate & Cinema HUD)
+- `cine-void` (`#0D0F12`): Derin mat antrasit zemin; OLED siyahı, yansıma yapmaz, gözü dinlendirir.
+- `cine-slate` (`#15181E`): Kurgu masası tablası ve hücre gövdesi.
+- `cine-border` (`#232834`): İnce 1px çerçeve ve vizör kılcalları.
+- `optic-cyan` (`#00E5FF`): Oyuncu 1 odak rengi; kamera netleme parantezleri `[ + ]`.
+- `iris-crimson` (`#FF2A55`): Oyuncu 2 diyafram rengi; objektif diyafram halkası `[ ◎ ]`.
+- `kodak-amber` (`#FFB800`): 15s gerilim barı, 35mm emülsiyon damgası (`KODAK 5219`) ve altın Rarity rozeti.
+- `deadlock-steel` (`#333B4A`): Kilitli sahipsiz hücre kaplama rengi (`LOCKED_NEUTRAL`).
+- `text-ivory` (`#F1F5F9`): Yüksek kontrastlı fildişi film başlığı.
+- `text-muted` (`#94A3B8`): Vizyon yılı ve yönetmen künyesi (`2010 · Christopher Nolan`).
 
-### 5.2 Tipografik Hücre Tasarımı (Criterion / A24 Plaka Estetiği)
-- Hücre kenarlarında 35mm film perforasyon delikleri (sprocket holes).
-- Poster yerine: Kalın başlık, vizyon yılı, yönetmen künyesi ve türe özel loş analog gren dokusu.
-- Doğru bilinen hücrede: Kabartmalı **[ X ]** veya **[ O ]** mühür damgası ve yaldızlı Rarity rozeti (`[RARE +5]`).
-- Kilitli hücrede: Mat kurşuni zemin ve asma kilit simgesi (`Lock`).
+### 5.2 Hücre Anatomisi (The 35mm Film Slate)
+- **Perforasyon Delikleri:** Dikey kenarlarda lazer kesim 35mm film şeridi delikleri (*sprocket holes*).
+- **Emülsiyon Damgası:** Köşede altın sarısı teknik kod: `KODAK 5219 · FRAME #04 · [+5]`.
+- **Kahraman Tipografi:** Criterion Collection kapaklarındaki gibi asil, kalın, sıkıştırılmış display font.
+- **Soft & Cool HUD Simgesi:** Kaba harfler yerine Oyuncu 1 için kamera vizör odak parantezleri `[ + ]` (`[ ✕ · P1 ]`), Oyuncu 2 için kamera diyafram halkası `[ ◎ ]` (`[ ◎ · P2 ]`).
+- **Deadlock Durumu:** İki oyuncu da bilemediğinde mat çelik diyafram kapanır ve `LOCKED_NEUTRAL` mührü basılır.
 
-### 5.3 Vektörel İkon Standardı (Lucide-React)
-İşletim sistemi emojileri (🍿, 🎬, 🏆 vb.) kaldırılmış; yerlerine tek tip `lucide-react` SVG ikonları (`Clapperboard`, `Ticket`, `Trophy`, `Award`, `Sparkles`, `Timer`, `Search`, `Lock`, `Swords`, `Zap`) tanımlanmıştır.
+### 5.3 Game Juice & Hareket Koreografisi
+- **The Slam Stamp (280ms):** Doğru cevap verildiğinde hücreye görsel ve mühür darbeyle oturur (`scale: 1.06 -> 0.98 -> 1.0`), 40ms beyaz flaş parlar.
+- **Eriyen Gerilim Barı (Shot-Clock):** 15 saniyeden geriye eriyen lineer kehribar bar; son 4 saniyede projeksiyon ampul titremesi (*bulb flicker*) ve nabız uyarısı.
+- **Projektör Işık Köprüsü:** 3'lü hat tamamlandığında 3 karenin perforasyon deliklerinden kesintisiz neon ışık huzmesi geçer.
+- **GPU Optimizasyonu:** Yalnızca donanım hızlandırmalı `transform` ve `opacity` kullanılır; 60 FPS TBDR dostu performans.
 
-### 5.4 Erişilebilirlik ve Ses
-- WCAG 2.1 AA kontrast oranı (`4.5:1`).
-- `prefers-reduced-motion` desteği (titreme ve makara dönüş animasyonlarını kapatma).
-- Web Audio API ses susturma durumunda osilatörlerin tamamen askıya alınması (sıfır CPU/pil tüketimi).
+### 5.4 Akustik Tokluk & Haptik
+- **Web Audio API Sentezi:** Dışarıdan MP3 indirilmez; 80Hz bas mühür darbesi (*The Chess Thud of Cinema*) ve 880Hz gerilim tıkı saf osilatörlerle üretilir.
+- **Haptik:** Hücre seçiminde 10ms mikro klik; doğru cevapta 25ms tok darbe; sürenin son 3 saniyesinde kalp atışı uyarısı.
 
 ---
 

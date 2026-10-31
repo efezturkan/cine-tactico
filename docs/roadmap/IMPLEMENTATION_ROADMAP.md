@@ -56,11 +56,13 @@
 
 ---
 
-## 5. Faz 4: 35mm Tipografik Arayüz ve Görsel Kimlik
+## 5. Faz 4: Neo-Noir Cine-HUD & Game Feel Revizyonu
 
-* **Mikro-Adım 4.1:** Telefon emojilerinin `lucide-react` vektörel SVG ikonlarıyla ikame edilmesi.
-* **Mikro-Adım 4.2:** Postersiz 35mm tipografik Criterion/A24 film şeridi hücre plakalarının `XoxBoard.tsx` içine uygulanması.
-* **Mikro-Adım 4.3:** Mobil klavye açıldığında tahtayı ve süreyi ekranda görünür tutan `100dvh` responsive düzenin tamamlanması.
+* **Mikro-Adım 4.1 (Tasarım Sistemi & CSS Motion Engine):** Neo-Noir renk tokenlarının (`cine-void`, `optic-cyan`, `iris-crimson`, `kodak-amber`) tanımlanması ve GPU hızlandırmalı CSS yaylanma/darbe animasyonlarının (`slam-stamp`, `sprocket-glow`, `tension-pulse`) `globals.css` içine eklenmesi.
+* **Mikro-Adım 4.2 (35mm Hücre Anatomisi & Vizör HUD Simgeleri):** Hücrelerin 35mm KODAK film slaytına dönüştürülmesi; kaba harfler yerine P1 Cyan odak parantezleri `[ + ]` (`[ ✕ · P1 ]`) ve P2 Crimson diyafram halkası `[ ◎ ]` (`[ ◎ · P2 ]`) filigranlarının `XoxBoard.tsx` içine işlenmesi.
+* **Mikro-Adım 4.3 (15s Eriyen Kehribar Gerilim Barı):** `ShotClock.tsx` içine son 4 saniyede projeksiyon ampul titremesi (*bulb flicker*) ve eriyen lineer gerilim barının bağlanması.
+* **Mikro-Adım 4.4 (Akustik Tokluk & Haptik):** Dış MP3 paketi indirilmeden `audio.ts` Web Audio osilatörleriyle 80Hz analog mühür bası (*The Chess Thud of Cinema*) ve gerilim tıkının sentezlenmesi.
+* **Mikro-Adım 4.5 (Mobil 100dvh & Sıfır Hata Doğrulaması):** Mobil sanal klavye açıkken `100dvh` responsive ekran koruması ve 77/77 testin yeşil kalmasının (`npm test` & `npm run build`) onaylanması.
 
 ---
 
