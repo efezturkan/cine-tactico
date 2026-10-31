@@ -11,7 +11,7 @@
 
 | Phase | Description | Gate Requirement | Status | Evidence |
 | :--- | :--- | :--- | :--- | :--- |
-| **Phase 0** | Repository & Architecture Audit | Baseline Report (`PHASE-00-BASELINE.md`) | **IN PROGRESS** | Codebase audited, test passing, report drafting |
+| **Phase 0** | Repository & Architecture Audit | Baseline Report (`PHASE-00-BASELINE.md`) | **DONE** | Codebase audited, test passing (27/27), clean build (171 kB), baseline committed (`7bcf24f`) |
 | **Phase 1** | Mobile Architecture & Capacitor | Native builds generated (iOS & Android) | **NOT STARTED** | Gate 0 prerequisite pending |
 | **Phase 2** | Gameplay & Data Integrity | Core logic tests passing (27/27) | **DONE** | `src/tests/game-engine.test.ts` (27/27 passed) |
 | **Phase 3** | Automated & Physical QA | Real device test report | **NOT STARTED** | Pending Phase 1 native build |
@@ -34,7 +34,7 @@
 | T0-02 | Static export & Capacitor compatibility check | 0 | **DONE** | 100% client-side React App Router, static page generation |
 | T0-03 | Baseline test suite execution | 0 | **DONE** | `npx tsx src/tests/game-engine.test.ts` (27/27 pass) |
 | T0-04 | Production build execution | 0 | **DONE** | `npm run build` succeeds (171 kB First Load JS) |
-| T0-05 | Compile `PHASE-00-BASELINE.md` | 0 | **IN PROGRESS** | File being written to `docs/launch/` |
+| T0-05 | Compile `PHASE-00-BASELINE.md` | 0 | **DONE** | Complete audit in `docs/launch/PHASE-00-BASELINE.md` |
 | T1-01 | Install Capacitor core & CLI dependencies | 1 | **NOT STARTED** | Awaiting Phase 0 gate approval |
 | T1-02 | Configure `capacitor.config.ts` & app IDs | 1 | **NOT STARTED** | Reverse-domain ID selection pending |
 | T1-03 | Add `@capacitor/ios` and `@capacitor/android` | 1 | **NOT STARTED** | Awaiting Phase 0 gate approval |
