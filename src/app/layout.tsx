@@ -1,0 +1,33 @@
+import type { Metadata, Viewport } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "CineXOX | Sinema & Dizi 3x3 Taktik Düellosu",
+  description: "Film ve dizi kültürünün günlük 3x3 XOX oyunu. Yönetmenler, oyuncular ve Oscar'larla 3'lü hat yap, streak'ini koru!",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: "#0b0d13",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="tr">
+      <body className="bg-[#0b0d13] text-white antialiased min-h-screen">
+        {children}
+      </body>
+    </html>
+  );
+}
