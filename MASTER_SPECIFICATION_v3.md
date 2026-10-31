@@ -243,6 +243,7 @@ Oyun, Letterboxd tipografik asaleti, ARRI/RED yönetmen monitörü HUD disiplini
 - **Perforasyon Kuralı:** Görsel gürültüyü önlemek için 35mm perforasyon delikleri her karede kontrolsüzce kullanılmaz; sadece tahtanın dış çerçevesinde ve doğru bilinip açılan hücrelerin kenarlarında mühür olarak yer alır.
 - **Kazanan Hat Önceliği:** 3'lü kombinasyon oluştuğunda kazanan 3 kare altın ışık huzmesiyle birbirine bağlanır (`z-index: 30`); diğer hücreler `opacity: 0.45` seviyesine çekilerek şampiyon hamle öne çıkarılır.
 - **Neon Disiplini:** Sürekli açık kalan statik neon glow yasaktır; neon vurgular yalnızca hamle anı (280ms) ve son saniye geriliminde reaktif olarak yanar.
+- **DOKUNULMAZ EKRAN (MatchmakingQueueModal):** 35mm Dönen Film Makarası, çift yönlü dönen kehribar/kırmızı halkalar, `00:07` sayacı ve dinamik sinefil durum metinleri içeren "Rakip Aranıyor" bekleme ekranı projenin dokunulmaz temel görselidir; asla değiştirilemez veya kaldırılamaz.
 
 ### 5.3 Mod Bazlı Zaman Yönetimi (Decoupled Shot-Clock)
 - **Ranked Blitz:** 15s katı shot-clock (Sunucu otoriter deadline).
