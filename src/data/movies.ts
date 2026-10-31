@@ -8,7 +8,7 @@ export const MOVIES_DATABASE: Movie[] = [
     originalTitle: "Inception",
     year: 2010,
     director: "Christopher Nolan",
-    cast: ["Leonardo DiCaprio", "Cillian Murphy", "Joseph Gordon-Levitt", "Elliot Page", "Tom Hardy"],
+    cast: ["Leonardo DiCaprio", "Cillian Murphy", "Joseph Gordon-Levitt", "Elliot Page", "Tom Hardy", "Michael Caine", "Marion Cotillard"],
     genres: ["Sci-Fi", "Action", "Thriller"],
     themes: ["HEIST","PLOT_TWIST","AI"],
     hasOscar: true,
@@ -441,7 +441,7 @@ export const MOVIES_DATABASE: Movie[] = [
     originalTitle: "The Dark Knight Rises",
     year: 2012,
     director: "Christopher Nolan",
-    cast: ["Christian Bale", "Tom Hardy", "Anne Hathaway", "Gary Oldman", "Joseph Gordon-Levitt"],
+    cast: ["Christian Bale", "Tom Hardy", "Anne Hathaway", "Gary Oldman", "Joseph Gordon-Levitt", "Michael Caine", "Marion Cotillard", "Cillian Murphy"],
     genres: ["Action", "Drama", "Thriller"],
     themes: ["HEIST","LITERALLY_ME"],
     hasOscar: false,
@@ -1445,5 +1445,57 @@ export const MOVIES_DATABASE: Movie[] = [
     overview: "A bank teller discovers that he's actually an NPC inside a brutal, open world video game."
   ,
     sourceIds: { wikidata: "Q38685497" },
-    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }}
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
+  {
+    id: "m_ford_v_ferrari",
+    title: "Ford v Ferrari",
+    originalTitle: "Ford v Ferrari",
+    year: 2019,
+    director: "James Mangold",
+    cast: ["Matt Damon", "Christian Bale", "Jon Bernthal", "Caitríona Balfe"],
+    genres: ["Action", "Biography", "Drama"],
+    themes: ["SURVIVAL"],
+    hasOscar: true,
+    boxOfficeCategory: "BLOCKBUSTER",
+    overview: "American car designer Carroll Shelby and driver Ken Miles battle corporate interference to build a revolutionary race car for Ford."
+  },
+  {
+    id: "m_the_revenant",
+    title: "The Revenant",
+    originalTitle: "The Revenant",
+    year: 2015,
+    director: "Alejandro González Iñárritu",
+    cast: ["Leonardo DiCaprio", "Tom Hardy", "Domhnall Gleeson", "Will Poulter"],
+    genres: ["Action", "Adventure", "Drama"],
+    themes: ["SURVIVAL", "REVENGE"],
+    hasOscar: true,
+    boxOfficeCategory: "BLOCKBUSTER",
+    overview: "A frontiersman on a fur trading expedition in the 1820s fights for survival after being mauled by a bear."
+  },
+  {
+    id: "m_heat",
+    title: "Heat",
+    originalTitle: "Heat",
+    year: 1995,
+    director: "Michael Mann",
+    cast: ["Al Pacino", "Robert De Niro", "Val Kilmer", "Jon Voight", "Tom Sizemore", "Natalie Portman"],
+    genres: ["Action", "Crime", "Drama"],
+    themes: ["HEIST", "NEO_NOIR"],
+    hasOscar: false,
+    boxOfficeCategory: "BLOCKBUSTER",
+    overview: "A group of high-end professional thieves start to feel the heat from the LAPD when they unwittingly leave a clue at their latest heist."
+  },
+  {
+    id: "m_the_big_short",
+    title: "The Big Short",
+    originalTitle: "The Big Short",
+    year: 2015,
+    director: "Adam McKay",
+    cast: ["Christian Bale", "Steve Carell", "Ryan Gosling", "Brad Pitt", "Margot Robbie"],
+    genres: ["Biography", "Comedy", "Drama"],
+    themes: ["HEIST", "SATIRE"],
+    hasOscar: true,
+    boxOfficeCategory: "BLOCKBUSTER",
+    overview: "In 2006-2007 a group of investors bet against the US mortgage market."
+  }
 ];

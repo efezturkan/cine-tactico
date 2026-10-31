@@ -966,6 +966,59 @@ export const PRESET_BOARDS: GameBoard[] = [
     ],
     validCounts: {},
   },
+  {
+    id: "board_costars_legends",
+    title: "Yıldızlar Buluşması: Karakter × Karakter (Co-Stars)",
+    difficulty: "HARD",
+    boardMode: "CLASSIC",
+    rows: [
+      {
+        id: "r_bale",
+        type: "ACTOR",
+        label: "Christian Bale",
+        subLabel: "Batman, Ken Miles, Alfred Borden",
+        value: "Christian Bale",
+      },
+      {
+        id: "r_dicaprio",
+        type: "ACTOR",
+        label: "Leonardo DiCaprio",
+        subLabel: "Cobb, Hugh Glass, Billy Costigan",
+        value: "Leonardo DiCaprio",
+      },
+      {
+        id: "r_murphy",
+        type: "ACTOR",
+        label: "Cillian Murphy",
+        subLabel: "Oppenheimer, Tommy Shelby, Fischer",
+        value: "Cillian Murphy",
+      },
+    ],
+    cols: [
+      {
+        id: "c_hardy",
+        type: "ACTOR",
+        label: "Tom Hardy",
+        subLabel: "Bane, Eames, Farrier",
+        value: "Tom Hardy",
+      },
+      {
+        id: "c_caine",
+        type: "ACTOR",
+        label: "Michael Caine",
+        subLabel: "Alfred Pennyworth, Cutter, Miles",
+        value: "Michael Caine",
+      },
+      {
+        id: "c_damon",
+        type: "ACTOR",
+        label: "Matt Damon",
+        subLabel: "Carroll Shelby, Sullivan, Groves",
+        value: "Matt Damon",
+      },
+    ],
+    validCounts: {},
+  },
 ];
 
 // Lazy Memoization: Tahta geçerli film/aktör sayıları ilk erişimde hesaplanır,

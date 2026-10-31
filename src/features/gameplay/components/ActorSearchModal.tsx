@@ -53,7 +53,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
           <div>
             <span className="text-[10px] uppercase font-mono tracking-widest text-cyan-400 bg-cyan-950/60 px-2.5 py-1 rounded border border-cyan-800/50 flex items-center gap-1.5 w-fit">
               <Sparkles className="w-3 h-3 text-cyan-400" />
-              TER S KADRAJ // CO-STAR AJANI
+              TERS KADRAJ // CO-STAR AJANI
             </span>
             <div className="flex items-center gap-2 mt-3 flex-wrap">
               <div className="flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded bg-zinc-900 text-zinc-100 border border-zinc-700/80">

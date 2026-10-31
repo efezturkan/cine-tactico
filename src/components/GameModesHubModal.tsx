@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { audio } from "@/utils/audio";
 
+import { PRESET_BOARDS } from "@/data/boards";
+
 interface GameModesHubModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -31,16 +33,27 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
   onClose,
   onSelectPlayableBoard,
 }) => {
-  const [activeTab, setActiveTab] = useState<"ACTIVE_5" | "COMING_SOON" | "COMBINATIONS">("ACTIVE_5");
-  const [selectedPlaceholder, setSelectedPlaceholder] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"ACTIVE_MODES" | "COMING_SOON" | "COMBINATIONS">("ACTIVE_MODES");
+  const [modeFilter, setModeFilter] = useState<"ALL" | "CLASSIC" | "COSTARS" | "REVERSE" | "CONCEPT">("ALL");
 
   if (!isOpen) return null;
 
-  // 1. OYNANABİLİR CINEXOX MASALARI & ÇARPIŞMALARI
-  const TOP_5_MODES = [
+  // 1. OYNANABİLİR CINEXOX MASALARI & ÇARPIŞMALARI (Gerçek PRESET_BOARDS Eşleştirmesi)
+  const PLAYABLE_ARENAS = [
     {
-      idx: 0,
-      title: "Klasik Sinefil (Yönetmen x Oyuncu)",
+      id: "board_costars_legends",
+      category: "COSTARS",
+      title: "⭐ Karakter × Karakter (Co-Stars: Ortak Film)",
+      badge: "✨ Yeni & Çok İstenen",
+      color: "text-amber-300",
+      border: "border-amber-400/50",
+      bg: "bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-yellow-500/15",
+      desc: "Christian Bale, Leonardo DiCaprio, Cillian Murphy kesişiminde Tom Hardy, Michael Caine, Matt Damon. İki karakterin/aktörün birlikte oynadığı ortak filmleri bul!",
+    },
+    {
+      id: "board_master_1",
+      category: "CLASSIC",
+      title: "🎬 Auteur Savaşları (Yönetmen × Oyuncu)",
       badge: "Popüler & Dengeli",
       color: "text-amber-400",
       border: "border-amber-400/40",
@@ -48,8 +61,49 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
       desc: "Christopher Nolan, Tarantino, Scorsese kesişiminde Leonardo DiCaprio, Brad Pitt ve Christian Bale.",
     },
     {
-      idx: 1,
-      title: "Yıldız Oyuncular & Tür Çarpışması",
+      id: "board_reverse_nolan_titans",
+      category: "REVERSE",
+      title: "🔄 Ters Kadraj: Nolan & Yıldızlar Kadrosu",
+      badge: "Hafıza & Hız",
+      color: "text-emerald-400",
+      border: "border-emerald-400/40",
+      bg: "bg-emerald-500/10",
+      desc: "İki filmin kesişimindeki ortak oyuncuyu klavyeyle doğrudan yaz! Inception, The Prestige, Interstellar vs Dunkirk, Oppenheimer.",
+    },
+    {
+      id: "board_reverse_mafia_cult",
+      category: "REVERSE",
+      title: "🔄 Ters Kadraj: Suç Dehaları & Mafya Hanedanı",
+      badge: "Kült Hafıza",
+      color: "text-emerald-400",
+      border: "border-emerald-400/40",
+      bg: "bg-emerald-500/10",
+      desc: "The Godfather, Goodfellas, Scarface vs Heat, Taxi Driver, Casino. İki suç klasiğinin ortak aktörünü hatırla ve yaz!",
+    },
+    {
+      id: "board_concept_mindbending",
+      category: "CONCEPT",
+      title: "🧠 Sinefil Konsept: Zihin Bükücüler & Gizem",
+      badge: "14 Kült Tema",
+      color: "text-indigo-400",
+      border: "border-indigo-400/40",
+      bg: "bg-indigo-500/10",
+      desc: "Plot Twist, Zaman Yolculuğu ve Paranoya temalarında Christopher Nolan, Denis Villeneuve ve David Fincher.",
+    },
+    {
+      id: "board_concept_puzzle_chamber",
+      category: "CONCEPT",
+      title: "📦 Sinefil Konsept: Tek Mekan & Labirent",
+      badge: "Kurgusal Kriz",
+      color: "text-indigo-400",
+      border: "border-indigo-400/40",
+      bg: "bg-indigo-500/10",
+      desc: "Tek Mekan, Kurgusal Labirent ve Ahlaki İkilem temalarında Alfred Hitchcock, Quentin Tarantino ve David Fincher.",
+    },
+    {
+      id: "board_master_2",
+      category: "CLASSIC",
+      title: "🌟 Yıldız Oyuncular & Tür Çarpışması",
       badge: "Oyuncu Odaklı",
       color: "text-cyan-400",
       border: "border-cyan-400/40",
@@ -57,40 +111,44 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
       desc: "Brad Pitt, Cillian Murphy, Robert De Niro satırları; Suç, 8.0+ Puan ve 2010 Sonrası sütunları.",
     },
     {
-      idx: 2,
-      title: "Günün XOX Meydan Okuması",
-      badge: "Günlük Rutin",
-      color: "text-purple-400",
-      border: "border-purple-400/40",
-      bg: "bg-purple-400/10",
-      desc: "Denis Villeneuve, David Fincher, Christopher Nolan satırları; Bilim Kurgu, Dram ve 8.0+ Puan sütunları.",
-    },
-    {
-      idx: 3,
+      id: "board_dc_marvel",
+      category: "CLASSIC",
       title: "⚡ DC vs MARVEL (Süper Kahraman Düellosu)",
-      badge: "🔥 Hafta Sonu Modu",
+      badge: "🔥 Popüler Mod",
       color: "text-rose-400",
       border: "border-rose-500/50",
       bg: "bg-gradient-to-r from-red-600/20 to-blue-600/20",
-      desc: "Christian Bale (Batman/Gorr), James Gunn, Ryan Reynolds kesişiminde DC Evreni x Marvel (MCU) x 8.0+ Puan Efsaneleri.",
+      desc: "Christian Bale (Batman), James Gunn, Ryan Reynolds kesişiminde DC Evreni x Marvel (MCU) x 8.0+ Puan Efsaneleri.",
     },
     {
-      idx: 4,
+      id: "board_dune_scifi",
+      category: "CLASSIC",
       title: "🪐 Epik Bilim Kurgu: Dune & Nolan Evreni",
       badge: "Sci-Fi Efsaneleri",
       color: "text-amber-300",
       border: "border-amber-400/40",
       bg: "bg-amber-500/10",
-      desc: "Denis Villeneuve, Nolan, Timothée Chalamet satırları; Bilim Kurgu, Oscar ve 8.0+ Puan sütunları.",
+      desc: "Denis Villeneuve, Christopher Nolan, Timothée Chalamet satırları; Bilim Kurgu, Oscar ve 8.0+ Puan sütunları.",
     },
     {
-      idx: 5,
+      id: "board_90s_cult",
+      category: "CLASSIC",
       title: "🩸 90'lar Kült Arenası: Pulp Fiction & Fight Club",
       badge: "Kült Bağımsızlar",
       color: "text-emerald-400",
       border: "border-emerald-400/40",
       bg: "bg-emerald-400/10",
       desc: "Brad Pitt (Tyler Durden), Tarantino (Pulp Fiction), Fincher (Se7en) satırları; Suç, 8.0+ Puan ve 90'lar sütunları.",
+    },
+    {
+      id: "board_daily_today",
+      category: "CLASSIC",
+      title: "📅 Günün XOX Meydan Okuması",
+      badge: "Günlük Rutin",
+      color: "text-purple-400",
+      border: "border-purple-400/40",
+      bg: "bg-purple-400/10",
+      desc: "Tüm dünyayla aynı tahtada yarış. Bilim Kurgu, Dram ve 8.0+ Puan kesişiminde en nadir filmleri bul!",
     },
   ];
 
@@ -162,15 +220,15 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
           <button
             onClick={() => {
               audio.playSelect();
-              setActiveTab("ACTIVE_5");
+              setActiveTab("ACTIVE_MODES");
             }}
             className={`flex-1 py-1.5 rounded-xl transition-all ${
-              activeTab === "ACTIVE_5"
+              activeTab === "ACTIVE_MODES"
                 ? "bg-amber-400 text-cinema-dark font-black shadow-md"
                 : "hover:text-white"
             }`}
           >
-            5 Ana Matris
+            Aktif Masalar ({PLAYABLE_ARENAS.length})
           </button>
           <button
             onClick={() => {
@@ -183,7 +241,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
                 : "hover:text-white"
             }`}
           >
-            Diğer Oyunlar
+            Yeni Formatlar
           </button>
           <button
             onClick={() => {
@@ -200,42 +258,101 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
           </button>
         </div>
 
-        {/* 1. SEKME: EN MANTIKLI 5 OYNANABİLİR MATRİS */}
-        {activeTab === "ACTIVE_5" && (
-          <div className="space-y-2.5">
-            <p className="text-[11px] text-zinc-400 mb-1">
-              Test edilip dengelenmiş, anında oynanabilir 5 ana sinema matrisi:
-            </p>
-            {TOP_5_MODES.map((mode, i) => (
-              <div
-                key={i}
-                className={`p-3.5 rounded-2xl border ${mode.border} ${mode.bg} flex items-center justify-between gap-3 transition-all hover:scale-[1.01]`}
+        {/* 1. SEKME: OYNANABİLİR CINEXOX ARENALARI */}
+        {activeTab === "ACTIVE_MODES" && (
+          <div className="space-y-3">
+            {/* Kategori Filtresi */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] font-bold text-zinc-400 scrollbar-none">
+              <button
+                onClick={() => setModeFilter("ALL")}
+                className={`px-2.5 py-1 rounded-xl transition-all whitespace-nowrap ${
+                  modeFilter === "ALL"
+                    ? "bg-amber-400/20 text-amber-300 border border-amber-400/40"
+                    : "bg-[#0f172a] hover:text-white border border-transparent"
+                }`}
               >
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-black text-white">{mode.title}</span>
-                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-full bg-[#0a1122]/70 ${mode.color}`}>
-                      {mode.badge}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-zinc-300 mt-1 line-clamp-2 leading-relaxed">
-                    {mode.desc}
-                  </p>
-                </div>
+                Hepsi
+              </button>
+              <button
+                onClick={() => setModeFilter("COSTARS")}
+                className={`px-2.5 py-1 rounded-xl transition-all whitespace-nowrap flex items-center gap-1 ${
+                  modeFilter === "COSTARS"
+                    ? "bg-amber-400/20 text-amber-300 border border-amber-400/40"
+                    : "bg-[#0f172a] hover:text-white border border-transparent"
+                }`}
+              >
+                ⭐ Karakter × Karakter
+              </button>
+              <button
+                onClick={() => setModeFilter("REVERSE")}
+                className={`px-2.5 py-1 rounded-xl transition-all whitespace-nowrap flex items-center gap-1 ${
+                  modeFilter === "REVERSE"
+                    ? "bg-emerald-400/20 text-emerald-300 border border-emerald-400/40"
+                    : "bg-[#0f172a] hover:text-white border border-transparent"
+                }`}
+              >
+                🔄 Ters Kadraj
+              </button>
+              <button
+                onClick={() => setModeFilter("CONCEPT")}
+                className={`px-2.5 py-1 rounded-xl transition-all whitespace-nowrap flex items-center gap-1 ${
+                  modeFilter === "CONCEPT"
+                    ? "bg-indigo-400/20 text-indigo-300 border border-indigo-400/40"
+                    : "bg-[#0f172a] hover:text-white border border-transparent"
+                }`}
+              >
+                🧠 14 Kült Tema
+              </button>
+              <button
+                onClick={() => setModeFilter("CLASSIC")}
+                className={`px-2.5 py-1 rounded-xl transition-all whitespace-nowrap ${
+                  modeFilter === "CLASSIC"
+                    ? "bg-cyan-400/20 text-cyan-300 border border-cyan-400/40"
+                    : "bg-[#0f172a] hover:text-white border border-transparent"
+                }`}
+              >
+                🎬 Klasik Düello
+              </button>
+            </div>
 
-                <button
-                  onClick={() => {
-                    audio.playVictory();
-                    onSelectPlayableBoard(mode.idx, mode.title);
-                    onClose();
-                  }}
-                  className="py-2 px-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 text-cinema-dark font-black text-xs flex items-center gap-1 shadow-md active:scale-95 whitespace-nowrap"
-                >
-                  <Play className="w-3.5 h-3.5 fill-cinema-dark" />
-                  <span>Oyna</span>
-                </button>
-              </div>
-            ))}
+            <div className="space-y-2.5">
+              {PLAYABLE_ARENAS.filter(
+                m => modeFilter === "ALL" || m.category === modeFilter
+              ).map((mode) => {
+                const realIdx = PRESET_BOARDS.findIndex(b => b.id === mode.id);
+                return (
+                  <div
+                    key={mode.id}
+                    className={`p-3.5 rounded-2xl border ${mode.border} ${mode.bg} flex items-center justify-between gap-3 transition-all hover:scale-[1.01]`}
+                  >
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-black text-white">{mode.title}</span>
+                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full bg-[#0a1122]/70 ${mode.color}`}>
+                          {mode.badge}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-zinc-300 mt-1 line-clamp-2 leading-relaxed">
+                        {mode.desc}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        audio.playVictory();
+                        const targetIdx = realIdx >= 0 ? realIdx : 0;
+                        onSelectPlayableBoard(targetIdx, mode.title);
+                        onClose();
+                      }}
+                      className="py-2 px-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 text-cinema-dark font-black text-xs flex items-center gap-1 shadow-md active:scale-95 whitespace-nowrap"
+                    >
+                      <Play className="w-3.5 h-3.5 fill-cinema-dark" />
+                      <span>Oyna</span>
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 
