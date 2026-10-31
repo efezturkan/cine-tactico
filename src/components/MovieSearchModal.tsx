@@ -81,11 +81,10 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
       return pool.slice(0, 15);
     }
     return pool.filter(m => {
+      // Yalnızca Film/Dizi adına (ve orijinal adına) göre filtreleme — Hile koruması: Yönetmen/Oyuncu ile film dökümü engellendi!
       const matchTitle = m.title.toLowerCase().includes(q);
       const matchOrig = m.originalTitle?.toLowerCase().includes(q);
-      const matchDirector = m.director.toLowerCase().includes(q);
-      const matchCast = m.cast.some(a => a.toLowerCase().includes(q));
-      return matchTitle || matchOrig || matchDirector || matchCast;
+      return matchTitle || matchOrig;
     });
   }, [query, contentPool]);
 
@@ -131,7 +130,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
           </button>
         </div>
 
-        {/* Hızlı Arama Input */}
+        {/* Hızlı Arama Input (Sadece Film / Dizi Adı) */}
         <div className="relative my-3">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
           <input
@@ -139,9 +138,15 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Aklındaki filmi veya yönetmeni ara..."
+            placeholder="Film veya dizi adı gir (Örn: Inception, Matrix)..."
             className="w-full pl-10 pr-4 py-3 bg-cinema-dark border border-cinema-border focus:border-amber-400 rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none transition-all shadow-inner"
           />
+          <div className="flex items-center justify-between mt-1 px-1">
+            <span className="text-[10px] text-zinc-500 font-medium">Sadece yapım adına göre aranabilir (Yönetmen/Oyuncu ile arama yapılamaz).</span>
+            {query && (
+              <span className="text-[10px] text-amber-400 font-mono font-bold">{filteredMovies.length} sonuç</span>
+            )}
+          </div>
         </div>
 
         {/* Hatalı Kesişim Bildirimi (Non-blocking / İki Kriter Uyuşmazlığı) */}

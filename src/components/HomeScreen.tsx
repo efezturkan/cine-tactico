@@ -15,6 +15,7 @@ import {
   Zap,
   Clapperboard,
   Dna,
+  Bell,
 } from "lucide-react";
 import { UserProfile, AVATAR_OPTIONS, AMBIENCE_THEMES, DEFAULT_AMBIENCE, CORNER_ACCENT_COLORS } from "@/types/profile";
 import { ContentPoolType } from "@/types/game";
@@ -69,6 +70,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onOpenShop,
   onOpenLeaderboard,
   onOpenLiveAmbience,
+  onOpenNotifications,
+  notifUnreadCount,
 }) => {
   const [showQuickSetup, setShowQuickSetup] = useState<boolean>(false);
   const [tickerIndex, setTickerIndex] = useState<number>(0);
@@ -238,6 +241,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             >
               <Film className="w-3.5 h-3.5 fill-current" />
               <span>{profile.reelsBalance.toLocaleString()}</span>
+            </button>
+
+            {/* Bildirim Zili Butonu */}
+            <button
+              onClick={() => {
+                audio.playSelect();
+                if (onOpenNotifications) onOpenNotifications();
+              }}
+              className="p-2 rounded-xl text-zinc-400 hover:text-white bg-zinc-900/60 border border-zinc-800 transition-all active:scale-95 relative"
+              title="Bildirimler"
+            >
+              <Bell className="w-4 h-4" />
+              {notifUnreadCount && notifUnreadCount > 0 ? (
+                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-rose-600 text-white text-[8px] font-black flex items-center justify-center animate-pulse">
+                  {notifUnreadCount}
+                </span>
+              ) : null}
             </button>
 
             {/* Ayarlar / Loşluk Masası Butonu */}

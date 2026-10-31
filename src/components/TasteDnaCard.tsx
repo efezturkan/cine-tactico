@@ -2,16 +2,26 @@
 
 import React, { useState } from "react";
 import { TasteDna } from "@/types/profile";
-import { Dna, Share2, Sparkles, Film, Star, Check, Copy } from "lucide-react";
+import { Dna, Share2, Sparkles, Film, Star, Check, Copy, ExternalLink, Link2, Edit3 } from "lucide-react";
 import { audio } from "@/utils/audio";
 
 interface TasteDnaCardProps {
   tasteDna: TasteDna;
   username: string;
+  letterboxdUsername?: string;
+  onUpdateLetterboxd?: (handle: string) => void;
 }
 
-export const TasteDnaCard: React.FC<TasteDnaCardProps> = ({ tasteDna, username }) => {
+export const TasteDnaCard: React.FC<TasteDnaCardProps> = ({
+  tasteDna,
+  username,
+  letterboxdUsername,
+  onUpdateLetterboxd,
+}) => {
   const [copied, setCopied] = useState(false);
+  const [isEditingLb, setIsEditingLb] = useState(false);
+  const [lbInput, setLbInput] = useState(letterboxdUsername || "");
+  const [lbSaved, setLbSaved] = useState(false);
 
   const shareText = `🧬 BENİM SİNEMA ZEVK DNA'M (CineXOX) 🎬\n\n🎭 Estetik: "${tasteDna.cinemaAesthetic}"\n🎯 1 Numaralı Yönetmen: ${tasteDna.topDirector}\n🍿 Favori Tür: ${tasteDna.topGenre}\n⏳ Altın Çağı: ${tasteDna.topDecade}\n\nSenin sinema DNA'n ne? Gel kapışalım: ${
     typeof window !== "undefined" ? window.location.origin : "cinexox.app"
@@ -116,6 +126,102 @@ export const TasteDnaCard: React.FC<TasteDnaCardProps> = ({ tasteDna, username }
             </div>
           </div>
         ))}
+      </div>
+
+      {/* ── LETTERBOXD SİMBİYOTİK KÖPRÜ MODÜLÜ ─── */}
+      <div className="mt-4 pt-3 border-t border-purple-500/20">
+        <div className="p-3 rounded-2xl bg-black/50 border border-emerald-500/30 flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[10px] font-mono font-black uppercase text-emerald-400 tracking-wider">
+                LETTERBOXD KİMLİĞİ
+              </span>
+            </div>
+            {letterboxdUsername && !isEditingLb && (
+              <a
+                href={`https://letterboxd.com/${letterboxdUsername}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[9px] font-bold text-zinc-400 hover:text-emerald-300 flex items-center gap-1"
+              >
+                <span>Profili Gör</span>
+                <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+            )}
+          </div>
+
+          {isEditingLb ? (
+            <div className="flex items-center gap-2 mt-1">
+              <div className="relative flex-1">
+                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-500 font-mono">@</span>
+                <input
+                  type="text"
+                  value={lbInput}
+                  onChange={(e) => setLbInput(e.target.value)}
+                  placeholder="kullaniciadi"
+                  className="w-full pl-6 pr-2 py-1.5 rounded-xl bg-zinc-900 border border-emerald-500/50 text-xs text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-400 font-mono"
+                  autoFocus
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  audio.playSelect();
+                  const cleaned = lbInput.trim().replace(/^@/, "");
+                  if (onUpdateLetterboxd && cleaned) {
+                    onUpdateLetterboxd(cleaned);
+                  }
+                  setIsEditingLb(false);
+                  setLbSaved(true);
+                  setTimeout(() => setLbSaved(false), 2000);
+                }}
+                className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs shrink-0 transition-all active:scale-95"
+              >
+                Kaydet
+              </button>
+            </div>
+          ) : letterboxdUsername ? (
+            <div className="flex items-center justify-between gap-2 mt-0.5">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-xs font-black text-white font-mono truncate">
+                  @{letterboxdUsername}
+                </span>
+                <span className="text-[8px] font-black px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0">
+                  Onaylı Sinefil ✓
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  audio.playSelect();
+                  setIsEditingLb(true);
+                }}
+                className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-all"
+                title="Değiştir"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between gap-2 mt-0.5">
+              <span className="text-[10px] text-zinc-400">
+                Profilini bağla, izlediğin yönetmenleri arenaya taşı.
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  audio.playSelect();
+                  setIsEditingLb(true);
+                }}
+                className="px-2.5 py-1 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-[10px] font-black shrink-0 transition-all active:scale-95 flex items-center gap-1"
+              >
+                <Link2 className="w-3 h-3" />
+                <span>Bağla (+100 🎞️)</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

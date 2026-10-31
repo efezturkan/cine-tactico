@@ -144,6 +144,7 @@ export interface UserProfile {
   powerups: PowerupInventory; // Kafa Topu 2 tarzı jokerler
   unlockedAvatars: string[];
   isPro?: boolean;            // Sinefil Pro VIP
+  letterboxdUsername?: string;// Letterboxd kullanıcı adı (Simbiyotik Profil)
   tasteDna: CinephilePersona; // Sinefil Kimliği (Letterboxd / Persona)
   ambience?: CinemaAmbience;  // Sinema Salonu Işık ve Loşluk Ayarları
 }

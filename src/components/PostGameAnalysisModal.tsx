@@ -17,6 +17,7 @@ import {
   Check,
   Film,
   Zap,
+  ExternalLink,
 } from "lucide-react";
 import { audio } from "@/utils/audio";
 
@@ -45,6 +46,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   const [isWatchingAd, setIsWatchingAd] = useState<boolean>(false);
   const [adTimer, setAdTimer] = useState<number>(3);
   const [isShared, setIsShared] = useState<boolean>(false);
+  const [isRated, setIsRated] = useState<boolean>(false);
   const [rewardSeconds, setRewardSeconds] = useState<number>(7);
   const adIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -195,14 +197,27 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                   </span>
                 </div>
                 <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-                  {validMoviesForSelected.map(m => (
-                    <div
-                      key={m.id}
-                      className="text-[10px] p-1.5 rounded-lg bg-[#121c33] text-zinc-200 flex items-center justify-between"
-                    >
-                      <span className="font-bold truncate">{m.title} ({m.year})</span>
-                    </div>
-                  ))}
+                  {validMoviesForSelected.map(m => {
+                    const letterboxdSearchUrl = `https://letterboxd.com/search/${encodeURIComponent(m.title)}/`;
+                    return (
+                      <div
+                        key={m.id}
+                        className="text-[10px] p-2 rounded-xl bg-[#121c33] border border-zinc-800 text-zinc-200 flex items-center justify-between gap-2"
+                      >
+                        <span className="font-bold truncate">{m.title} ({m.year})</span>
+                        <a
+                          href={letterboxdSearchUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-[9px] font-black transition-all"
+                          title="Letterboxd'da İncele & Watchlist'e At"
+                        >
+                          <span>Letterboxd</span>
+                          <ExternalLink className="w-2.5 h-2.5" />
+                        </a>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -306,12 +321,16 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                 type="button"
                 onClick={() => {
                   audio.playVictory();
-                  alert("⭐ 5 Yıldız desteğiniz için teşekkürler!");
+                  setIsRated(true);
                 }}
-                className="py-2.5 rounded-xl bg-amber-400/90 hover:bg-amber-400 text-black font-black text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all"
+                className={`py-2.5 rounded-xl font-black text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all ${
+                  isRated
+                    ? "bg-emerald-500 text-black border border-emerald-400"
+                    : "bg-amber-400/90 hover:bg-amber-400 text-black"
+                }`}
               >
-                <Heart className="w-3.5 h-3.5 fill-black" />
-                <span>RATE US</span>
+                <Heart className={`w-3.5 h-3.5 ${isRated ? "fill-black text-black" : "fill-black"}`} />
+                <span>{isRated ? "⭐ TEŞEKKÜRLER!" : "RATE US"}</span>
               </button>
             </div>
 
