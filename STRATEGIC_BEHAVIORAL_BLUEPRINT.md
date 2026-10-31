@@ -66,3 +66,40 @@ Kullanıcıların bir uygulamaya bağımlı hale gelmesi tesadüf değildir; ins
    - Saat 21:00'de: *"🔥 4 Günlük serin tehlikede! Günün XOX'unu çözmek için son 3 saatin."*
 5. **Near-Miss Özeti:**
    - Maç kaybedildiğinde: *"Tek bir hamleyle kazanabilirdin! Rakibin karesini 8.2 IMDb'lik Shutter Island ile çalabilirdin!"* gösterimi.
+
+---
+
+## 4. Stratejik Konumlandırma: "Letterboxd Simbiyozu" (Judo & Truva Atı Modeli)
+
+Letterboxd ile aynı sahada (film günlüğü tutma, yıldız verme, eleştiri yazma) rekabet etmek imkansızdır (15M+ kullanıcı, 10 yıllık arşiv kilidi). Hedef onlarla kapışmak değil; **onların kitlesini çeken simbiyotik bir eğlence parkı** olmaktır.
+
+```
++------------------------------------+       +------------------------------------+
+|            LETTERBOXD              |       |              FİLMSEL               |
+|      "Pasif Kütüphane & Arşiv"      | ===>  |       "Canlı Gladyatör Arenası"     |
+|   Film logla, puan ver, liste yap   |       |    1v1 XOX, refleks, ego & düello   |
++------------------------------------+       +------------------------------------+
+                  ^                                            |
+                  |======== [Watchlist'e Ekle Köprüsü] ========|
+```
+
+### Temel Prensipler
+1. **Asla Kütüphane Olma:** Tek bir film günlüğü veya eleştiri alanı ekleme. Letterboxd kullanıcının diploması, FİLMSEL diplomayı masaya vurduğu arenadır.
+2. **Kullanıcı Adı ile Ego Çekme (Sıfır API Maliyeti):** Kullanıcının sadece Letterboxd kullanıcı adını/profilini referans alarak oyundaki zevk DNA'sını (`TasteDnaCard.tsx`) ve sinefil rozetlerini beslemek.
+3. **Trafiği Besleyen Truva Atı:** Maç sonu analizinde (`PostGameAnalysisModal.tsx`) bilinemeyen kült filmler için tek tıkla **"Letterboxd'da İncele / Watchlist'e Ekle"** deep-link'i sunmak. Böylece Letterboxd'a rakip değil, en organik trafik besleyicisi görünümü kazanılır.
+4. **Arcade-Sinefil Dengesi:** Kafa Topu benzeri güçlendirmeleri (Powerups) çocuksu isimlerden arındırıp sinefil jargonuyla kamufle etmek (*"Yönetmen Kurgusu"*, *"Festival Kotası"*, *"Sansür Kurulu"*).
+
+---
+
+## 5. Canlı Pazar Taraması & Rakip Açıkları Analizi (2026 Snapshot)
+
+Piyasadaki alternatiflerin güçlü ve zayıf tarafları ile FİLMSEL'in ele geçirdiği **Mavi Okyanus**:
+
+| Rakip / Segment | Ne Yapıyor? | Nerede Çuvallıyor? (Zayıf Karın) | FİLMSEL'in Avantajı |
+|---|---|---|---|
+| **Cinematrix / Movie Grid** (*Vulture*) | 3x3 günlük kesişim ızgarası (Immaculate Grid modeli). | **Sadece Web.** Mobil native app yok. 1v1 canlı rekabet yok, pasif tek kişilik. | **Native App (iOS/Android)** + Canlı 1v1 XOX + Offline Pass&Play. |
+| **Cine2Nerdle Battle** | 1v1 film/aktör bağlantı zinciri (20s sayaç). | **Aşırı Toksik Meta:** Usta oyuncular rakibi 60'lar Fransız sinemasına kilitleyip boğuyor. **Büyük Hile Krizi:** Arkada Letterboxd açıp kopya çekiliyor. Çirkin 90'lar arayüzü. | **XOX Stratejisi:** Hileye vakit bırakmayan 15s shot-clock + hem popüler hem kült filmlere alan tanıyan **Nadirlik Puanı**. |
+| **Framed / Moviedle** | Günlük tekil film karesi tahminleri. | Günde 45 saniyede bitiyor. Sosyal rekabet ve arkadaş düellosu sıfır. | Günlük Wordle ritüelini canlı lobi ve liglerle birleştiren hibrit döngü. |
+| **Geleneksel Mobil Quizler** (*PopcornTrivia*) | 4 şıklı klasik test soruları (A, B, C, D). | 2014 model, reklam boğuntusu, sıfır taktik. Sinefiller nefret ediyor. | Sıfır şık ezberi; 35mm grenli sinema salonu estetiği ve Taptic dokunmatik hissi. |
+
+> **Nihai Fırsat:** Sinefil kitlesi App Store ve Google Play'de modern, şık ve canlı bir sinema oyunu bulamıyor. FİLMSEL, mobil mağazalardaki bu boşluğu dolduran ve Letterboxd ile dost kalan tek oyuncu konumundadır.

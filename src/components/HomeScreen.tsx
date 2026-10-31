@@ -94,7 +94,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
     <div
-      className="w-full max-w-md mx-auto min-h-screen text-white flex flex-col justify-between pb-24 relative select-none antialiased overflow-hidden transition-colors duration-500"
+      className="w-full max-w-md mx-auto min-h-screen text-white flex flex-col justify-start pb-24 relative select-none antialiased overflow-x-hidden transition-colors duration-500"
       style={{
         backgroundColor: activeTheme.bgColor,
         filter: `brightness(${Math.min(1.1, Math.max(0.65, ambience.dimness / 85))})`,

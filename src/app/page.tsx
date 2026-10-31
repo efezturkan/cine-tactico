@@ -127,6 +127,29 @@ export default function CineXoxPage() {
   const [claimedDaily, setClaimedDaily] = useState<boolean>(false);
   const [claimedQuestIds, setClaimedQuestIds] = useState<string[]>([]);
 
+  // UTC Server-Time Authority for Daily Streak & Claims
+  useEffect(() => {
+    try {
+      const todayUtc = new Date().toISOString().slice(0, 10);
+      const savedDate = localStorage.getItem("cinexox_last_streak_utc");
+      if (savedDate) {
+        if (savedDate === todayUtc) {
+          setClaimedDaily(true);
+        } else {
+          setClaimedDaily(false);
+          const lastDate = new Date(savedDate + "T00:00:00Z");
+          const curDate = new Date(todayUtc + "T00:00:00Z");
+          const diffDays = Math.round((curDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+          if (diffDays > 1) {
+            setProfile(p => ({ ...p, dailyStreak: 1 }));
+          }
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
   // Özel Turnuva & Düello Odası Ayarları (MVP: 30-45s Casual Tempo, Steal/Powerup Kapalı)
   const [customShotClock, setCustomShotClock] = useState<number>(35);
   const [allowSteal, setAllowSteal] = useState<boolean>(false);
@@ -351,10 +374,17 @@ export default function CineXoxPage() {
     resetGame(selectedBoard);
   };
 
-  const handleClaimDailyReward = (amount: number, diamonds?: number) => {
+  const handleClaimDailyReward = (amount: number) => {
+    const todayUtc = new Date().toISOString().slice(0, 10);
+    try {
+      localStorage.setItem("cinexox_last_streak_utc", todayUtc);
+    } catch {
+      // ignore
+    }
     setProfile(p => ({
       ...p,
       reelsBalance: p.reelsBalance + amount,
+      lastStreakDateUtc: todayUtc,
     }));
     setClaimedDaily(true);
   };
@@ -452,7 +482,7 @@ export default function CineXoxPage() {
 
   if (currentView === "HOME") {
     return (
-      <main className="min-h-screen bg-[#07080b] flex flex-col items-center justify-center">
+      <main className="min-h-screen bg-[#07080b] flex flex-col items-center">
         <HomeScreen
           profile={profile}
           onStartGame={handleStartFromHome}

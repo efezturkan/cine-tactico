@@ -257,11 +257,13 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
           })}
         </div>
 
-        {/* 4. SABİT ALT BAR: KULLANICININ KENDİ DURUMU (Senin Sıralaman) */}
+        {/* 4. SABİT ALT BAR: KULLANICININ KENDİ DURUMU (Senin Sıralaman / Progressive Disclosure) */}
         <div className="pt-2.5 mt-2 border-t border-sky-500/15">
           <div className="p-3 rounded-2xl bg-gradient-to-r from-[#172342] to-[#10182b] border border-cyan-400/40 flex items-center justify-between shadow-lg">
             <div className="flex items-center gap-2.5">
-              <span className="text-xs font-black text-cyan-400 font-mono">#42</span>
+              <span className={`text-xs font-black font-mono ${currentUser.totalMatches < 10 ? "text-zinc-500" : "text-cyan-400"}`}>
+                {currentUser.totalMatches < 10 ? "--" : "#42"}
+              </span>
               <div
                 className={`w-9 h-9 rounded-full bg-gradient-to-tr ${currentAvatar.iconBg} flex items-center justify-center text-lg border-2 border-cyan-400`}
               >
@@ -271,21 +273,32 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                 <div className="text-xs font-black text-white flex items-center gap-1.5">
                   <span>{currentUser.username} (Sen)</span>
                   <span className="text-[9px] bg-cyan-400/20 text-cyan-300 px-1 py-0.2 rounded font-black">
-                    Level {currentUser.rankLevel || 6}
+                    Level {currentUser.rankLevel || 1}
                   </span>
                 </div>
                 <p className="text-[9px] text-zinc-400 font-bold">
-                  Gümüş Ligi · %{currentUser.totalMatches > 0 ? Math.round((currentUser.wins / currentUser.totalMatches) * 100) : 0} Galibiyet
+                  {currentUser.totalMatches < 10
+                    ? `Derecelendirme: ${currentUser.totalMatches}/10 Maç Tamamlandı`
+                    : `Gümüş Ligi · %${currentUser.totalMatches > 0 ? Math.round((currentUser.wins / currentUser.totalMatches) * 100) : 0} Galibiyet`}
                 </p>
               </div>
             </div>
 
             <div className="text-right">
-              <div className="flex items-center gap-1 text-xs font-black text-amber-400 justify-end">
-                <Trophy className="w-3.5 h-3.5 fill-amber-400" />
-                <span>{currentUser.wins * 30 + (currentUser.draws || 0) * 10}</span>
-              </div>
-              <span className="text-[9px] text-emerald-400 font-bold">+23 Kupa Son Maç</span>
+              {currentUser.totalMatches < 10 ? (
+                <div>
+                  <span className="text-[10px] font-black uppercase text-amber-400 tracking-wider">DERECESİZ</span>
+                  <span className="text-[8px] text-zinc-500 block font-bold mt-0.5">{10 - currentUser.totalMatches} Maç Kaldı</span>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center gap-1 text-xs font-black text-amber-400 justify-end">
+                    <Trophy className="w-3.5 h-3.5 fill-amber-400" />
+                    <span>{currentUser.wins * 30 + (currentUser.draws || 0) * 10}</span>
+                  </div>
+                  <span className="text-[9px] text-emerald-400 font-bold">+23 Kupa Son Maç</span>
+                </>
+              )}
             </div>
           </div>
         </div>

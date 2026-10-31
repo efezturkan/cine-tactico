@@ -28,6 +28,25 @@ import {
   Wallet,
 } from "lucide-react";
 
+// Kriptografik Güvenli 6 Karakterli Kod Üreteci (Unambiguous Alfanümerik: 0/O, 1/I hariç)
+function generateSecureRoomCode(): string {
+  const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+  if (typeof window !== "undefined" && window.crypto && window.crypto.getRandomValues) {
+    const array = new Uint8Array(6);
+    window.crypto.getRandomValues(array);
+    let code = "CX-";
+    for (let i = 0; i < 6; i++) {
+      code += chars[array[i] % chars.length];
+    }
+    return code;
+  }
+  let code = "CX-";
+  for (let i = 0; i < 6; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
+
 interface CustomRoomModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -46,24 +65,34 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
   const [roomSubTab, setRoomSubTab] = useState<"CREATE" | "JOIN">("CREATE");
   const [tournamentSubTab, setTournamentSubTab] = useState<"JOIN" | "CREATE">("JOIN");
 
-  // 3. 1v1 Oda Kurma State'leri
-  const [roomCode] = useState(() => "SINE-" + Math.floor(1000 + Math.random() * 9000));
+  // 3. 1v1 Oda Kurma State'leri (Kriptografik CX- Kod)
+  const [roomCode] = useState<string>(() => generateSecureRoomCode());
   const [isPublic, setIsPublic] = useState<boolean>(false); // 🔒 Özel vs 🌐 Herkese Açık
   const [matchFormat, setMatchFormat] = useState<"BO1" | "BO3">("BO1");
   const [shotClock, setShotClock] = useState<10 | 20 | 30>(30);
   const [selectedBoardId, setSelectedBoardId] = useState<string>(PRESET_BOARDS[0].id);
   const [allowSteal, setAllowSteal] = useState<boolean>(false);
-  const [allowPowerups, setAllowPowerups] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
 
-  // 4. Odaya Katılma Input State'i
+  // 4. Odaya Katılma Input State'i & Rate Limiter (Brute-Force Koruması: max 5 deneme / 60 sn)
   const [joinCodeInput, setJoinCodeInput] = useState<string>("");
   const [joinError, setJoinError] = useState<string | null>(null);
+  const [failedAttempts, setFailedAttempts] = useState<number[]>([]);
+  const [rateLimitSeconds, setRateLimitSeconds] = useState<number>(0);
 
   // 5. Turnuva Kurma State'leri
   const [tourneyName, setTourneyName] = useState<string>("Sinefil Şampiyonası");
-  const [tourneyEntryFee, setTourneyEntryFee] = useState<"FREE" | "REELS" | "DIAMONDS">("FREE");
+  const [tourneyEntryFee, setTourneyEntryFee] = useState<"FREE" | "REELS">("FREE");
   const [joinedTourneyId, setJoinedTourneyId] = useState<string | null>(null);
+
+  // Rate-limit sayacını her saniye geri say
+  React.useEffect(() => {
+    if (rateLimitSeconds <= 0) return;
+    const interval = setInterval(() => {
+      setRateLimitSeconds(prev => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [rateLimitSeconds]);
 
   if (!isOpen) return null;
 
@@ -82,7 +111,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       themeId: selectedBoardId,
       category: currentBoard.title,
       allowCellStealing: allowSteal,
-      allowPowerups,
+      allowPowerups: false,
       ...overrideSettings,
     };
     onCreateRoom(settings, currentBoard);
@@ -104,13 +133,34 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     }
   };
 
-  // Kod ile Odaya Katıl
+  // Kod ile Odaya Katıl (Rate Limit & Crypto Format Denetimi)
   const handleJoinByCode = (codeToJoin: string) => {
-    const cleanCode = codeToJoin.trim().toUpperCase();
-    if (!cleanCode || cleanCode.length < 5) {
-      setJoinError("Lütfen geçerli bir Oda Kodu gir (Örn: SINE-1234)");
+    const now = Date.now();
+    const recentFailures = failedAttempts.filter(t => now - t < 60_000);
+
+    if (rateLimitSeconds > 0 || recentFailures.length >= 5) {
+      if (rateLimitSeconds <= 0) setRateLimitSeconds(60);
+      setJoinError(`Güvenlik: Çok fazla başarısız deneme! Lütfen ${rateLimitSeconds > 0 ? rateLimitSeconds : 60} saniye bekleyin.`);
+      audio.playError();
       return;
     }
+
+    const cleanCode = codeToJoin.trim().toUpperCase();
+    const isValidFormat = /^([A-Z0-9]{4,8}|CX-[A-Z0-9]{6})$/.test(cleanCode);
+
+    if (!isValidFormat) {
+      const updated = [...recentFailures, now];
+      setFailedAttempts(updated);
+      audio.playError();
+      if (updated.length >= 5) {
+        setRateLimitSeconds(60);
+        setJoinError("5 kez geçersiz kod girildi. 60 saniye bekleyin.");
+      } else {
+        setJoinError(`Geçersiz oda kodu formatı! (Örn: CX-7K9M2P) [Kalan deneme: ${5 - updated.length}]`);
+      }
+      return;
+    }
+
     audio.playPowerup();
     const settings: CustomRoomSettings = {
       roomCode: cleanCode,
@@ -121,8 +171,8 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       shotClockSeconds: 20,
       themeId: PRESET_BOARDS[0].id,
       category: PRESET_BOARDS[0].title,
-      allowCellStealing: true,
-      allowPowerups: true,
+      allowCellStealing: false,
+      allowPowerups: false,
     };
     onCreateRoom(settings, PRESET_BOARDS[0]);
     onClose();
@@ -141,10 +191,10 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       themeId: selectedBoardId,
       category: currentBoard.title,
       allowCellStealing: allowSteal,
-      allowPowerups: true,
+      allowPowerups: false,
       entryFee: {
         type: tourneyEntryFee,
-        amount: tourneyEntryFee === "REELS" ? 200 : tourneyEntryFee === "DIAMONDS" ? 20 : 0,
+        amount: tourneyEntryFee === "REELS" ? 200 : 0,
       },
       prizePool: "1.500 Makara + Şampiyonluk Rozeti 🏆",
     };
@@ -152,10 +202,10 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     onClose();
   };
 
-  // Örnek Canlı Açık Odalar (Public Lobiler)
+  // Örnek Canlı Açık Odalar (Public Lobiler - CX- Kod Standardı)
   const PUBLIC_ROOMS = [
     {
-      code: "SINE-4421",
+      code: "CX-4K9M2P",
       host: "Kadir (Level 7)",
       boardTitle: "⚡ DC vs MARVEL Düellosu",
       boardIdx: 3,
@@ -165,7 +215,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       badgeColor: "text-rose-400 border-rose-500/30 bg-rose-500/10",
     },
     {
-      code: "SINE-8910",
+      code: "CX-8B7D1A",
       host: "Selin (Level 5)",
       boardTitle: "🩸 90'lar Kült: Fight Club",
       boardIdx: 5,
@@ -175,7 +225,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       badgeColor: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
     },
     {
-      code: "SINE-1299",
+      code: "CX-3N8X4W",
       host: "Emre (Level 9)",
       boardTitle: "🎬 Auteur Savaşları: Nolan",
       boardIdx: 0,
@@ -186,7 +236,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     },
   ];
 
-  // Canlı Turnuva Listesi
+  // Canlı Turnuva Listesi (Saf Makara & Kupa)
   const ACTIVE_TOURNAMENTS = [
     {
       id: "trny_1",
@@ -206,7 +256,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       players: "7/8 Dolu",
       slotsLeft: "Son 1 Koltuk!",
       entryFee: "100 🎞️",
-      prize: "3.500 🎞️ + 25 💎",
+      prize: "3.500 🎞️ + Şampiyonluk Rozeti",
       badge: "DOLUYOR",
       boardIdx: 3,
     },
@@ -216,8 +266,8 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       theme: "🩸 90'lar & Neo-Noir",
       players: "3/8 Dolu",
       slotsLeft: "Kayıt Açık",
-      entryFee: "15 💎",
-      prize: "50 💎 + Elmas Taç",
+      entryFee: "250 🎞️",
+      prize: "1.000 🎞️ + Altın Rozet",
       badge: "KAYITTA",
       boardIdx: 5,
     },
@@ -534,20 +584,22 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      placeholder="Örn: SINE-4421"
+                      placeholder="Örn: CX-7K9M2P"
                       value={joinCodeInput}
+                      disabled={rateLimitSeconds > 0}
                       onChange={e => {
                         setJoinCodeInput(e.target.value.toUpperCase());
                         setJoinError(null);
                       }}
-                      className="flex-1 px-3 py-2 rounded-xl bg-[#121a30] border border-zinc-700 text-white font-mono text-xs font-bold uppercase placeholder:text-zinc-600 focus:outline-none focus:border-cyan-400"
+                      className="flex-1 px-3 py-2 rounded-xl bg-[#121a30] border border-zinc-700 text-white font-mono text-xs font-bold uppercase placeholder:text-zinc-600 focus:outline-none focus:border-cyan-400 disabled:opacity-50"
                     />
                     <button
                       type="button"
+                      disabled={rateLimitSeconds > 0}
                       onClick={() => handleJoinByCode(joinCodeInput)}
-                      className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-black text-xs transition-transform active:scale-95"
+                      className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:bg-zinc-700 disabled:text-zinc-500 text-black font-black text-xs transition-transform active:scale-95"
                     >
-                      Katıl
+                      {rateLimitSeconds > 0 ? `${rateLimitSeconds}s` : "Katıl"}
                     </button>
                   </div>
                   {joinError && <p className="text-[10px] text-rose-400 mt-1 font-bold">{joinError}</p>}
@@ -728,11 +780,10 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 block mb-1.5">
                     Katılım Ücreti
                   </label>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {[
                       { val: "FREE", label: "Ücretsiz", desc: "Açık Katılım" },
                       { val: "REELS", label: "200 🎞️", desc: "Makara Giriş" },
-                      { val: "DIAMONDS", label: "20 💎", desc: "Elmas Ligi" },
                     ].map(f => (
                       <button
                         key={f.val}
