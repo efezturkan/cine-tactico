@@ -41,9 +41,9 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
 
   const filteredActors = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) {
-      // Sık aranan popüler aktörlerden bir ön izleme
-      return uniqueActors.slice(0, 10);
+    // Anti-Cheat: En az 2 harf girilmeden öneri/hafıza ipucu verilmez!
+    if (q.length < 2) {
+      return [];
     }
     return uniqueActors.filter(actor => actor.toLowerCase().includes(q)).slice(0, 15);
   }, [query, uniqueActors]);
@@ -135,35 +135,44 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
 
         {/* Hızlı Öneri Listesi */}
         <div className="mt-3 flex-1 overflow-y-auto pr-1 space-y-1.5 min-h-[220px]">
-          <div className="text-[10px] font-black text-zinc-400 uppercase tracking-widest px-1 mb-1">
-            {query.trim() ? "Eşleşen Oyuncular" : "Hızlı Seçim / Hafıza İpucu"}
-          </div>
-          {filteredActors.map((actor, idx) => (
-            <button
-              key={idx}
-              onClick={() => {
-                audio.playSelect();
-                onSelectActor(actor);
-              }}
-              className="w-full p-2.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500/50 flex items-center justify-between text-left transition-all group"
-            >
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center text-cyan-300 font-bold text-xs shrink-0 group-hover:scale-105 transition-transform">
-                  <User className="w-3.5 h-3.5" />
-                </div>
-                <span className="font-bold text-sm text-zinc-100 group-hover:text-cyan-300 transition-colors">
-                  {actor}
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-zinc-400 group-hover:text-cyan-400 font-bold">
-                Seç →
-              </span>
-            </button>
-          ))}
-          {filteredActors.length === 0 && (
-            <div className="py-8 text-center text-zinc-500 text-xs">
-              Eşleşen kayıtlı aktör bulunamadı. Üstteki &ldquo;ONAYLA&rdquo; butonu ile doğrudan gönderebilirsiniz.
+          {query.trim().length < 2 ? (
+            <div className="py-12 text-center text-zinc-500 text-xs">
+              <User className="w-8 h-8 mx-auto mb-2 text-zinc-600" />
+              Oyuncu adını yazmaya başlayın (en az 2 harf).
             </div>
+          ) : (
+            <>
+              <div className="text-[10px] font-black text-zinc-400 uppercase tracking-widest px-1 mb-1">
+                Eşleşen Oyuncular ({filteredActors.length})
+              </div>
+              {filteredActors.map((actor, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    audio.playSelect();
+                    onSelectActor(actor);
+                  }}
+                  className="w-full p-2.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500/50 flex items-center justify-between text-left transition-all group"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center text-cyan-300 font-bold text-xs shrink-0 group-hover:scale-105 transition-transform">
+                      <User className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="font-bold text-sm text-zinc-100 group-hover:text-cyan-300 transition-colors">
+                      {actor}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-zinc-400 group-hover:text-cyan-400 font-bold">
+                    Seç →
+                  </span>
+                </button>
+              ))}
+              {filteredActors.length === 0 && (
+                <div className="py-8 text-center text-zinc-500 text-xs">
+                  Eşleşen kayıtlı aktör bulunamadı. Üstteki &ldquo;ONAYLA&rdquo; butonu ile doğrudan gönderebilirsiniz.
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

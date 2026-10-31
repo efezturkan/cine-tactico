@@ -137,26 +137,11 @@ export function calculateBotMove(
         if (candidate !== undefined) {
           const movies = getAvailableMoviesForCell(board, candidate, usedMovieIds);
           if (movies.length > 0) {
-            // HARD modda en yüksek IMDb puanlı filmi seçer
+            // HARD modda Oscar'lı/prestijli filmi önceliklendirir
             const chosenMovie =
               difficulty === "HARD"
-                ? [...movies].sort((x, y) => y.imdbRating - x.imdbRating)[0]
+                ? [...movies].sort((x, y) => (y.hasOscar ? 1 : 0) - (x.hasOscar ? 1 : 0))[0]
                 : movies[Math.floor(Math.random() * movies.length)];
-            return { cellIndex: candidate, movie: chosenMovie };
-          }
-        }
-      }
-
-      // Steal Modu: Rakibin karesini çalarak zafer hattı tamamlama
-      if (allowCellStealing && botMarks === 2 && vals.some(v => v?.answeredBy === opponentSymbol)) {
-        const candidate = [a, b, c].find(idx => cells[idx]?.answeredBy === opponentSymbol);
-        if (candidate !== undefined) {
-          const oppRating = cells[candidate]!.movie.imdbRating;
-          const movies = getAvailableMoviesForCell(board, candidate, usedMovieIds).filter(
-            m => m.imdbRating > oppRating
-          );
-          if (movies.length > 0) {
-            const chosenMovie = [...movies].sort((x, y) => y.imdbRating - x.imdbRating)[0];
             return { cellIndex: candidate, movie: chosenMovie };
           }
         }
@@ -185,23 +170,8 @@ export function calculateBotMove(
           if (movies.length > 0) {
             const chosenMovie =
               difficulty === "HARD"
-                ? [...movies].sort((x, y) => y.imdbRating - x.imdbRating)[0]
+                ? [...movies].sort((x, y) => (y.hasOscar ? 1 : 0) - (x.hasOscar ? 1 : 0))[0]
                 : movies[Math.floor(Math.random() * movies.length)];
-            return { cellIndex: candidate, movie: chosenMovie };
-          }
-        }
-      }
-
-      // Steal Modu: Rakibin 2'li hattındaki bir kareyi çalarak tehdidi bozma
-      if (allowCellStealing && opponentMarks === 2) {
-        const candidate = [a, b, c].find(idx => cells[idx]?.answeredBy === opponentSymbol);
-        if (candidate !== undefined) {
-          const oppRating = cells[candidate]!.movie.imdbRating;
-          const movies = getAvailableMoviesForCell(board, candidate, usedMovieIds).filter(
-            m => m.imdbRating > oppRating
-          );
-          if (movies.length > 0) {
-            const chosenMovie = [...movies].sort((x, y) => y.imdbRating - x.imdbRating)[0];
             return { cellIndex: candidate, movie: chosenMovie };
           }
         }
@@ -209,23 +179,10 @@ export function calculateBotMove(
     }
   }
 
-  // 3. OYNANABİLİR TÜM KARELERİ VE FİLMLERİNİ DERLE (Boş veya Çalınabilir Kareler)
-  const candidateIndices = [...emptyCellIndices];
-  if (allowCellStealing) {
-    cells.forEach((cell, idx) => {
-      if (cell && cell.answeredBy === opponentSymbol && !candidateIndices.includes(idx)) {
-        candidateIndices.push(idx);
-      }
-    });
-  }
-
-  const playableCells = candidateIndices
+  // 3. OYNANABİLİR TÜM BOŞ KARELERİ VE FİLMLERİNİ DERLE
+  const playableCells = emptyCellIndices
     .map(idx => {
-      const occupant = cells[idx];
-      let movies = getAvailableMoviesForCell(board, idx, usedMovieIds);
-      if (occupant) {
-        movies = movies.filter(m => m.imdbRating > occupant.movie.imdbRating);
-      }
+      const movies = getAvailableMoviesForCell(board, idx, usedMovieIds);
       return { idx, movies };
     })
     .filter(item => item.movies.length > 0);
@@ -270,7 +227,7 @@ export function calculateBotMove(
   // HARD seviye prestijli filmleri öne çıkarır
   const chosenMovie =
     difficulty === "HARD"
-      ? [...chosenTarget.movies].sort((x, y) => y.imdbRating - x.imdbRating)[0]
+      ? [...chosenTarget.movies].sort((x, y) => (y.hasOscar ? 1 : 0) - (x.hasOscar ? 1 : 0))[0]
       : chosenTarget.movies[Math.floor(Math.random() * chosenTarget.movies.length)];
 
   return { cellIndex: chosenTarget.idx, movie: chosenMovie };

@@ -119,7 +119,6 @@ export function useGameSession(
                 director: "Kilitli",
                 cast: [],
                 genres: [],
-                imdbRating: 0,
                 hasOscar: false,
               },
               answeredBy: "NEUTRAL",
@@ -204,25 +203,10 @@ export function useGameSession(
 
       const activePlayer = playerSymbol || currentTurn;
       const currentOccupant = cells[cellIndex];
-      let isStealingMove = false;
 
-      // Hücre doluysa: Kare Çalma (Steal) kuralı kontrolü
+      // Hücre doluysa: Kare mühürlüdür, hamle yapılamaz
       if (currentOccupant !== null) {
-        if (!allowCellStealing) {
-          return { success: false, message: "Seçilen kare dolu." };
-        }
-        if (currentOccupant.answeredBy === activePlayer) {
-          return { success: false, message: "Kendi kareni çalamazsın!" };
-        }
-        if (movie.imdbRating <= currentOccupant.movie.imdbRating) {
-          audio.playError();
-          haptic.error();
-          return {
-            success: false,
-            message: "Kareyi çalmak için daha yüksek puanlı bir film seçmelisin!",
-          };
-        }
-        isStealingMove = true;
+        return { success: false, message: "Seçilen kare dolu ve mühürlü." };
       }
 
       if (usedMovieIds.includes(movie.id)) {
@@ -259,9 +243,8 @@ export function useGameSession(
       const baseScore = 200;
       const timeBonus = Math.floor(secondsRemainingRef.current * 15);
       const comboMultiplier = 1 + (newCombo - 1) * 0.4;
-      const stealBonus = isStealingMove ? 350 : 0;
       const doubleMultiplier = isDouble ? 2 : 1;
-      const points = Math.round((baseScore + timeBonus + stealBonus) * comboMultiplier * doubleMultiplier);
+      const points = Math.round((baseScore + timeBonus) * comboMultiplier * doubleMultiplier);
 
       const rarity = calculateMovieRarity(movie);
       const updatedRarityX = activePlayer === "X" ? scoreRarityX + rarity.totalPoints : scoreRarityX;
@@ -293,11 +276,7 @@ export function useGameSession(
       };
       setCells(newCells);
 
-      if (isStealingMove && currentOccupant) {
-        setUsedMovieIds(prev => [...prev.filter(id => id !== currentOccupant.movie.id), movie.id]);
-      } else {
-        setUsedMovieIds(prev => [...prev, movie.id]);
-      }
+      setUsedMovieIds(prev => [...prev, movie.id]);
 
       // Kazanan Analizi
       if (board.boardMode === "REVERSE_CAST") {
@@ -332,7 +311,6 @@ export function useGameSession(
         success: true,
         points,
         combo: newCombo,
-        stolen: isStealingMove,
       };
     },
     [
@@ -414,7 +392,6 @@ export function useGameSession(
           director: "Ortak Aktör",
           cast: [matchedActor],
           genres: [],
-          imdbRating: 8.0,
           hasOscar: false,
         },
         actorName: matchedActor,

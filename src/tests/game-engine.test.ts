@@ -211,41 +211,42 @@ runTest("Kesişimsiz 3 Yönetmen x 3 Aktör tahtası Eksen Güvenliği tarafınd
   return !result.isValid && result.failedCells.length >= 6;
 });
 
-// 9. Kare Çalma (Steal Mode) & Bot Steal Testleri
-runTest("Bot completes winning line by stealing opponent cell with higher IMDb rating (Steal Mode)", () => {
+// 9. Kare Mühürleme & Hücre Çalma Yasağı (Anti-Steal Güvencesi)
+runTest("Dolu hücreler mühürlüdür; bot asla dolu hücreyi çalamaz veya hedefleyemez", () => {
   const board = PRESET_BOARDS[0];
-  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!; // IMDb 8.8
-  const lowerMovie = { ...inception, id: "m_test_low", title: "Low Rated Film", imdbRating: 6.5 };
+  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!;
   
   const cells = Array(9).fill(null);
   cells[0] = { movie: inception, answeredBy: "O", timestamp: 1 };
   cells[1] = { movie: inception, answeredBy: "O", timestamp: 2 };
-  // Cell 2 has opponent mark with lower IMDb score (6.5)
-  cells[2] = { movie: lowerMovie, answeredBy: "X", timestamp: 3 };
+  // Cell 2 has opponent mark; hücre mühürlüdür
+  cells[2] = { movie: inception, answeredBy: "X", timestamp: 3 };
 
-  // With allowCellStealing = true, bot should steal cell 2 to win!
-  const decision = calculateBotMove(board, cells, [], "HARD", "O", true);
+  // Bot boş olan diğer hücrelerden birini seçmelidir (Cell 2'yi çalamaz)
+  const decision = calculateBotMove(board, cells, [inception.id], "HARD", "O");
   return (
     decision !== null &&
-    decision.cellIndex === 2 &&
-    decision.movie !== null &&
-    decision.movie.imdbRating > 6.5
+    decision.cellIndex !== 2 &&
+    decision.cellIndex !== 0 &&
+    decision.cellIndex !== 1 &&
+    decision.movie !== null
   );
 });
 
-runTest("Cell stealing logic respects strict IMDb score threshold", () => {
-  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!; // IMDb 8.8
-  const interstellar = MOVIES_DATABASE.find(m => m.id === "m_interstellar")!; // IMDb 8.7
-  const darkKnight = MOVIES_DATABASE.find(m => m.id === "m_dark_knight")!; // IMDb 9.0
+runTest("Bot sahipsiz/kilitli (LOCKED_NEUTRAL) hücreleri hedeflemez", () => {
+  const board = PRESET_BOARDS[0];
+  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!;
 
-  // 9.0 can steal 8.8 (Dark Knight > Inception)
-  const canDarkKnightStealInception = darkKnight.imdbRating > inception.imdbRating;
-  // 8.7 cannot steal 8.8 (Interstellar <= Inception)
-  const canInterstellarStealInception = interstellar.imdbRating > inception.imdbRating;
-  // 8.8 cannot steal 8.8 (Equal score rejected)
-  const canInceptionStealInception = inception.imdbRating > inception.imdbRating;
+  const cells = Array(9).fill(null);
+  // 8 hücre dolu veya sahipsiz kilitli olsun, sadece hücre 4 boş kalsın
+  for (let i = 0; i < 9; i++) {
+    if (i !== 4) {
+      cells[i] = { movie: inception, answeredBy: "NEUTRAL", timestamp: i, isLockedNeutral: true };
+    }
+  }
 
-  return canDarkKnightStealInception && !canInterstellarStealInception && !canInceptionStealInception;
+  const decision = calculateBotMove(board, cells, [], "HARD", "O");
+  return decision !== null && decision.cellIndex === 4;
 });
 
 console.log("\n=================================================");

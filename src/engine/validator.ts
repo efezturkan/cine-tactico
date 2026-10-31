@@ -52,10 +52,6 @@ export function isMovieMatchingCriterion(movie: Movie, criterion: Criterion): bo
       if (criterion.value === "NO_OSCAR") return !movie.hasOscar;
       return false;
 
-    case "RATING":
-      if (criterion.value === "IMDB_8_PLUS") return movie.imdbRating >= 8.0;
-      return false;
-
     case "FRANCHISE":
       if (!movie.franchise) return false;
       return movie.franchise.trim().toUpperCase() === criterion.value.trim().toUpperCase();
@@ -99,7 +95,7 @@ export function calculateMovieRarity(movie: Movie): {
   if (movie.boxOfficeCategory === "BLOCKBUSTER") obscurityScore += 30;
   if (movie.year < 2000) obscurityScore -= 15;
   if (movie.year < 1990) obscurityScore -= 10;
-  if (movie.imdbRating >= 8.5) obscurityScore += 10; // Popüler başyapıt
+  if (movie.hasOscar) obscurityScore += 10; // Ödüllü popüler başyapıt
 
   const percentile = Math.min(95, Math.max(3, obscurityScore));
 

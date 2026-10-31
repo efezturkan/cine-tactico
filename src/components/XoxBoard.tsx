@@ -21,14 +21,10 @@ interface XoxBoardProps {
  * Görsel yüklenemediğinde veya 404 verdiğinde patlak resim yerine
  * şık ve sinematik tipografik kart tasarımı gösterir.
  */
-// Phase 2: MVP typographic-first mode (no TMDB poster dependency for offline & licensing safety)
-const SHOW_EXTERNAL_POSTERS = false;
-
 const CellMoviePoster: React.FC<{
   cellData: CellAnswer;
   isWinning?: boolean;
 }> = ({ cellData }) => {
-  const [imgFailed, setImgFailed] = useState(false);
   const { movie, answeredBy, actorName, rarityScore, isLockedNeutral } = cellData;
   const isNeutral = answeredBy === "NEUTRAL" || isLockedNeutral;
   const isPlayerX = answeredBy === "X";
@@ -76,16 +72,6 @@ const CellMoviePoster: React.FC<{
             ORTAK AKTÖR
           </span>
         </div>
-      ) : SHOW_EXTERNAL_POSTERS && movie.posterUrl && !imgFailed ? (
-        <Image
-          src={movie.posterUrl}
-          alt={movie.title}
-          fill
-          sizes="(max-width: 768px) 33vw, 150px"
-          className="object-cover"
-          unoptimized
-          onError={() => setImgFailed(true)}
-        />
       ) : (
         <div
           className={`absolute inset-0 bg-gradient-to-b ${getGenreGradient()} flex flex-col items-center justify-center p-2 text-center`}
@@ -185,14 +171,6 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
       iconElement = (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-400/15 border border-amber-400/40 flex items-center justify-center text-amber-400 shadow-sm shrink-0 mb-1">
           <Award className="w-4 h-4" />
-        </div>
-      );
-    } else if (crit.type === "RATING") {
-      badgeLabel = "⭐ PUAN";
-      badgeColor = "text-amber-300";
-      iconElement = (
-        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-yellow-400/15 border border-yellow-400/40 flex items-center justify-center text-yellow-400 shadow-sm shrink-0 mb-1">
-          <Star className="w-4 h-4 fill-yellow-400" />
         </div>
       );
     } else if (crit.type === "DECADE") {

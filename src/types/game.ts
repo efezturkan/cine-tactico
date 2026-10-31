@@ -55,7 +55,7 @@ export const RARITY_TIERS: Record<
 
 export interface Criterion {
   id: string;
-  type: "DIRECTOR" | "ACTOR" | "GENRE" | "DECADE" | "AWARD" | "RATING" | "FRANCHISE" | "THEME" | "MOVIE_INTERSECTION";
+  type: "DIRECTOR" | "ACTOR" | "GENRE" | "DECADE" | "AWARD" | "FRANCHISE" | "THEME" | "MOVIE_INTERSECTION";
   label: string;
   subLabel?: string;
   value: string;
@@ -70,13 +70,11 @@ export interface Movie {
   director: string;
   cast: string[];
   genres: string[];
-  imdbRating: number;
   hasOscar: boolean;
   boxOfficeCategory?: "BLOCKBUSTER" | "INDIE" | "STANDARD";
   franchise?: "DC" | "MARVEL" | "LOTR" | "HARRY_POTTER" | "DUNE" | "STAR_WARS" | "OTHER" | string;
   themes?: (CultThemeKey | string)[];
   mediaType?: "FILM" | "SERIES";
-  posterUrl?: string;
   overview?: string;
   /** Wikidata / external database identifiers */
   sourceIds?: {

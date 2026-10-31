@@ -76,7 +76,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
 
   const filteredMovies = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return [];
+    if (q.length < 2) return [];
     return MOVIES_DATABASE.filter(m => m.title.toLowerCase().includes(q) || m.originalTitle?.toLowerCase().includes(q)).slice(0, 5);
   }, [query]);
 
@@ -192,21 +192,29 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
             {/* Otomatik Eşleşmeler */}
             {filteredMovies.length > 0 && (
               <div className="mt-2 space-y-1 max-h-36 overflow-y-auto">
-                {filteredMovies.map(movie => (
-                  <button
-                    key={movie.id}
-                    onClick={() => handleSelectMovie(movie)}
-                    className="w-full p-2.5 rounded-xl bg-zinc-900 hover:bg-amber-500/20 border border-zinc-800 hover:border-amber-400 flex items-center justify-between text-left transition-all"
-                  >
-                    <div>
-                      <div className="font-black text-xs text-white">{movie.title}</div>
-                      <div className="text-[10px] text-zinc-400 font-mono">
-                        {movie.year} · {movie.director}
+                {filteredMovies.map(movie => {
+                  const hasDiffOriginal =
+                    movie.originalTitle &&
+                    movie.originalTitle.trim().toLowerCase() !== movie.title.trim().toLowerCase();
+
+                  return (
+                    <button
+                      key={movie.id}
+                      onClick={() => handleSelectMovie(movie)}
+                      className="w-full p-2.5 rounded-xl bg-zinc-900 hover:bg-amber-500/20 border border-zinc-800 hover:border-amber-400 flex items-center justify-between text-left transition-all"
+                    >
+                      <div>
+                        <div className="font-black text-xs text-white">{movie.title}</div>
+                        {hasDiffOriginal && (
+                          <div className="text-[10px] text-zinc-400 italic">
+                            {movie.originalTitle}
+                          </div>
+                        )}
                       </div>
-                    </div>
-                    <span className="text-xs font-bold text-amber-400">GÖNDER 🚀</span>
-                  </button>
-                ))}
+                      <span className="text-xs font-bold text-amber-400">GÖNDER &rarr;</span>
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>

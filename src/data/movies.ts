@@ -11,10 +11,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Leonardo DiCaprio", "Cillian Murphy", "Joseph Gordon-Levitt", "Elliot Page", "Tom Hardy"],
     genres: ["Sci-Fi", "Action", "Thriller"],
     themes: ["HEIST","PLOT_TWIST","AI"],
-    imdbRating: 8.8,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
     overview: "A thief who steals corporate secrets through dream-sharing technology."
   ,
     sourceIds: { wikidata: "Q25188" },
@@ -28,11 +26,9 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Christian Bale", "Heath Ledger", "Cillian Murphy", "Gary Oldman", "Michael Caine", "Morgan Freeman"],
     genres: ["Action", "Crime", "Drama"],
     themes: ["NEO_NOIR","LITERALLY_ME"],
-    imdbRating: 9.0,
     hasOscar: true,
     franchise: "DC",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
     overview: "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham."
   ,
     sourceIds: { wikidata: "Q163872" },
@@ -46,10 +42,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Cillian Murphy", "Robert Downey Jr.", "Emily Blunt", "Matt Damon", "Florence Pugh"],
     genres: ["Drama", "History", "Biography"],
     themes: ["NON_LINEAR","DYSTOPIA"],
-    imdbRating: 8.9,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
     overview: "The story of American scientist J. Robert Oppenheimer and his role in the atomic bomb."
   ,
     sourceIds: { wikidata: "Q108839994" },
@@ -63,10 +57,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain", "Timothée Chalamet", "Matt Damon", "Michael Caine"],
     genres: ["Sci-Fi", "Adventure", "Drama"],
     themes: ["SPACE","TIME_TRAVEL","SURVIVAL"],
-    imdbRating: 8.7,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
     overview: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival."
   ,
     sourceIds: { wikidata: "Q13417189" },
@@ -80,10 +72,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Cillian Murphy", "Tom Hardy", "Mark Rylance", "Kenneth Branagh", "Harry Styles"],
     genres: ["Action", "Drama", "History"],
     themes: ["NON_LINEAR","SURVIVAL"],
-    imdbRating: 7.8,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/ebSnODDg9lbsMIaWg2uAbjn7TO5.jpg",
     overview: "Allied soldiers from Belgium, the British Empire, and France are surrounded by the German Army."
   ,
     sourceIds: { wikidata: "Q21935651" },
@@ -97,10 +87,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Christian Bale", "Hugh Jackman", "Scarlett Johansson", "Michael Caine"],
     genres: ["Drama", "Mystery", "Sci-Fi"],
     themes: ["PLOT_TWIST","REVENGE"],
-    imdbRating: 8.5,
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
-    posterUrl: "https://image.tmdb.org/t/p/w500/bdN3gXuIZYaJP7ftKK2sU0nPtEA.jpg",
     overview: "Two stage magicians engage in a battle to create the ultimate illusion."
   ,
     sourceIds: { wikidata: "Q46551" },
@@ -116,10 +104,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["John Travolta", "Samuel L. Jackson", "Uma Thurman", "Bruce Willis", "Tim Roth"],
     genres: ["Crime", "Drama"],
     themes: ["NON_LINEAR","HEIST"],
-    imdbRating: 8.9,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
     overview: "The lives of two mob hitmen, a boxer, a gangster and his wife intertwine."
   ,
     sourceIds: { wikidata: "Q104123" },
@@ -133,10 +119,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Leonardo DiCaprio", "Brad Pitt", "Margot Robbie", "Al Pacino", "Dakota Fanning"],
     genres: ["Comedy", "Drama"],
     themes: ["REVENGE"],
-    imdbRating: 7.6,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/8j58iEBw9pOXFD2L0nt0ZXeHviB.jpg",
     overview: "A faded television actor and his stunt double strive to achieve fame and success."
   ,
     sourceIds: { wikidata: "Q47300912" },
@@ -150,10 +134,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Brad Pitt", "Christoph Waltz", "Michael Fassbender", "Mélanie Laurent", "Diane Kruger"],
     genres: ["Adventure", "Drama", "War"],
     themes: ["REVENGE","WHODUNNIT"],
-    imdbRating: 8.4,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/7sfbEnaARXDDhKm0CZ7D7kyBTox.jpg",
     overview: "In Nazi-occupied France during WWII, a plan to assassinate Nazi leaders by Jewish U.S. soldiers."
   ,
     sourceIds: { wikidata: "Q153723" },
@@ -167,10 +149,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Jamie Foxx", "Christoph Waltz", "Leonardo DiCaprio", "Samuel L. Jackson", "Kerry Washington"],
     genres: ["Drama", "Western"],
     themes: ["REVENGE"],
-    imdbRating: 8.5,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/7oWY8vdWW7thTzWh3OKYRkWUlD5.jpg",
     overview: "With the help of a German bounty-hunter, a freed slave sets out to rescue his wife."
   ,
     sourceIds: { wikidata: "Q571032" },
@@ -186,10 +166,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Leonardo DiCaprio", "Jonah Hill", "Margot Robbie", "Matthew McConaughey", "Kyle Chandler"],
     genres: ["Biography", "Comedy", "Crime"],
     themes: ["LITERALLY_ME"],
-    imdbRating: 8.2,
     hasOscar: false,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/34m2tygAYBGqA9MXKhRDtzYd4MR.jpg",
     overview: "The true story of Jordan Belfort, from his rise to a wealthy stock-broker to his fall."
   ,
     sourceIds: { wikidata: "Q1392744" },
@@ -203,10 +181,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Leonardo DiCaprio", "Mark Ruffalo", "Ben Kingsley", "Michelle Williams", "Max von Sydow"],
     genres: ["Mystery", "Thriller"],
     themes: ["PLOT_TWIST","NEO_NOIR","WHODUNNIT"],
-    imdbRating: 8.2,
     hasOscar: false,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/4GDy0PHYX3VRXUtwK5ysagvk2Te.jpg",
     overview: "In 1954, a U.S. Marshal investigates the disappearance of a murderer."
   ,
     sourceIds: { wikidata: "Q210364" },
@@ -220,10 +196,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Leonardo DiCaprio", "Matt Damon", "Jack Nicholson", "Mark Wahlberg", "Martin Sheen"],
     genres: ["Crime", "Drama", "Thriller"],
     themes: ["WHODUNNIT","PLOT_TWIST","NEO_NOIR"],
-    imdbRating: 8.5,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/nT97ifVT2J1yMQmeq20Qblg61T.jpg",
     overview: "An undercover cop and a mole in the police attempt to identify each other."
   ,
     sourceIds: { wikidata: "Q172975" },
@@ -237,10 +211,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Robert De Niro", "Ray Liotta", "Joe Pesci", "Lorraine Bracco", "Paul Sorvino"],
     genres: ["Biography", "Crime", "Drama"],
     themes: ["HEIST","NON_LINEAR"],
-    imdbRating: 8.7,
     hasOscar: true,
     boxOfficeCategory: "STANDARD",
-    posterUrl: "https://image.tmdb.org/t/p/w500/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg",
     overview: "The story of Henry Hill and his life in the mafia."
   ,
     sourceIds: { wikidata: "Q42047" },
@@ -254,10 +226,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Robert De Niro", "Jodie Foster", "Cybill Shepherd", "Harvey Keitel"],
     genres: ["Crime", "Drama"],
     themes: ["NEO_NOIR","LITERALLY_ME"],
-    imdbRating: 8.2,
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
-    posterUrl: "https://image.tmdb.org/t/p/w500/ekstpH694DaGliIN7WW9XB49Qv5.jpg",
     overview: "A mentally unstable veteran works as a nighttime taxi driver in New York City."
   ,
     sourceIds: { wikidata: "Q47221" },
@@ -271,10 +241,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Robert De Niro", "Al Pacino", "Joe Pesci", "Harvey Keitel"],
     genres: ["Biography", "Crime", "Drama"],
     themes: ["NON_LINEAR"],
-    imdbRating: 7.8,
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
-    posterUrl: "https://image.tmdb.org/t/p/w500/mbm8k3GFbXS0bA975bYFqHvgZus.jpg",
     overview: "Hitman Frank Sheeran looks back at the secrets he kept as a member of the Bufalino family."
   ,
     sourceIds: { wikidata: "Q29057443" },
@@ -288,10 +256,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Leonardo DiCaprio", "Robert De Niro", "Lily Gladstone", "Jesse Plemons", "Brendan Fraser"],
     genres: ["Crime", "Drama", "History"],
     themes: ["WHODUNNIT","REVENGE"],
-    imdbRating: 7.6,
     hasOscar: false,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/dB6Krk806zeqd095MAmpph965ko.jpg",
     overview: "Real love crosses paths with unspeakable betrayal in the Osage Nation murders."
   ,
     sourceIds: { wikidata: "Q66316924" },
@@ -307,10 +273,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Ryan Gosling", "Harrison Ford", "Ana de Armas", "Sylvia Hoeks", "Robin Wright"],
     genres: ["Action", "Drama", "Mystery", "Sci-Fi"],
     themes: ["DYSTOPIA","AI","NEO_NOIR","LITERALLY_ME","CULT_FLOP"],
-    imdbRating: 8.0,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
     overview: "Young Blade Runner K tracks down former Blade Runner Rick Deckard."
   ,
     sourceIds: { wikidata: "Q21500755" },
@@ -324,10 +288,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Amy Adams", "Jeremy Renner", "Forest Whitaker", "Michael Stuhlbarg"],
     genres: ["Drama", "Mystery", "Sci-Fi"],
     themes: ["TIME_TRAVEL","NON_LINEAR","SPACE"],
-    imdbRating: 7.9,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/x2FJsf1ElAgr63Y3PNPtJrcmpoe.jpg",
     overview: "A linguist works with the military to communicate with alien lifeforms."
   ,
     sourceIds: { wikidata: "Q20382729" },
@@ -341,10 +303,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Emily Blunt", "Benicio del Toro", "Josh Brolin", "Daniel Kaluuya"],
     genres: ["Action", "Crime", "Drama", "Mystery"],
     themes: ["NEO_NOIR","REVENGE"],
-    imdbRating: 7.7,
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
-    posterUrl: "https://image.tmdb.org/t/p/w500/iMwZScLwS2nZp2Y9P0T2Lp0tH.jpg",
     overview: "An idealistic FBI agent is enlisted to aid in the escalating war against drugs."
   ,
     sourceIds: { wikidata: "Q17337292" },
@@ -360,10 +320,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Brad Pitt", "Edward Norton", "Helena Bonham Carter", "Meat Loaf", "Jared Leto"],
     genres: ["Drama"],
     themes: ["PLOT_TWIST","LITERALLY_ME","CULT_FLOP"],
-    imdbRating: 8.8,
     hasOscar: false,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
     overview: "An insomniac office worker and a soap maker form an underground fight club."
   ,
     sourceIds: { wikidata: "Q123784007" },
@@ -377,10 +335,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Brad Pitt", "Morgan Freeman", "Gwyneth Paltrow", "Kevin Spacey"],
     genres: ["Crime", "Drama", "Mystery"],
     themes: ["PLOT_TWIST","NEO_NOIR","WHODUNNIT"],
-    imdbRating: 8.6,
     hasOscar: false,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/6yoghtyTpznpBik8EngEmJskVUO.jpg",
     overview: "Two detectives hunt a serial killer who uses the seven deadly sins as his motives."
   ,
     sourceIds: { wikidata: "Q190908" },
@@ -394,10 +350,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Jesse Eisenberg", "Andrew Garfield", "Justin Timberlake", "Armie Hammer", "Rooney Mara"],
     genres: ["Biography", "Drama"],
     themes: ["NON_LINEAR"],
-    imdbRating: 7.8,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/n0ybibhJtQ5icDqTpTzbRytvEeV.jpg",
     overview: "As Harvard student Mark Zuckerberg creates Facebook, he faces lawsuits."
   ,
     sourceIds: { wikidata: "Q185888" },
@@ -411,10 +365,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Ben Affleck", "Rosamund Pike", "Neil Patrick Harris", "Tyler Perry"],
     genres: ["Drama", "Mystery", "Thriller"],
     themes: ["PLOT_TWIST","WHODUNNIT","REVENGE"],
-    imdbRating: 8.1,
     hasOscar: false,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/qymaJhucquUwjpAC3Handb9z1eP.jpg",
     overview: "With his wife's disappearance, a man sees the spotlight turned on him."
   ,
     sourceIds: { wikidata: "Q14920425" },
@@ -428,10 +380,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Sigourney Weaver", "Charles S. Dutton", "Charles Dance"],
     genres: ["Action", "Sci-Fi", "Horror"],
     themes: ["SPACE","SURVIVAL"],
-    imdbRating: 6.5,
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
-    posterUrl: "https://image.tmdb.org/t/p/w500/hPgu93Y74h6Lp8b1kE5e8X4m8A9.jpg",
     overview: "After her last ordeal, Ellen Ripley crash-lands on a maximum-security prison."
   ,
     sourceIds: { wikidata: "Q108543" },
@@ -447,10 +397,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Russell Crowe", "Joaquin Phoenix", "Connie Nielsen", "Oliver Reed"],
     genres: ["Action", "Adventure", "Drama"],
     themes: ["REVENGE","SURVIVAL"],
-    imdbRating: 8.5,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg",
     overview: "A former Roman General sets out to exact vengeance against the corrupt emperor."
   ,
     sourceIds: { wikidata: "Q128518" },
@@ -464,11 +412,9 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Joaquin Phoenix", "Robert De Niro", "Zazie Beetz", "Frances Conroy"],
     genres: ["Crime", "Drama", "Thriller"],
     themes: ["LITERALLY_ME","NEO_NOIR"],
-    imdbRating: 8.4,
     hasOscar: true,
     franchise: "DC",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
     overview: "During the 1980s, a failed comedian is driven insane in Gotham City."
   ,
     sourceIds: { wikidata: "Q42759035" },
@@ -482,10 +428,8 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Song Kang-ho", "Lee Sun-kyun", "Cho Yeo-jeong", "Choi Woo-shik", "Park So-dam"],
     genres: ["Drama", "Thriller"],
     themes: ["PLOT_TWIST","SINGLE_LOCATION"],
-    imdbRating: 8.5,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
     overview: "Greed and class discrimination threaten the relationship between the Park and Kim families."
   ,
     sourceIds: { wikidata: "Q61448040" },
@@ -500,11 +444,9 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Christian Bale", "Tom Hardy", "Anne Hathaway", "Gary Oldman", "Joseph Gordon-Levitt"],
     genres: ["Action", "Drama", "Thriller"],
     themes: ["HEIST","LITERALLY_ME"],
-    imdbRating: 8.4,
     hasOscar: false,
     franchise: "DC",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/hr0L2aueqlP2BYUblTTjmtn0hw4.jpg",
     overview: "Eight years after the Joker's reign of anarchy, Batman is forced from his exile by the terrorist Bane."
   ,
     sourceIds: { wikidata: "Q189330" },
@@ -517,11 +459,9 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Taika Waititi",
     cast: ["Christian Bale", "Chris Hemsworth", "Natalie Portman", "Tessa Thompson", "Russell Crowe"],
     genres: ["Action", "Adventure", "Comedy"],
-    imdbRating: 6.2,
     hasOscar: false,
     franchise: "MARVEL",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/pIkRyD18kl4F0bPpKXm74BYTGZ2.jpg",
     overview: "Thor enlists the help of Valkyrie, Korg and Jane Foster to fight Gorr the God Butcher (Christian Bale)."
   ,
     sourceIds: { wikidata: "Q65768604" },
@@ -534,11 +474,9 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "James Gunn",
     cast: ["Chris Pratt", "Zoe Saldana", "Dave Bautista", "Bradley Cooper", "Vin Diesel"],
     genres: ["Action", "Adventure", "Sci-Fi"],
-    imdbRating: 8.0,
     hasOscar: false,
     franchise: "MARVEL",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/r7vmZjiyZw9rpEvYSJG4FsR4oob.jpg",
     overview: "A group of intergalactic criminals must pull together to stop a fanatical warrior."
   ,
     sourceIds: { wikidata: "Q5887360" },
@@ -551,11 +489,9 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "James Gunn",
     cast: ["Margot Robbie", "Idris Elba", "John Cena", "Joel Kinnaman", "Sylvester Stallone"],
     genres: ["Action", "Adventure", "Comedy"],
-    imdbRating: 7.2,
     hasOscar: false,
     franchise: "DC",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/kb4TN99qGqvRIUm9KyqwSIqa8as.jpg",
     overview: "Supervillains Harley Quinn, Bloodsport, Peacemaker join Task Force X on the remote island of Corto Maltese."
   ,
     sourceIds: { wikidata: "Q57317060" },
@@ -568,11 +504,9 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Tim Miller",
     cast: ["Ryan Reynolds", "Morena Baccarin", "T.J. Miller", "Ed Skrein"],
     genres: ["Action", "Comedy", "Sci-Fi"],
-    imdbRating: 8.0,
     hasOscar: false,
     franchise: "MARVEL",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/fSRb7vyIP8rQpL0I47P3qUsucht.jpg",
     overview: "A wisecracking mercenary gets experimented on and becomes immortal but ugly, and sets out to track down the man who ruined his looks."
   ,
     sourceIds: { wikidata: "Q19347291" },
@@ -585,11 +519,9 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Martin Campbell",
     cast: ["Ryan Reynolds", "Blake Lively", "Peter Sarsgaard", "Mark Strong"],
     genres: ["Action", "Adventure", "Sci-Fi"],
-    imdbRating: 5.5,
     hasOscar: false,
     franchise: "DC",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/o0yW4rS201G2s3i6gH4m7n4U7N4.jpg",
     overview: "Reckless test pilot Hal Jordan is granted an alien ring that bestows him with otherworldly superpowers."
   ,
     sourceIds: { wikidata: "Q903885" },
@@ -602,11 +534,9 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Bob Persichetti",
     cast: ["Shameik Moore", "Jake Johnson", "Hailee Steinfeld", "Mahershala Ali", "Nicolas Cage"],
     genres: ["Animation", "Action", "Adventure"],
-    imdbRating: 8.4,
     hasOscar: true,
     franchise: "MARVEL",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg",
     overview: "Teen Miles Morales becomes the new Spider-Man, while joining other Spider-Heroes from various dimensions."
   ,
     sourceIds: { wikidata: "Q29588607" },
@@ -620,11 +550,9 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Hugh Jackman", "Patrick Stewart", "Dafne Keen", "Boyd Holbrook"],
     genres: ["Action", "Drama", "Sci-Fi"],
     themes: ["DYSTOPIA","SURVIVAL"],
-    imdbRating: 8.1,
     hasOscar: false,
     franchise: "MARVEL",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/fnbjcRDYn6YviCcePDnGdyAkYsB.jpg",
     overview: "In a future where mutants are nearly extinct, an elderly and weary Logan leads a quiet life until a young mutant arrives."
   ,
     sourceIds: { wikidata: "Q24053263" },
@@ -638,11 +566,9 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Robert Downey Jr.", "Chris Evans", "Mark Ruffalo", "Chris Hemsworth", "Scarlett Johansson"],
     genres: ["Action", "Adventure", "Drama"],
     themes: ["TIME_TRAVEL","SPACE"],
-    imdbRating: 8.4,
     hasOscar: false,
     franchise: "MARVEL",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
     overview: "After the devastating events of Infinity War, the universe is in ruins. The Avengers assemble once more to reverse Thanos' actions."
   ,
     sourceIds: { wikidata: "Q23781155" },
@@ -656,11 +582,9 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Peter Jackson",
     cast: ["Elijah Wood", "Ian McKellen", "Viggo Mortensen", "Cate Blanchett", "Orlando Bloom"],
     genres: ["Adventure", "Fantasy", "Action"],
-    imdbRating: 8.9,
     hasOscar: true,
     franchise: "LOTR",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cDK6.jpg",
     overview: "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring."
   ,
     sourceIds: { wikidata: "Q127367" },
@@ -673,11 +597,9 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Peter Jackson",
     cast: ["Elijah Wood", "Ian McKellen", "Viggo Mortensen", "Cate Blanchett", "Andy Serkis"],
     genres: ["Adventure", "Fantasy", "Action"],
-    imdbRating: 9.0,
     hasOscar: true,
     franchise: "LOTR",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg",
     overview: "Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam."
   ,
     sourceIds: { wikidata: "Q131074" },
@@ -690,11 +612,9 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Alfonso Cuarón",
     cast: ["Daniel Radcliffe", "Emma Watson", "Rupert Grint", "Gary Oldman", "Michael Gambon", "David Thewlis"],
     genres: ["Adventure", "Family", "Fantasy"],
-    imdbRating: 7.9,
     hasOscar: false,
     franchise: "HARRY_POTTER",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/aWx2k4QdrYqG4l57g3Yt3W9C5vF.jpg",
     overview: "Harry Potter, Ron and Hermione return to Hogwarts School of Witchcraft and Wizardry for their third year."
   ,
     sourceIds: { wikidata: "Q102448" },
@@ -707,11 +627,9 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "David Yates",
     cast: ["Daniel Radcliffe", "Emma Watson", "Rupert Grint", "Ralph Fiennes", "Gary Oldman", "Alan Rickman"],
     genres: ["Adventure", "Fantasy", "Mystery"],
-    imdbRating: 8.1,
     hasOscar: false,
     franchise: "HARRY_POTTER",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/c54HpQmuwXjHq2C9wK8a9i22V9e.jpg",
     overview: "Harry, Ron, and Hermione search for Voldemort's remaining Horcruxes in their effort to destroy the Dark Lord."
   ,
     sourceIds: { wikidata: "Q232009" },
@@ -725,11 +643,9 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Timothée Chalamet", "Rebecca Ferguson", "Oscar Isaac", "Zendaya", "Javier Bardem", "Josh Brolin"],
     genres: ["Sci-Fi", "Adventure", "Action"],
     themes: ["DYSTOPIA","SPACE","REVENGE"],
-    imdbRating: 8.0,
     hasOscar: true,
     franchise: "DUNE",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
     overview: "Paul Atreides arrives on Arrakis after his father accepts the stewardship of the dangerous planet."
   ,
     sourceIds: { wikidata: "Q60834962" },
@@ -743,11 +659,9 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Timothée Chalamet", "Zendaya", "Rebecca Ferguson", "Javier Bardem", "Austin Butler", "Florence Pugh"],
     genres: ["Sci-Fi", "Adventure", "Action"],
     themes: ["DYSTOPIA","SPACE","REVENGE"],
-    imdbRating: 8.6,
     hasOscar: false,
     franchise: "DUNE",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
     overview: "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family."
   ,
     sourceIds: { wikidata: "Q109228991" },
@@ -760,11 +674,9 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Taika Waititi",
     cast: ["Chris Hemsworth", "Tom Hiddleston", "Cate Blanchett", "Mark Ruffalo", "Tessa Thompson"],
     genres: ["Action", "Adventure", "Comedy"],
-    imdbRating: 7.9,
     hasOscar: false,
     franchise: "MARVEL",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/rzRwTcFvttcN1Z9X2bKiNd9zy9b.jpg",
     overview: "Imprisoned on the planet Sakaar, Thor must race against time to return to Asgard and stop Ragnarök."
   ,
     sourceIds: { wikidata: "Q22665878" },
@@ -778,11 +690,9 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Jean Reno", "Gary Oldman", "Natalie Portman", "Danny Aiello"],
     genres: ["Action", "Crime", "Drama"],
     themes: ["REVENGE","NEO_NOIR"],
-    imdbRating: 8.5,
     hasOscar: false,
     franchise: "OTHER",
     boxOfficeCategory: "INDIE",
-    posterUrl: "https://image.tmdb.org/t/p/w500/wA2kG4YqA9T3YqgP7F1vA9v7g.jpg",
     overview: "12-year-old Mathilda is reluctantly taken in by Léon, a professional assassin, after her family is murdered."
   ,
     sourceIds: { wikidata: "Q484675" },
@@ -796,11 +706,9 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Brad Pitt", "Cate Blanchett", "Taraji P. Henson", "Julia Ormond"],
     genres: ["Drama", "Fantasy", "Romance"],
     themes: ["NON_LINEAR"],
-    imdbRating: 7.8,
     hasOscar: true,
     franchise: "OTHER",
     boxOfficeCategory: "BLOCKBUSTER",
-    posterUrl: "https://image.tmdb.org/t/p/w500/3Wv4W1s3xKz2Y19m8C0x2B9y.jpg",
     overview: "Tells the story of Benjamin Button, a man who starts aging backwards with bizarre consequences."
   ,
     sourceIds: { wikidata: "Q183239" },
@@ -816,7 +724,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Guy Pearce", "Carrie-Anne Moss", "Joe Pantoliano"],
     genres: ["Mystery", "Thriller"],
     themes: ["PLOT_TWIST","NON_LINEAR","REVENGE","NEO_NOIR"],
-    imdbRating: 8.4,
     hasOscar: false,
     boxOfficeCategory: "INDIE",
     overview: "A man with short-term memory loss attempts to track down his wife's murderer."
@@ -832,7 +739,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Christian Bale", "Michael Caine", "Cillian Murphy", "Gary Oldman", "Liam Neeson"],
     genres: ["Action", "Crime", "Drama"],
     themes: ["NEO_NOIR"],
-    imdbRating: 8.2,
     hasOscar: false,
     franchise: "DC",
     boxOfficeCategory: "BLOCKBUSTER",
@@ -851,7 +757,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Robert De Niro", "Sharon Stone", "Joe Pesci", "James Woods"],
     genres: ["Crime", "Drama"],
     themes: ["HEIST","NON_LINEAR"],
-    imdbRating: 8.2,
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "A tale of greed, deception, money, power, and murder between two best friends in Las Vegas."
@@ -866,7 +771,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Martin Scorsese",
     cast: ["Robert De Niro", "Cathy Moriarty", "Joe Pesci"],
     genres: ["Biography", "Drama", "Sport"],
-    imdbRating: 8.2,
     hasOscar: true,
     boxOfficeCategory: "STANDARD",
     overview: "The life of boxer Jake LaMotta, whose violence and temper that lead him to the top in the ring destroyed his life outside of it."
@@ -882,7 +786,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Leonardo DiCaprio", "Cate Blanchett", "Kate Beckinsale", "Alec Baldwin"],
     genres: ["Biography", "Drama"],
     themes: ["LITERALLY_ME"],
-    imdbRating: 7.5,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "A biopic depicting the early years of legendary director and aviator Howard Hughes' career from the late 1920s to the mid 1940s."
@@ -900,7 +803,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Uma Thurman", "David Carradine", "Lucy Liu", "Daryl Hannah"],
     genres: ["Action", "Crime", "Drama"],
     themes: ["REVENGE","NON_LINEAR"],
-    imdbRating: 8.2,
     hasOscar: false,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "After awakening from a four-year coma, a former assassin wreaks vengeance on the team of assassins who betrayed her."
@@ -916,7 +818,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Uma Thurman", "David Carradine", "Michael Madsen", "Daryl Hannah"],
     genres: ["Action", "Crime", "Thriller"],
     themes: ["REVENGE"],
-    imdbRating: 8.0,
     hasOscar: false,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "The Bride continues her quest of vengeance against her former boss and lover Bill."
@@ -932,7 +833,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Harvey Keitel", "Tim Roth", "Michael Madsen", "Steve Buscemi"],
     genres: ["Crime", "Thriller"],
     themes: ["SINGLE_LOCATION","HEIST","NON_LINEAR","WHODUNNIT"],
-    imdbRating: 8.3,
     hasOscar: false,
     boxOfficeCategory: "INDIE",
     overview: "When a simple jewelry heist goes horribly wrong, the surviving criminals begin to suspect that one of them is a police informant."
@@ -950,7 +850,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Jake Gyllenhaal", "Mark Ruffalo", "Robert Downey Jr.", "Anthony Edwards"],
     genres: ["Crime", "Drama", "Mystery"],
     themes: ["WHODUNNIT","NEO_NOIR"],
-    imdbRating: 7.7,
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "Between 1968 and 1983, a San Francisco cartoonist becomes an amateur detective obsessed with tracking down the Zodiac Killer."
@@ -966,7 +865,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Daniel Craig", "Rooney Mara", "Christopher Plummer", "Stellan Skarsgård"],
     genres: ["Crime", "Drama", "Mystery"],
     themes: ["WHODUNNIT","REVENGE","NEO_NOIR"],
-    imdbRating: 7.8,
     hasOscar: true,
     boxOfficeCategory: "STANDARD",
     overview: "Journalist Mikael Blomkvist is aided in his search for a woman who has been missing for forty years by Lisbeth Salander."
@@ -984,7 +882,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Hugh Jackman", "Jake Gyllenhaal", "Viola Davis", "Paul Dano"],
     genres: ["Crime", "Drama", "Mystery"],
     themes: ["WHODUNNIT","PLOT_TWIST","NEO_NOIR"],
-    imdbRating: 8.1,
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "When Keller Dover's daughter and her friend go missing, he takes matters into his own hands as the police pursue multiple leads."
@@ -1000,7 +897,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Lubna Azabal", "Mélissa Désormeaux-Poulin", "Maxim Gaudette"],
     genres: ["Drama", "Mystery", "War"],
     themes: ["PLOT_TWIST","WHODUNNIT","REVENGE"],
-    imdbRating: 8.3,
     hasOscar: false,
     boxOfficeCategory: "INDIE",
     overview: "Twins journey to the Middle East to discover their family history and fulfill their mother's last wishes."
@@ -1018,7 +914,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Marlon Brando", "Al Pacino", "James Caan", "Robert Duvall", "Diane Keaton"],
     genres: ["Crime", "Drama"],
     themes: ["REVENGE"],
-    imdbRating: 9.2,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son."
@@ -1034,7 +929,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Al Pacino", "Robert De Niro", "Robert Duvall", "Diane Keaton"],
     genres: ["Crime", "Drama"],
     themes: ["NON_LINEAR","REVENGE"],
-    imdbRating: 9.0,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands the family syndicate."
@@ -1050,7 +944,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Sigourney Weaver", "Tom Skerritt", "John Hurt", "Ian Holm"],
     genres: ["Horror", "Sci-Fi"],
     themes: ["SPACE","SURVIVAL","SINGLE_LOCATION"],
-    imdbRating: 8.5,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "The crew of a commercial spacecraft encounter a deadly lifeform after investigating a mysterious transmission of unknown origin."
@@ -1066,7 +959,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Leonardo DiCaprio", "Kate Winslet", "Billy Zane", "Kathy Bates"],
     genres: ["Drama", "Romance"],
     themes: ["SURVIVAL","NON_LINEAR"],
-    imdbRating: 7.9,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic."
@@ -1082,7 +974,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Sam Worthington", "Zoe Saldana", "Sigourney Weaver", "Stephen Lang"],
     genres: ["Action", "Adventure", "Fantasy", "Sci-Fi"],
     themes: ["SPACE","DYSTOPIA"],
-    imdbRating: 7.9,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world."
@@ -1098,7 +989,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Arnold Schwarzenegger", "Linda Hamilton", "Edward Furlong", "Robert Patrick"],
     genres: ["Action", "Sci-Fi"],
     themes: ["TIME_TRAVEL","AI","DYSTOPIA","SURVIVAL"],
-    imdbRating: 8.6,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "A cyborg, identical to the one who failed to kill Sarah Connor, must now protect her ten-year-old son John Connor from an advanced cyborg."
@@ -1114,7 +1004,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss", "Hugo Weaving"],
     genres: ["Action", "Sci-Fi"],
     themes: ["DYSTOPIA","AI","PLOT_TWIST"],
-    imdbRating: 8.7,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence."
@@ -1130,7 +1019,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Miles Teller", "J.K. Simmons", "Paul Reiser", "Melissa Benoist"],
     genres: ["Drama", "Music"],
     themes: ["SINGLE_LOCATION"],
-    imdbRating: 8.5,
     hasOscar: true,
     boxOfficeCategory: "INDIE",
     overview: "A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential."
@@ -1145,7 +1033,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Damien Chazelle",
     cast: ["Ryan Gosling", "Emma Stone", "John Legend", "Rosemarie DeWitt"],
     genres: ["Comedy", "Drama", "Music"],
-    imdbRating: 8.0,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations for the future."
@@ -1161,7 +1048,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Tommy Lee Jones", "Javier Bardem", "Josh Brolin", "Woody Harrelson"],
     genres: ["Crime", "Drama", "Thriller"],
     themes: ["NEO_NOIR","HEIST"],
-    imdbRating: 8.2,
     hasOscar: true,
     boxOfficeCategory: "STANDARD",
     overview: "Violence and mayhem ensue after a hunter stumbles upon a drug deal gone wrong and more than two million dollars in cash near the Rio Grande."
@@ -1177,7 +1063,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Jack Nicholson", "Shelley Duvall", "Danny Lloyd", "Scatman Crothers"],
     genres: ["Drama", "Horror"],
     themes: ["SINGLE_LOCATION","PLOT_TWIST"],
-    imdbRating: 8.4,
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "A family heads to an isolated hotel for the winter where a sinister presence influences the father into violence."
@@ -1193,7 +1078,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Malcolm McDowell", "Patrick Magee", "Michael Bates"],
     genres: ["Crime", "Sci-Fi"],
     themes: ["DYSTOPIA","LITERALLY_ME"],
-    imdbRating: 8.3,
     hasOscar: false,
     boxOfficeCategory: "STANDARD",
     overview: "In the future, a sadistic gang leader is imprisoned and volunteers for a conduct-aversion experiment, but it doesn't go as planned."
@@ -1209,7 +1093,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Keir Dullea", "Gary Lockwood", "William Sylvester"],
     genres: ["Adventure", "Sci-Fi"],
     themes: ["SPACE","AI","DYSTOPIA"],
-    imdbRating: 8.3,
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
     overview: "After discovering a mysterious artifact buried on the Moon, mankind seeks its origins with the help of supercomputer H.A.L. 9000."
@@ -1224,7 +1107,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Vince Gilligan",
     cast: ["Bryan Cranston", "Aaron Paul", "Bob Odenkirk"],
     genres: ["Crime", "Drama", "Thriller"],
-    imdbRating: 9.5,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "A chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing methamphetamine."
@@ -1238,7 +1120,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Vince Gilligan",
     cast: ["Bob Odenkirk", "Rhea Seehorn", "Giancarlo Esposito"],
     genres: ["Crime", "Drama"],
-    imdbRating: 9.0,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "The trials and tribulations of criminal lawyer Jimmy McGill in the years leading up to his fateful run-in with Walter White."
@@ -1252,7 +1133,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "David Benioff",
     cast: ["Peter Dinklage", "Emilia Clarke", "Kit Harington", "Lena Headey"],
     genres: ["Action", "Adventure", "Drama"],
-    imdbRating: 9.2,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns."
@@ -1266,7 +1146,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Jesse Armstrong",
     cast: ["Brian Cox", "Jeremy Strong", "Sarah Snook", "Kieran Culkin"],
     genres: ["Drama"],
-    imdbRating: 8.9,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "The Roy family is known for controlling the biggest media and entertainment company in the world."
@@ -1280,7 +1159,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Steven Knight",
     cast: ["Cillian Murphy", "Paul Anderson", "Tom Hardy", "Helen McCrory"],
     genres: ["Crime", "Drama"],
-    imdbRating: 8.8,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "A gangster family epic set in 1900s England, centering on a gang who sew razor blades in the peaks of their caps."
@@ -1294,7 +1172,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Cary Joji Fukunaga",
     cast: ["Matthew McConaughey", "Woody Harrelson", "Colin Farrell"],
     genres: ["Crime", "Drama", "Mystery"],
-    imdbRating: 8.9,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "Seasonal anthology series in which police investigations unearth the personal and professional secrets of those involved."
@@ -1308,7 +1185,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Johan Renck",
     cast: ["Jared Harris", "Stellan Skarsgård", "Jessie Buckley"],
     genres: ["Drama", "History", "Thriller"],
-    imdbRating: 9.3,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "In April 1986, an explosion at the Chernobyl nuclear power plant in the USSR becomes one of the world's worst man-made catastrophes."
@@ -1322,7 +1198,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "David Fincher",
     cast: ["Jonathan Groff", "Holt McCallany", "Anna Torv"],
     genres: ["Crime", "Drama", "Thriller"],
-    imdbRating: 8.6,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "Set in the late 1970s, two FBI agents expand criminal science by delving into the psychology of murder."
@@ -1336,7 +1211,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Ben Stiller",
     cast: ["Adam Scott", "Patricia Arquette", "John Turturro", "Christopher Walken"],
     genres: ["Drama", "Mystery", "Sci-Fi"],
-    imdbRating: 8.7,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "Mark leads a team of office workers whose memories have been surgically divided between their work and personal lives."
@@ -1350,7 +1224,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "David Chase",
     cast: ["James Gandolfini", "Lorraine Bracco", "Edie Falco", "Michael Imperioli"],
     genres: ["Crime", "Drama"],
-    imdbRating: 9.2,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "New Jersey mob boss Tony Soprano deals with personal and professional issues in his home and business life."
@@ -1364,7 +1237,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "The Duffer Brothers",
     cast: ["Millie Bobby Brown", "Finn Wolfhard", "Winona Ryder", "David Harbour"],
     genres: ["Drama", "Fantasy", "Horror", "Sci-Fi"],
-    imdbRating: 8.7,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "When a young boy vanishes, a small town uncovers a mystery involving secret experiments and supernatural forces."
@@ -1378,7 +1250,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Craig Mazin",
     cast: ["Pedro Pascal", "Bella Ramsey", "Gabriel Luna"],
     genres: ["Action", "Adventure", "Drama", "Sci-Fi"],
-    imdbRating: 8.7,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "After a global pandemic destroys civilization, a hardened survivor takes charge of a 14-year-old girl who may be humanity's last hope."
@@ -1392,7 +1263,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Noah Hawley",
     cast: ["Billy Bob Thornton", "Martin Freeman", "Ewan McGregor"],
     genres: ["Crime", "Drama", "Thriller"],
-    imdbRating: 8.9,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "Various chronicles of deception, intrigue and murder in and around frozen Minnesota."
@@ -1406,7 +1276,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "David Simon",
     cast: ["Dominic West", "Idris Elba", "Michael Kenneth Williams"],
     genres: ["Crime", "Drama", "Thriller"],
-    imdbRating: 9.3,
     hasOscar: false,
     mediaType: "SERIES",
     overview: "The Baltimore drug scene, as seen through the eyes of drug dealers and law enforcement."
@@ -1420,7 +1289,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Greta Gerwig",
     cast: ["Margot Robbie", "Ryan Gosling", "America Ferrera", "Simu Liu", "Will Ferrell"],
     genres: ["Comedy", "Adventure", "Fantasy"],
-    imdbRating: 6.8,
     hasOscar: true,
     mediaType: "FILM",
     overview: "Barbie and Ken are having the time of their lives in the colorful and seemingly perfect world of Barbie Land."
@@ -1434,7 +1302,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Greta Gerwig",
     cast: ["Saoirse Ronan", "Emma Watson", "Florence Pugh", "Timothée Chalamet", "Laura Dern", "Meryl Streep"],
     genres: ["Drama", "Romance"],
-    imdbRating: 7.8,
     hasOscar: true,
     mediaType: "FILM",
     overview: "Jo March reflects back and forth on her life, telling the beloved story of the March sisters."
@@ -1448,7 +1315,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Greta Gerwig",
     cast: ["Saoirse Ronan", "Laurie Metcalf", "Tracy Letts", "Lucas Hedges", "Timothée Chalamet"],
     genres: ["Comedy", "Drama"],
-    imdbRating: 7.4,
     hasOscar: false,
     mediaType: "FILM",
     overview: "In 2002, an artistically inclined seventeen-year-old girl comes of age in Sacramento, California."
@@ -1462,7 +1328,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Robert Zemeckis",
     cast: ["Tom Hanks", "Robin Wright", "Gary Sinise", "Sally Field"],
     genres: ["Drama", "Romance"],
-    imdbRating: 8.8,
     hasOscar: true,
     mediaType: "FILM",
     overview: "The history of the United States from the 1950s to the '70s unfolds from the perspective of an Alabama man with an IQ of 75."
@@ -1476,7 +1341,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Steven Spielberg",
     cast: ["Tom Hanks", "Matt Damon", "Tom Sizemore", "Edward Burns"],
     genres: ["Drama", "War"],
-    imdbRating: 8.6,
     hasOscar: true,
     mediaType: "FILM",
     overview: "Following the Normandy Landings, a group of U.S. soldiers go behind enemy lines to retrieve a paratrooper whose brothers have been killed in action."
@@ -1491,7 +1355,6 @@ export const MOVIES_DATABASE: Movie[] = [
     cast: ["Tom Hanks", "Helen Hunt", "Paul Sanchez"],
     genres: ["Adventure", "Drama"],
     themes: ["SURVIVAL","SINGLE_LOCATION"],
-    imdbRating: 7.8,
     hasOscar: false,
     mediaType: "FILM",
     overview: "A FedEx executive undergoes a physical and emotional transformation after crash landing on a deserted island."
@@ -1505,7 +1368,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "James Gunn",
     cast: ["Chris Pratt", "Zoe Saldana", "Dave Bautista", "Bradley Cooper"],
     genres: ["Action", "Adventure", "Comedy", "Sci-Fi"],
-    imdbRating: 7.6,
     hasOscar: false,
     mediaType: "FILM",
     franchise: "MARVEL",
@@ -1520,7 +1382,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "James Gunn",
     cast: ["Chris Pratt", "Zoe Saldana", "Dave Bautista", "Chukwudi Iwuji"],
     genres: ["Action", "Adventure", "Comedy", "Sci-Fi"],
-    imdbRating: 8.0,
     hasOscar: false,
     mediaType: "FILM",
     franchise: "MARVEL",
@@ -1535,7 +1396,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "David Leitch",
     cast: ["Ryan Reynolds", "Josh Brolin", "Morena Baccarin", "Zazie Beetz"],
     genres: ["Action", "Comedy", "Sci-Fi"],
-    imdbRating: 7.7,
     hasOscar: false,
     mediaType: "FILM",
     franchise: "MARVEL",
@@ -1550,7 +1410,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Shawn Levy",
     cast: ["Ryan Reynolds", "Hugh Jackman", "Emma Corrin", "Morena Baccarin"],
     genres: ["Action", "Comedy", "Sci-Fi"],
-    imdbRating: 7.8,
     hasOscar: false,
     mediaType: "FILM",
     franchise: "MARVEL",
@@ -1565,7 +1424,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "James Gunn",
     cast: ["John Cena", "Danielle Brooks", "Freddie Stroma", "Chukwudi Iwuji"],
     genres: ["Action", "Comedy", "Sci-Fi"],
-    imdbRating: 8.3,
     hasOscar: false,
     mediaType: "SERIES",
     franchise: "DC",
@@ -1580,7 +1438,6 @@ export const MOVIES_DATABASE: Movie[] = [
     director: "Shawn Levy",
     cast: ["Ryan Reynolds", "Jodie Comer", "Taika Waititi", "Joe Keery"],
     genres: ["Action", "Comedy", "Sci-Fi"],
-    imdbRating: 7.1,
     hasOscar: false,
     mediaType: "FILM",
     overview: "A bank teller discovers that he's actually an NPC inside a brutal, open world video game."

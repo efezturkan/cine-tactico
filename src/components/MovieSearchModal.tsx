@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Criterion, Movie, ContentPoolType, CellAnswer } from "@/types/game";
 import { MOVIES_DATABASE } from "@/data/movies";
-import { Search, X, Film, Star, Award, Tv, Sparkles, AlertCircle } from "lucide-react";
+import { Search, X, Film, ShieldCheck } from "lucide-react";
 import { audio } from "@/utils/audio";
 
 interface MovieSearchModalProps {
@@ -19,30 +19,10 @@ interface MovieSearchModalProps {
   targetOccupant?: CellAnswer | null;
 }
 
-// Phase 2: MVP typographic-first mode (no TMDB poster dependency)
-const SHOW_EXTERNAL_POSTERS = false;
-
-const SearchMovieThumbnail: React.FC<{ movie: Movie }> = ({ movie }) => {
-  const [imgFailed, setImgFailed] = useState(false);
-
-  if (SHOW_EXTERNAL_POSTERS && movie.posterUrl && !imgFailed) {
-    return (
-      <Image
-        src={movie.posterUrl}
-        alt={movie.title}
-        fill
-        sizes="44px"
-        className="object-cover"
-        unoptimized
-        onError={() => setImgFailed(true)}
-      />
-    );
-  }
-
+const SearchMovieThumbnail: React.FC<{ movie: Movie }> = () => {
   return (
     <div className="w-full h-full bg-gradient-to-br from-zinc-800 to-zinc-950 flex flex-col items-center justify-center p-1 text-center">
-      <Film className="w-3.5 h-3.5 text-amber-400 mb-0.5" />
-      <span className="text-[8px] font-black text-zinc-300 font-mono">{movie.year}</span>
+      <Film className="w-4 h-4 text-amber-400" />
     </div>
   );
 };
@@ -79,11 +59,13 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
     }
 
     const q = query.trim().toLowerCase();
-    if (!q) {
-      return pool.slice(0, 15);
+    // Anti-Cheat: En az 2 harf yazılmadan hiçbir film listelenmez! (Rastgele gezinme engellendi)
+    if (q.length < 2) {
+      return [];
     }
     return pool.filter(m => {
-      // Yalnızca Film/Dizi adına (ve orijinal adına) göre filtreleme — Hile koruması: Yönetmen/Oyuncu ile film dökümü engellendi!
+      // Anti-Cheat: Yalnızca Film/Dizi adına (ve orijinal adına) göre filtreleme
+      // Yönetmen, oyuncu, tür, yıl veya ödül ile ASLA arama yapılamaz!
       const matchTitle = m.title.toLowerCase().includes(q);
       const matchOrig = m.originalTitle?.toLowerCase().includes(q);
       return matchTitle || matchOrig;
@@ -132,25 +114,6 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
           </button>
         </div>
 
-        {/* Kare Çalma Bilgilendirme Rozeti */}
-        {targetOccupant && (
-          <div className="mt-3 p-2.5 rounded-xl bg-gradient-to-r from-rose-950/80 via-zinc-900/90 to-amber-950/70 border border-rose-500/50 text-rose-200 text-xs font-bold flex items-center justify-between gap-2 shadow-lg">
-            <div className="flex items-center gap-2 min-w-0">
-              <Sparkles className="w-4 h-4 text-amber-400 shrink-0 animate-pulse" />
-              <div className="min-w-0">
-                <span className="text-[10px] uppercase font-black tracking-wider text-amber-400 block">Kare Çalma Düellosu</span>
-                <span className="truncate block text-zinc-200">
-                  Mevcut Film: <b className="text-white">{targetOccupant.movie.title}</b>
-                </span>
-              </div>
-            </div>
-            <div className="shrink-0 px-2 py-1 rounded-lg bg-black/60 border border-amber-400/40 text-amber-400 font-mono font-black text-xs flex items-center gap-1">
-              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-              <span>&gt; {targetOccupant.movie.imdbRating}</span>
-            </div>
-          </div>
-        )}
-
         {/* Hızlı Arama Input (Sadece Film / Dizi Adı) */}
         <div className="relative my-3">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
@@ -178,69 +141,66 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
           </div>
         )}
 
-        {/* Afişli Görsel Film Listesi (SPOILER-FREE: Yönetmen ve Oyuncu listelenmez!) */}
+        {/* Afişli Görsel Film Listesi (ANTI-CHEAT: Tür, Yıl, Ödül, Gişe ve Yönetmen bilgileri KESİNLİKLE gösterilmez!) */}
         <div className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-          {filteredMovies.length === 0 ? (
+          {query.trim().length < 2 ? (
+            <div className="py-12 px-4 text-center text-zinc-400 flex flex-col items-center justify-center">
+              <div className="w-12 h-12 rounded-2xl bg-zinc-800/80 border border-zinc-700/60 flex items-center justify-center mb-3 text-amber-400 shadow-md">
+                <Film className="w-6 h-6" />
+              </div>
+              <p className="text-sm font-bold text-zinc-200">Film veya Dizi Adını Yazmaya Başla</p>
+              <p className="text-xs text-zinc-500 mt-1 max-w-xs leading-relaxed">
+                Sonuçları listelemek için en az 2 harf girilmelidir.
+              </p>
+              <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[11px] font-bold text-emerald-400">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                Anti-Cheat: Tür ve yıl ipuçları adil oyun için gizlenmiştir
+              </div>
+            </div>
+          ) : filteredMovies.length === 0 ? (
             <div className="py-12 text-center text-zinc-500 text-sm">
               <Film className="w-8 h-8 mx-auto mb-2 text-zinc-600" />
-              Eşleşen film bulunamadı.
+              &quot;{query}&quot; ile eşleşen yapım bulunamadı.
             </div>
           ) : (
             filteredMovies.map(movie => {
               const isUsed = usedMovieIds.includes(movie.id);
-              const isStealTargetLower = targetOccupant ? movie.imdbRating <= targetOccupant.movie.imdbRating : false;
-              const isDisabled = isUsed || isStealTargetLower;
+              const hasDiffOriginal =
+                movie.originalTitle &&
+                movie.originalTitle.trim().toLowerCase() !== movie.title.trim().toLowerCase();
 
               return (
                 <button
                   key={movie.id}
-                  disabled={isDisabled}
+                  disabled={isUsed}
                   onClick={() => onSelectMovie(movie)}
                   className={`w-full p-2.5 rounded-2xl flex items-center justify-between text-left transition-all border ${
                     isUsed
                       ? "opacity-40 bg-zinc-950 border-zinc-900 cursor-not-allowed"
-                      : isStealTargetLower
-                      ? "opacity-50 bg-zinc-950/60 border-zinc-800/80 cursor-not-allowed"
-                      : targetOccupant
-                      ? "bg-rose-950/20 hover:bg-rose-900/30 border-rose-500/30 hover:border-rose-400/70 active:scale-[0.99] shadow-sm"
                       : "bg-zinc-900/80 hover:bg-zinc-800 border-cinema-border hover:border-amber-400/60 active:scale-[0.99] shadow-sm"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    {/* Dikey Afiş Küçük Resmi */}
+                    {/* Dikey Afiş Küçük Resmi (Yıl/Metin Yok) */}
                     <div className="relative w-11 h-16 rounded-lg overflow-hidden bg-zinc-800 shrink-0 border border-zinc-700/60 shadow-md">
                       <SearchMovieThumbnail movie={movie} />
                     </div>
 
-                    {/* Film Bilgileri: SADECE Film Adı, Çıkış Yılı ve Türler (Yönetmen kopyası YOK!) */}
+                    {/* Film Bilgileri: SADECE Film Adı & Varsa Orijinal Adı (Kriter Kopyası 0!) */}
                     <div className="min-w-0">
-                      <div className="font-extrabold text-sm text-zinc-100 truncate flex items-center gap-1.5">
-                        {movie.title}
-                        <span className="text-[11px] font-medium text-zinc-400">({movie.year})</span>
-                      </div>
-                      <div className="text-[11px] text-zinc-400 truncate mt-0.5">
-                        Tür: {movie.genres.join(" · ")}
-                      </div>
-                      <div className="flex items-center gap-2 mt-1.5 text-[10px] font-bold text-zinc-400 flex-wrap">
-                        {/* IMDb Puanı */}
-                        <span className="flex items-center gap-0.5 text-amber-300 bg-amber-400/10 px-1.5 py-0.5 rounded border border-amber-400/20 font-mono font-bold text-[10px]">
-                          <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
-                          {movie.imdbRating}
-                        </span>
-
-                        {movie.hasOscar && (
-                          <span className="flex items-center gap-0.5 text-yellow-400 bg-yellow-400/10 px-1.5 py-0.5 rounded border border-yellow-400/20">
-                            <Award className="w-2.5 h-2.5" /> Oscar
+                      <div className="font-extrabold text-sm text-zinc-100 truncate flex items-center gap-2">
+                        <span>{movie.title}</span>
+                        {movie.mediaType === "SERIES" && (
+                          <span className="text-[9px] font-black font-mono text-cyan-400 bg-cyan-400/10 px-1.5 py-0.5 rounded border border-cyan-400/25">
+                            DİZİ
                           </span>
                         )}
-                        {movie.mediaType === "SERIES" ? (
-                          <span className="flex items-center gap-0.5 text-cyan-400 bg-cyan-400/10 px-1.5 py-0.5 rounded border border-cyan-400/25 text-[9px] font-black font-mono">
-                            <Tv className="w-2.5 h-2.5" /> DİZİ
-                          </span>
-                        ) : (
-                          <span className="text-zinc-500">{movie.boxOfficeCategory || "SİNEMA"}</span>
-                        )}
                       </div>
+                      {hasDiffOriginal && (
+                        <div className="text-[11px] text-zinc-400 truncate mt-0.5 italic">
+                          {movie.originalTitle}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -248,14 +208,6 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                     {isUsed ? (
                       <span className="text-[10px] font-bold text-zinc-500 px-2 py-1 rounded bg-zinc-800">
                         Kullanıldı
-                      </span>
-                    ) : isStealTargetLower ? (
-                      <span className="text-[9px] font-mono font-bold text-rose-400/70 px-2 py-1 rounded bg-rose-950/30 border border-rose-900/40">
-                        Puan Düşük ({movie.imdbRating})
-                      </span>
-                    ) : targetOccupant ? (
-                      <span className="text-xs font-black text-rose-400 group-hover:text-rose-300 px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center gap-1 shadow-sm">
-                        <Sparkles className="w-3 h-3 text-rose-400" /> Çal &rarr;
                       </span>
                     ) : (
                       <span className="text-xs font-black text-amber-400 group-hover:text-amber-300 px-3 py-1.5 rounded-xl bg-amber-400/10 border border-amber-400/20">
