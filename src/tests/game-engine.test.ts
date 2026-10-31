@@ -1,7 +1,16 @@
 import { MOVIES_DATABASE } from "../data/movies";
 import { PRESET_BOARDS, getRandomBoard, createRandomizedBoard, getRandomOpponent } from "../data/boards";
 import { WINNING_LINES, evaluateBoardState } from "../engine/rules";
-import { validateMove, findMatchingMovies, validateBoardSolvability, matchesContentPool, getSharedActors } from "../engine/validator";
+import {
+  validateMove,
+  findMatchingMovies,
+  validateBoardSolvability,
+  matchesContentPool,
+  getSharedActors,
+  normalizeCinemaString,
+  calculateLevenshteinDistance,
+  validateActorIntersection,
+} from "../engine/validator";
 import { calculateBotMove, getBotThinkingDelay } from "../engine/bot-ai";
 
 console.log("=================================================");
@@ -247,6 +256,44 @@ runTest("Bot sahipsiz/kilitli (LOCKED_NEUTRAL) hücreleri hedeflemez", () => {
 
   const decision = calculateBotMove(board, cells, [], "HARD", "O");
   return decision !== null && decision.cellIndex === 4;
+});
+
+// 10. Normalizasyon & Ters Kadraj Kontrollü Aktör Doğrulama
+runTest("normalizeCinemaString Türkçe karakterleri ve aksanları doğru temizler", () => {
+  const input = "  Şahika Çoşkun & Timothée Öztürk  ";
+  const normalized = normalizeCinemaString(input);
+  return normalized === "sahika coskun timothee ozturk";
+});
+
+runTest("calculateLevenshteinDistance mesafeleri doğru hesaplar", () => {
+  return (
+    calculateLevenshteinDistance("dicaprio", "dicaprio") === 0 &&
+    calculateLevenshteinDistance("dicaprio", "dicapri") === 1 &&
+    calculateLevenshteinDistance("nolan", "tarantino") > 4
+  );
+});
+
+runTest("validateActorIntersection ortak aktörü tam eşleşmeyle doğrular", () => {
+  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!;
+  const darkKnight = MOVIES_DATABASE.find(m => m.id === "m_dark_knight")!;
+  // Ortak aktörler: Cillian Murphy
+  const result = validateActorIntersection("Cillian Murphy", inception, darkKnight);
+  return result.isValid && result.matchedActor === "Cillian Murphy";
+});
+
+runTest("validateActorIntersection 1 harf yazım hatasını kontrollü tolere eder", () => {
+  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!;
+  const darkKnight = MOVIES_DATABASE.find(m => m.id === "m_dark_knight")!;
+  // "Cillian Murphyy" (1 harf fazla) -> tolere edilmeli
+  const result = validateActorIntersection("Cillian Murphyy", inception, darkKnight);
+  return result.isValid && result.matchedActor === "Cillian Murphy";
+});
+
+runTest("validateActorIntersection alakasız aktörü kesin olarak reddeder", () => {
+  const inception = MOVIES_DATABASE.find(m => m.id === "m_inception")!;
+  const darkKnight = MOVIES_DATABASE.find(m => m.id === "m_dark_knight")!;
+  const result = validateActorIntersection("Brad Pitt", inception, darkKnight);
+  return !result.isValid;
 });
 
 console.log("\n=================================================");

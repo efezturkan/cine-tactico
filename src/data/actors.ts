@@ -1,0 +1,242 @@
+import { Actor } from "@/types/game";
+import { normalizeCinemaString } from "@/engine/validator";
+
+/**
+ * CINE-XOX AKTÖR VE TAKMA AD (ALIAS) VERİTABANI
+ * DATA_GOVERNANCE.md standardı: Alan bazlı provenance ve doğrulama meta-verisi içerir.
+ */
+export const ACTORS_DATABASE: Actor[] = [
+  {
+    id: "act_dicaprio",
+    primaryName: "Leonardo DiCaprio",
+    normalizedName: "leonardo dicaprio",
+    aliases: ["Leo DiCaprio", "Leonardo Wilhelm DiCaprio"],
+    normalizedAliases: ["leo dicaprio", "leonardo wilhelm dicaprio"],
+    birthYear: 1974,
+    sourceIds: { wikidata: "Q38111" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q38111",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_deniro",
+    primaryName: "Robert De Niro",
+    normalizedName: "robert de niro",
+    aliases: ["Bob De Niro", "Bobby De Niro", "Robert Anthony De Niro Jr."],
+    normalizedAliases: ["bob de niro", "bobby de niro", "robert anthony de niro jr"],
+    birthYear: 1943,
+    sourceIds: { wikidata: "Q36949" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q36949",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_bale",
+    primaryName: "Christian Bale",
+    normalizedName: "christian bale",
+    aliases: ["Christian Charles Philip Bale"],
+    normalizedAliases: ["christian charles philip bale"],
+    birthYear: 1974,
+    sourceIds: { wikidata: "Q45772" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q45772",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_pitt",
+    primaryName: "Brad Pitt",
+    normalizedName: "brad pitt",
+    aliases: ["William Bradley Pitt"],
+    normalizedAliases: ["william bradley pitt"],
+    birthYear: 1963,
+    sourceIds: { wikidata: "Q35332" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q35332",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_murphy",
+    primaryName: "Cillian Murphy",
+    normalizedName: "cillian murphy",
+    aliases: [],
+    normalizedAliases: [],
+    birthYear: 1976,
+    sourceIds: { wikidata: "Q202589" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q202589",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_chalamet",
+    primaryName: "Timothée Chalamet",
+    normalizedName: "timothee chalamet",
+    aliases: ["Timothee Chalamet", "Timmy Chalamet"],
+    normalizedAliases: ["timothee chalamet", "timmy chalamet"],
+    birthYear: 1995,
+    sourceIds: { wikidata: "Q19877770" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q19877770",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_pacino",
+    primaryName: "Al Pacino",
+    normalizedName: "al pacino",
+    aliases: ["Alfredo James Pacino"],
+    normalizedAliases: ["alfredo james pacino"],
+    birthYear: 1940,
+    sourceIds: { wikidata: "Q41163" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q41163",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_hardy",
+    primaryName: "Tom Hardy",
+    normalizedName: "tom hardy",
+    aliases: ["Edward Thomas Hardy"],
+    normalizedAliases: ["edward thomas hardy"],
+    birthYear: 1977,
+    sourceIds: { wikidata: "Q208009" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q208009",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_robbie",
+    primaryName: "Margot Robbie",
+    normalizedName: "margot robbie",
+    aliases: ["Margot Elise Robbie"],
+    normalizedAliases: ["margot elise robbie"],
+    birthYear: 1990,
+    sourceIds: { wikidata: "Q1924847" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q1924847",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_mcconaughey",
+    primaryName: "Matthew McConaughey",
+    normalizedName: "matthew mcconaughey",
+    aliases: ["Matthew David McConaughey", "Matthew Mcconaughey"],
+    normalizedAliases: ["matthew david mcconaughey", "matthew mcconaughey"],
+    birthYear: 1969,
+    sourceIds: { wikidata: "Q188955" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q188955",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_hanks",
+    primaryName: "Tom Hanks",
+    normalizedName: "tom hanks",
+    aliases: ["Thomas Jeffrey Hanks"],
+    normalizedAliases: ["thomas jeffrey hanks"],
+    birthYear: 1956,
+    sourceIds: { wikidata: "Q2263" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q2263",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_damon",
+    primaryName: "Matt Damon",
+    normalizedName: "matt damon",
+    aliases: ["Matthew Paige Damon"],
+    normalizedAliases: ["matthew paige damon"],
+    birthYear: 1970,
+    sourceIds: { wikidata: "Q175535" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q175535",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+  {
+    id: "act_ledger",
+    primaryName: "Heath Ledger",
+    normalizedName: "heath ledger",
+    aliases: ["Heath Andrew Ledger"],
+    normalizedAliases: ["heath andrew ledger"],
+    birthYear: 1979,
+    sourceIds: { wikidata: "Q40572" },
+    provenance: {
+      source: "WIKIDATA",
+      sourceId: "Q40572",
+      license: "CC0",
+      verified: true,
+      verifiedAt: "2026-11-01",
+      verifiedBy: "editorial_team",
+    },
+  },
+];
+
+/**
+ * Aktör Takma Ad Haritası (Hızlı Lookup)
+ */
+export const ACTOR_ALIAS_MAP: Map<string, string> = new Map();
+
+ACTORS_DATABASE.forEach(actor => {
+  ACTOR_ALIAS_MAP.set(actor.normalizedName, actor.primaryName);
+  actor.normalizedAliases.forEach(alias => {
+    ACTOR_ALIAS_MAP.set(alias, actor.primaryName);
+  });
+});

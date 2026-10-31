@@ -746,32 +746,6 @@ function CineXoxPageContent() {
             setCurrentView("GAME");
           }}
         />
-
-        <CustomRoomModal
-          isOpen={showCustomLobby}
-          onClose={() => setShowCustomLobby(false)}
-          currentUser={profile}
-          onCreateRoom={(settings, selectedBoard) => {
-            handleCreateCustomRoom(settings, selectedBoard);
-            const bIdx = PRESET_BOARDS.findIndex(b => b.id === selectedBoard.id);
-            setPendingBoardIndex(bIdx !== -1 ? bIdx : 0);
-            setPendingOpponent(getRandomOpponent("MEDIUM"));
-            setShowMatchFound(true);
-          }}
-        />
-
-        <DailyShareModal
-          isOpen={showDailyShare}
-          onClose={() => setShowDailyShare(false)}
-          board={board}
-          cells={cells}
-          score={totalArcadeScore}
-        />
-
-        <HowToPlayModal
-          isOpen={showHelp}
-          onClose={() => setShowHelp(false)}
-        />
       </main>
     );
   }

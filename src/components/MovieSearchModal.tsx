@@ -17,6 +17,7 @@ interface MovieSearchModalProps {
   contentPool?: ContentPoolType;
   errorMessage?: string | null;
   targetOccupant?: CellAnswer | null;
+  initialQuery?: string;
 }
 
 const SearchMovieThumbnail: React.FC<{ movie: Movie }> = () => {
@@ -37,13 +38,14 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
   contentPool = "HYBRID",
   errorMessage,
   targetOccupant,
+  initialQuery = "",
 }) => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
-      setQuery("");
+      setQuery(initialQuery);
       setTimeout(() => {
         inputRef.current?.focus();
       }, 50);

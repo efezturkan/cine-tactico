@@ -83,10 +83,10 @@ describe("CINEXOX ANTI-CHEAT TEST SUITE", () => {
   );
 
   // Test 7: Original title search also matches
-  const spiritedAwayResults = filterMoviesForSearch("Spirited Away");
+  const darkKnightResults = filterMoviesForSearch("The Dark Knight");
   assert(
-    spiritedAwayResults.some(m => m.originalTitle?.toLowerCase() === "spirited away"),
-    "Original title search 'Spirited Away' resolves for Ruhların Kaçışı"
+    darkKnightResults.some(m => m.originalTitle?.toLowerCase() === "the dark knight"),
+    "Original title search 'The Dark Knight' resolves for Kara Şövalye"
   );
 
   console.log(`\n=================================================`);
