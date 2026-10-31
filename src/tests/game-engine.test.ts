@@ -205,6 +205,28 @@ runTest("Mod 2 Sinefil (Yönetmen × Oscar Durumu) tahtası Eksen Güvenliğini 
   return result.isValid && result.failedCells.length === 0;
 });
 
+runTest("Tüm 14 Kült Tema konsept tahtalarında yer alır ve her hücrede en az 3 çözüm (Eksen Güvenliği) bulunur", () => {
+  const conceptBoards = PRESET_BOARDS.filter(b => b.boardMode === "CINE_CONCEPT");
+  if (conceptBoards.length < 5) return false;
+
+  const foundThemes = new Set<string>();
+  for (const b of conceptBoards) {
+    const solvability = validateBoardSolvability(b, 3);
+    if (!solvability.isValid) return false;
+    b.rows.forEach(r => {
+      if (r.type === "THEME") foundThemes.add(r.value);
+    });
+  }
+
+  const REQUIRED_14_THEMES = [
+    "PLOT_TWIST", "WHODUNNIT", "TIME_TRAVEL", "NON_LINEAR", 
+    "SINGLE_LOCATION", "HEIST", "REVENGE", "SURVIVAL", 
+    "DYSTOPIA", "SPACE", "AI", "NEO_NOIR", "LITERALLY_ME", "CULT_FLOP"
+  ];
+
+  return REQUIRED_14_THEMES.every(t => foundThemes.has(t));
+});
+
 runTest("Kesişimsiz 3 Yönetmen x 3 Aktör tahtası Eksen Güvenliği tarafından reddedilir (Ölü Hücre Koruması)", () => {
   const unfeasibleBoard: any = {
     id: "unfeasible_test",
