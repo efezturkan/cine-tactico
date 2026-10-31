@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Sliders,
   Trophy,
@@ -14,6 +14,7 @@ import {
   Swords,
   Zap,
   Clapperboard,
+  Dna,
 } from "lucide-react";
 import { UserProfile, AVATAR_OPTIONS, AMBIENCE_THEMES, DEFAULT_AMBIENCE, CORNER_ACCENT_COLORS } from "@/types/profile";
 import { ContentPoolType } from "@/types/game";
@@ -38,10 +39,10 @@ interface HomeScreenProps {
   onOpenLiveAmbience?: () => void;
 }
 
-// Sprocket holes — left/right edge decorations
+// Sprocket holes — left/right continuous 35mm film edge perforations
 const SprocketStrip = () => (
-  <div className="flex flex-col items-center gap-[6px] py-4">
-    {Array.from({ length: 22 }).map((_, i) => (
+  <div className="flex flex-col items-center gap-[6px] py-2 h-full overflow-hidden select-none pointer-events-none">
+    {Array.from({ length: 75 }).map((_, i) => (
       <div
         key={i}
         style={{
@@ -50,6 +51,7 @@ const SprocketStrip = () => (
           background: "#07080b",
           borderRadius: 2,
           border: "1px solid #2a2b35",
+          flexShrink: 0,
         }}
       />
     ))}
@@ -69,6 +71,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onOpenLiveAmbience,
 }) => {
   const [showQuickSetup, setShowQuickSetup] = useState<boolean>(false);
+  const [tickerIndex, setTickerIndex] = useState<number>(0);
+
+  const TICKER_MESSAGES = [
+    { tag: "KÜLT HAMLE", text: "@sinefil_deniz, Nolan × DiCaprio karesinde 'The Aviator' oynadı (%3.8 Nadir)!" },
+    { tag: "DÜELLO", text: "@kaan, 12 saniyede çapraz 3'lü hat kurarak maçı çaldı!" },
+    { tag: "REKOR", text: "@merve, Tarantino karesinde 'True Romance' bilerek +500 Puan aldı!" },
+    { tag: "SİNEFİL LİGİ", text: "@tarkovsky_fan, 5 maçlık seriyle Elmas Ligi'ne yükseldi!" },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTickerIndex((prev) => (prev + 1) % TICKER_MESSAGES.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [TICKER_MESSAGES.length]);
 
   const currentAvatar =
     AVATAR_OPTIONS.find((a) => a.id === profile.avatarId) || AVATAR_OPTIONS[0];
@@ -94,7 +111,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
     <div
-      className="w-full max-w-md mx-auto min-h-screen text-white flex flex-col justify-start pb-24 relative select-none antialiased overflow-x-hidden transition-colors duration-500"
+      className="w-full max-w-md mx-auto min-h-screen text-white flex flex-col justify-between relative select-none antialiased overflow-x-hidden transition-colors duration-500 sm:my-6 sm:rounded-[36px] sm:border sm:border-zinc-800/80 sm:shadow-[0_0_80px_rgba(0,0,0,0.85)]"
       style={{
         backgroundColor: activeTheme.bgColor,
         filter: `brightness(${Math.min(1.1, Math.max(0.65, ambience.dimness / 85))})`,
@@ -239,22 +256,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </header>
 
         {/* Minimalist 35mm Analog Logo */}
-        <div className="text-center py-0.5">
-          <div className="text-[8px] font-black tracking-[0.3em] uppercase opacity-75" style={{ color: activeTheme.accentColor }}>
-            KODAK 35mm FILM
+        <div className="text-center py-1">
+          <div className="text-[9px] font-black tracking-[0.35em] uppercase text-zinc-500 font-mono">
+            KODAK 5219 &middot; 35MM CINEMA
           </div>
-          <h1 className="text-base font-black tracking-[0.2em] text-white uppercase font-mono leading-none">
+          <h1 className="text-2xl font-black tracking-[0.22em] text-white uppercase font-mono leading-tight drop-shadow-md">
             CINE<span style={{ color: effectiveCornerColor }}>XOX</span>
           </h1>
         </div>
 
-        {/* ── 2. MERKEZ STAGE: HIZLI OYNA (HERO CTA - BAŞPARMAK BÖLGESİ) ─── */}
-        <button
+        {/* ── 2. MERKEZ STAGE: CANLI DÜELLO (HERO CTA - BAŞPARMAK BÖLGESİ) ─── */}
+        <div
           onClick={() => {
             audio.playSelect();
-            setShowQuickSetup(true);
+            onStartGame("CLASSIC", "NORMAL", "FILM");
           }}
-          className="w-full p-4 rounded-2xl text-left transition-all active:scale-[0.98] shadow-2xl relative overflow-hidden group border"
+          className="w-full p-4 rounded-2xl text-left transition-all active:scale-[0.98] shadow-2xl relative overflow-hidden group border cursor-pointer select-none"
           style={{
             background: "linear-gradient(135deg, #8b151b 0%, #b01e25 50%, #d97706 100%)",
             borderColor: effectiveCornerColor,
@@ -269,21 +286,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           <div className="relative z-10 flex items-center justify-between gap-3">
             <div className="flex items-center gap-3.5 min-w-0">
-              {/* Clapperboard SVG İkonu - BEYAZ KUTU KALDIRILDI! */}
               <div className="w-11 h-11 rounded-xl bg-black/40 backdrop-blur-sm flex items-center justify-center border border-white/20 shrink-0 shadow-md">
                 <Clapperboard className="w-6 h-6 text-amber-300" />
               </div>
 
               <div className="min-w-0">
-                {/* Mikro Etiket: SVG Zap ile */}
+                {/* Mikro Etiket: Canlı Nabız & Süre */}
                 <div className="flex items-center gap-1.5 text-[10px] font-mono font-black uppercase tracking-wider text-amber-200">
-                  <Zap className="w-3 h-3 fill-amber-300 text-amber-300" />
-                  <span>1V1 ONLINE &middot; 10-15s</span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                  <span>142 Sinefil Çevrimiçi</span>
+                  <span className="opacity-50">&middot;</span>
+                  <span>10-15s</span>
                 </div>
 
-                {/* Başlık: Büyük & Yüksek Kontrast */}
-                <h2 className="text-base sm:text-lg font-black text-white leading-tight mt-0.5">
-                  HIZLI OYNA (MAÇ BUL)
+                {/* Başlık: CANLI DÜELLO (1v1) */}
+                <h2 className="text-base sm:text-lg font-black text-white leading-tight mt-0.5 tracking-wide">
+                  CANLI DÜELLO (1v1)
                 </h2>
 
                 {/* Alt Bilgi */}
@@ -293,13 +311,28 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </div>
             </div>
 
-            {/* Sağ Eylem Butonu: Altın Vurgulu BAŞLA Butonu */}
-            <div className="shrink-0 flex items-center gap-1 px-3 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-black text-xs shadow-lg transition-transform active:scale-95 border border-amber-300">
-              <span>BAŞLA</span>
-              <Play className="w-3.5 h-3.5 fill-black" />
+            {/* Sağ Taraf: İnce Ayar Butonu + Anında BAŞLA Butonu */}
+            <div className="shrink-0 flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  audio.playSelect();
+                  setShowQuickSetup(true);
+                }}
+                className="p-2 rounded-xl bg-black/40 hover:bg-black/60 border border-white/20 text-amber-200 transition-all active:scale-95"
+                title="Kural ve Zorluk Ayarları"
+              >
+                <Sliders className="w-3.5 h-3.5" />
+              </button>
+
+              <div className="flex items-center gap-1 px-3 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-black text-xs shadow-lg transition-transform active:scale-95 border border-amber-300">
+                <span>BAŞLA</span>
+                <Play className="w-3.5 h-3.5 fill-black" />
+              </div>
             </div>
           </div>
-        </button>
+        </div>
 
         {/* ── 3. İKİNCİL OYUN MODLARI: YAN YANA 2 DENGELİ KART (SIFIR TRUNCATE) ─── */}
         <div className="grid grid-cols-2 gap-2.5">
@@ -390,7 +423,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </span>
             {/* Progressive Rank: 10 maçtan azsa sentetik rank yerine "Derecesiz" gösterilir */}
             <span className="font-bold text-zinc-400">
-              {profile.totalMatches < 10 ? "DERECESİZ (10 MAÇ KALDI)" : `SIRA #${profile.rankLevel * 15}`}
+              {profile.totalMatches < 10 ? `DERECESİZ (${Math.max(0, 10 - profile.totalMatches)} MAÇ KALDI)` : `SIRA #${profile.rankLevel * 15}`}
             </span>
           </div>
 
@@ -410,6 +443,32 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 %{winRate}
               </span>
             </div>
+          </div>
+
+          {/* 35mm Negatif İlerleme Çubuğu (10 Maçlık Lig Yerleşimi) */}
+          <div className="mt-2.5 pt-2 border-t border-zinc-800/80 flex items-center justify-between gap-1.5 px-0.5">
+            <span className="text-[8px] font-mono font-bold text-zinc-400 uppercase tracking-wider shrink-0">
+              LİG YERLEŞİMİ:
+            </span>
+            <div className="flex items-center gap-1 flex-1 justify-center max-w-[190px]">
+              {Array.from({ length: 10 }).map((_, idx) => {
+                const isPlayed = idx < profile.totalMatches;
+                return (
+                  <div
+                    key={idx}
+                    className={`h-2 flex-1 rounded-xs border transition-all ${
+                      isPlayed
+                        ? "bg-amber-400 border-amber-300 shadow-[0_0_6px_rgba(245,158,11,0.5)]"
+                        : "bg-zinc-900 border-zinc-700/80"
+                    }`}
+                    title={isPlayed ? `Maç ${idx + 1} Oynandı` : `Kalan Maç ${idx + 1}`}
+                  />
+                );
+              })}
+            </div>
+            <span className="text-[8.5px] font-mono font-black shrink-0" style={{ color: effectiveCornerColor }}>
+              {Math.min(profile.totalMatches, 10)}/10
+            </span>
           </div>
         </div>
 
@@ -439,6 +498,60 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </span>
         </button>
 
+        {/* ── 6. CANLI SİNEFİL AKIŞI (ÖLÜ BOŞLUĞU DOLDURAN CANLI DARBE) ─── */}
+        <div className="rounded-xl px-3 py-2 border border-zinc-800/90 bg-[#0c0e15]/90 flex items-center gap-2.5 overflow-hidden shadow-sm">
+          <div className="flex items-center gap-1 shrink-0 px-2 py-0.5 rounded-md bg-red-950/70 border border-red-700/50 text-[8px] font-mono font-black text-red-400 uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse inline-block" />
+            <span>{TICKER_MESSAGES[tickerIndex].tag}</span>
+          </div>
+          <p className="text-[10px] font-bold text-zinc-300 truncate transition-opacity duration-300">
+            {TICKER_MESSAGES[tickerIndex].text}
+          </p>
+        </div>
+
+        {/* ── 7. SİNEFİL ZEVK DNA'SI & LETTERBOXD KÖPRÜSÜ (VİTRİN KARTI) ─── */}
+        <div
+          onClick={() => {
+            audio.playSelect();
+            onOpenProfileModal();
+          }}
+          className="p-3 rounded-2xl border transition-all active:scale-[0.98] cursor-pointer relative overflow-hidden group select-none"
+          style={{
+            background: "linear-gradient(135deg, rgba(26,16,40,0.85) 0%, rgba(12,14,22,0.95) 100%)",
+            borderColor: "rgba(168,85,247,0.35)",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.4)",
+          }}
+        >
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center shrink-0">
+                <Dna className="w-4 h-4 text-purple-400" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[8px] font-mono font-black uppercase text-purple-400 tracking-wider">
+                    SİNEMA ZEVK DNA&apos;SI
+                  </span>
+                  <span className="text-[7.5px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold">
+                    LETTERBOXD HAZIR
+                  </span>
+                </div>
+                <span className="text-xs font-black text-white block truncate mt-0.5">
+                  {profile.tasteDna?.cinemaAesthetic || "Karanlık Zihinler & Bilim Kurgu"}
+                </span>
+                <span className="text-[9.5px] font-bold text-zinc-400 block truncate mt-0.5">
+                  Favori: {profile.tasteDna?.topDirector || "Christopher Nolan"} &middot; {profile.tasteDna?.topGenre || "Sci-Fi"}
+                </span>
+              </div>
+            </div>
+
+            <div className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 text-[10px] font-bold transition-all">
+              <span>İncele</span>
+              <Sparkles className="w-3 h-3 text-purple-300" />
+            </div>
+          </div>
+        </div>
+
         {/* ── TEK KAYNAKLI SİNEMA METADATA TICKER (ISO Çelişkisi Kaldırıldı) ─── */}
         <div className="text-center py-0.5">
           <span className="text-[7.5px] font-mono font-black uppercase tracking-[0.25em] text-zinc-600">
@@ -447,7 +560,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
       </div>
 
-      {/* ── 6. ALT DOCK BAR (SAFE-AREA UYUMLU, SABİT NAVİGASYON) ─── */}
+      {/* ── 8. ALT DOCK BAR (SAFE-AREA UYUMLU, SABİT NAVİGASYON) ─── */}
       <nav
         className="fixed bottom-0 left-0 right-0 flex items-center justify-around px-4 z-40 max-w-md mx-auto"
         style={{
@@ -463,7 +576,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           { label: "Lobi", icon: Home, color: "#8b151b", active: true, act: undefined },
           { label: "Günlük", icon: Clock, color: "#d97706", active: false, act: onOpenDaily },
           { label: "Sıralama", icon: Trophy, color: "#f59e0b", active: false, act: onOpenLeaderboard },
-          { label: "İkonlar", icon: Sparkles, color: "#a855f7", active: false, act: onOpenShop },
+          { label: "Gardrop", icon: Sparkles, color: "#a855f7", active: false, act: onOpenShop },
         ].map((tab) => {
           const Icon = tab.icon;
           return (
