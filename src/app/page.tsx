@@ -556,6 +556,8 @@ function CineXoxApp() {
     if (isSupabaseConfigured) {
       createRealtimeRoom(settings.roomCode, profile, activeBoard, settings);
     }
+    setShowCustomLobby(false);
+    setCurrentView("GAME");
   };
 
   const handleJoinCustomRoom = (roomCode: string, settings: CustomRoomSettings, boardData: GameBoard) => {
@@ -566,6 +568,8 @@ function CineXoxApp() {
     setMode("ONLINE_ROOM");
     setBoard(boardData);
     resetGame(boardData);
+    setShowCustomLobby(false);
+    setCurrentView("GAME");
   };
 
   const handleClaimDailyReward = (amount: number) => {
@@ -622,6 +626,26 @@ function CineXoxApp() {
     };
     setBotDifficulty(difficultyMap[diff]);
     setShowMatchmakingQueue(true);
+  };
+
+  const handleDirectStartMode = (
+    modeType: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL"
+  ) => {
+    audio.playSelect();
+    const result = getBoardForMode(modeType, boardIndex);
+    const targetIdx = result.index;
+    const nextBoard = result.board;
+    const opp = getRandomOpponent("MEDIUM", pendingOpponent.name);
+
+    setPendingBoardIndex(targetIdx);
+    setPendingOpponent(opp);
+    setBoardIndex(targetIdx);
+    setBoard(nextBoard);
+    resetGame(nextBoard);
+    setMode("VS_BOT");
+    setBotDifficulty("MEDIUM");
+    setCustomShotClock(12);
+    setCurrentView("GAME");
   };
 
   const executeMatchSetup = (
@@ -724,6 +748,7 @@ function CineXoxApp() {
       setBoardIndex(idx);
       setBoard(PRESET_BOARDS[idx]);
       resetGame(PRESET_BOARDS[idx]);
+      setShowGameModesHub(false);
       setCurrentView("GAME");
     },
     onCloseProfile: () => setShowProfile(false),
@@ -757,6 +782,7 @@ function CineXoxApp() {
         <HomeScreen
           profile={profile}
           onStartGame={handleStartFromHome}
+          onDirectStartMode={handleDirectStartMode}
           onOpenProfileModal={() => {
             audio.playSelect();
             setShowProfile(true);
@@ -819,7 +845,11 @@ function CineXoxApp() {
             setMode(selectedMode);
             setPendingBoardIndex(boardIdx);
             setPendingOpponent(opp);
-            setShowMatchFound(true);
+            if (selectedMode === "PASS_AND_PLAY") {
+              setCurrentView("GAME");
+            } else {
+              setShowMatchFound(true);
+            }
           }}
           onOpenCustomLobby={() => {
             setCurrentView("HOME");

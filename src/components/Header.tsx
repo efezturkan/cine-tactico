@@ -123,25 +123,31 @@ export const Header: React.FC<HeaderProps> = ({
         }}
       >
         <div
-          className="flex items-center gap-1 px-2 py-0.5 rounded-lg transition-all"
+          className="flex items-center gap-1 px-2 py-0.5 rounded-lg transition-all relative"
           style={
             currentTurn === "X"
-              ? { background: "rgba(6,182,212,0.15)", color: "#06b6d4" }
+              ? { background: "rgba(6,182,212,0.18)", color: "#06b6d4" }
               : { color: "#4b5563" }
           }
         >
+          {currentTurn === "X" && (
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#06b6d4]" />
+          )}
           <span className="text-xs font-black">X</span>
           <span className="text-sm font-semibold">{scoreX}</span>
         </div>
         <span className="font-bold text-xs" style={{ color: "#2a2b35" }}>:</span>
         <div
-          className="flex items-center gap-1 px-2 py-0.5 rounded-lg transition-all"
+          className="flex items-center gap-1 px-2 py-0.5 rounded-lg transition-all relative"
           style={
             currentTurn === "O"
-              ? { background: "rgba(139,21,27,0.15)", color: "#8b151b" }
+              ? { background: "rgba(139,21,27,0.22)", color: "#ff2a55" }
               : { color: "#4b5563" }
           }
         >
+          {currentTurn === "O" && (
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_#ff2a55]" />
+          )}
           <span className="text-xs font-black">O</span>
           <span className="text-sm font-semibold">{scoreO}</span>
         </div>

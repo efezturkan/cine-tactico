@@ -25,6 +25,7 @@ import { QuickMatchSetupModal } from "@/features/multiplayer";
 interface HomeScreenProps {
   profile: UserProfile;
   onStartGame: (modeName: string, difficulty: "EASY" | "NORMAL" | "HARD", contentPool?: ContentPoolType) => void;
+  onDirectStartMode?: (mode: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL") => void;
   onOpenProfileModal: () => void;
   onOpenCustomLobby: () => void;
   onOpenDaily: () => void;
@@ -62,12 +63,15 @@ const SprocketStrip = () => (
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   profile,
   onStartGame,
+  onDirectStartMode,
   onOpenProfileModal,
   onOpenCustomLobby,
   onOpenDaily,
   onOpenQuests,
   onOpenDna,
   onOpenShop,
+  onOpenGameModesHub,
+  onOpenGameSelect,
   onOpenLeaderboard,
   onOpenLiveAmbience,
   onOpenNotifications,
@@ -369,9 +373,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <span className="text-[10px] font-black tracking-widest uppercase text-zinc-400 font-mono">
               ARENA MODLARI (3 SEÇENEK)
             </span>
-            <span className="text-[9px] font-bold text-amber-400 font-mono">
-              0% BERABERLİK · FOTO-FİNİŞ
-            </span>
+            {onOpenGameSelect && (
+              <button
+                type="button"
+                onClick={() => {
+                  audio.playSelect();
+                  onOpenGameSelect();
+                }}
+                className="text-[9px] font-bold text-amber-400 hover:text-amber-300 font-mono flex items-center gap-1 transition-colors cursor-pointer"
+              >
+                <span>TÜM ARENALAR</span>
+                <span>&rarr;</span>
+              </button>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -379,7 +393,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <button
               onClick={() => {
                 audio.playSelect();
-                onStartGame("CLASSIC", "NORMAL", "FILM");
+                if (onDirectStartMode) {
+                  onDirectStartMode("CLASSIC");
+                } else {
+                  onStartGame("CLASSIC", "NORMAL", "FILM");
+                }
               }}
               className="p-3 rounded-2xl text-left border transition-all active:scale-[0.98] group relative overflow-hidden bg-gradient-to-br from-amber-950/30 via-zinc-950 to-black border-amber-500/40 hover:border-amber-400"
             >
@@ -401,7 +419,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <button
               onClick={() => {
                 audio.playSelect();
-                onStartGame("REVERSE_CAST", "NORMAL", "FILM");
+                if (onDirectStartMode) {
+                  onDirectStartMode("REVERSE_CAST");
+                } else {
+                  onStartGame("REVERSE_CAST", "NORMAL", "FILM");
+                }
               }}
               className="p-3 rounded-2xl text-left border transition-all active:scale-[0.98] group relative overflow-hidden bg-gradient-to-br from-cyan-950/30 via-zinc-950 to-black border-cyan-500/40 hover:border-cyan-400"
             >
@@ -423,7 +445,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <button
               onClick={() => {
                 audio.playSelect();
-                onStartGame("CINE_CONCEPT", "NORMAL", "FILM");
+                if (onDirectStartMode) {
+                  onDirectStartMode("CINE_CONCEPT");
+                } else {
+                  onStartGame("CINE_CONCEPT", "NORMAL", "FILM");
+                }
               }}
               className="p-3 rounded-2xl text-left border transition-all active:scale-[0.98] group relative overflow-hidden bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black border-purple-500/40 hover:border-purple-400"
             >
@@ -689,6 +715,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       >
         {[
           { label: "Lobi", icon: Home, color: "#8b151b", active: true, act: undefined },
+          { label: "Arenalar", icon: Film, color: "#06b6d4", active: false, act: onOpenGameSelect },
           { label: "Günlük", icon: Clock, color: "#d97706", active: false, act: onOpenDaily },
           { label: "Sıralama", icon: Trophy, color: "#f59e0b", active: false, act: onOpenLeaderboard },
           { label: "Gardrop", icon: Sparkles, color: "#a855f7", active: false, act: onOpenShop },
