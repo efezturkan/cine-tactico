@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "tsx src/tests/game-engine.test.ts && tsx src/tests/anti-cheat.test.ts && tsx src/tests/modal-render.test.tsx"
+    "test": "tsx src/tests/game-engine.test.ts && tsx src/tests/anti-cheat.test.ts && tsx src/tests/modal-render.test.tsx && tsx src/tests/auth-identity.test.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",

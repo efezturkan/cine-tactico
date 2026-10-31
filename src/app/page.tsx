@@ -10,6 +10,7 @@ import {
   syncProfileToSupabase,
   finishRealtimeGame,
   isSupabaseConfigured,
+  ensureAnonymousSession,
 } from "@/backend";
 import {
   PRESET_BOARDS,
@@ -160,6 +161,25 @@ function CineXoxApp() {
       }
     }
   }, [profile.ambience]);
+
+  // Otomatik anonim oyuncu kimliği başlatma / mevcut oturumu yükleme
+  useEffect(() => {
+    if (isSupabaseConfigured) {
+      ensureAnonymousSession().then(state => {
+        if (state.profile) {
+          setProfile(prev => ({
+            ...prev,
+            username: state.profile?.username || prev.username,
+            avatarId: state.profile?.avatar_id || prev.avatarId,
+            wins: state.profile?.wins ?? prev.wins,
+            losses: state.profile?.losses ?? prev.losses,
+            draws: state.profile?.draws ?? prev.draws,
+            reelsBalance: state.profile?.reels_balance ?? prev.reelsBalance,
+          }));
+        }
+      });
+    }
+  }, []);
 
   // Oyun Oturumu (Game Session Hook)
   const {
