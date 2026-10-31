@@ -467,6 +467,7 @@ runTest("9. MatchRecord 9 hücreyi, tahtayı ve Letterboxd verilerini eksiksiz s
     answeredBy: i % 2 === 0 ? ("X" as const) : ("O" as const),
     movie: MOVIES_DATABASE[i],
     rarityScore: 8,
+    timestamp: Date.now(),
   }));
   const record: MatchRecord = {
     id: "m_test_1",

@@ -1,4 +1,4 @@
-import { GameBoard, Movie, PlayerSymbol, CustomRoomSettings } from "@/core/types";
+import { GameBoard, Movie, PlayerSymbol, CustomRoomSettings, CellAnswer } from "@/core";
 
 export interface GameRoomRecord {
   id: string;
@@ -46,4 +46,22 @@ export interface LeaderboardProfileRecord {
   reels_balance: number;
   letterboxd_username?: string;
   updated_at: string;
+}
+
+export interface MatchSessionRecord {
+  id: string;
+  room_code?: string;
+  player_x_id?: string | null;
+  player_o_id?: string | null;
+  winner_id?: string | null;
+  outcome: "VICTORY_X" | "VICTORY_O" | "DRAW" | "ABANDONED";
+  game_mode: string;
+  board_id: string;
+  board_title?: string;
+  moves_count: number;
+  score_rarity_x: number;
+  score_rarity_o: number;
+  total_arcade_score: number;
+  final_cells: (CellAnswer | null)[];
+  completed_at: string;
 }

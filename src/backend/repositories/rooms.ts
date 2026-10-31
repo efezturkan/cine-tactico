@@ -1,24 +1,31 @@
 import { supabase, isSupabaseConfigured } from "../supabase/client";
 import { GameRoomRecord } from "../supabase/types";
-import { GameBoard, CustomRoomSettings, PlayerSymbol } from "@/core/types";
+import { GameBoard, CustomRoomSettings, PlayerSymbol } from "@/core";
 import { UserProfile } from "@/types/profile";
 
 export async function createRealtimeRoom(
   roomCode: string,
   host: UserProfile,
   board: GameBoard,
-  settings: CustomRoomSettings
+  settings: CustomRoomSettings,
+  hostUserId?: string
 ): Promise<{ success: boolean; room?: GameRoomRecord; error?: string }> {
   if (!isSupabaseConfigured || !supabase) {
     return { success: false, error: "Supabase henüz yapılandırılmadı." };
   }
 
   try {
+    const userRes = await supabase.auth.getUser();
+    const actualHostId = hostUserId || userRes.data?.user?.id;
+    if (!actualHostId) {
+      return { success: false, error: "Oda oluşturmak için geçerli bir kullanıcı oturumu gerekli." };
+    }
+
     const { data, error } = await supabase
       .from("game_rooms")
       .insert({
         room_code: roomCode,
-        host_id: host.username,
+        host_id: actualHostId,
         host_username: host.username,
         host_avatar: host.avatarId,
         board_id: board.id,
@@ -40,13 +47,20 @@ export async function createRealtimeRoom(
 
 export async function joinRealtimeRoom(
   roomCode: string,
-  guest: UserProfile
+  guest: UserProfile,
+  guestUserId?: string
 ): Promise<{ success: boolean; room?: GameRoomRecord; error?: string }> {
   if (!isSupabaseConfigured || !supabase) {
     return { success: false, error: "Supabase henüz yapılandırılmadı." };
   }
 
   try {
+    const userRes = await supabase.auth.getUser();
+    const actualGuestId = guestUserId || userRes.data?.user?.id;
+    if (!actualGuestId) {
+      return { success: false, error: "Odaya katılmak için geçerli bir kullanıcı oturumu gerekli." };
+    }
+
     const { data: existing, error: fetchErr } = await supabase
       .from("game_rooms")
       .select("*")
@@ -61,14 +75,14 @@ export async function joinRealtimeRoom(
       return { success: false, error: "Bu maç zaten başladı veya tamamlandı." };
     }
 
-    if (existing.host_id === guest.username) {
+    if (existing.host_id === actualGuestId) {
       return { success: true, room: existing as GameRoomRecord };
     }
 
     const { data, error } = await supabase
       .from("game_rooms")
       .update({
-        guest_id: guest.username,
+        guest_id: actualGuestId,
         guest_username: guest.username,
         guest_avatar: guest.avatarId,
         status: "IN_PROGRESS",
