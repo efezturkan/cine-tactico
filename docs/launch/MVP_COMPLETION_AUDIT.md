@@ -1,3 +1,17 @@
+# DÜZELTME — 1 Kasım 2026
+
+Aşağıdaki rapor motoru ve RLS’yi doğru söyler. “MVP hazır, sadece ikon kaldı” hükmü yanlıştır.
+
+Gerçek: bot, aynı telefon, online oda kodu, ters kadraj, küratörlü tahtalar, yerel katalog, shot clock, basit ses ve titreşim.
+
+Yarım: günlük tahta sabit. Maç sonu analizi bağlı. Portre manifesti commit dışı. İkon ve splash varsayılan. Faz 4 hareketi var, his yok.
+
+Sahte veya yerel yalan: ana ekran ticker, görev ilerlemeleri, bildirim listesi, maç geçmişi tohumları, liderlik tablosu Supabase boşsa uydurma isimler.
+
+Ürün kilidi: `docs/product/MVP.md`.
+
+---
+
 # CINE-TACTICO — MVP COMPLETION AUDIT REPORT
 
 **Tarih:** 1 Kasım 2026  

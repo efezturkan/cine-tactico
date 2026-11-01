@@ -1,0 +1,13 @@
+---
+description: Movie, board, and actor catalog rules
+globs: src/data/**/*.ts
+alwaysApply: false
+---
+
+# Game data
+
+- Keep provenance (`source`, `license`, `verifiedAt`) on movie fields.
+- Every board cell needs at least 3 valid answers (axis safety).
+- Prefer Wikidata / editorial CC0 facts. Never scrape IMDb/TMDb into the catalog.
+- Actor aliases belong in `src/data/actors.ts`. Fuzzy match stays last-resort for names with 6+ characters.
+- After catalog edits run `npm test` so board solvability and anti-cheat suites still pass.

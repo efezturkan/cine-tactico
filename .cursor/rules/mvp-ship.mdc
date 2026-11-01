@@ -1,0 +1,29 @@
+---
+description: Cine-XOX MVP authority, tests, and reporting
+alwaysApply: true
+---
+
+# MVP ship
+
+Read `docs/product/MVP.md` before any feature work. `docs/product/GAME_FEEL.md` decides screens. `MASTER_SPECIFICATION_v3.md` decides rules.
+
+## Authority
+
+- One slice. iOS v1 only: bot, pass-and-play, online room, match feel, icon.
+- Do not add shop, quests, leagues, fake feeds, DNA, ambience, notifications, or daily calendar.
+- Do not put those existing screens back on the home path.
+- Do not rebuild the data graph. Curated boards stay until after TestFlight.
+- Do not restyle the reel modal, shot clock, or 4x4 board structure.
+- Cell stealing stays forbidden. No IMDb/TMDb ratings or poster CDNs.
+- User asked to keep `main` updated. Before a risky edit, branch `backup/YYYY-MM-DD-short`. Never force-push.
+
+## Tests
+
+- Engine, data, or anti-cheat: `npm test` must pass.
+- TypeScript edits: `npx tsc --noEmit`.
+- UI slice: play bot to a win and a miss on a phone-width viewport.
+- Do not claim a feature works if the UI shows seeded or hardcoded people.
+
+## Report
+
+End every slice in five lines: what changed, test result, what is still fake, next slice, commit.

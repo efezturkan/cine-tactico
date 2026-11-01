@@ -1,0 +1,16 @@
+---
+description: Approved Cine-XOX UI and feel constraints
+globs: src/features/**/*.tsx,src/components/**/*.tsx
+alwaysApply: false
+---
+
+# UI and feel
+
+Visual mix: Chess.com clarity, Letterboxd culture, Balatro slam, 35mm analog. Tokens live in `tailwind.config.ts`.
+
+Do not rebuild these without an explicit request:
+- `MatchmakingQueueModal.tsx` (gold reel animation timings)
+- `ShotClock.tsx` (neon core + ping radar)
+- `XoxBoard.tsx` 4x4 matrix (corner clapper, axis badges, 35mm plates)
+
+Keyboard-open: board and shot-clock stay visible (`100dvh`). Search cards must not leak genre/year/Oscar hints into the DOM.

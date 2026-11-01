@@ -1,0 +1,17 @@
+---
+description: Game engine rules for Cine-XOX core
+globs: src/core/**/*.ts
+alwaysApply: false
+---
+
+# Core engine
+
+- Pure TypeScript. No React, Capacitor, or Supabase imports.
+- 3-in-a-row wins immediately. Rarity never overrides a completed line.
+- Wrong answer or shot-clock timeout consumes that player's attempt on the cell.
+- Two consumed attempts → `LOCKED_NEUTRAL`.
+- Full board + no line + golden reel enabled → `GOLDEN_REEL`, then foto-finish by rarity.
+- Ters Kadraj: most cells win; no golden reel.
+- A film used once in a match cannot be reused.
+- Rarity is per-cell pool rank. If pool `N < 3`, cap at Rare.
+- Add or extend tests in `src/tests/game-engine.test.ts` for every rule change.

@@ -1,7 +1,7 @@
 # CINE-XOX — Uygulama Yol Haritası ve Faz Takip Planı
 **Doküman:** `docs/roadmap/IMPLEMENTATION_ROADMAP.md`  
-**Durum:** AKTİF — FAZ 1 BAŞLANGICI  
-**Tarih:** 31 Ekim 2026 (Konsolide Sürüm)  
+**Durum:** FAZ 4 HİSSETME BİTMEDİ — iOS v1 sırası `docs/product/MVP.md`  
+**Tarih:** 1 Kasım 2026  
 **İlgili Belgeler:** `MASTER_SPECIFICATION_v3.md`, `docs/architecture/DATA_GOVERNANCE.md`
 
 ---
@@ -14,8 +14,8 @@
 | **FAZ 1** | Test Standardizasyonu & Veri/Lisans Güvenliği | **TAMAMLANDI** | `npm test` + `npm run build` Sıfır Hata |
 | **FAZ 2** | Ortak Oyun Motoru & Kural Durum Makinesi | **TAMAMLANDI** | 64/64 Test Suite (%100 Başarı) |
 | **FAZ 3** | Oyun Modları (Ters Kadraj & 14 Kült Tema) | **TAMAMLANDI** | 14 Tema & %100 Eksen Güvenliği (77/77 Test) |
-| **FAZ 4** | 35mm Tipografik Arayüz & Görsel Kimlik | **TAMAMLANDI** | Lucide SVG + 35mm Slate + 100dvh Responsive |
-| **FAZ 5** | Çok Oyunculu & Kalıcılık Altyapısı | **TAMAMLANDI** | Supabase Realtime + RLS + Match History + 35mm Viral Card |
+| **FAZ 4** | Maç hissi | **YARIM** | İskelet var. Ana ekran menü. Oyun gibi değil |
+| **FAZ 5** | Online oda | **KOD VAR** | İki gerçek telefonla oynanmadı |
 
 ---
 
