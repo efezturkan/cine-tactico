@@ -852,12 +852,6 @@ function CineXoxApp() {
             audio.playSelect();
             setCurrentView("GAME_SELECT");
           }}
-          onOpenHelp={() => {
-            audio.playSelect();
-            setShowHelp(true);
-          }}
-          muted={muted}
-          onToggleMute={handleToggleMute}
         />
         <GlobalModals {...globalModalsProps} />
       </main>

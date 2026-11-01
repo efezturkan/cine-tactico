@@ -1,11 +1,26 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Swords, UserRound, Volume2, VolumeX, Vibrate } from "lucide-react";
-import { UserProfile } from "@/types/profile";
+import React, { useState, useEffect } from "react";
+import {
+  Sliders,
+  Trophy,
+  Gift,
+  Play,
+  Film,
+  Flame,
+  Clock,
+  Sparkles,
+  Home,
+  Swords,
+  Zap,
+  Clapperboard,
+  Dna,
+  Bell,
+} from "lucide-react";
+import { UserProfile, AVATAR_OPTIONS, AMBIENCE_THEMES, DEFAULT_AMBIENCE, CORNER_ACCENT_COLORS } from "@/types/profile";
 import { ContentPoolType } from "@/core";
 import { audio } from "@/utils/audio";
-import { haptic, setHapticEnabled } from "@/utils/haptics";
+import { QuickMatchSetupModal } from "@/features/multiplayer";
 
 interface HomeScreenProps {
   profile: UserProfile;
@@ -24,160 +39,719 @@ interface HomeScreenProps {
   onOpenNotifications?: () => void;
   notifUnreadCount?: number;
   onOpenLiveAmbience?: () => void;
-  onOpenHelp?: () => void;
-  muted?: boolean;
-  onToggleMute?: () => void;
 }
 
-function Mark() {
-  return (
-    <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
-      <rect x="4" y="8" width="64" height="56" rx="8" fill="#0E1018" stroke="#8B151B" strokeWidth="2" />
-      <rect x="4" y="8" width="64" height="14" rx="8" fill="#8B151B" />
-      <rect x="4" y="16" width="64" height="6" fill="#8B151B" />
-      <path d="M18 18 L26 8 L34 18 L42 8 L50 18 L58 8" stroke="#F8FAFC" strokeWidth="2.5" fill="none" />
-      <path d="M24 44 L36 28 L48 44" stroke="#F8FAFC" strokeWidth="3" fill="none" strokeLinejoin="round" />
-      <circle cx="36" cy="48" r="3" fill="#D97706" />
-    </svg>
-  );
-}
+// Sprocket holes — left/right continuous 35mm film edge perforations
+const SprocketStrip = () => (
+  <div className="flex flex-col items-center gap-[6px] py-2 h-full overflow-hidden select-none pointer-events-none">
+    {Array.from({ length: 75 }).map((_, i) => (
+      <div
+        key={i}
+        style={{
+          width: 9,
+          height: 6,
+          background: "#07080b",
+          borderRadius: 2,
+          border: "1px solid #2a2b35",
+          flexShrink: 0,
+        }}
+      />
+    ))}
+  </div>
+);
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   profile,
+  onStartGame,
   onDirectStartMode,
   onOpenProfileModal,
   onOpenCustomLobby,
-  onOpenHelp,
-  muted = false,
-  onToggleMute,
+  onOpenDaily,
+  onOpenQuests,
+  onOpenDna,
+  onOpenShop,
+  onOpenGameModesHub,
+  onOpenGameSelect,
+  onOpenLeaderboard,
+  onOpenLiveAmbience,
+  onOpenNotifications,
+  notifUnreadCount,
 }) => {
-  const [hapticOn, setHapticOn] = useState(true);
+  const [showQuickSetup, setShowQuickSetup] = useState<boolean>(false);
+  const [tickerIndex, setTickerIndex] = useState<number>(0);
+
+  const TICKER_MESSAGES = [
+    { tag: "KÜLT HAMLE", text: "@sinefil_deniz, Nolan × DiCaprio karesinde 'The Aviator' oynadı (%3.8 Nadir)!" },
+    { tag: "DÜELLO", text: "@kaan, 12 saniyede çapraz 3'lü hat kurarak maçı çaldı!" },
+    { tag: "REKOR", text: "@merve, Tarantino karesinde 'True Romance' bilerek +500 Puan aldı!" },
+    { tag: "SİNEFİL LİGİ", text: "@tarkovsky_fan, 5 maçlık seriyle Elmas Ligi'ne yükseldi!" },
+  ];
 
   useEffect(() => {
-    try {
-      setHapticOn(localStorage.getItem("cinexox_haptic") !== "0");
-    } catch {
-      setHapticOn(true);
-    }
-  }, []);
+    const timer = setInterval(() => {
+      setTickerIndex((prev) => (prev + 1) % TICKER_MESSAGES.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [TICKER_MESSAGES.length]);
+
+  const currentAvatar =
+    AVATAR_OPTIONS.find((a) => a.id === profile.avatarId) || AVATAR_OPTIONS[0];
 
   const winRate =
-    profile.totalMatches > 0 ? Math.round((profile.wins / profile.totalMatches) * 100) : 0;
+    profile.totalMatches > 0
+      ? Math.round((profile.wins / profile.totalMatches) * 100)
+      : 0;
 
-  const startDuel = () => {
-    audio.playSelect();
-    haptic.light();
-    onDirectStartMode?.("CLASSIC");
-  };
+  const ambience = { ...DEFAULT_AMBIENCE, ...(profile?.ambience || {}) };
+  const activeTheme = (ambience.theme && AMBIENCE_THEMES[ambience.theme]) || AMBIENCE_THEMES.velvet_red;
+
+  // Köşe ve vurgu rengi — Temaya göre otomatik veya kullanıcının özel seçtiği renk
+  const effectiveCornerColor =
+    ambience.cornerAccent && ambience.cornerAccent !== "AUTO" && CORNER_ACCENT_COLORS[ambience.cornerAccent]
+      ? CORNER_ACCENT_COLORS[ambience.cornerAccent].color
+      : activeTheme?.secondaryAccent || "#f59e0b";
+
+  // Sanitize hex for alpha appending (e.g., #f59e0b18) to avoid invalid tokens
+  const safeCornerHex =
+    effectiveCornerColor && effectiveCornerColor.startsWith("#")
+      ? effectiveCornerColor
+      : activeTheme?.secondaryAccent || "#f59e0b";
+
+  const effectiveHudBorder =
+    ambience.cornerAccent && ambience.cornerAccent !== "AUTO" && CORNER_ACCENT_COLORS[ambience.cornerAccent]
+      ? CORNER_ACCENT_COLORS[ambience.cornerAccent].border
+      : activeTheme?.hudBorder || "rgba(217,119,6,0.3)";
+
+  const safeDimness = typeof ambience.dimness === "number" && !isNaN(ambience.dimness) ? ambience.dimness : 85;
+  const safeGlow = typeof ambience.glowIntensity === "number" && !isNaN(ambience.glowIntensity) ? ambience.glowIntensity : 65;
 
   return (
-    <div className="w-full max-w-md mx-auto min-h-[100dvh] text-white flex flex-col relative select-none antialiased overflow-x-hidden bg-[#07080B]">
-      <div className="absolute inset-x-8 top-0 h-40 pointer-events-none blur-3xl opacity-80 bg-[radial-gradient(ellipse_at_top,rgba(139,21,27,0.45),transparent_70%)]" />
-      <div className="absolute left-0 top-0 bottom-0 w-3 bg-[#0a0b10] border-r border-[#1A1C24] pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-3 bg-[#0a0b10] border-l border-[#1A1C24] pointer-events-none" />
+    <div
+      className="w-full max-w-md mx-auto min-h-screen text-white flex flex-col justify-between relative select-none antialiased overflow-x-hidden transition-colors duration-500 sm:my-6 sm:rounded-[36px] sm:border sm:border-zinc-800/80 sm:shadow-[0_0_80px_rgba(0,0,0,0.85)]"
+      style={{
+        backgroundColor: activeTheme?.bgColor || "#07080b",
+        filter: `brightness(${Math.min(1.1, Math.max(0.65, safeDimness / 85))})`,
+      }}
+    >
+      {/* ── Top Dynamic Projector Beam (Kişiselleştirilebilir Projeksiyon Hüzmesi) ─── */}
+      <div
+        className="absolute top-0 left-1/6 right-1/6 h-48 pointer-events-none z-0 blur-3xl transition-all duration-700"
+        style={{
+          background: `radial-gradient(ellipse at top, ${activeTheme?.glowRgba || "rgba(139, 21, 27, 0.45)"}, transparent 75%)`,
+          opacity: safeGlow / 100,
+        }}
+      />
 
-      <header className="relative z-10 flex items-center justify-between px-6 pt-4">
+      {/* ── Sprocket borders (Film Perforasyon Delikleri) ─── */}
+      <div
+        className="absolute left-0 top-0 bottom-0 overflow-hidden pointer-events-none z-0"
+        style={{ width: 16, background: "#0a0b10", borderRight: "1px solid #1a1c24" }}
+      >
+        <SprocketStrip />
+      </div>
+      <div
+        className="absolute right-0 top-0 bottom-0 overflow-hidden pointer-events-none z-0"
+        style={{ width: 16, background: "#0a0b10", borderLeft: "1px solid #1a1c24" }}
+      >
+        <SprocketStrip />
+      </div>
+
+      {/* ── Subtle Cinema Viewfinder Watermark (Kişiselleştirilebilir Lens Filigranı) ─── */}
+      {ambience.showWatermark && (
+        <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center opacity-[0.035] transition-opacity duration-300">
+          <svg width="340" height="340" viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="170" cy="170" r="160" stroke={activeTheme.accentColor} strokeWidth="1" strokeDasharray="6 6" />
+            <circle cx="170" cy="170" r="110" stroke={activeTheme.accentColor} strokeWidth="1" />
+            <line x1="170" y1="20" x2="170" y2="320" stroke={activeTheme.accentColor} strokeWidth="1" strokeDasharray="4 8" />
+            <line x1="20" y1="170" x2="320" y2="170" stroke={activeTheme.accentColor} strokeWidth="1" strokeDasharray="4 8" />
+            <rect x="55" y="110" width="230" height="120" rx="4" stroke="#ffffff" strokeWidth="1" strokeDasharray="3 5" />
+            <circle cx="170" cy="170" r="3" fill={activeTheme.accentColor} />
+          </svg>
+        </div>
+      )}
+
+      {/* ── Top Ambient Light Line ─── */}
+      <div
+        className="absolute top-0 left-4 right-4 h-px pointer-events-none z-10 transition-colors duration-500"
+        style={{
+          background: `linear-gradient(to right, transparent, ${activeTheme.accentColor} 30%, ${activeTheme.accentColor} 70%, transparent)`,
+        }}
+      />
+
+      {/* Ana İçerik Yığını (Sprocket'lardan korunaklı iç dolgu, alt dock bar için pb-20) */}
+      <div className="px-5 relative z-10 flex flex-col gap-2.5 pt-2 pb-20 sm:pb-8">
+
+        {/* ── 1. ÜST STATUS BAR: KİMLİK & KAYNAKLAR (STANDART HUB MİMARİSİ) ─── */}
+        <header className="flex items-center justify-between gap-2 py-1">
+          {/* SOL: OYUNCU KİMLİĞİ (AVATAR + İSİM + LEVEL) - Tıklanınca Profil Açar */}
+          <button
+            onClick={() => {
+              audio.playSelect();
+              onOpenProfileModal();
+            }}
+            className="flex items-center gap-2.5 p-1 -ml-1 rounded-2xl hover:bg-white/5 active:scale-95 transition-all text-left min-w-0 group"
+            title="Profil & Sinefil DNA"
+          >
+            {/* 35mm Slayt Montürü Çerçeveli Avatar */}
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 shadow-md relative transition-transform group-hover:scale-105"
+              style={{
+                background: "linear-gradient(135deg, #1f2230, #0e1018)",
+                border: `1.5px solid ${effectiveCornerColor}`,
+              }}
+            >
+              <span className="leading-none select-none">{currentAvatar.emoji}</span>
+            </div>
+
+            {/* İsim ve Seviye */}
+            <div className="min-w-0 flex flex-col">
+              <span className="text-xs font-black text-white truncate max-w-[110px] leading-tight">
+                {profile.username}
+              </span>
+              <span
+                className="text-[10px] font-bold truncate leading-tight mt-0.5"
+                style={{ color: effectiveCornerColor }}
+              >
+                Lv.{profile.rankLevel || 1} &middot; {profile.rankTitle || "Bilet Kontrolörü"}
+              </span>
+            </div>
+          </button>
+
+          {/* SAĞ: DUOLINGO ATEŞİ + MAKARA BAKİYESİ + AYARLAR */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Streak Ateşi */}
+            <button
+              onClick={() => {
+                audio.playSelect();
+                onOpenDaily();
+              }}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-black font-mono transition-all active:scale-95 shadow-sm"
+              style={{
+                background: "linear-gradient(135deg, rgba(239,68,68,0.2), rgba(245,158,11,0.2))",
+                border: "1px solid rgba(245,158,11,0.5)",
+                color: "#f59e0b",
+              }}
+              title={`${profile.dailyStreak || 3} Günlük Seri`}
+            >
+              <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500 animate-pulse" />
+              <span>{profile.dailyStreak || 3}</span>
+            </button>
+
+            {/* Makara Bakiyesi */}
+            <button
+              onClick={() => {
+                audio.playSelect();
+                if (onOpenShop) onOpenShop();
+                else if (onOpenQuests) onOpenQuests();
+              }}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-black transition-all active:scale-95"
+              style={{
+                background: `${safeCornerHex}18`,
+                border: `1px solid ${safeCornerHex}50`,
+                color: safeCornerHex,
+              }}
+              title="Sinefil İkon Pazarı"
+            >
+              <Film className="w-3.5 h-3.5 fill-current" />
+              <span>{profile.reelsBalance.toLocaleString()}</span>
+            </button>
+
+            {/* Bildirim Zili Butonu */}
+            <button
+              onClick={() => {
+                audio.playSelect();
+                if (onOpenNotifications) onOpenNotifications();
+              }}
+              className="p-2 rounded-xl text-zinc-400 hover:text-white bg-zinc-900/60 border border-zinc-800 transition-all active:scale-95 relative"
+              title="Bildirimler"
+            >
+              <Bell className="w-4 h-4" />
+              {notifUnreadCount && notifUnreadCount > 0 ? (
+                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-rose-600 text-white text-[8px] font-black flex items-center justify-center animate-pulse">
+                  {notifUnreadCount}
+                </span>
+              ) : null}
+            </button>
+
+            {/* Ayarlar / Loşluk Masası Butonu */}
+            <button
+              onClick={() => {
+                audio.playSelect();
+                if (onOpenLiveAmbience) onOpenLiveAmbience();
+                else onOpenProfileModal();
+              }}
+              className="p-2 rounded-xl text-zinc-400 hover:text-white bg-zinc-900/60 border border-zinc-800 transition-all active:scale-95"
+              title="Salon Işıkları & Ayarlar"
+            >
+              <Sliders className="w-4 h-4" />
+            </button>
+          </div>
+        </header>
+
+        {/* Minimalist 35mm Analog Logo */}
+        <div className="text-center py-1">
+          <div className="text-[9px] font-black tracking-[0.35em] uppercase text-zinc-500 font-mono">
+            KODAK 5219 &middot; 35MM CINEMA
+          </div>
+          <h1 className="text-2xl font-black tracking-[0.22em] text-white uppercase font-mono leading-tight drop-shadow-md">
+            CINE<span style={{ color: effectiveCornerColor }}>XOX</span>
+          </h1>
+        </div>
+
+        {/* ── 2. MERKEZ STAGE: CANLI DÜELLO (HERO CTA - BAŞPARMAK BÖLGESİ) ─── */}
+        <div
+          onClick={() => {
+            audio.playSelect();
+            onStartGame("CLASSIC", "NORMAL", "FILM");
+          }}
+          className="w-full p-4 rounded-2xl text-left transition-all active:scale-[0.98] shadow-2xl relative overflow-hidden group border cursor-pointer select-none"
+          style={{
+            background: "linear-gradient(135deg, #8b151b 0%, #b01e25 50%, #d97706 100%)",
+            borderColor: effectiveCornerColor,
+            boxShadow: `0 8px 32px rgba(139,21,27,0.45), 0 0 20px ${activeTheme.glowRgba}`,
+          }}
+        >
+          {/* Kamera Vizör Köşe Kılavuzları ┌ ┐ └ ┘ */}
+          <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 pointer-events-none rounded-tl-sm" style={{ borderColor: effectiveCornerColor }} />
+          <div className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 pointer-events-none rounded-tr-sm" style={{ borderColor: effectiveCornerColor }} />
+          <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 pointer-events-none rounded-bl-sm" style={{ borderColor: effectiveCornerColor }} />
+          <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 pointer-events-none rounded-br-sm" style={{ borderColor: effectiveCornerColor }} />
+
+          <div className="relative z-10 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="w-11 h-11 rounded-xl bg-black/40 backdrop-blur-sm flex items-center justify-center border border-white/20 shrink-0 shadow-md">
+                <Clapperboard className="w-6 h-6 text-amber-300" />
+              </div>
+
+              <div className="min-w-0">
+                {/* Mikro Etiket: Canlı Nabız & Süre */}
+                <div className="flex items-center gap-1.5 text-[10px] font-mono font-black uppercase tracking-wider text-amber-200">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                  <span>142 Sinefil Çevrimiçi</span>
+                  <span className="opacity-50">&middot;</span>
+                  <span>12s Blitz</span>
+                </div>
+
+                {/* Başlık: CANLI DÜELLO (1v1) */}
+                <h2 className="text-base sm:text-lg font-black text-white leading-tight mt-0.5 tracking-wide">
+                  CANLI DÜELLO (1v1)
+                </h2>
+
+                {/* Alt Bilgi */}
+                <p className="text-[10px] sm:text-[11px] font-bold text-amber-100/80 truncate mt-0.5">
+                  Klasik (Oyuncu &times; Yönetmen) &amp; Sinefil
+                </p>
+              </div>
+            </div>
+
+            {/* Sağ Taraf: İnce Ayar Butonu + Anında BAŞLA Butonu */}
+            <div className="shrink-0 flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  audio.playSelect();
+                  setShowQuickSetup(true);
+                }}
+                className="p-2 rounded-xl bg-black/40 hover:bg-black/60 border border-white/20 text-amber-200 transition-all active:scale-95"
+                title="Kural ve Zorluk Ayarları"
+              >
+                <Sliders className="w-3.5 h-3.5" />
+              </button>
+
+              <div className="flex items-center gap-1 px-3 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-black text-xs shadow-lg transition-transform active:scale-95 border border-amber-300">
+                <span>BAŞLA</span>
+                <Play className="w-3.5 h-3.5 fill-black" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── 2.5. 3 ANA OYUN MODU VİTRİNİ (KLASİK / TERS KADRAJ / SİNEFİL KONSEPT) ─── */}
+        <div className="w-full space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-[10px] font-black tracking-widest uppercase text-zinc-400 font-mono">
+              ARENA MODLARI (3 SEÇENEK)
+            </span>
+            {onOpenGameSelect && (
+              <button
+                type="button"
+                onClick={() => {
+                  audio.playSelect();
+                  onOpenGameSelect();
+                }}
+                className="text-[9px] font-bold text-amber-400 hover:text-amber-300 font-mono flex items-center gap-1 transition-colors cursor-pointer"
+              >
+                <span>TÜM ARENALAR</span>
+                <span>&rarr;</span>
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {/* 1. Klasik Düello */}
+            <button
+              onClick={() => {
+                audio.playSelect();
+                if (onDirectStartMode) {
+                  onDirectStartMode("CLASSIC");
+                } else {
+                  onStartGame("CLASSIC", "NORMAL", "FILM");
+                }
+              }}
+              className="p-3 rounded-2xl text-left border transition-all active:scale-[0.98] group relative overflow-hidden bg-gradient-to-br from-amber-950/30 via-zinc-950 to-black border-amber-500/40 hover:border-amber-400"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-base">🎬</span>
+                <span className="text-[8px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                  15S BLITZ
+                </span>
+              </div>
+              <div className="text-xs font-black text-white group-hover:text-amber-300 transition-colors">
+                Klasik Düello
+              </div>
+              <div className="text-[9.5px] text-zinc-400 font-medium leading-tight mt-0.5">
+                Yönetmen/Tür × Oyuncu · 3&apos;lü Hat XOX Zaferi
+              </div>
+            </button>
+
+            {/* 2. Ters Kadraj */}
+            <button
+              onClick={() => {
+                audio.playSelect();
+                if (onDirectStartMode) {
+                  onDirectStartMode("REVERSE_CAST");
+                } else {
+                  onStartGame("REVERSE_CAST", "NORMAL", "FILM");
+                }
+              }}
+              className="p-3 rounded-2xl text-left border transition-all active:scale-[0.98] group relative overflow-hidden bg-gradient-to-br from-cyan-950/30 via-zinc-950 to-black border-cyan-500/40 hover:border-cyan-400"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-base">🎭</span>
+                <span className="text-[8px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">
+                  ORTAK OYUNCU
+                </span>
+              </div>
+              <div className="text-xs font-black text-white group-hover:text-cyan-300 transition-colors">
+                Ters Kadraj
+              </div>
+              <div className="text-[9.5px] text-zinc-400 font-medium leading-tight mt-0.5">
+                Film A × Film B · Ortak Aktör Yaz · En Çok Kapatan
+              </div>
+            </button>
+
+            {/* 3. Sinefil Konsept */}
+            <button
+              onClick={() => {
+                audio.playSelect();
+                if (onDirectStartMode) {
+                  onDirectStartMode("CINE_CONCEPT");
+                } else {
+                  onStartGame("CINE_CONCEPT", "NORMAL", "FILM");
+                }
+              }}
+              className="p-3 rounded-2xl text-left border transition-all active:scale-[0.98] group relative overflow-hidden bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black border-purple-500/40 hover:border-purple-400"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-base">🌀</span>
+                <span className="text-[8px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-purple-400/20 text-purple-300 border border-purple-400/30">
+                  14 KÜLT TEMA
+                </span>
+              </div>
+              <div className="text-xs font-black text-white group-hover:text-purple-300 transition-colors">
+                Sinefil Konsept
+              </div>
+              <div className="text-[9.5px] text-zinc-400 font-medium leading-tight mt-0.5">
+                Plot Twist, Heist, Neo-Noir, Distopya &amp; Auteur
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {/* ── 3. İKİNCİL OYUN MODLARI: YAN YANA 2 DENGELİ KART (SIFIR TRUNCATE) ─── */}
+        <div className="grid grid-cols-2 gap-2.5">
+          {/* Kart 1: Günün Kadresi */}
+          <button
+            onClick={() => {
+              audio.playSelect();
+              onOpenDaily();
+            }}
+            className="p-3 rounded-2xl flex flex-col justify-between text-left border transition-all active:scale-[0.98] group relative overflow-hidden min-h-[110px]"
+            style={{
+              background: "linear-gradient(135deg, rgba(217,119,6,0.12), rgba(14,16,24,0.92))",
+              borderColor: "rgba(217,119,6,0.35)",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.35)",
+            }}
+          >
+            <div className="flex items-center justify-between w-full">
+              <div className="w-7 h-7 rounded-lg bg-amber-400/20 border border-amber-400/35 flex items-center justify-center shrink-0">
+                <Clock className="w-3.5 h-3.5 text-amber-400" />
+              </div>
+              <span className="text-[8px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-400 border border-amber-400/30">
+                GÜNLÜK RİTÜEL
+              </span>
+            </div>
+
+            <div className="mt-2">
+              <span className="text-xs font-black text-white block">
+                Günün Kadresi
+              </span>
+              <span className="text-[9.5px] font-bold text-zinc-400 block leading-tight mt-0.5">
+                Sabit Matris &middot; Rarity &middot; Paylaş
+              </span>
+            </div>
+          </button>
+
+          {/* Kart 2: Özel Oda & Düello */}
+          <button
+            onClick={() => {
+              audio.playSelect();
+              onOpenCustomLobby();
+            }}
+            className="p-3 rounded-2xl flex flex-col justify-between text-left border transition-all active:scale-[0.98] group relative overflow-hidden min-h-[110px]"
+            style={{
+              background: "linear-gradient(135deg, rgba(139,21,27,0.12), rgba(14,16,24,0.92))",
+              borderColor: "rgba(139,21,27,0.35)",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.35)",
+            }}
+          >
+            <div className="flex items-center justify-between w-full">
+              <div className="w-7 h-7 rounded-lg bg-red-600/20 border border-red-500/35 flex items-center justify-center shrink-0">
+                <Swords className="w-3.5 h-3.5 text-red-400" />
+              </div>
+              <span className="text-[8px] font-mono font-bold text-red-400 bg-red-950/40 px-2 py-0.5 rounded-full border border-red-800/40">
+                1v1 LOBİ &rarr;
+              </span>
+            </div>
+
+            <div className="mt-2">
+              <span className="text-xs font-black text-white block">
+                Özel Oda &amp; Düello
+              </span>
+              <span className="text-[9.5px] font-bold text-zinc-400 block leading-tight mt-0.5">
+                Kodla Arkadaşını Çağır &middot; Kuralları Seç
+              </span>
+            </div>
+          </button>
+        </div>
+
+        {/* ── 4. SİNEFİL KÜNYESİ (PROGRESSIVE DISCLOSURE & DÜZENLİ KART) ─── */}
+        <div
+          className="rounded-2xl p-3 relative overflow-hidden font-sans border"
+          style={{
+            background: "linear-gradient(135deg, rgba(14,16,24,0.95), rgba(10,11,16,0.98))",
+            borderColor: effectiveHudBorder,
+            boxShadow: `0 4px 20px rgba(0,0,0,0.5)`,
+          }}
+        >
+          {/* Kamera Vizör Köşe Kılavuzları */}
+          <div className="absolute top-1.5 left-1.5 w-2.5 h-2.5 border-t border-l pointer-events-none rounded-tl-sm" style={{ borderColor: effectiveCornerColor }} />
+          <div className="absolute top-1.5 right-1.5 w-2.5 h-2.5 border-t border-r pointer-events-none rounded-tr-sm" style={{ borderColor: effectiveCornerColor }} />
+          <div className="absolute bottom-1.5 left-1.5 w-2.5 h-2.5 border-b border-l pointer-events-none rounded-bl-sm" style={{ borderColor: effectiveCornerColor }} />
+          <div className="absolute bottom-1.5 right-1.5 w-2.5 h-2.5 border-b border-r pointer-events-none rounded-br-sm" style={{ borderColor: effectiveCornerColor }} />
+
+          <div className="flex items-center justify-between text-[8px] font-mono uppercase tracking-widest text-zinc-500 mb-2 px-1">
+            <span className="flex items-center gap-1.5" style={{ color: activeTheme.accentColor }}>
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: activeTheme.accentColor }} />
+              REC &middot; SİNEFİL KÜNYESİ
+            </span>
+            {/* Progressive Rank: 10 maçtan azsa sentetik rank yerine "Derecesiz" gösterilir */}
+            <span className="font-bold text-zinc-400">
+              {profile.totalMatches < 10 ? `DERECESİZ (${Math.max(0, 10 - profile.totalMatches)} MAÇ KALDI)` : `SIRA #${profile.rankLevel * 15}`}
+            </span>
+          </div>
+
+          {/* 3'lü İstatistik Şeridi: Galibiyet / Mağlubiyet / Oran */}
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="rounded-xl bg-zinc-900/60 p-1.5 border border-zinc-800">
+              <span className="text-[8px] font-black uppercase text-zinc-500 font-mono block">GALİBİYET</span>
+              <span className="text-sm font-black text-white">{profile.wins}</span>
+            </div>
+            <div className="rounded-xl bg-zinc-900/60 p-1.5 border border-zinc-800">
+              <span className="text-[8px] font-black uppercase text-zinc-500 font-mono block">MAĞLUBİYET</span>
+              <span className="text-sm font-black text-white">{profile.losses}</span>
+            </div>
+            <div className="rounded-xl bg-zinc-900/60 p-1.5 border border-zinc-800">
+              <span className="text-[8px] font-black uppercase text-zinc-500 font-mono block">ORAN</span>
+              <span className="text-sm font-black" style={{ color: effectiveCornerColor }}>
+                %{winRate}
+              </span>
+            </div>
+          </div>
+
+          {/* 35mm Negatif İlerleme Çubuğu (10 Maçlık Lig Yerleşimi) */}
+          <div className="mt-2.5 pt-2 border-t border-zinc-800/80 flex items-center justify-between gap-1.5 px-0.5">
+            <span className="text-[8px] font-mono font-bold text-zinc-400 uppercase tracking-wider shrink-0">
+              LİG YERLEŞİMİ:
+            </span>
+            <div className="flex items-center gap-1 flex-1 justify-center max-w-[190px]">
+              {Array.from({ length: 10 }).map((_, idx) => {
+                const isPlayed = idx < profile.totalMatches;
+                return (
+                  <div
+                    key={idx}
+                    className={`h-2 flex-1 rounded-xs border transition-all ${
+                      isPlayed
+                        ? "bg-amber-400 border-amber-300 shadow-[0_0_6px_rgba(245,158,11,0.5)]"
+                        : "bg-zinc-900 border-zinc-700/80"
+                    }`}
+                    title={isPlayed ? `Maç ${idx + 1} Oynandı` : `Kalan Maç ${idx + 1}`}
+                  />
+                );
+              })}
+            </div>
+            <span className="text-[8.5px] font-mono font-black shrink-0" style={{ color: effectiveCornerColor }}>
+              {Math.min(profile.totalMatches, 10)}/10
+            </span>
+          </div>
+        </div>
+
+        {/* ── 5. GÜNLÜK GÖREV TICKER'I ─── */}
         <button
-          type="button"
+          onClick={() => {
+            audio.playSelect();
+            onOpenQuests();
+          }}
+          className="p-2.5 rounded-xl flex items-center justify-between text-left border transition-all active:scale-[0.98] bg-[#0e1018]/90 border-zinc-800 hover:border-zinc-700"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-7 h-7 rounded-lg bg-amber-400/15 border border-amber-400/30 flex items-center justify-center shrink-0">
+              <Gift className="w-3.5 h-3.5 text-amber-400" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[11px] font-black text-white block truncate">
+                Günlük Görev: İlk Maçı Kazan
+              </span>
+              <span className="text-[9px] font-bold text-amber-400 block">
+                +100 Makara Ödülü
+              </span>
+            </div>
+          </div>
+          <span className="text-[9px] font-mono font-bold text-zinc-400 bg-zinc-800 px-2 py-1 rounded-md shrink-0">
+            1/1 &middot; AL &rarr;
+          </span>
+        </button>
+
+        {/* ── 6. CANLI SİNEFİL AKIŞI (ÖLÜ BOŞLUĞU DOLDURAN CANLI DARBE) ─── */}
+        <div className="rounded-xl px-3 py-2 border border-zinc-800/90 bg-[#0c0e15]/90 flex items-center gap-2.5 overflow-hidden shadow-sm">
+          <div className="flex items-center gap-1 shrink-0 px-2 py-0.5 rounded-md bg-red-950/70 border border-red-700/50 text-[8px] font-mono font-black text-red-400 uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse inline-block" />
+            <span>{TICKER_MESSAGES[tickerIndex].tag}</span>
+          </div>
+          <p className="text-[10px] font-bold text-zinc-300 truncate transition-opacity duration-300">
+            {TICKER_MESSAGES[tickerIndex].text}
+          </p>
+        </div>
+
+        {/* ── 7. SİNEFİL ZEVK DNA'SI & LETTERBOXD KÖPRÜSÜ (VİTRİN KARTI) ─── */}
+        <div
           onClick={() => {
             audio.playSelect();
             onOpenProfileModal();
           }}
-          className="flex items-center gap-2 rounded-2xl px-1 py-1 active:scale-95"
-        >
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#8B151B] bg-[#0E1018]">
-            <UserRound className="h-5 w-5 text-[#F8FAFC]" />
-          </span>
-          <span className="text-left">
-            <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-[#94A3B8]">Pasaport</span>
-            <span className="block max-w-[140px] truncate text-sm font-black">{profile.username}</span>
-          </span>
-        </button>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            aria-label={hapticOn ? "Titreşimi kapat" : "Titreşimi aç"}
-            onClick={() => {
-              const next = !hapticOn;
-              setHapticOn(next);
-              setHapticEnabled(next);
-              if (next) haptic.light();
-            }}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#1A1C24] bg-[#0E1018] active:scale-95"
-          >
-            <Vibrate className={`h-4 w-4 ${hapticOn ? "text-[#D97706]" : "text-[#64748B]"}`} />
-          </button>
-          {onToggleMute && (
-            <button
-              type="button"
-              aria-label={muted ? "Sesi aç" : "Sesi kapat"}
-              onClick={onToggleMute}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#1A1C24] bg-[#0E1018] active:scale-95"
-            >
-              {muted ? <VolumeX className="h-4 w-4 text-[#64748B]" /> : <Volume2 className="h-4 w-4 text-[#F8FAFC]" />}
-            </button>
-          )}
-        </div>
-      </header>
-
-      <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-8 text-center">
-        <Mark />
-        <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.28em] text-[#D97706]">Cine-XOX</p>
-        <h1 className="mt-2 text-4xl font-black tracking-tight text-[#F8FAFC]">Üç kare. Bir hat.</h1>
-        <p className="mt-3 max-w-[280px] text-sm leading-relaxed text-[#94A3B8]">
-          3×3 tahta. İki ipucu, bir film. 12 saniye. Üç hücre birleşince maç biter.
-        </p>
-
-        <button
-          type="button"
-          onClick={startDuel}
-          className="tap-scale mt-8 flex w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-[#8B151B] px-6 py-4 text-base font-black text-[#F8FAFC] shadow-[0_12px_40px_rgba(139,21,27,0.35)]"
-        >
-          <Swords className="h-5 w-5" />
-          Düelloya Gir
-        </button>
-        <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-[#64748B]">Bot · 12 sn</p>
-
-        <button
-          type="button"
-          onClick={() => {
-            audio.playSelect();
-            onOpenCustomLobby();
+          className="p-3 rounded-2xl border transition-all active:scale-[0.98] cursor-pointer relative overflow-hidden group select-none"
+          style={{
+            background: "linear-gradient(135deg, rgba(26,16,40,0.85) 0%, rgba(12,14,22,0.95) 100%)",
+            borderColor: "rgba(168,85,247,0.35)",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.4)",
           }}
-          className="tap-scale mt-6 w-full max-w-xs rounded-2xl border border-[#1A1C24] bg-[#0E1018] px-6 py-3 text-sm font-bold text-[#F8FAFC]"
         >
-          Arkadaşınla oda aç
-        </button>
-        <p className="mt-2 max-w-[260px] text-[11px] leading-snug text-[#64748B]">
-          İki telefon. Oda kodu gerçek bir rakip bağlanınca maç başlar.
-        </p>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center shrink-0">
+                <Dna className="w-4 h-4 text-purple-400" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[8px] font-mono font-black uppercase text-purple-400 tracking-wider">
+                    SİNEMA ZEVK DNA&apos;SI
+                  </span>
+                  {profile.letterboxdUsername ? (
+                    <span className="text-[7.5px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold">
+                      @{profile.letterboxdUsername} &middot; ONAYLI ✓
+                    </span>
+                  ) : (
+                    <span className="text-[7.5px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold">
+                      LETTERBOXD BAĞLA
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs font-black text-white block truncate mt-0.5">
+                  {profile.tasteDna?.cinemaAesthetic || "Karanlık Zihinler & Bilim Kurgu"}
+                </span>
+                <span className="text-[9.5px] font-bold text-zinc-400 block truncate mt-0.5">
+                  Favori: {profile.tasteDna?.topDirector || "Christopher Nolan"} &middot; {profile.tasteDna?.topGenre || "Sci-Fi"}
+                </span>
+              </div>
+            </div>
 
-        {onOpenHelp && (
-          <button
-            type="button"
-            onClick={() => {
-              audio.playSelect();
-              onOpenHelp();
-            }}
-            className="mt-8 text-xs font-bold uppercase tracking-widest text-[#94A3B8]"
-          >
-            Nasıl oynanır
-          </button>
-        )}
-      </main>
-
-      <footer className="relative z-10 grid grid-cols-3 gap-2 px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
-        {[
-          ["Galibiyet", String(profile.wins)],
-          ["Maç", String(profile.totalMatches)],
-          ["Oran", `%${winRate}`],
-        ].map(([label, value]) => (
-          <div key={label} className="rounded-2xl border border-[#1A1C24] bg-[#0E1018] px-2 py-3 text-center">
-            <span className="block font-mono text-[9px] uppercase tracking-wider text-[#64748B]">{label}</span>
-            <span className="mt-1 block text-lg font-black text-[#F8FAFC]">{value}</span>
+            <div className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 text-[10px] font-bold transition-all">
+              <span>İncele</span>
+              <Sparkles className="w-3 h-3 text-purple-300" />
+            </div>
           </div>
-        ))}
-      </footer>
+        </div>
+
+        {/* ── TEK KAYNAKLI SİNEMA METADATA TICKER (ISO Çelişkisi Kaldırıldı) ─── */}
+        <div className="text-center py-0.5">
+          <span className="text-[7.5px] font-mono font-black uppercase tracking-[0.25em] text-zinc-600">
+            KODAK 5219 &middot; 35MM &middot; 24FPS &middot; SHUTTER 180&deg; &middot; FRAME #024
+          </span>
+        </div>
+      </div>
+
+      {/* ── 8. ALT DOCK BAR (SAFE-AREA UYUMLU, SABİT NAVİGASYON) ─── */}
+      <nav
+        className="fixed bottom-0 left-0 right-0 flex items-center justify-around px-4 z-40 max-w-md mx-auto"
+        style={{
+          background: "rgba(7,8,11,0.98)",
+          borderTop: "1px solid #1a1c24",
+          backdropFilter: "blur(20px)",
+          boxShadow: "0 -4px 20px rgba(0,0,0,0.6)",
+          paddingTop: "0.5rem",
+          paddingBottom: "max(0.6rem, env(safe-area-inset-bottom))",
+        }}
+      >
+        {[
+          { label: "Lobi", icon: Home, color: "#8b151b", active: true, act: undefined },
+          { label: "Arenalar", icon: Film, color: "#06b6d4", active: false, act: onOpenGameSelect },
+          { label: "Günlük", icon: Clock, color: "#d97706", active: false, act: onOpenDaily },
+          { label: "Sıralama", icon: Trophy, color: "#f59e0b", active: false, act: onOpenLeaderboard },
+          { label: "Gardrop", icon: Sparkles, color: "#a855f7", active: false, act: onOpenShop },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.label}
+              onClick={tab.act}
+              className="flex flex-col items-center transition-all active:scale-95 px-3 py-1"
+            >
+              <Icon
+                className="w-5 h-5"
+                style={{ color: tab.active ? tab.color : "#4b5563" }}
+              />
+              <span
+                className="text-[8px] font-black mt-0.5 uppercase tracking-wide"
+                style={{ color: tab.active ? tab.color : "#4b5563" }}
+              >
+                {tab.label}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* ── Ekran 2: Hızlı Oyna Ayarları Modalı ─── */}
+      <QuickMatchSetupModal
+        isOpen={showQuickSetup}
+        onClose={() => setShowQuickSetup(false)}
+        userProfile={profile}
+        onStartMatchmaking={(mode, pool, diff) => {
+          setShowQuickSetup(false);
+          onStartGame(mode, diff, pool);
+        }}
+      />
     </div>
   );
 };
