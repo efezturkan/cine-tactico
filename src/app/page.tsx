@@ -79,22 +79,22 @@ function CineXoxApp() {
 
   // Kullanıcı Profili
   const [profile, setProfile] = useState<UserProfile>({
-    username: "Sinefil_99",
+    username: "Oyuncu",
     avatarId: "avatar_director",
-    rankTitle: "Bilet Kontrolörü 🍿",
+    rankTitle: "Bilet Kontrolörü",
     rankLevel: 1,
-    totalMatches: 4,
-    wins: 3,
-    losses: 1,
+    totalMatches: 0,
+    wins: 0,
+    losses: 0,
     draws: 0,
-    highestCombo: 4,
-    dailyStreak: 3,
+    highestCombo: 0,
+    dailyStreak: 0,
     streakProtected: false,
     favoriteGenre: "Sci-Fi",
     favoriteDirector: "Christopher Nolan",
     favoriteMode: "Klasik 3x3",
-    lastFiveMatches: ["L", "W", "L", "W", "W"],
-    reelsBalance: 350,
+    lastFiveMatches: [],
+    reelsBalance: 0,
     diamondsBalance: 45,
     powerups: {
       freezeTime: 2,
@@ -302,10 +302,8 @@ function CineXoxApp() {
     setProfile(prev => {
       const isWin = winner === "X";
       const outcome: "W" | "L" | "D" = isWin ? "W" : winner === "O" ? "L" : "D";
-      const currentLast5 = prev.lastFiveMatches && prev.lastFiveMatches.length > 0
-        ? prev.lastFiveMatches
-        : ["L", "W", "L", "W", "W"];
-      const updatedLast5 = [...currentLast5.slice(1), outcome] as ("W" | "L" | "D")[];
+      const currentLast5 = prev.lastFiveMatches ?? [];
+      const updatedLast5 = [...currentLast5, outcome].slice(-5) as ("W" | "L" | "D")[];
 
       const matchMode = (board.boardMode || (mode === "ONLINE_ROOM" ? "ONLINE_ROOM" : "CLASSIC")) as any;
       const modeLabel = board.boardMode === "REVERSE_CAST"
@@ -527,7 +525,7 @@ function CineXoxApp() {
     audio.playError();
     setShowSurrenderConfirm(false);
     setProfile(prev => {
-      const currentLast5 = prev.lastFiveMatches?.length ? prev.lastFiveMatches : ["L", "W", "L", "W", "W"];
+      const currentLast5 = prev.lastFiveMatches?.length ? prev.lastFiveMatches : [];
       const updatedLast5 = [...currentLast5.slice(1), "L"] as ("W" | "L" | "D")[];
       return {
         ...prev,
@@ -571,7 +569,7 @@ function CineXoxApp() {
     setIsHost(true);
     setCustomRoomCode(settings.roomCode);
     setCustomShotClock(settings.shotClockSeconds);
-    setAllowSteal(settings.allowCellStealing);
+    setAllowSteal(false);
     setMode("ONLINE_ROOM");
     const activeBoard = optionalBoard || PRESET_BOARDS[boardIndex];
     setBoard(activeBoard);
@@ -588,7 +586,7 @@ function CineXoxApp() {
     setIsHost(false);
     setCustomRoomCode(roomCode);
     setCustomShotClock(settings.shotClockSeconds);
-    setAllowSteal(settings.allowCellStealing);
+    setAllowSteal(false);
     setMode("ONLINE_ROOM");
     setBoard(boardData);
     resetGame(boardData);
@@ -681,6 +679,15 @@ function CineXoxApp() {
     setCurrentView("GAME");
   };
 
+  const handleOpenDailyFromHome = () => {
+    audio.playSelect();
+    setMode("DAILY_SOLO");
+    setBoardIndex(2);
+    setBoard(PRESET_BOARDS[2]);
+    resetGame(PRESET_BOARDS[2]);
+    setCurrentView("GAME");
+  };
+
   const executeMatchSetup = (
     modeType: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL",
     diff: "EASY" | "NORMAL" | "HARD"
@@ -720,15 +727,6 @@ function CineXoxApp() {
 
   const handleMatchFoundCountdownComplete = () => {
     setShowMatchFound(false);
-    setCurrentView("GAME");
-  };
-
-  const handleOpenDailyFromHome = () => {
-    audio.playSelect();
-    setMode("DAILY_SOLO");
-    setBoardIndex(2);
-    setBoard(PRESET_BOARDS[2]);
-    resetGame(PRESET_BOARDS[2]);
     setCurrentView("GAME");
   };
 
@@ -854,6 +852,12 @@ function CineXoxApp() {
             audio.playSelect();
             setCurrentView("GAME_SELECT");
           }}
+          onOpenHelp={() => {
+            audio.playSelect();
+            setShowHelp(true);
+          }}
+          muted={muted}
+          onToggleMute={handleToggleMute}
         />
         <GlobalModals {...globalModalsProps} />
       </main>
@@ -872,14 +876,11 @@ function CineXoxApp() {
             setBoardIndex(boardIdx);
             setBoard(randomized);
             resetGame(randomized);
+            if (selectedMode === "PASS_AND_PLAY") return;
             setMode(selectedMode);
             setPendingBoardIndex(boardIdx);
             setPendingOpponent(opp);
-            if (selectedMode === "PASS_AND_PLAY") {
-              setCurrentView("GAME");
-            } else {
-              setShowMatchFound(true);
-            }
+            setShowMatchFound(true);
           }}
           onOpenCustomLobby={() => {
             setCurrentView("HOME");

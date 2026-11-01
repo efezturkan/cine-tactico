@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Cine-Tactico</string>
-    <string name="title_activity_main">Cine-Tactico</string>
+    <string name="app_name">Cine-XOX</string>
+    <string name="title_activity_main">Cine-XOX</string>
     <string name="package_name">com.cinetactico.game</string>
     <string name="custom_url_scheme">com.cinetactico.game</string>
 </resources>

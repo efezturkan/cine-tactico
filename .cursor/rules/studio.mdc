@@ -9,7 +9,7 @@ This is Cine-XOX: 3x3 cinephile XOX on Next.js + Capacitor + Supabase. Not Unity
 
 - Spec: `MASTER_SPECIFICATION_v3.md`. Cell stealing is forbidden.
 - Shared engine: `src/core`. UI must not fork win/lock/rarity rules.
-- Offline bot and pass-and-play stay network-free.
+- Offline bot stays network-free. No same-phone pass-and-play. The shot clock makes handing the phone absurd.
 - Cosmetics only in shop. No pay-to-win.
 - No IMDb/TMDb ratings or poster CDNs.
 - Leave MatchmakingQueueModal, ShotClock, and XoxBoard structure intact unless the user explicitly asks.

@@ -5,9 +5,27 @@ const isNative = () => {
   return typeof window !== "undefined" && (window as unknown as { Capacitor?: { isNativePlatform: () => boolean } }).Capacitor?.isNativePlatform?.();
 };
 
+function hapticAllowed(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return localStorage.getItem("cinexox_haptic") !== "0";
+  } catch {
+    return true;
+  }
+}
+
+export function setHapticEnabled(enabled: boolean): void {
+  try {
+    localStorage.setItem("cinexox_haptic", enabled ? "1" : "0");
+  } catch {
+    // Storage can be unavailable in private browsing.
+  }
+}
+
 export const haptic = {
   // Hafif dokunma
   light: async () => {
+    if (!hapticAllowed()) return;
     try {
       if (isNative()) {
         await Haptics.impact({ style: ImpactStyle.Light });
@@ -23,6 +41,7 @@ export const haptic = {
 
   // Orta sertlikte dokunma (Joker, hamle patlaması)
   medium: async () => {
+    if (!hapticAllowed()) return;
     try {
       if (isNative()) {
         await Haptics.impact({ style: ImpactStyle.Medium });
@@ -38,6 +57,7 @@ export const haptic = {
 
   // Başarılı hamle (Çift tatlı vuruş)
   success: async () => {
+    if (!hapticAllowed()) return;
     try {
       if (isNative()) {
         await Haptics.notification({ type: NotificationType.Success });
@@ -53,6 +73,7 @@ export const haptic = {
 
   // Hata / Süre uyarısı (Sert titreşim)
   error: async () => {
+    if (!hapticAllowed()) return;
     try {
       if (isNative()) {
         await Haptics.notification({ type: NotificationType.Error });
@@ -68,6 +89,7 @@ export const haptic = {
 
   // Zafer / XOX çizgisi
   victory: async () => {
+    if (!hapticAllowed()) return;
     try {
       if (isNative()) {
         await Haptics.notification({ type: NotificationType.Success });

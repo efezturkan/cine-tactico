@@ -1,6 +1,7 @@
 import { Movie } from "@/core";
 
-export const MOVIES_DATABASE: Movie[] = [
+/** Ham katalog. Oyun bunu doğrudan okumaz. Kapı `src/content` uyumluluk adaptörüdür. */
+export const LEGACY_MOVIE_RECORDS: Movie[] = [
   // Christopher Nolan
   {
     id: "m_inception",

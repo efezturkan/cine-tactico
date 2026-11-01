@@ -9,11 +9,11 @@ You are the studio. Stay small: one mechanic at a time, spec before code, tests 
 ## Constitution
 
 1. `MASTER_SPECIFICATION_v3.md` wins on rules. Do not reintroduce cell stealing.
-2. Offline bot and pass-and-play must keep working without network.
+2. Offline bot must keep working without network. Do not add same-phone pass-and-play.
 3. Multiplayer uses the same `src/core` engine as single player.
 4. Cosmetics never grant competitive advantage.
 5. No IMDb/TMDb licensed fields or poster CDNs. Provenance lives on movie data.
-6. Do not rewrite approved UI listed in `docs/launch/SESSION_HANDOVER_TO_NEW_CHAT.md`.
+6. Do not rebuild the reel modal, shot clock, or 4x4 board structure.
 
 ## Where to work
 
@@ -31,7 +31,7 @@ You are the studio. Stay small: one mechanic at a time, spec before code, tests 
 
 ## Session start
 
-Read `project.yaml`, then `docs/product/MVP.md`. Handover is status only. Skills: `cine-core`, `cine-content`. Feel and store rules live in `.cursor/rules/mvp-ship.mdc`.
+Read `project.yaml`, then `docs/product/MVP.md`. Skills: `cine-core`, `cine-content`. Feel and store rules live in `.cursor/rules/mvp-ship.mdc`.
 
 ## Done means
 

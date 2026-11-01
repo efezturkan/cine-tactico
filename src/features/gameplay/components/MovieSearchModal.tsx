@@ -3,9 +3,11 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Criterion, Movie, ContentPoolType, CellAnswer } from "@/core";
-import { MOVIES_DATABASE } from "@/data/movies";
+import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
+import { movieMatchesTitleQuery } from "@/content/search/movieTitle";
 import { Search, X, Film, ShieldCheck, AlertTriangle } from "lucide-react";
 import { audio } from "@/utils/audio";
+import { assetResolver } from "@/utils/assetResolver";
 
 interface MovieSearchModalProps {
   isOpen: boolean;
@@ -20,7 +22,22 @@ interface MovieSearchModalProps {
   initialQuery?: string;
 }
 
-const SearchMovieThumbnail: React.FC<{ movie: Movie }> = () => {
+const SearchMovieThumbnail: React.FC<{ movie: Movie }> = ({ movie }) => {
+  const [imgError, setImgError] = useState(false);
+  const resolved = useMemo(() => assetResolver.resolveForMovie(movie), [movie]);
+
+  if (resolved.isAvailable && resolved.src && !imgError) {
+    return (
+      <img
+        src={resolved.src}
+        alt=""
+        loading="lazy"
+        onError={() => setImgError(true)}
+        className="w-full h-full object-cover"
+      />
+    );
+  }
+
   return (
     <div className="w-full h-full bg-gradient-to-br from-zinc-800 to-zinc-950 flex flex-col items-center justify-center p-1 text-center">
       <Film className="w-4 h-4 text-amber-400" />
@@ -60,19 +77,14 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
       pool = pool.filter(m => m.mediaType === "SERIES");
     }
 
-    const q = query.trim().toLowerCase();
-    // Anti-Cheat: En az 2 harf yazılmadan hiçbir film listelenmez! (Rastgele gezinme engellendi)
-    if (q.length < 2) {
-      return [];
-    }
-    return pool.filter(m => {
-      // Anti-Cheat: Yalnızca Film/Dizi adına (ve orijinal adına) göre filtreleme
-      // Yönetmen, oyuncu, tür, yıl veya ödül ile ASLA arama yapılamaz!
-      const matchTitle = m.title.toLowerCase().includes(q);
-      const matchOrig = m.originalTitle?.toLowerCase().includes(q);
-      return matchTitle || matchOrig;
-    });
+    if (query.trim().length < 2) return [];
+    return pool.filter((movie) => movieMatchesTitleQuery(movie, query));
   }, [query, contentPool]);
+
+  const rowCritAsset = useMemo(() => assetResolver.resolveForCriterion(rowCrit), [rowCrit]);
+  const colCritAsset = useMemo(() => assetResolver.resolveForCriterion(colCrit), [colCrit]);
+  const rowAvatar = rowCrit.avatarUrl || (rowCritAsset.isAvailable ? rowCritAsset.src : undefined);
+  const colAvatar = colCrit.avatarUrl || (colCritAsset.isAvailable ? colCritAsset.src : undefined);
 
   if (!isOpen) return null;
 
@@ -87,18 +99,18 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
             </span>
             <div className="flex items-center gap-2 mt-2 flex-wrap">
               <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-zinc-800 text-zinc-100 border border-zinc-700 flex items-center gap-1.5">
-                {rowCrit.avatarUrl && (
-                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block">
-                    <Image src={rowCrit.avatarUrl} alt="" fill className="object-cover" unoptimized />
+                {rowAvatar && (
+                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-zinc-600/60">
+                    <Image src={rowAvatar} alt="" fill className="object-cover" unoptimized />
                   </span>
                 )}
                 {rowCrit.label}
               </span>
               <span className="text-zinc-500 font-bold text-xs">+</span>
               <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-zinc-800 text-zinc-100 border border-zinc-700 flex items-center gap-1.5">
-                {colCrit.avatarUrl && (
-                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block">
-                    <Image src={colCrit.avatarUrl} alt="" fill className="object-cover" unoptimized />
+                {colAvatar && (
+                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-zinc-600/60">
+                    <Image src={colAvatar} alt="" fill className="object-cover" unoptimized />
                   </span>
                 )}
                 {colCrit.label}
@@ -124,8 +136,12 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Film veya dizi adı gir (Örn: Inception, Matrix)..."
-            className="w-full pl-10 pr-4 py-3 bg-cinema-dark border border-cinema-border focus:border-amber-400 rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none transition-all shadow-inner"
+            placeholder="Film adı"
+            enterKeyHint="search"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            className="w-full pl-10 pr-4 py-3 bg-cinema-dark border border-cinema-border focus:border-amber-400 rounded-xl text-base text-white placeholder-zinc-500 focus:outline-none transition-all shadow-inner"
           />
           <div className="flex items-center justify-between mt-1 px-1">
             <span className="text-[10px] text-zinc-500 font-medium">Sadece yapım adına göre aranabilir (Yönetmen/Oyuncu ile arama yapılamaz).</span>

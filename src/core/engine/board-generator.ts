@@ -1,6 +1,6 @@
 import { GameBoard } from "../types";
 import { findMatchingMovies, getSharedActors } from "./validator";
-import { MOVIES_DATABASE } from "@/data/movies";
+import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
 
 /**
  * Bir tahtanın 9 hücresindeki geçerli film/aktör sayılarını hesaplar

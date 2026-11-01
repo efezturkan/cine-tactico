@@ -1,4 +1,5 @@
-import { MOVIES_DATABASE } from "../data/movies";
+import { MOVIES_DATABASE } from "../content/adapters/gameCatalog";
+import { movieMatchesTitleQuery } from "../content/search/movieTitle";
 
 function filterMoviesForSearch(query: string, contentPool: "ALL" | "FILM" | "SERIES" | "HYBRID" = "HYBRID") {
   let pool = MOVIES_DATABASE;
@@ -7,17 +8,8 @@ function filterMoviesForSearch(query: string, contentPool: "ALL" | "FILM" | "SER
   } else if (contentPool === "SERIES") {
     pool = pool.filter(m => m.mediaType === "SERIES");
   }
-
-  const q = query.trim().toLowerCase();
-  // Anti-Cheat: En az 2 harf yazılmadan hiçbir film listelenmez
-  if (q.length < 2) {
-    return [];
-  }
-  return pool.filter(m => {
-    const matchTitle = m.title.toLowerCase().includes(q);
-    const matchOrig = m.originalTitle?.toLowerCase().includes(q);
-    return matchTitle || matchOrig;
-  });
+  if (query.trim().length < 2) return [];
+  return pool.filter((movie) => movieMatchesTitleQuery(movie, query));
 }
 
 describe("CINEXOX ANTI-CHEAT TEST SUITE", () => {

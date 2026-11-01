@@ -334,47 +334,14 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
         <div className="text-center pb-2.5 border-b border-sky-500/15">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#131f38] border border-amber-400/30 text-amber-400 text-[10px] font-black uppercase tracking-wider mb-1">
             <Trophy className="w-3.5 h-3.5" />
-            <span>ARENA & TURNUVA MERKEZİ</span>
+            <span>ODA</span>
           </div>
-          <h2 className="text-lg font-black text-white">Özel Oyun & Şampiyona</h2>
+          <h2 className="text-lg font-black text-white">İki telefon, bir oda</h2>
           <p className="text-[11px] text-zinc-400">
-            Arkadaşınla 1v1 kapış veya 8 kişilik eleme turnuvasına katıl.
+            Kod paylaş. Rakip bağlanınca maç başlar. Saat 12 saniye.
           </p>
         </div>
 
-        {/* 2. ANA SEKMELER: 1v1 ÖZEL ODA vs 8 KİŞİLİK TURNUVA (Clash Royale Tarzı Net Ayrım) */}
-        <div className="grid grid-cols-2 gap-2 my-3 p-1 rounded-2xl bg-[#070b16] border border-sky-500/15">
-          <button
-            type="button"
-            onClick={() => {
-              audio.playSelect();
-              setMainTab("1V1_ROOM");
-            }}
-            className={`py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 text-xs font-black transition-all ${
-              mainTab === "1V1_ROOM"
-                ? "bg-gradient-to-r from-amber-500 to-amber-600 text-black shadow-lg shadow-amber-500/20"
-                : "text-zinc-400 hover:text-white"
-            }`}
-          >
-            <Swords className="w-4 h-4" />
-            <span>1v1 Özel Oda</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              audio.playSelect();
-              setMainTab("TOURNAMENT");
-            }}
-            className={`py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 text-xs font-black transition-all ${
-              mainTab === "TOURNAMENT"
-                ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                : "text-zinc-400 hover:text-white"
-            }`}
-          >
-            <Trophy className="w-4 h-4" />
-            <span>Turnuva (8 Kişi)</span>
-          </button>
-        </div>
 
         {/* ========================================================
             SEKME 1: 1v1 ÖZEL ODA (DOSTLUK MAÇI)
@@ -545,11 +512,9 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                 </div>
 
                 {/* 4. HAMLE SÜRESİ (CHESS BLITZ SAATİ) */}
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 gap-2">
                   {[
-                    { val: 10, label: "10s Blitz", desc: "Aşırı Hızlı" },
-                    { val: 12, label: "12s Standart", desc: "Anti-Hile" },
-                    { val: 20, label: "20s Rahat", desc: "Geniş Süre" },
+                    { val: 12, label: "12 saniye", desc: "Maç saati" },
                   ].map(item => (
                     <button
                       key={item.val}
@@ -570,26 +535,6 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   ))}
                 </div>
 
-                {/* 5. TAKTİK TOGGLE'LAR (Kare Çalma Kuralı) */}
-                <div className="text-left">
-                  <button
-                    type="button"
-                    onClick={() => setAllowSteal(!allowSteal)}
-                    className={`w-full p-2.5 rounded-xl border flex items-center justify-between text-xs font-black transition-all ${
-                      allowSteal
-                        ? "bg-[#111e3b] border-amber-400 text-white"
-                        : "bg-[#0b101f] border-zinc-800 text-zinc-500"
-                    }`}
-                  >
-                    <div>
-                      <span>Kare Çalma (IMDb Steal)</span>
-                      <p className="text-[10px] text-zinc-500 font-normal">Daha yüksek IMDb puanlı filmle rakip karesini devralma</p>
-                    </div>
-                    <span className="text-[10px] font-mono font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
-                      {allowSteal ? "AÇIK 🔥" : "KAPALI"}
-                    </span>
-                  </button>
-                </div>
 
                 {/* Oda Kodu & Başlat */}
                 <div className="pt-2 border-t border-sky-500/10 space-y-2">
@@ -651,53 +596,9 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   {joinError && <p className="text-[10px] text-rose-400 mt-1 font-bold">{joinError}</p>}
                 </div>
 
-                {/* Canlı Açık Lobiler (Public Lobbies) */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                      <span>Canlı Bekleyen Lobiler</span>
-                    </span>
-                    <span className="text-[10px] text-zinc-500 font-bold">Gerçek Zamanlı</span>
-                  </div>
-
-                  <div className="space-y-2">
-                    {PUBLIC_ROOMS.map(r => (
-                      <div
-                        key={r.code}
-                        className="p-2.5 rounded-2xl bg-[#10182b] border border-zinc-800 hover:border-sky-500/40 flex items-center justify-between transition-all"
-                      >
-                        <div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-xs font-black text-white">{r.host}</span>
-                            <span className={`text-[9px] font-black px-1.5 py-0.2 rounded border ${r.badgeColor}`}>
-                              {r.players}
-                            </span>
-                          </div>
-                          <p className="text-[10px] text-zinc-400 mt-0.5">{r.boardTitle}</p>
-                          <div className="text-[9px] text-zinc-500 font-bold mt-0.5">
-                            Format: {r.format} · Süre: {r.time}
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSelectedBoardId(PRESET_BOARDS[r.boardIdx].id);
-                            handleStartCustomRoom({
-                              roomCode: r.code,
-                              roomName: `${r.host} Düellosu`,
-                              themeId: PRESET_BOARDS[r.boardIdx].id,
-                              category: PRESET_BOARDS[r.boardIdx].title,
-                            });
-                          }}
-                          className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-black font-black text-xs shadow-md active:scale-95 transition-all"
-                        >
-                          Katıl &rarr;
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <p className="text-[11px] text-zinc-500">
+                  Açık lobi listesi yok. Yalnızca kodu bildiğin odaya katılırsın.
+                </p>
               </div>
             )}
           </div>

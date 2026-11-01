@@ -143,14 +143,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const currentAvatar =
     AVATAR_OPTIONS.find(a => a.id === selectedAvatar) || AVATAR_OPTIONS[0];
 
-  const last5 = profile.lastFiveMatches && profile.lastFiveMatches.length > 0
-    ? profile.lastFiveMatches
-    : profile.totalMatches === 0
-    ? (["-", "-", "-", "-", "-"] as const)
-    : (["W", "W", "W", "W", "W"] as const);
+  const recent = (profile.lastFiveMatches ?? []).slice(-5);
+  const last5 = [...Array(Math.max(0, 5 - recent.length)).fill("-"), ...recent];
 
-  const favoriteDirector = profile.favoriteDirector || "Christopher Nolan";
-  const favoriteMode = profile.favoriteMode || "Klasik 3x3";
+  const favoriteDirector = profile.favoriteDirector || "Seçilmedi";
+  const favoriteMode = profile.favoriteMode || "3×3";
 
   const handleSaveName = async () => {
     const cleaned = tempName.trim();
@@ -223,7 +220,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
           <div className="w-6" /> {/* Dengeleme boşluğu */}
           <h2 className="text-sm font-black tracking-widest text-zinc-300 uppercase font-mono">
-            CINE<span className="text-amber-400">XOX</span> PROFİL
+            SİNEFİL PASAPORT
           </h2>
           <button
             onClick={onClose}
@@ -234,7 +231,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         </div>
 
         {/* Sekmeler: Kariyer vs Zevk DNA'sı vs Sinema Işık & Loşluk */}
-        <div className="grid grid-cols-3 gap-1.5 my-3 p-1 rounded-2xl bg-[#07080b] border border-zinc-800 text-xs font-bold text-zinc-400">
+        <div className="my-3 p-1 rounded-2xl bg-[#07080b] border border-zinc-800 text-xs font-bold text-zinc-400">
           <button
             onClick={() => {
               audio.playSelect();
@@ -247,34 +244,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             }`}
           >
             Kariyer
-          </button>
-          <button
-            onClick={() => {
-              audio.playSelect();
-              setActiveTab("DNA");
-            }}
-            className={`py-1.5 px-1 rounded-xl flex items-center justify-center gap-1 transition-all ${
-              activeTab === "DNA"
-                ? "bg-purple-500 text-white font-black shadow-md"
-                : "hover:text-white"
-            }`}
-          >
-            <Dna className="w-3 h-3" />
-            <span className="truncate">Zevk DNA</span>
-          </button>
-          <button
-            onClick={() => {
-              audio.playSelect();
-              setActiveTab("AMBIENCE");
-            }}
-            className={`py-1.5 px-1 rounded-xl flex items-center justify-center gap-1 transition-all ${
-              activeTab === "AMBIENCE"
-                ? "bg-rose-600 text-white font-black shadow-md"
-                : "hover:text-white"
-            }`}
-          >
-            <Lightbulb className="w-3 h-3 text-amber-300" />
-            <span className="truncate">Salon Işığı</span>
           </button>
         </div>
 
@@ -640,11 +609,41 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </span>
             )}
 
-            {/* Seviye İlerleme Çubuğu */}
-            <div className="w-48 h-1.5 bg-zinc-800 rounded-full mt-2 overflow-hidden border border-zinc-700">
-              <div className="w-3/4 h-full bg-gradient-to-r from-amber-400 to-yellow-300 rounded-full" />
+            <div className="w-full mt-3 rounded-2xl border border-zinc-800 bg-[#07080b] p-3">
+              <div className="flex items-center justify-between text-[8px] font-mono uppercase tracking-widest text-zinc-500">
+                <span className="text-amber-400">Sinefil künyesi</span>
+                <span>
+                  {profile.totalMatches < 10
+                    ? `Derecesiz · ${Math.max(0, 10 - profile.totalMatches)} maç`
+                    : profile.rankTitle}
+                </span>
+              </div>
+              <div className="mt-2 grid grid-cols-3 gap-2 text-center">
+                <div>
+                  <div className="text-[8px] text-zinc-500">GALİBİYET</div>
+                  <div className="text-lg font-black">{profile.wins}</div>
+                </div>
+                <div>
+                  <div className="text-[8px] text-zinc-500">MAĞLUBİYET</div>
+                  <div className="text-lg font-black">{profile.losses}</div>
+                </div>
+                <div>
+                  <div className="text-[8px] text-zinc-500">ORAN</div>
+                  <div className="text-lg font-black text-amber-400">%{winRate}</div>
+                </div>
+              </div>
+              <div className="mt-2 flex items-center gap-1">
+                {Array.from({ length: 10 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className={`h-1.5 flex-1 rounded-sm ${idx < profile.totalMatches ? "bg-amber-400" : "bg-zinc-800"}`}
+                  />
+                ))}
+              </div>
+              <div className="mt-1 text-right text-[8px] font-mono text-zinc-500">
+                {Math.min(profile.totalMatches, 10)}/10
+              </div>
             </div>
-            <span className="text-[9px] text-zinc-500 font-bold mt-1">750 / 1000 XP</span>
 
             {/* HESAP & KİMLİK DURUMU (Misafir vs Kayıtlı Oyuncu) */}
             <div className="w-full my-3 p-3 rounded-2xl bg-[#07080b] border border-zinc-800">

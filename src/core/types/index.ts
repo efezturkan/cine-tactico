@@ -91,6 +91,8 @@ export interface Movie {
   id: string;
   title: string;
   originalTitle?: string;
+  /** Özgün ve yerelleştirilmiş adlar. Arama bunları da okur. */
+  aliases?: string[];
   year: number;
   director: string;
   directorId?: string;
@@ -160,7 +162,7 @@ export interface GameBoard {
 
 export type CoreGameMode = "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT";
 
-export type GameMode = "PASS_AND_PLAY" | "VS_BOT" | "ONLINE_ROOM" | "DAILY_SOLO";
+export type GameMode = "VS_BOT" | "ONLINE_ROOM" | "DAILY_SOLO";
 
 export type BotDifficulty = "EASY" | "MEDIUM" | "HARD";
 
@@ -182,3 +184,5 @@ export interface CustomRoomSettings {
   entryFee?: { type: "FREE" | "REELS"; amount: number };
   prizePool?: string;
 }
+
+export * from "./assets";

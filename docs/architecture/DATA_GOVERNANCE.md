@@ -2,7 +2,7 @@
 **Doküman:** `docs/architecture/DATA_GOVERNANCE.md`  
 **Durum:** ONAYLANDI (FAZ 0)  
 **Tarih:** 31 Ekim 2026 (Konsolide Sürüm)  
-**İlgili Belgeler:** `MASTER_SPECIFICATION_v3.md`, `IMPLEMENTATION_ROADMAP.md`
+**İlgili Belgeler:** `MASTER_SPECIFICATION_v3.md`, `docs/product/DATA_MODEL.md`
 
 ---
 

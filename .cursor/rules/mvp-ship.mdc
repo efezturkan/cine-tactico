@@ -5,11 +5,11 @@ alwaysApply: true
 
 # MVP ship
 
-Read `docs/product/MVP.md` before any feature work. `docs/product/GAME_FEEL.md` decides screens. `MASTER_SPECIFICATION_v3.md` decides rules.
+Read `docs/product/MVP.md` before any feature work. `docs/product/GAME_FEEL.md` decides screens. `docs/design/DESIGN_SYSTEM.md` decides color. `MASTER_SPECIFICATION_v3.md` decides rules.
 
 ## Authority
 
-- One slice. iOS v1 only: bot, pass-and-play, online room, match feel, icon.
+- One slice. iOS v1 only: bot, online room, match feel, icon. No pass-and-play.
 - Do not add shop, quests, leagues, fake feeds, DNA, ambience, notifications, or daily calendar.
 - Do not put those existing screens back on the home path.
 - Do not rebuild the data graph. Curated boards stay until after TestFlight.

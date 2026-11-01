@@ -1,32 +1,21 @@
-# Cine-XOX — Ürün ve MVP
+# Cine-XOX — MVP
 
-Film bilgisiyle oynanan 3x3 XOX. Tek cümle bu.
+Film XOX. İki ipucu, bir film, üçlü hat. Hücre çalınmaz. Saat 12 saniye.
 
-İki eksen kesişir (Nolan × Bilim Kurgu). Oyuncu o kesişime uyan bir film yazar. Üçlü hat kuran kazanır. Hücre çalınmaz.
+## Oyunda
 
-## iOS v1 içinde
+- Film: ipucu × ipucu, ortaya film adı. Bota karşı.
+- İkili: oyuncu × oyuncu, ortaya ortak film.
+- Kadraj: film × film, ortaya ortak oyuncu.
+- Hızlı başlat bu üçünden birini rastgele açar. Botu insan diye göstermez.
+- Oda iki telefon. Aynı telefon yok.
+- Maç, arama, sonuç, nasıl oynanır.
+- İkon ve açılış: bordo zemin, fildişi ve kehribar X. Afiş yok.
 
-- Bot
-- Aynı telefonda iki kişi
-- Online oda (Supabase)
-- Maç, cevap arama, sonuç, kısa nasıl oynanır
-- Çevrimdışı bot ve aynı telefon
-- 12 saniye shot clock (kod böyle; şartnamedeki 15 saniye iptal)
+## Oyunda değil
 
-## iOS v1 dışında
+Mağaza, görev, lig, sahte akış, DNA, ambiyans, bildirim, günlük takvim, tema vitrini, reklam, IAP.
 
-Mağaza, görev, lig, sahte akış, DNA kartı, ambiyans, bildirim, günlük takvim, 14 tema vitrini, Ters Kadraj vitrini, IAP, reklam.
+## Sende kalan
 
-Bunlar kodda durabilir. Ana ekranda durmaz. Silmek ayrı iş; v1’de gizlenir.
-
-## Sıra
-
-1. Ana ekranı tek oyun kapısına indir.
-2. Maç hissi: doğru damga, yanlış, kilit, kazanma. Makara modalı ve shot clock iskeleti aynı kalır.
-3. App ikonu ve splash.
-4. Xcode archive → TestFlight. Apple Team ID sende.
-5. Aynı paket Android `.aab`.
-
-## Bitti sayılmaz
-
-İlk maç 10 saniyede açılmıyorsa, ana ekran menüyse, ikon hâlâ Capacitor varsayılanıysa, iki telefonla oda oynanmadıysa.
+Apple Team ID ile Xcode arşivi ve TestFlight. İki telefonla oda. Android `.aab` aynı paketten.

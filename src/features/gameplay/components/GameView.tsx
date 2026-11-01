@@ -23,17 +23,8 @@ import { GoldenReelModal } from "./GoldenReelModal";
 import { PostGameAnalysisModal } from "./PostGameAnalysisModal";
 
 import {
-  Zap,
-  Flame,
-  Bot,
-  Share2,
   ShieldAlert,
-  Flag,
-  Users,
   Swords,
-  Calendar,
-  Lock,
-  Shuffle,
   Lightbulb,
 } from "lucide-react";
 
@@ -100,8 +91,6 @@ export function GameView(props: GameViewProps) {
   const gameTheme = (gameAmbience.theme && AMBIENCE_THEMES[gameAmbience.theme]) || AMBIENCE_THEMES.velvet_red;
   const safeGameDimness = typeof gameAmbience.dimness === "number" && !isNaN(gameAmbience.dimness) ? gameAmbience.dimness : 85;
   const safeGameGlow = typeof gameAmbience.glowIntensity === "number" && !isNaN(gameAmbience.glowIntensity) ? gameAmbience.glowIntensity : 65;
-  const isMatchInProgress = props.winner === null && props.cells.some(c => c !== null);
-
   return (
     <div
       className="min-h-[100dvh] text-white flex flex-col font-sans select-none antialiased transition-colors duration-500 relative"
@@ -130,8 +119,6 @@ export function GameView(props: GameViewProps) {
         reelsBalance={props.profile.reelsBalance}
         userAvatarId={props.profile.avatarId}
         onBackToHome={props.onRequestExitGame}
-        onOpenQuests={props.onOpenQuests}
-        onOpenProfile={props.onOpenProfile}
         onOpenHelp={props.onOpenHelp}
       />
 
@@ -141,152 +128,6 @@ export function GameView(props: GameViewProps) {
       {/* Main Container */}
       <div className="flex-1 flex max-w-7xl w-full mx-auto">
         <main className="flex-1 flex flex-col items-center justify-start p-2 sm:p-4 max-w-2xl mx-auto w-full">
-          {/* Block Blast Skor & Hızlı Akış Barı */}
-          <div className="w-full max-w-md mx-auto my-1 flex items-center justify-between px-3 py-1.5 rounded-2xl bg-gradient-to-r from-cinema-card via-cinema-dark to-cinema-card border border-cinema-border shadow-sm">
-            <div className="flex items-center gap-1.5 text-xs font-black">
-              <Zap className="w-4 h-4 text-amber-400 fill-amber-400" />
-              <span className="text-zinc-400 text-[11px]">SKOR:</span>
-              <span className="text-amber-400 text-sm font-black tracking-wide">
-                {props.totalArcadeScore.toLocaleString()}
-              </span>
-            </div>
-
-            {props.comboStreak > 1 ? (
-              <div className="flex items-center gap-1 text-xs font-black text-rose-400 animate-pulse-fast bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/30">
-                <Flame className="w-3.5 h-3.5 fill-rose-400" />
-                KOMBO x{props.comboStreak}
-              </div>
-            ) : props.isBotThinking ? (
-              <div className="flex items-center gap-1.5 text-xs font-bold text-cyan-400 animate-pulse">
-                <Bot className="w-3.5 h-3.5" />
-                <span>{props.botStatusMessage || "Düşünüyor..."}</span>
-              </div>
-            ) : props.mode === "DAILY_SOLO" ? (
-              <button
-                onClick={props.onOpenDailyShare}
-                className="flex items-center gap-1 text-[11px] font-black text-amber-400 bg-amber-400/10 hover:bg-amber-400/20 px-2.5 py-0.5 rounded-full border border-amber-400/30 transition-all active:scale-95"
-              >
-                <Share2 className="w-3 h-3" />
-                Skor Kartı Paylaş
-              </button>
-            ) : props.allowSteal ? (
-              <div className="flex items-center gap-1 text-[10px] font-black text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20">
-                <ShieldAlert className="w-3 h-3" /> KARE ÇALMA AKTİF
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-black/60 border border-amber-500/30 text-[10px] font-mono font-bold" title="Canlı Rarity Puanları">
-                  <span className="text-cyan-400">X: {props.scoreRarityX}</span>
-                  <span className="text-zinc-600">·</span>
-                  <span className="text-rose-400">O: {props.scoreRarityO}</span>
-                </div>
-                {props.winner === null && (
-                  <button
-                    type="button"
-                    onClick={props.onRequestExitGame}
-                    className="flex items-center gap-1 text-[10px] font-black text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 px-2 py-0.5 rounded-full border border-rose-500/30 transition-all active:scale-95"
-                    title="Maçtan Çekil (Hükmen Yenilgi)"
-                  >
-                    <Flag className="w-2.5 h-2.5 text-rose-400" />
-                    <span>Terk Et</span>
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* 4 Ana Oyun Modu Seçici Sekmeler */}
-          <div className="w-full max-w-md mx-auto my-1 grid grid-cols-4 gap-1 p-1 rounded-2xl bg-cinema-card border border-cinema-border text-xs font-bold text-zinc-400">
-            <button
-              onClick={() => props.onSwitchMode("PASS_AND_PLAY")}
-              className={`py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all ${
-                props.mode === "PASS_AND_PLAY"
-                  ? "bg-amber-400 text-cinema-dark shadow-md font-black"
-                  : "hover:text-white"
-              }`}
-            >
-              <Users className="w-3.5 h-3.5" />
-              <span className="text-[9.5px] font-bold">Pass & Play</span>
-            </button>
-
-            <button
-              onClick={() => props.onSwitchMode("VS_BOT")}
-              className={`py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all ${
-                props.mode === "VS_BOT"
-                  ? "bg-cyan-500 text-cinema-dark shadow-md font-black"
-                  : "hover:text-white"
-              }`}
-            >
-              <Bot className="w-3.5 h-3.5" />
-              <span className="text-[9.5px] font-bold">Yapay Zeka</span>
-            </button>
-
-            <button
-              onClick={() => props.onSwitchMode("ONLINE_ROOM")}
-              className={`py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all ${
-                props.mode === "ONLINE_ROOM"
-                  ? "bg-rose-500 text-white shadow-md font-black"
-                  : "hover:text-white"
-              }`}
-            >
-              <Swords className="w-3.5 h-3.5" />
-              <span className="text-[9.5px] font-bold">Özel Oda</span>
-            </button>
-
-            <button
-              onClick={() => props.onSwitchMode("DAILY_SOLO")}
-              className={`py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all ${
-                props.mode === "DAILY_SOLO"
-                  ? "bg-emerald-500 text-white shadow-md font-black"
-                  : "hover:text-white"
-              }`}
-            >
-              <Calendar className="w-3.5 h-3.5" />
-              <span className="text-[9.5px] font-bold">Günün Kadresi</span>
-            </button>
-          </div>
-
-          {/* Bot Zorluk Seçici & Durum Kartı */}
-          {props.mode === "VS_BOT" && (
-            <div className="w-full max-w-md mx-auto mb-2 flex items-center justify-between px-3 py-1.5 rounded-xl bg-zinc-900/80 border border-zinc-800 text-xs shadow-sm">
-              <div className="flex items-center gap-1.5">
-                <Bot className="w-3.5 h-3.5 text-cyan-400" />
-                <span className="text-zinc-400 text-[11px] font-bold">Bot Zorluğu:</span>
-                {isMatchInProgress && (
-                  <span
-                    className="flex items-center gap-0.5 text-[9px] font-mono text-zinc-400 bg-zinc-800/90 px-1.5 py-0.5 rounded border border-zinc-700/60"
-                    title="Maç esnasında zorluk kilitlidir"
-                  >
-                    <Lock className="w-2.5 h-2.5 text-amber-400" />
-                    <span>Kilitli</span>
-                  </span>
-                )}
-              </div>
-              <div className="flex gap-1">
-                {(["EASY", "MEDIUM", "HARD"] as BotDifficulty[]).map(diff => (
-                  <button
-                    key={diff}
-                    onClick={() => props.onSelectDifficulty(diff)}
-                    title={isMatchInProgress ? "Maç devam ederken zorluk değiştirilemez" : undefined}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-black transition-all ${
-                      props.botDifficulty === diff
-                        ? diff === "HARD"
-                          ? "bg-rose-500 text-white shadow-sm"
-                          : diff === "MEDIUM"
-                          ? "bg-amber-400 text-cinema-dark shadow-sm"
-                          : "bg-emerald-500 text-white shadow-sm"
-                        : isMatchInProgress
-                        ? "bg-zinc-800/40 text-zinc-600 hover:text-zinc-500 cursor-not-allowed"
-                        : "bg-zinc-800 text-zinc-400 hover:text-white"
-                    }`}
-                  >
-                    {diff === "EASY" ? "Acemi" : diff === "MEDIUM" ? "Meraklı" : "Sinefil"}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Özel Oda Bilgi Çubuğu */}
           {props.mode === "ONLINE_ROOM" && props.customRoomCode && (
             <div className="w-full max-w-md mx-auto mb-2 flex items-center justify-between px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs">
@@ -294,26 +135,14 @@ export function GameView(props: GameViewProps) {
                 <Swords className="w-3.5 h-3.5" /> Oda #{props.customRoomCode}
               </span>
               <span className="text-[10px] font-mono text-zinc-400">
-                Süre: {props.customShotClock}s | Çalma: {props.allowSteal ? "AÇIK" : "KAPALI"}
+                {props.customShotClock}s
               </span>
             </div>
           )}
 
           {/* Board Title & Randomizer */}
-          <div className="w-full max-w-xl flex items-center justify-between px-3 mt-1 text-xs">
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-zinc-200">{props.board.title}</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-zinc-800 text-amber-400 border border-zinc-700">
-                {props.board.difficulty}
-              </span>
-            </div>
-            <button
-              onClick={props.onNextBoard}
-              className="flex items-center gap-1 text-[11px] font-bold text-zinc-400 hover:text-amber-400 transition-colors"
-            >
-              <Shuffle className="w-3 h-3" />
-              Farklı Matris
-            </button>
+          <div className="w-full max-w-md px-3 mt-1 text-center text-xs font-bold text-zinc-300 truncate">
+            {props.board.title}
           </div>
 
           {/* Shot Clock */}

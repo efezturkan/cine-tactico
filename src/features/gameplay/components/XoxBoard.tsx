@@ -4,6 +4,8 @@ import React from "react";
 import { GameBoard, CellAnswer, PlayerSymbol, Criterion, Movie } from "@/core";
 import { audio } from "@/utils/audio";
 import { Clapperboard, Award, Calendar, Film, Shield, Sparkles, Lock, User, Compass } from "lucide-react";
+import { assetResolver } from "@/utils/assetResolver";
+import { LocalFace } from "./LocalFace";
 
 interface XoxBoardProps {
   board: GameBoard;
@@ -26,6 +28,11 @@ const CellMoviePoster: React.FC<{
   const { movie, answeredBy, actorName, rarityScore, isLockedNeutral } = cellData;
   const isNeutral = answeredBy === "NEUTRAL" || isLockedNeutral;
   const isPlayerX = answeredBy === "X";
+
+  // Varlık görselini çöz (Ters Kadraj: Aktör portresi, Normal: Film afişi)
+  const cellAsset = actorName
+    ? assetResolver.resolveForActor(actorName)
+    : assetResolver.resolveForMovie(movie);
 
   // Türe göre dinamik atmosfer gradyanı
   const getGenreGradient = () => {
@@ -82,6 +89,15 @@ const CellMoviePoster: React.FC<{
             {movie.year || ""}
           </span>
         </div>
+      )}
+
+      {/* Varlık Görsel Katmanı (varsa saydam sinematik arka plan) */}
+      {cellAsset.isAvailable && cellAsset.src && (
+        <img
+          src={cellAsset.src}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-luminosity pointer-events-none"
+        />
       )}
 
       {/* Karartma Gradyanı */}
@@ -150,18 +166,32 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
     if (crit.type === "DIRECTOR") {
       badgeLabel = "YÖNETMEN";
       badgeColor = "text-amber-400";
+      const asset = assetResolver.resolveForCriterion(crit);
       iconElement = (
-        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-amber-500/25 to-rose-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 font-mono font-black text-[11px] shadow-sm shrink-0 mb-1">
-          {getInitials(crit.label)}
-        </div>
+        <LocalFace
+          src={asset.isAvailable ? asset.src : undefined}
+          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden border border-amber-400/60 shadow-sm shrink-0 mb-1 relative bg-zinc-900"
+          fallback={
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-amber-500/25 to-rose-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 font-mono font-black text-[11px] shadow-sm shrink-0 mb-1">
+              {getInitials(crit.label)}
+            </div>
+          }
+        />
       );
     } else if (crit.type === "ACTOR") {
       badgeLabel = "BAŞROL";
       badgeColor = "text-cyan-400";
+      const asset = assetResolver.resolveForCriterion(crit);
       iconElement = (
-        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-cyan-500/25 to-blue-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 font-mono font-black text-[11px] shadow-sm shrink-0 mb-1">
-          {getInitials(crit.label)}
-        </div>
+        <LocalFace
+          src={asset.isAvailable ? asset.src : undefined}
+          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden border border-cyan-400/60 shadow-sm shrink-0 mb-1 relative bg-zinc-900"
+          fallback={
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-cyan-500/25 to-blue-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 font-mono font-black text-[11px] shadow-sm shrink-0 mb-1">
+              {getInitials(crit.label)}
+            </div>
+          }
+        />
       );
     } else if (crit.type === "AWARD") {
       badgeLabel = "ÖDÜL";
@@ -182,7 +212,12 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
     } else if (crit.type === "MOVIE_INTERSECTION") {
       badgeLabel = "FİLM";
       badgeColor = "text-amber-400";
-      iconElement = (
+      const asset = assetResolver.resolveForCriterion(crit);
+      iconElement = asset.isAvailable && asset.src ? (
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden border border-amber-400/50 shadow-sm shrink-0 mb-1 relative bg-zinc-900">
+          <img src={asset.src} alt="" className="w-full h-full object-cover" />
+        </div>
+      ) : (
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 font-black text-[11px] shadow-sm shrink-0 mb-1">
           <Film className="w-4 h-4 text-amber-400" />
         </div>

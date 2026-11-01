@@ -34,7 +34,7 @@ export interface MoveResult {
 
 export function useGameSession(
   initialBoard: GameBoard,
-  mode: GameMode = "PASS_AND_PLAY",
+  mode: GameMode = "VS_BOT",
   botDifficulty: BotDifficulty = "MEDIUM",
   shotClockLimit: number = 12, // 12s Blitz (Hile ve dış kaynak aramasını önleme standardı)
   allowCellStealing: boolean = false,

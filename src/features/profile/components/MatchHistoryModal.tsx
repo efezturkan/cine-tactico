@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { MatchRecord, UserProfile } from "@/types/profile";
 import { GameBoard, CellAnswer } from "@/core";
-import { PRESET_BOARDS } from "@/data/boards";
 import { findMatchingMovies, getSharedActors } from "@/core";
 import { LetterboxdShareCardModal } from "@/features/profile";
 import { audio } from "@/utils/audio";
@@ -37,75 +36,7 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Profilde kayıtlı maçlar veya ilk giriş için temsili maç geçmişi
-  const matches: MatchRecord[] =
-    profile.matchHistory && profile.matchHistory.length > 0
-      ? profile.matchHistory
-      : [
-          {
-            id: "m_seed_1",
-            timestamp: Date.now() - 1000 * 60 * 12, // 12 dk önce
-            outcome: "VICTORY",
-            mode: "CLASSIC",
-            modeLabel: "Klasik Düello",
-            opponent: {
-              name: "NolanZihni",
-              avatarId: "avatar_director",
-              rankTitle: "Zaman Büken Sinefil",
-            },
-            trophyDelta: 24,
-            scoreRarity: 38,
-            totalArcadeScore: 1850,
-            board: PRESET_BOARDS[0],
-            cells: Array(9).fill(null).map((_, i) => ({
-              movie: {
-                id: `seed_${i}`,
-                title: i % 2 === 0 ? "Inception" : "Pulp Fiction",
-                year: 2010,
-                director: "Christopher Nolan",
-                cast: ["Leonardo DiCaprio"],
-                genres: ["Sci-Fi"],
-                imdbRating: 8.8,
-                hasOscar: true,
-              },
-              answeredBy: i % 2 === 0 ? "X" : "O",
-              timestamp: Date.now(),
-              rarityScore: 12,
-            })),
-          },
-          {
-            id: "m_seed_2",
-            timestamp: Date.now() - 1000 * 60 * 65, // 1 saat önce
-            outcome: "VICTORY",
-            mode: "REVERSE_CAST",
-            modeLabel: "Ters Kadraj",
-            opponent: {
-              name: "LetterboxdEfsanesi",
-              avatarId: "avatar_critics",
-              rankTitle: "5 Yıldız Koleksiyoneri",
-            },
-            trophyDelta: 26,
-            scoreRarity: 42,
-            totalArcadeScore: 2100,
-            board: PRESET_BOARDS[3] || PRESET_BOARDS[0],
-            cells: Array(9).fill(null).map((_, i) => ({
-              movie: {
-                id: `seed_act_${i}`,
-                title: "Cillian Murphy",
-                year: 0,
-                director: "Ortak Aktör",
-                cast: ["Cillian Murphy"],
-                genres: [],
-                imdbRating: 8.0,
-                hasOscar: false,
-              },
-              actorName: "Cillian Murphy",
-              answeredBy: i < 5 ? "X" : "O",
-              timestamp: Date.now(),
-              rarityScore: 15,
-            })),
-          },
-        ];
+  const matches: MatchRecord[] = profile.matchHistory ?? [];
 
   // Seçili maçın incelenen hücresindeki alternatif çözümler
   const getInspectSolutions = (board: GameBoard, cellIdx: number) => {
@@ -289,6 +220,9 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
         ) : (
           /* 2. MAÇ LİSTESİ (Clash Royale Tarzı Karşılaşma Kartları) */
           <div className="my-3 space-y-2.5">
+            {matches.length === 0 ? (
+              <p className="py-10 text-center text-sm text-zinc-500">Henüz maç yok.</p>
+            ) : null}
             {matches.map(m => {
               const isWin = m.outcome === "VICTORY";
               return (

@@ -1,6 +1,6 @@
 # CINE-XOX — DESIGN SYSTEM SPECIFICATION
 **Tarih:** 1 Kasım 2026  
-**Durum:** Palet kilitli. Maç hissi bitmedi. Ekran listesi `docs/product/GAME_FEEL.md`.  
+**Durum:** Palet kilitli. Ekranlar `docs/product/GAME_FEEL.md`.  
 **Kapsam:** Renk Mimarisi, Tipografi Hiyerarşisi, Hareket & Animasyon İlkeleri, Görsel Bileşenler
 
 ---

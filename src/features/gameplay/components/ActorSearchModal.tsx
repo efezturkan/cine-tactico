@@ -1,9 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Criterion } from "@/core";
 import { X, User, Sparkles, Send, ShieldAlert, Film } from "lucide-react";
 import { audio } from "@/utils/audio";
+import { assetResolver } from "@/utils/assetResolver";
+import { LocalFace } from "./LocalFace";
+import { ACTORS_DATABASE } from "@/content/adapters/gameCatalog";
+import { normalizeCinemaString } from "@/core";
 
 interface ActorSearchModalProps {
   isOpen: boolean;
@@ -43,6 +47,20 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
     }
   };
 
+  // Anti-Cheat & Arama: En az 2 harf girilmeden öneri listelenmez
+  const suggestedActors = useMemo(() => {
+    const q = normalizeCinemaString(query.trim());
+    if (q.length < 2) return [];
+    return ACTORS_DATABASE.filter(actor => {
+      const matchPrimary = actor.normalizedName.includes(q);
+      const matchAlias = actor.normalizedAliases.some(alias => alias.includes(q));
+      return matchPrimary || matchAlias;
+    }).slice(0, 5);
+  }, [query]);
+
+  const rowCritAsset = useMemo(() => assetResolver.resolveForCriterion(rowCrit), [rowCrit]);
+  const colCritAsset = useMemo(() => assetResolver.resolveForCriterion(colCrit), [colCrit]);
+
   if (!isOpen) return null;
 
   return (
@@ -57,12 +75,20 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
             </span>
             <div className="flex items-center gap-2 mt-3 flex-wrap">
               <div className="flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded bg-zinc-900 text-zinc-100 border border-zinc-700/80">
-                <Film className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                {rowCritAsset.isAvailable && rowCritAsset.src ? (
+                  <img src={rowCritAsset.src} alt="" className="w-4 h-5 object-cover rounded-sm border border-zinc-700 shrink-0" />
+                ) : (
+                  <Film className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                )}
                 <span>{rowCrit.label}</span>
               </div>
               <span className="text-zinc-600 font-bold text-xs font-mono">×</span>
               <div className="flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded bg-zinc-900 text-zinc-100 border border-zinc-700/80">
-                <Film className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                {colCritAsset.isAvailable && colCritAsset.src ? (
+                  <img src={colCritAsset.src} alt="" className="w-4 h-5 object-cover rounded-sm border border-zinc-700 shrink-0" />
+                ) : (
+                  <Film className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                )}
                 <span>{colCrit.label}</span>
               </div>
             </div>
@@ -111,6 +137,47 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
               </button>
             )}
           </div>
+
+          {/* Dinamik Eşleşen Oyuncu Önerileri (Portreli) */}
+          {suggestedActors.length > 0 && (
+            <div className="flex flex-col gap-1.5 p-2 rounded-xl bg-zinc-900/80 border border-zinc-800 max-h-40 overflow-y-auto">
+              <span className="text-[10px] font-mono text-zinc-500 px-1 font-bold">
+                Eşleşen Oyuncular ({suggestedActors.length}):
+              </span>
+              {suggestedActors.map(actor => {
+                const asset = assetResolver.resolveForActor(actor.id);
+                return (
+                  <button
+                    key={actor.id}
+                    type="button"
+                    onClick={() => {
+                      audio.playSelect();
+                      onSelectActor(actor.primaryName);
+                    }}
+                    className="flex items-center justify-between p-2 rounded-lg bg-zinc-950/80 hover:bg-zinc-800 border border-zinc-800/80 hover:border-cyan-500/50 transition-all text-left group"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <LocalFace
+                        src={asset.isAvailable ? asset.src : undefined}
+                        className="w-7 h-7 rounded-full overflow-hidden border border-cyan-400/50 shrink-0"
+                        fallback={
+                          <div className="w-7 h-7 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-cyan-400 text-[10px] font-mono font-bold shrink-0">
+                            {asset.fallbackText}
+                          </div>
+                        }
+                      />
+                      <span className="text-xs font-mono font-bold text-zinc-200 group-hover:text-cyan-300 truncate">
+                        {actor.primaryName}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-mono text-cyan-400 group-hover:text-cyan-300 font-bold shrink-0">
+                      Seç &rarr;
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           <button
             type="submit"

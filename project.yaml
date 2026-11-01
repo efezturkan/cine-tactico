@@ -9,13 +9,13 @@ orientation: portrait
 
 paths:
   spec: MASTER_SPECIFICATION_v3.md
-  handover: docs/launch/SESSION_HANDOVER_TO_NEW_CHAT.md
+  product: docs/product/MVP.md
   core: src/core
   data: src/data
   tests: src/tests
 
 targets:
-  shot_clock_seconds: 15
+  shot_clock_seconds: 12
   golden_reel_seconds: 12
   min_valid_answers_per_cell: 3
   rarity_cap_when_pool_lt_3: rare
@@ -27,10 +27,10 @@ untouchable:
 
 mvp:
   clock_seconds: 12
-  modes: [VS_BOT, PASS_AND_PLAY, ONLINE_ROOM]
-  next_slice: home-is-play
+  modes: [VS_BOT, ONLINE_ROOM]
+  next_slice: testflight
   docs:
     - docs/product/MVP.md
     - docs/product/GAME_FEEL.md
     - docs/product/DATA_MODEL.md
-    - docs/design/PRODUCTION.md
+    - docs/design/DESIGN_SYSTEM.md

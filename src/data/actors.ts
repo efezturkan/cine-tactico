@@ -5,7 +5,8 @@ import { normalizeCinemaString } from "@/core";
  * CINE-XOX AKTÖR VE TAKMA AD (ALIAS) VERİTABANI
  * DATA_GOVERNANCE.md standardı: Alan bazlı provenance ve doğrulama meta-verisi içerir.
  */
-export const ACTORS_DATABASE: Actor[] = [
+/** Ham kişi listesi. Oyun bunu doğrudan okumaz. */
+export const LEGACY_ACTOR_RECORDS: Actor[] = [
   {
     id: "act_dicaprio",
     primaryName: "Leonardo DiCaprio",
@@ -234,7 +235,7 @@ export const ACTORS_DATABASE: Actor[] = [
  */
 export const ACTOR_ALIAS_MAP: Map<string, string> = new Map();
 
-ACTORS_DATABASE.forEach(actor => {
+LEGACY_ACTOR_RECORDS.forEach(actor => {
   ACTOR_ALIAS_MAP.set(actor.normalizedName, actor.primaryName);
   actor.normalizedAliases.forEach(alias => {
     ACTOR_ALIAS_MAP.set(alias, actor.primaryName);

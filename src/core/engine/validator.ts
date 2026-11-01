@@ -8,7 +8,7 @@ import {
   BASE_CELL_POINTS,
   CultThemeKey,
 } from "../types";
-import { MOVIES_DATABASE } from "@/data/movies";
+import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
 
 export function matchesContentPool(movie: Movie, pool: ContentPoolType = "HYBRID"): boolean {
   if (pool === "HYBRID") return true;

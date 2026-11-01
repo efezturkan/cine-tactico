@@ -217,7 +217,7 @@ Klasik Düello ve Sinefil Konsept modlarında 9 hücre sonuçlandığı halde 3'
   - **Cinephile (Hard):** Geniş kült film havuzu, daha nadir cevaplar.
 - Bot maçları gerçek oyuncu istatistiklerinden ayrı tutulur.
 - **Multiplayer Geçiş Sınırları:** 
-  - İlk aşamada Single Player (Bot) ve Pass & Play (Aynı Cihazda İki Kişi) modları %100 offline olarak tamamlanacaktır.
+  - İlk aşamada Single Player (Bot) %100 offline çalışır. Aynı cihazda iki kişi yoktur: 12 saniyelik shot clock telefon değiştirmeyi imkansız kılar. İkinci oyuncu ayrı telefonda odaya girer.
   - Gerçek bir backend seçilip bağlanmadan sahte "çevrimiçi oda açıldı" illüzyonlarına izin verilmez.
   - Çok oyunculu modlar sunucu tarafı otorite (Server-Authoritative State, senkron shot-clock deadline, 30s reconnect grace period) ile Faz 5'te hayata geçirilecektir.
 
@@ -248,7 +248,6 @@ Oyun, Letterboxd tipografik asaleti, ARRI/RED yönetmen monitörü HUD disiplini
 ### 5.3 Mod Bazlı Zaman Yönetimi (Decoupled Shot-Clock)
 - **Ranked Blitz:** 15s katı shot-clock (Sunucu otoriter deadline).
 - **Solo Bot:** Esnek zamanlayıcı (Süresiz / 15s / 30s seçenekli).
-- **Pass & Play:** 30s veya Süresiz (Cihaz el değiştirme süresi).
 - **Günün Cine-XOX'u:** Tur düşmesi olmayan skor odaklı ileri kronometre (Stopwatch).
 - **Katman Ayrımı:** `ShotClock.tsx` sadece sunum katmanıdır; oyun motoru zamanı epoch ms olarak bağımsız yönetir.
 

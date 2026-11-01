@@ -8,7 +8,7 @@ Telefon dik. Başparmak. Bir dokunuş = bir niyet. Menü katmanı yok.
 
 ## Açılış
 
-Uygulama açılır. Tahta görünür. Oyna. Bot, aynı telefon veya oda. Başka kapı yok.
+Uygulama açılır. Tahta görünür. Oyna. Bot veya başka telefonda oda. Aynı telefonda iki kişi yok: 12 saniyede telefon el değiştirilmez.
 
 ## Hamle
 
@@ -40,7 +40,7 @@ Oyuncu rengi marka rengiyle karışmaz. Altın sadece puan ve makara.
 | Ekran | İş |
 |---|---|
 | Ana | Oyna |
-| Mod | Bot / aynı telefon / oda |
+| Mod | Bot / oda |
 | Maç | 3 eksen + 3 eksen + 9 kare + saat |
 | Arama | Yaz, liste, seç. İpucu sızmaz |
 | Sonuç | Kim kazandı, tekrar, çık |

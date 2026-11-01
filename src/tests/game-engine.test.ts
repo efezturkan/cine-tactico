@@ -1,4 +1,4 @@
-import { MOVIES_DATABASE } from "../data/movies";
+import { MOVIES_DATABASE } from "../content/adapters/gameCatalog";
 import { PRESET_BOARDS, getRandomBoard, createRandomizedBoard, getRandomOpponent, getBoardForMode } from "../data/boards";
 import { MatchRecord } from "../types/profile";
 import {

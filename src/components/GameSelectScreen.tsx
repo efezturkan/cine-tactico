@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import {
   ArrowLeft, Film, Globe, Shuffle, Award, Zap, Swords, Star,
-  Clock, Users, Bot, Lock, ChevronRight, Layers, Play
+  Clock, Bot, Lock, ChevronRight, Layers, Play
 } from "lucide-react";
 import { PRESET_BOARDS } from "@/data/boards";
 import { audio } from "@/utils/audio";
@@ -25,7 +25,7 @@ const BOARD_META = [
     tag: "KLASİK",
     badge: "Tüm Filmler",
     desc: "Nolan, Tarantino, Scorsese. Dijital sinema arşivleriyle 3x3 taktik savaşı.",
-    modes: ["VS_BOT", "PASS_AND_PLAY"],
+    modes: ["VS_BOT"],
     difficulty: "NORMAL",
     isLive: false,
   },
@@ -39,7 +39,7 @@ const BOARD_META = [
     tag: "YILDIZLAR",
     badge: "Yönetmen × Oyuncu",
     desc: "DiCaprio, Pitt, Hanks. Sinema tarihinin en büyük yıldızları saha doluyor.",
-    modes: ["VS_BOT", "PASS_AND_PLAY"],
+    modes: ["VS_BOT"],
     difficulty: "NORMAL",
     isLive: false,
   },
@@ -53,7 +53,7 @@ const BOARD_META = [
     tag: "OSCAR",
     badge: "Tür & Ödüller",
     desc: "En iyi film, tür kesişimleri, 8.5+ puanlı filmlerin karanlık bulmacaları.",
-    modes: ["VS_BOT", "PASS_AND_PLAY"],
+    modes: ["VS_BOT"],
     difficulty: "ZOR",
     isLive: false,
     isDailyPickup: true,
@@ -68,7 +68,7 @@ const BOARD_META = [
     tag: "DC vs MARVEL",
     badge: "⚡ Canlı Etkinlik",
     desc: "Batman mı Spider-Man mi? Evrenler çarpışıyor. Bu haftasonu 2x Makara ödülü.",
-    modes: ["VS_BOT", "PASS_AND_PLAY"],
+    modes: ["VS_BOT"],
     difficulty: "KOLAY",
     isLive: true,
   },
@@ -82,7 +82,7 @@ const BOARD_META = [
     tag: "EPİK SCI-FI",
     badge: "Dune Evreni",
     desc: "Villeneuve, Nolan, Cameron. Bilim kurgunun altın çağı 3x3 arenaya dönüşüyor.",
-    modes: ["VS_BOT", "PASS_AND_PLAY"],
+    modes: ["VS_BOT"],
     difficulty: "ZOR",
     isLive: false,
   },
@@ -96,7 +96,7 @@ const BOARD_META = [
     tag: "90'LAR KÜLT",
     badge: "Kült Arena",
     desc: "Pulp Fiction, Fight Club, Léon. 90'ların tüm karanlığını tahtaya taşı.",
-    modes: ["VS_BOT", "PASS_AND_PLAY"],
+    modes: ["VS_BOT"],
     difficulty: "ZOR",
     isLive: false,
   },
@@ -110,7 +110,7 @@ const BOARD_META = [
     tag: "SİNEMA DEVLERİ",
     badge: "Ağır Sıkletler",
     desc: "DiCaprio, Christian Bale, Brad Pitt. Oscar ve drama devlerinin çatışması.",
-    modes: ["VS_BOT", "PASS_AND_PLAY"],
+    modes: ["VS_BOT"],
     difficulty: "NORMAL",
     isLive: false,
   },
@@ -124,7 +124,7 @@ const BOARD_META = [
     tag: "GERİLİM & GİZEM",
     badge: "Karanlık Zihinler",
     desc: "Fincher, Nolan, Villeneuve. Sinematik zeka oyunları ve başyapıtlar.",
-    modes: ["VS_BOT", "PASS_AND_PLAY"],
+    modes: ["VS_BOT"],
     difficulty: "ZOR",
     isLive: false,
   },
@@ -132,7 +132,6 @@ const BOARD_META = [
 
 const MODE_LABELS: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
   VS_BOT: { label: "Yapay Zeka", icon: <Bot className="w-3 h-3" />, color: "text-cyan-400" },
-  PASS_AND_PLAY: { label: "Pass & Play", icon: <Users className="w-3 h-3" />, color: "text-amber-400" },
   ONLINE_ROOM: { label: "Özel Oda", icon: <Swords className="w-3 h-3" />, color: "text-[#8b151b]" },
 };
 
@@ -170,7 +169,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
     setSelectedIndex(boardIndex);
   };
 
-  const handlePlay = (mode: "VS_BOT" | "PASS_AND_PLAY") => {
+  const handlePlay = (mode: "VS_BOT") => {
     if (selectedIndex === null) return;
     audio.playCombo(3);
     onSelectBoard(selectedIndex, mode);
@@ -352,40 +351,6 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
         <div className="max-w-md mx-auto">
           {selectedMeta ? (
             <>
-              <div className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-2 text-center">
-                MOD SEÇ — {selectedMeta.tag}
-              </div>
-              <div className="grid grid-cols-2 gap-2 mb-2">
-                <button
-                  onClick={() => handlePlay("VS_BOT")}
-                  className="py-3 px-4 rounded-2xl border transition-all active:scale-95 flex items-center justify-center gap-2"
-                  style={{
-                    background: "rgba(6,182,212,0.08)",
-                    borderColor: "rgba(6,182,212,0.3)",
-                  }}
-                >
-                  <Bot className="w-4 h-4 text-cyan-400" />
-                  <div className="text-left">
-                    <div className="text-[10px] font-black text-white">Yapay Zeka</div>
-                    <div className="text-[8px] text-cyan-400">Solo / Pratik</div>
-                  </div>
-                </button>
-                <button
-                  onClick={() => handlePlay("PASS_AND_PLAY")}
-                  className="py-3 px-4 rounded-2xl border transition-all active:scale-95 flex items-center justify-center gap-2"
-                  style={{
-                    background: "rgba(217,119,6,0.08)",
-                    borderColor: "rgba(217,119,6,0.3)",
-                  }}
-                >
-                  <Users className="w-4 h-4 text-amber-400" />
-                  <div className="text-left">
-                    <div className="text-[10px] font-black text-white">Pass & Play</div>
-                    <div className="text-[8px] text-amber-400">Aynı Ekranda</div>
-                  </div>
-                </button>
-              </div>
-
               {/* Big Play Button */}
               <button
                 onClick={() => handlePlay("VS_BOT")}

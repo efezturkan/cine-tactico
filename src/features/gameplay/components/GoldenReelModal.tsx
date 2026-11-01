@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { PlayerSymbol, Movie } from "@/core";
-import { MOVIES_DATABASE } from "@/data/movies";
+import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
+import { movieMatchesTitleQuery } from "@/content/search/movieTitle";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { Sparkles, Trophy, Film, Send, Clock, X, AlertTriangle } from "lucide-react";
@@ -77,7 +78,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
   const filteredMovies = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (q.length < 2) return [];
-    return MOVIES_DATABASE.filter(m => m.title.toLowerCase().includes(q) || m.originalTitle?.toLowerCase().includes(q)).slice(0, 5);
+    return MOVIES_DATABASE.filter((movie) => movieMatchesTitleQuery(movie, q)).slice(0, 5);
   }, [query]);
 
   const handleSelectMovie = (movie: Movie) => {

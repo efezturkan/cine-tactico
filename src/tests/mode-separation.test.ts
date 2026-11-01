@@ -20,11 +20,10 @@ function assert(condition: boolean, desc: string) {
 async function runTests() {
   // 1. Single Player Mode Isolation
   const isSinglePlayer = (mode: GameMode): boolean => {
-    return mode === "VS_BOT" || mode === "PASS_AND_PLAY" || mode === "DAILY_SOLO";
+    return mode === "VS_BOT" || mode === "DAILY_SOLO";
   };
 
   assert(isSinglePlayer("VS_BOT"), "VS_BOT is classified as Single Player mode");
-  assert(isSinglePlayer("PASS_AND_PLAY"), "PASS_AND_PLAY is classified as local mode");
   assert(isSinglePlayer("DAILY_SOLO"), "DAILY_SOLO is classified as Single Player mode");
   assert(!isSinglePlayer("ONLINE_ROOM"), "ONLINE_ROOM is NOT classified as single player");
 
@@ -49,10 +48,6 @@ async function runTests() {
   // VS_BOT guards
   assert(canSelectCell("VS_BOT", "X", false), "VS_BOT: Player can click on turn X");
   assert(!canSelectCell("VS_BOT", "O", false), "VS_BOT: Player CANNOT click while bot is playing turn O");
-
-  // PASS_AND_PLAY (both local turns allowed)
-  assert(canSelectCell("PASS_AND_PLAY", "X", false), "PASS_AND_PLAY: Local player X can click");
-  assert(canSelectCell("PASS_AND_PLAY", "O", false), "PASS_AND_PLAY: Local player O can click");
 
   // ONLINE_ROOM (Host is X, Guest is O)
   assert(canSelectCell("ONLINE_ROOM", "X", true), "ONLINE_ROOM: Host can click on turn X");

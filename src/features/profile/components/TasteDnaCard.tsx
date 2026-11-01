@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { TasteDna } from "@/types/profile";
 import { Dna, Share2, Sparkles, Film, Star, Check, Copy, ExternalLink, Link2, Edit3 } from "lucide-react";
 import { audio } from "@/utils/audio";
+import { assetResolver } from "@/utils/assetResolver";
 
 interface TasteDnaCardProps {
   tasteDna: TasteDna;
@@ -41,6 +42,11 @@ export const TasteDnaCard: React.FC<TasteDnaCardProps> = ({
       setTimeout(() => setCopied(false), 2500);
     }
   };
+
+  const dirAsset = useMemo(
+    () => assetResolver.resolveForDirector(tasteDna.topDirector),
+    [tasteDna.topDirector]
+  );
 
   return (
     <div className="p-4 rounded-3xl bg-gradient-to-br from-indigo-950/60 via-cinema-dark to-purple-950/40 border border-purple-500/30 shadow-xl relative overflow-hidden">
@@ -80,11 +86,20 @@ export const TasteDnaCard: React.FC<TasteDnaCardProps> = ({
 
       {/* Temel Metrikler */}
       <div className="grid grid-cols-3 gap-2 my-3 text-center">
-        <div className="p-2.5 rounded-xl bg-zinc-900/60 border border-zinc-800">
+        <div className="p-2.5 rounded-xl bg-zinc-900/60 border border-zinc-800 flex flex-col items-center justify-center">
           <span className="text-[9px] font-bold text-zinc-500 block">Favori Yönetmen</span>
-          <span className="text-xs font-black text-amber-400 truncate block mt-0.5">
-            {tasteDna.topDirector}
-          </span>
+          <div className="flex items-center gap-1.5 mt-0.5 justify-center max-w-full">
+            {dirAsset.isAvailable && dirAsset.src && (
+              <img
+                src={dirAsset.src}
+                alt=""
+                className="w-4 h-4 rounded-full object-cover border border-amber-400/50 shrink-0"
+              />
+            )}
+            <span className="text-xs font-black text-amber-400 truncate">
+              {tasteDna.topDirector}
+            </span>
+          </div>
         </div>
         <div className="p-2.5 rounded-xl bg-zinc-900/60 border border-zinc-800">
           <span className="text-[9px] font-bold text-zinc-500 block">Lider Tür</span>
