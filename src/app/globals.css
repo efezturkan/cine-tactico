@@ -13,6 +13,10 @@
   --film-dark: #050505;
   --frame-mount: #1e1f28;
   --velvet-glow: rgba(139, 21, 27, 0.25);
+  --player-one: #06b6d4;
+  --player-two: #ff2a55;
+  --state-neutral-lock: #333b4a;
+  --state-error: #ef4444;
 }
 
 html {
@@ -145,4 +149,35 @@ input {
 }
 .tap-scale:active {
   transform: scale(0.96);
+}
+
+/* ─── Move placement slam-stamp animation ───────────────────── */
+@keyframes slam-stamp {
+  0%   { transform: scale(0.94); opacity: 0.85; }
+  60%  { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1.0);  opacity: 1; }
+}
+
+.the-slam-stamp {
+  animation: slam-stamp 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+/* ─── Winning line golden beam ───────────────────────────────── */
+@keyframes winning-beam {
+  0%   { box-shadow: 0 0 0 rgba(245, 158, 11, 0); }
+  50%  { box-shadow: 0 0 24px rgba(245, 158, 11, 0.7), inset 0 0 12px rgba(245, 158, 11, 0.3); }
+  100% { box-shadow: 0 0 16px rgba(217, 119, 6, 0.5), inset 0 0 8px rgba(217, 119, 6, 0.2); }
+}
+
+.winning-beam {
+  animation: winning-beam 1.4s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .the-slam-stamp,
+  .winning-beam,
+  .tap-scale {
+    animation: none !important;
+    transition: none !important;
+  }
 }

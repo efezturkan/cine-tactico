@@ -28,7 +28,7 @@ export const ShotClock: React.FC<ShotClockProps> = ({
   const isPlayerX = currentTurn === "X";
 
   return (
-    <div className="w-full max-w-md mx-auto my-3 px-4">
+    <div className="w-full max-w-md mx-auto my-1.5 sm:my-2.5 px-3 sm:px-4">
       <div className="flex items-center justify-between text-xs mb-1.5 font-bold tracking-wide">
         <div className="flex items-center gap-1.5">
           {isBotThinking ? (

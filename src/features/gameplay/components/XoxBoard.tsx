@@ -56,7 +56,7 @@ const CellMoviePoster: React.FC<{
   }
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-between p-1.5 overflow-hidden rounded-xl select-none">
+    <div className="relative w-full h-full flex flex-col justify-between p-1.5 overflow-hidden rounded-xl select-none the-slam-stamp">
       {/* Ters Kadraj: Aktör Gösterimi */}
       {actorName ? (
         <div
@@ -99,9 +99,9 @@ const CellMoviePoster: React.FC<{
         <div
           className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-black text-[10px] shadow-lg backdrop-blur-sm"
           style={{
-            background: isPlayerX ? "#06b6d4" : "#8b151b",
+            background: isPlayerX ? "#06b6d4" : "#ff2a55",
             color: "white",
-            border: `1.5px solid ${isPlayerX ? "rgba(6,182,212,0.7)" : "rgba(139,21,27,0.7)"}`,
+            border: `1.5px solid ${isPlayerX ? "rgba(6,182,212,0.7)" : "rgba(255,42,85,0.7)"}`,
           }}
         >
           {answeredBy}
@@ -321,8 +321,8 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                 cellBorder = "rgba(6,182,212,0.7)";
                 cellShadow = "0 0 12px rgba(6,182,212,0.25)";
               } else if (isOccupied && !isPlayerX) {
-                cellBorder = "rgba(139,21,27,0.8)";
-                cellShadow = "0 0 12px rgba(139,21,27,0.3)";
+                cellBorder = "rgba(255,42,85,0.7)";
+                cellShadow = "0 0 12px rgba(255,42,85,0.25)";
               }
 
               const isDisabled = winner !== null || isOccupied;
@@ -336,7 +336,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                     onCellClick(cellIndex);
                   }}
                   className={`aspect-square relative rounded-xl overflow-hidden transition-all transform active:scale-95 group ${cellRing} ${
-                    isWinning ? "scale-[1.03] z-10" : ""
+                    isWinning ? "scale-[1.03] z-10 winning-beam" : ""
                   }`}
                   style={{
                     background: cellBg,

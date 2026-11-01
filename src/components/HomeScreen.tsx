@@ -178,8 +178,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         }}
       />
 
-      {/* Ana İçerik Yığını (Sprocket'lardan korunaklı iç dolgu) */}
-      <div className="px-5 relative z-10 flex flex-col gap-2.5 pt-2">
+      {/* Ana İçerik Yığını (Sprocket'lardan korunaklı iç dolgu, alt dock bar için pb-20) */}
+      <div className="px-5 relative z-10 flex flex-col gap-2.5 pt-2 pb-20 sm:pb-8">
 
         {/* ── 1. ÜST STATUS BAR: KİMLİK & KAYNAKLAR (STANDART HUB MİMARİSİ) ─── */}
         <header className="flex items-center justify-between gap-2 py-1">

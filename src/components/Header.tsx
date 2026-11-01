@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header
-      className="w-full max-w-4xl mx-auto px-3 sm:px-4 py-2.5 flex items-center justify-between sticky top-0 z-30"
+      className="w-full max-w-4xl mx-auto px-3 sm:px-4 py-1.5 sm:py-2.5 flex items-center justify-between sticky top-0 z-30"
       style={{
         background: "rgba(7,8,11,0.97)",
         borderBottom: "1px solid #1a1c24",

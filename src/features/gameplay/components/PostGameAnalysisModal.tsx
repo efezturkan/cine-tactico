@@ -159,8 +159,8 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-300 select-none">
-      <div className="w-full max-w-sm bg-[#10182b] border-2 border-amber-400 rounded-3xl p-5 shadow-2xl flex flex-col relative text-white max-h-[95vh] overflow-y-auto custom-scrollbar">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-300 select-none">
+      <div className="w-full max-w-sm bg-[#0e1018] border border-amber-500/40 rounded-3xl p-5 shadow-[0_12px_40px_rgba(0,0,0,0.85)] flex flex-col relative text-white max-h-[95vh] overflow-y-auto custom-scrollbar">
         {/* 1. TAHTA İNCELEME GÖRÜNÜMÜ (CHESS.COM STYLE CELL ANALYSIS) */}
         {showAnalysis ? (
           <div>

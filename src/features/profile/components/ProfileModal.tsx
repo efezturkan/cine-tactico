@@ -218,23 +218,23 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-sm sm:max-w-md bg-[#0a1122] border border-sky-500/20 rounded-3xl p-5 shadow-2xl flex flex-col max-h-[92vh] overflow-y-auto custom-scrollbar relative text-white">
+      <div className="w-full max-w-sm sm:max-w-md bg-[#0e1018] border border-zinc-800 rounded-3xl p-5 shadow-2xl flex flex-col max-h-[92vh] overflow-y-auto custom-scrollbar relative text-white">
         {/* Üst Bar: Profil Başlığı & Kapat Butonu */}
-        <div className="flex items-center justify-between pb-2 border-b border-sky-500/10">
+        <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
           <div className="w-6" /> {/* Dengeleme boşluğu */}
           <h2 className="text-sm font-black tracking-widest text-zinc-300 uppercase font-mono">
             CINE<span className="text-amber-400">XOX</span> PROFİL
           </h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full bg-[#131f38] text-zinc-400 hover:text-white transition-colors"
+            className="p-1.5 rounded-full bg-[#151822] text-zinc-400 hover:text-white transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Sekmeler: Kariyer vs Zevk DNA'sı vs Sinema Işık & Loşluk */}
-        <div className="grid grid-cols-3 gap-1.5 my-3 p-1 rounded-2xl bg-[#0f172a] border border-sky-500/15 text-xs font-bold text-zinc-400">
+        <div className="grid grid-cols-3 gap-1.5 my-3 p-1 rounded-2xl bg-[#07080b] border border-zinc-800 text-xs font-bold text-zinc-400">
           <button
             onClick={() => {
               audio.playSelect();
@@ -242,7 +242,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             }}
             className={`py-1.5 px-1 rounded-xl text-center truncate transition-all ${
               activeTab === "CAREER"
-                ? "bg-amber-400 text-[#080d1a] font-black shadow-md"
+                ? "bg-amber-400 text-cinema-dark font-black shadow-md"
                 : "hover:text-white"
             }`}
           >
@@ -521,7 +521,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 className={`w-20 h-20 rounded-full bg-gradient-to-tr ${currentAvatar.iconBg} flex items-center justify-center text-4xl shadow-xl shadow-sky-500/10 border-2 border-amber-400 relative active:scale-95 transition-transform`}
               >
                 {currentAvatar.emoji}
-                <div className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-amber-400 text-cinema-dark flex items-center justify-center shadow border-2 border-[#0a1122]">
+                <div className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-amber-400 text-cinema-dark flex items-center justify-center shadow border-2 border-[#0e1018]">
                   <Camera className="w-3 h-3 fill-cinema-dark" />
                 </div>
               </button>
@@ -529,7 +529,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             {/* Avatar Seçici Açılır Paneli (Puanla Kilit Açma & Seçme) */}
             {showAvatarPicker && (
-              <div className="w-full p-3 rounded-2xl bg-[#10182b] border border-amber-400/30 mb-3 animate-in fade-in zoom-in-95">
+              <div className="w-full p-3 rounded-2xl bg-[#151822] border border-amber-400/30 mb-3 animate-in fade-in zoom-in-95">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] font-black uppercase tracking-wider text-amber-400">
                     Sinefil İkonları (Avatar Seç / Aç)
@@ -607,7 +607,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     value={tempName}
                     onChange={e => setTempName(e.target.value)}
                     maxLength={16}
-                    className="px-2 py-0.5 bg-[#131f38] border border-amber-400 rounded-lg text-sm font-bold text-white text-center focus:outline-none"
+                    className="px-2 py-0.5 bg-[#151822] border border-amber-400 rounded-lg text-sm font-bold text-white text-center focus:outline-none"
                     autoFocus
                   />
                   <button
@@ -641,13 +641,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             )}
 
             {/* Seviye İlerleme Çubuğu */}
-            <div className="w-48 h-1.5 bg-[#131f38] rounded-full mt-2 overflow-hidden border border-sky-500/20">
+            <div className="w-48 h-1.5 bg-zinc-800 rounded-full mt-2 overflow-hidden border border-zinc-700">
               <div className="w-3/4 h-full bg-gradient-to-r from-amber-400 to-yellow-300 rounded-full" />
             </div>
             <span className="text-[9px] text-zinc-500 font-bold mt-1">750 / 1000 XP</span>
 
             {/* HESAP & KİMLİK DURUMU (Misafir vs Kayıtlı Oyuncu) */}
-            <div className="w-full my-3 p-3 rounded-2xl bg-[#0f172a] border border-zinc-800">
+            <div className="w-full my-3 p-3 rounded-2xl bg-[#07080b] border border-zinc-800">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs ${
@@ -694,7 +694,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     value={linkEmail}
                     onChange={(e) => setLinkEmail(e.target.value)}
                     required
-                    className="w-full px-3 py-1.5 rounded-xl bg-[#131f38] border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400"
+                    className="w-full px-3 py-1.5 rounded-xl bg-[#151822] border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400"
                   />
                   <input
                     type="password"
@@ -703,7 +703,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     onChange={(e) => setLinkPassword(e.target.value)}
                     required
                     minLength={6}
-                    className="w-full px-3 py-1.5 rounded-xl bg-[#131f38] border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400"
+                    className="w-full px-3 py-1.5 rounded-xl bg-[#151822] border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400"
                   />
                   {linkMessage && (
                     <div className={`text-[10px] font-bold p-1.5 rounded-lg text-center ${
@@ -727,7 +727,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <div className="w-full my-3">
               <button
                 onClick={() => setShowDirectorPicker(!showDirectorPicker)}
-                className="w-full py-2.5 px-3 rounded-2xl bg-[#10182b] border border-sky-500/20 hover:border-amber-400/50 flex items-center justify-between text-xs transition-all active:scale-[0.99]"
+                className="w-full py-2.5 px-3 rounded-2xl bg-[#151822] border border-zinc-800 hover:border-amber-400/50 flex items-center justify-between text-xs transition-all active:scale-[0.99]"
               >
                 <div className="flex items-center gap-2">
                   <Clapperboard className="w-4 h-4 text-amber-400" />
@@ -739,7 +739,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
               {/* Yönetmen Seçim Listesi */}
               {showDirectorPicker && (
-                <div className="mt-2 p-2 rounded-2xl bg-[#131f38] border border-amber-400/30 max-h-40 overflow-y-auto custom-scrollbar animate-in fade-in">
+                <div className="mt-2 p-2 rounded-2xl bg-[#151822] border border-amber-400/30 max-h-40 overflow-y-auto custom-scrollbar animate-in fade-in">
                   <span className="text-[9px] font-black uppercase text-amber-400 px-2 block mb-1">
                     Yönetmenini Değiştir
                   </span>
@@ -751,7 +751,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         className={`text-left px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors ${
                           favoriteDirector === dir
                             ? "bg-amber-400 text-cinema-dark font-black"
-                            : "text-zinc-300 hover:bg-[#10182b]"
+                            : "text-zinc-300 hover:bg-zinc-800"
                         }`}
                       >
                         {dir}
@@ -826,7 +826,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   audio.playSelect();
                   setShowMatchHistory(true);
                 }}
-                className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#131f38] to-[#1c2c4d] hover:from-[#182747] hover:to-[#22365e] border border-sky-500/40 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.98]"
+                className="w-full py-3 rounded-2xl bg-gradient-to-r from-zinc-900 to-[#151822] hover:from-zinc-800 hover:to-zinc-900 border border-amber-500/30 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.98]"
               >
                 <History className="w-4 h-4 text-amber-400" />
                 <span>SAVAŞ GEÇMİŞİ &amp; TAHTA İNCELEMESİ</span>
@@ -834,8 +834,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </div>
 
             {/* 7. OYUN AYARLARI (Ses ve Haptik) */}
-            <div className="w-full mt-3 pt-3 border-t border-sky-500/10 space-y-2">
-              <div className="flex items-center justify-between p-2 rounded-xl bg-[#0d1424] border border-zinc-800 text-xs">
+            <div className="w-full mt-3 pt-3 border-t border-zinc-800 space-y-2">
+              <div className="flex items-center justify-between p-2 rounded-xl bg-[#07080b] border border-zinc-800 text-xs">
                 <div className="flex items-center gap-2">
                   {isMuted ? (
                     <VolumeX className="w-4 h-4 text-zinc-500" />

@@ -196,53 +196,53 @@ export function GameView(props: GameViewProps) {
           </div>
 
           {/* 4 Ana Oyun Modu Seçici Sekmeler */}
-          <div className="w-full max-w-md mx-auto my-1.5 grid grid-cols-4 gap-1 p-1 rounded-2xl bg-cinema-card border border-cinema-border text-xs font-bold text-zinc-400">
+          <div className="w-full max-w-md mx-auto my-1 grid grid-cols-4 gap-1 p-1 rounded-2xl bg-cinema-card border border-cinema-border text-xs font-bold text-zinc-400">
             <button
               onClick={() => props.onSwitchMode("PASS_AND_PLAY")}
-              className={`py-2 px-1 rounded-xl flex flex-col items-center justify-center gap-1 transition-all ${
+              className={`py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all ${
                 props.mode === "PASS_AND_PLAY"
                   ? "bg-amber-400 text-cinema-dark shadow-md font-black"
                   : "hover:text-white"
               }`}
             >
               <Users className="w-3.5 h-3.5" />
-              <span className="text-[10px] font-bold">Pass & Play</span>
+              <span className="text-[9.5px] font-bold">Pass & Play</span>
             </button>
 
             <button
               onClick={() => props.onSwitchMode("VS_BOT")}
-              className={`py-2 px-1 rounded-xl flex flex-col items-center justify-center gap-1 transition-all ${
+              className={`py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all ${
                 props.mode === "VS_BOT"
                   ? "bg-cyan-500 text-cinema-dark shadow-md font-black"
                   : "hover:text-white"
               }`}
             >
               <Bot className="w-3.5 h-3.5" />
-              <span className="text-[10px] font-bold">Yapay Zeka</span>
+              <span className="text-[9.5px] font-bold">Yapay Zeka</span>
             </button>
 
             <button
               onClick={() => props.onSwitchMode("ONLINE_ROOM")}
-              className={`py-2 px-1 rounded-xl flex flex-col items-center justify-center gap-1 transition-all ${
+              className={`py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all ${
                 props.mode === "ONLINE_ROOM"
                   ? "bg-rose-500 text-white shadow-md font-black"
                   : "hover:text-white"
               }`}
             >
               <Swords className="w-3.5 h-3.5" />
-              <span className="text-[10px] font-bold">Özel Oda</span>
+              <span className="text-[9.5px] font-bold">Özel Oda</span>
             </button>
 
             <button
               onClick={() => props.onSwitchMode("DAILY_SOLO")}
-              className={`py-2 px-1 rounded-xl flex flex-col items-center justify-center gap-1 transition-all ${
+              className={`py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all ${
                 props.mode === "DAILY_SOLO"
                   ? "bg-emerald-500 text-white shadow-md font-black"
                   : "hover:text-white"
               }`}
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span className="text-[10px] font-bold">Günün Kadresi</span>
+              <span className="text-[9.5px] font-bold">Günün Kadresi</span>
             </button>
           </div>
 
