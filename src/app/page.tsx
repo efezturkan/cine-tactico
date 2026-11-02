@@ -211,6 +211,8 @@ function CineXoxApp() {
     }
   }, []);
 
+  const [isGameIntroActive, setIsGameIntroActive] = useState<boolean>(true);
+
   // Oyun Oturumu (Game Session Hook)
   const {
     board,
@@ -243,7 +245,7 @@ function CineXoxApp() {
     botDifficulty,
     customShotClock,
     allowSteal,
-    currentView === "GAME" && !showMatchFound
+    currentView === "GAME" && !showMatchFound && !isGameIntroActive
   );
 
   const isMatchInProgress = winner === null && cells.some(c => c !== null);
@@ -676,6 +678,7 @@ function CineXoxApp() {
     setBoardIndex(2);
     setBoard(PRESET_BOARDS[2]);
     resetGame(PRESET_BOARDS[2]);
+    setIsGameIntroActive(true);
     setCurrentView("GAME");
   };
 
@@ -718,6 +721,7 @@ function CineXoxApp() {
 
   const handleMatchFoundCountdownComplete = () => {
     setShowMatchFound(false);
+    setIsGameIntroActive(true);
     setCurrentView("GAME");
   };
 
@@ -929,6 +933,8 @@ function CineXoxApp() {
         pendingSwitchMode={pendingSwitchMode}
         pendingOpponent={pendingOpponent}
         pendingBoardIndex={pendingBoardIndex}
+        isIntroActive={isGameIntroActive}
+        onCompleteIntro={() => setIsGameIntroActive(false)}
         onToggleMute={handleToggleMute}
         onHeaderReset={handleHeaderReset}
         onRequestExitGame={handleRequestExitGame}
@@ -968,6 +974,7 @@ function CineXoxApp() {
           setBoardIndex(nextIdx);
           setBoard(nextBoard);
           resetGame(nextBoard);
+          setIsGameIntroActive(true);
         }}
         onBackToHome={() => {
           audio.stopAll();

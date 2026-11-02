@@ -61,6 +61,8 @@ export interface GameViewProps {
   pendingSwitchMode: GameMode | null;
   pendingOpponent: BotOpponentProfile;
   pendingBoardIndex: number;
+  isIntroActive?: boolean;
+  onCompleteIntro?: () => void;
 
   onToggleMute: () => void;
   onHeaderReset: () => void;
@@ -87,6 +89,14 @@ export interface GameViewProps {
 export function GameView(props: GameViewProps) {
   const [showClapper, setShowClapper] = useState(true);
 
+  const isIntro = props.isIntroActive !== undefined ? props.isIntroActive : showClapper;
+  const handleIntroComplete = () => {
+    setShowClapper(false);
+    if (props.onCompleteIntro) {
+      props.onCompleteIntro();
+    }
+  };
+
   const gameAmbience = { ...DEFAULT_AMBIENCE, ...(props.profile?.ambience || {}) };
   const gameTheme = (gameAmbience.theme && AMBIENCE_THEMES[gameAmbience.theme]) || AMBIENCE_THEMES.velvet_red;
   const safeGameDimness =
@@ -102,10 +112,10 @@ export function GameView(props: GameViewProps) {
         filter: `brightness(${Math.min(1.1, Math.max(0.65, safeGameDimness / 85))})`,
       }}
     >
-      {/* Maç Başı Klaket Geri Sayımı (3-2-1-AKSİYON, Dokunarak Geçilebilir) */}
-      {showClapper && (
+      {/* Maç Başı First Look & Klaket Animasyonu (Tahtayı İnceleme + 35mm Klaket Çarpması, Dokunarak Geçilebilir) */}
+      {isIntro && (
         <ClapperCountdown
-          onComplete={() => setShowClapper(false)}
+          onComplete={handleIntroComplete}
           isMuted={props.muted}
         />
       )}
