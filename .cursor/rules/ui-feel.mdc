@@ -6,7 +6,8 @@ alwaysApply: false
 
 # UI and feel
 
-Visual mix: Chess.com clarity, Letterboxd culture, Balatro slam, 35mm analog. Tokens live in `tailwind.config.ts`.
+Supreme spec: `docs/design/DESIGN.md` (CineXOX Tasarım Anayasası). Every UI change must conform to its rules.
+Visual mix: Letterboxd calm + Block Blast one-touch clarity + Wordle daily ritual + 35mm analog. Tokens live in `tailwind.config.ts`.
 
 Do not rebuild these without an explicit request:
 - `MatchmakingQueueModal.tsx` (gold reel animation timings)

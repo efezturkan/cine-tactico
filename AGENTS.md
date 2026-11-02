@@ -9,11 +9,12 @@ You are the studio. Stay small: one mechanic at a time, spec before code, tests 
 ## Constitution
 
 1. `MASTER_SPECIFICATION_v3.md` wins on rules. Do not reintroduce cell stealing.
-2. Offline bot must keep working without network. Do not add same-phone pass-and-play.
-3. Multiplayer uses the same `src/core` engine as single player.
-4. Cosmetics never grant competitive advantage.
-5. No IMDb/TMDb licensed fields or poster CDNs. Provenance lives on movie data.
-6. Do not rebuild the reel modal, shot clock, or 4x4 board structure.
+2. `docs/design/DESIGN.md` (CineXOX Tasarım Anayasası) wins on UI, aesthetics, feel, and language. Read before UI work.
+3. Offline bot must keep working without network. Do not add same-phone pass-and-play.
+4. Multiplayer uses the same `src/core` engine as single player.
+5. Cosmetics never grant competitive advantage.
+6. No IMDb/TMDb licensed fields or poster CDNs. Provenance lives on movie data.
+7. Do not rebuild the reel modal, shot clock, or 4x4 board structure.
 
 ## Where to work
 
