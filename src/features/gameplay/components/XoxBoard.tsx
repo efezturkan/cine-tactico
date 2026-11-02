@@ -472,11 +472,6 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                     >
                       {introPhase}
                     </div>
-
-                    {/* Rakamın Hemen Altına Gömülü TAP TO SKIP */}
-                    <span className="text-[6.5px] sm:text-[7.5px] md:text-[8.5px] font-mono tracking-widest text-[#D9A441]/90 uppercase mt-0.5 z-10 font-bold">
-                      TAP TO SKIP
-                    </span>
                   </div>
                 </div>
               )}

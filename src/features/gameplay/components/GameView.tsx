@@ -117,7 +117,7 @@ export function GameView(props: GameViewProps) {
         ["--game-arena-size" as string]: "min(94vw, calc(100dvh - 120px), 720px)",
       }}
     >
-      {/* Maç Başı First Look & Klaket Animasyonu (Tahtayı İnceleme + 35mm Klaket Çarpması, Dokunarak Geçilebilir) */}
+      {/* Maç Başı First Look & Klaket Animasyonu (Tahtayı İnceleme + 35mm Klaket Çarpması, Dokunmaya Duyarsız Doğal Akış) */}
       {isIntro && (
         <ClapperCountdown
           onComplete={handleIntroComplete}
