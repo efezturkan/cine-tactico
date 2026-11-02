@@ -162,7 +162,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             title: r.rank_title || "Sinefil Düellocusu",
             trophies: r.rating,
             wins: r.wins,
-            avatarEmoji: avatar.emoji,
+            avatarEmoji: avatar?.emoji || "🎬",
             badgeColor,
             league,
           };

@@ -5,6 +5,8 @@ import { PlayerSymbol, GameBoard, CellAnswer } from "@/core";
 import { UserProfile } from "@/types/profile";
 import { RotateCcw, Home } from "lucide-react";
 import { audio } from "@/utils/audio";
+import { MiniKadrajPreview } from "@/components/ui/MiniKadrajPreview";
+import { Button } from "@/components/ui/Button";
 
 interface PostGameAnalysisModalProps {
   winner: PlayerSymbol | "DRAW" | null;
@@ -54,6 +56,10 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
         )
       : 5;
 
+  const displayTitle =
+    board.displayTitle ||
+    (board.title.includes(":") ? board.title.split(":")[0].trim() : board.title);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
       <div
@@ -76,7 +82,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
         {/* Top Micro Tag */}
         <div className="text-center mb-1">
           <span className="text-[9px] font-mono font-bold tracking-[0.25em] text-[#D9A441] uppercase">
-            CINE-XOX · 35MM
+            35MM · 24 FPS
           </span>
         </div>
 
@@ -91,16 +97,27 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                 : "text-[#E8E6E1]"
             }`}
           >
-            {isVictory ? "Kesin!" : isDraw ? "Berabere" : "Kurgu masasına dönüyoruz."}
+            {isVictory ? "Kesin!" : isDraw ? "Kör kadraj" : "Kurgu masasına dönüyoruz."}
           </h2>
 
+          {isDraw && (
+            <p className="text-xs text-[#8A8F9A] font-sans mt-0.5">
+              Berabere.
+            </p>
+          )}
+
           <p className="text-xs text-[#8A8F9A] font-sans truncate mt-1 px-4">
-            {board.title}
+            {displayTitle}
           </p>
         </div>
 
+        {/* Centered MiniKadrajPreview */}
+        <div className="flex justify-center my-2">
+          <MiniKadrajPreview cells={cells} size="md" />
+        </div>
+
         {/* Clean Match Summary Card */}
-        <div className="w-full my-4 py-3 px-2 rounded-xl bg-[#0F1115] border border-white/5 grid grid-cols-3 gap-1 text-center">
+        <div className="w-full my-3 py-3 px-2 rounded-xl bg-[#0F1115] border border-white/5 grid grid-cols-3 gap-1 text-center">
           <div>
             <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
               SEN (X)
@@ -127,37 +144,38 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
           </div>
         </div>
 
-        {/* Primary Action Button: "Tekrar çek" */}
-        <button
-          type="button"
-          data-testid="final-frame-play-again-btn"
-          onClick={() => {
-            audio.playSelect();
-            onPlayAgain();
-          }}
-          className="w-full py-3.5 px-4 rounded-xl bg-[#D9A441] hover:bg-[#c99535] text-[#0B0D12] font-black text-sm tracking-wider uppercase flex items-center justify-center gap-2 mb-2 transition-all active:scale-[0.98] shadow-md"
-        >
-          <RotateCcw className="w-4 h-4 stroke-[2.5]" />
-          <span>Tekrar çek</span>
-        </button>
+        {/* Actions */}
+        <div className="flex flex-col gap-2 mt-1">
+          <Button
+            variant="primary"
+            data-testid="final-frame-play-again-btn"
+            onClick={() => {
+              audio.playSelect();
+              onPlayAgain();
+            }}
+            className="w-full"
+          >
+            <RotateCcw className="w-4 h-4 stroke-[2.5]" />
+            <span>Yeni çekim</span>
+          </Button>
 
-        {/* Secondary Action Button: "Gişe'ye dön" */}
-        <button
-          type="button"
-          onClick={() => {
-            audio.playSelect();
-            if (onBackToHome) onBackToHome();
-          }}
-          className="w-full py-3 px-4 rounded-xl bg-[#181B22] hover:bg-[#20242D] border border-white/10 text-[#E8E6E1] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-[0.98]"
-        >
-          <Home className="w-3.5 h-3.5 text-[#8A8F9A]" />
-          <span>Gişe&apos;ye dön</span>
-        </button>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              audio.playSelect();
+              if (onBackToHome) onBackToHome();
+            }}
+            className="w-full"
+          >
+            <Home className="w-4 h-4 text-[#8A8F9A]" />
+            <span>Gişe&apos;ye dön</span>
+          </Button>
+        </div>
 
         {/* Bottom Micro Tag: 30% Opacity */}
         <div className="text-center mt-3">
           <span className="text-[8px] font-mono tracking-widest text-[#8A8F9A] opacity-30 uppercase">
-            35MM · 24 FPS
+            CineXOX · 35MM
           </span>
         </div>
       </div>

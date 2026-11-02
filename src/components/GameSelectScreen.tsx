@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { PRESET_BOARDS } from "@/data/boards";
 import { audio } from "@/utils/audio";
+import { BottomNav } from "./ui/BottomNav";
 
 export type BoardCategory = "Hepsi" | "Karakter" | "Ters Kadraj" | "Konsept" | "Klasik";
 
@@ -193,7 +194,7 @@ const POSTERS_DATA: BoardPosterMeta[] = [
     index: 16,
     reel: "17",
     category: "Karakter",
-    badge: "CO-STARS",
+    badge: "KARAKTER",
     desc: "Aynı sette devleşen efsane aktör kadroları",
     icon: Star,
     tone: "from-violet-500/15 via-transparent to-transparent",
@@ -267,38 +268,15 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
         }}
       />
 
-      {/* Top Bar */}
-      <header className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-2 border-b border-white/5 bg-[#0B0D12]/95 backdrop-blur-sm min-h-[52px]">
-        <button
-          type="button"
-          onClick={() => {
-            audio.playSelect();
-            onBack();
-          }}
-          className="flex items-center gap-1.5 text-zinc-400 hover:text-white transition-colors active:scale-95 px-2 py-1 -ml-2 rounded-lg min-h-[44px]"
-        >
-          <ArrowLeft className="w-4 h-4 text-[#D9A441]" />
-          <span className="text-[11px] font-mono font-bold uppercase tracking-wider">Gişe</span>
-        </button>
-
-        <div className="text-center">
-          <div className="text-[9px] font-mono font-bold text-[#D9A441] tracking-[0.25em] uppercase">
-            CINE-XOX · 35MM
-          </div>
-          <h1 className="text-base sm:text-lg font-serif font-bold text-[#E8E6E1] tracking-wider uppercase">
-            Vizyondakiler
-          </h1>
-        </div>
-
-        <div className="text-right">
-          <span className="text-[9px] font-mono text-zinc-500 tracking-wider font-semibold">
-            {filteredPosters.length} AFİŞ
-          </span>
-        </div>
+      {/* 7B.1 Top Bar: Serif Başlık Ortada, Geri Oku ve Rozetler Yok */}
+      <header className="relative z-20 flex items-center justify-center px-4 py-3 border-b border-white/5 bg-[#0B0D12]/95 backdrop-blur-sm min-h-[52px]">
+        <h1 className="text-lg sm:text-xl font-serif font-bold text-[#E8E6E1] tracking-wider text-center">
+          Vizyondakiler
+        </h1>
       </header>
 
-      {/* Filter Strip */}
-      <div className="relative z-20 flex items-center gap-1.5 overflow-x-auto scrollbar-none px-4 sm:px-6 py-2 border-b border-white/5 bg-[#0D0F15]">
+      {/* 7B.2 Filter Strip: Sans, Normal Harf */}
+      <div className="relative z-20 flex items-center gap-2 overflow-x-auto scrollbar-none px-4 sm:px-6 py-2.5 border-b border-white/5 bg-[#0D0F15]">
         {CATEGORIES.map((cat) => {
           const isActive = activeCategory === cat;
           return (
@@ -309,10 +287,10 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
                 audio.playSelect();
                 setActiveCategory(cat);
               }}
-              className={`px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider whitespace-nowrap transition-all active:scale-95 ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-sans font-medium normal-case whitespace-nowrap transition-all active:scale-95 ${
                 isActive
                   ? "bg-[#181B22] text-[#D9A441] border border-[#D9A441]/50 shadow-sm"
-                  : "bg-[#12141A] text-zinc-400 border border-white/5 hover:text-white hover:border-white/15"
+                  : "bg-transparent text-[#8A8F9A] border border-white/10 hover:text-[#E8E6E1] hover:border-white/20"
               }`}
             >
               {cat}
@@ -332,7 +310,13 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
           <div className="grid grid-cols-2 gap-3">
             {filteredPosters.map((poster) => {
               const board = PRESET_BOARDS[poster.index];
-              const Icon = poster.icon;
+              const fullTitle = board?.title || `Makara #${poster.reel}`;
+              const displayTitle = fullTitle.includes(":")
+                ? fullTitle.split(":")[0].trim()
+                : fullTitle;
+              const subTitle = fullTitle.includes(":")
+                ? fullTitle.split(":")[1].trim()
+                : poster.desc;
 
               return (
                 <button
@@ -340,13 +324,13 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
                   type="button"
                   data-poster-card="true"
                   onClick={() => handleLaunchPoster(poster)}
-                  className="group relative aspect-[3/4] rounded-xl overflow-hidden text-left p-3 flex flex-col justify-between bg-[#12141A] border border-white/10 hover:border-[#D9A441]/50 transition-all duration-200 active:scale-[0.98] shadow-md"
+                  className="group relative aspect-[3/4] rounded-xl overflow-hidden text-left p-3.5 flex flex-col justify-between bg-[#12141A] border border-white/10 hover:border-[#D9A441]/50 transition-all duration-200 active:scale-[0.98] shadow-md"
                 >
                   {/* Mood Gradient Accent */}
                   <div
                     className={`absolute inset-0 bg-gradient-to-b ${poster.tone} pointer-events-none`}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D12] via-transparent to-transparent opacity-90 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D12] via-[#0B0D12]/40 to-transparent opacity-95 pointer-events-none" />
 
                   {/* Viewfinder corner brackets */}
                   <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t border-l border-white/20 pointer-events-none" />
@@ -354,39 +338,29 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
                   <div className="absolute bottom-1.5 left-1.5 w-2 h-2 border-b border-l border-white/20 pointer-events-none" />
                   <div className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b border-r border-white/20 pointer-events-none" />
 
-                  {/* Top Poster Meta */}
+                  {/* Top Poster Meta: Makara No + Rozet */}
                   <div className="relative z-10 flex items-center justify-between w-full">
                     <span className="font-mono text-[9px] font-semibold text-[#D9A441]/90 tracking-widest">
                       MAKARA #{poster.reel}
                     </span>
-                    <span className="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold tracking-wider uppercase bg-white/5 border border-white/10 text-zinc-300">
+                    <span className="px-1.5 py-0.5 rounded text-[8px] font-sans font-semibold uppercase bg-white/5 border border-white/10 text-[#8A8F9A]">
                       {poster.badge}
                     </span>
                   </div>
 
-                  {/* Center Cinema Reel Emblem */}
-                  <div className="relative z-10 flex items-center justify-center my-auto py-2">
-                    <div className="w-12 h-12 rounded-full border border-white/5 bg-white/[0.02] flex items-center justify-center text-white/30 group-hover:text-[#D9A441] group-hover:border-[#D9A441]/40 group-hover:scale-105 transition-all duration-200 shadow-inner">
-                      <Icon className="w-5 h-5 stroke-[1.7]" />
-                    </div>
-                  </div>
-
-                  {/* Bottom Content: Title & Action */}
+                  {/* 7B.3 Center/Bottom Content: Büyük Serif displayTitle, Açıklama, Sağ Altta Ok */}
                   <div className="relative z-10 w-full mt-auto">
-                    <h2 className="font-serif font-bold text-white text-xs sm:text-sm leading-tight line-clamp-2 group-hover:text-[#D9A441] transition-colors">
-                      {board?.title || `Makara #${poster.reel}`}
+                    <h2 className="font-serif font-bold text-[#E8E6E1] text-base sm:text-lg leading-snug group-hover:text-[#D9A441] transition-colors line-clamp-2">
+                      {displayTitle}
                     </h2>
-                    <p className="text-[9px] text-zinc-400 font-sans truncate mt-1">
-                      {poster.desc}
+                    <p className="text-[10px] sm:text-xs text-[#8A8F9A] font-sans line-clamp-2 mt-1 leading-tight">
+                      {subTitle}
                     </p>
 
-                    {/* Card Action Row */}
-                    <div className="mt-2 pt-1.5 border-t border-white/5 flex items-center justify-between">
-                      <span className="text-[8px] font-mono text-zinc-500 font-medium tracking-wider">
-                        3×3 KADRAJ
-                      </span>
-                      <span className="text-[8px] font-mono text-[#D9A441] font-bold tracking-wider flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
-                        BAŞLAT →
+                    {/* Sağ Altta Küçük Ok */}
+                    <div className="mt-2.5 pt-1.5 border-t border-white/5 flex items-center justify-end">
+                      <span className="text-[#D9A441] font-bold text-sm group-hover:translate-x-1 transition-transform">
+                        &rarr;
                       </span>
                     </div>
                   </div>
@@ -398,74 +372,19 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
       </main>
 
       {/* Bottom Bar — 4 tabs (Vizyondakiler active in gold) */}
-      <nav
-        className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around px-3 pt-2 bg-[#0B0D12]/95 backdrop-blur-md border-t border-white/5 max-w-lg mx-auto"
-        style={{
-          paddingBottom: "max(0.55rem, env(safe-area-inset-bottom))",
+      <BottomNav
+        activeTab="GAME_SELECT"
+        onSelectTab={(tabId) => {
+          if (tabId === "HOME") {
+            onBack();
+          } else if (tabId === "CUSTOM_ROOM") {
+            onOpenCustomLobby();
+          } else if (tabId === "PROFILE") {
+            if (onOpenProfileModal) onOpenProfileModal();
+            else onBack();
+          }
         }}
-      >
-        {[
-          {
-            label: "Gişe",
-            icon: Ticket,
-            active: false,
-            act: () => {
-              audio.playSelect();
-              onBack();
-            },
-          },
-          {
-            label: "Vizyondakiler",
-            icon: Film,
-            active: true,
-            act: undefined,
-          },
-          {
-            label: "Özel Gösterim",
-            icon: Swords,
-            active: false,
-            act: () => {
-              audio.playSelect();
-              onOpenCustomLobby();
-            },
-          },
-          {
-            label: "Sinefil Kartı",
-            icon: User,
-            active: false,
-            act: () => {
-              audio.playSelect();
-              if (onOpenProfileModal) onOpenProfileModal();
-              else onBack();
-            },
-          },
-        ].map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.label}
-              type="button"
-              onClick={tab.act}
-              className={`flex flex-col items-center justify-center min-h-[44px] min-w-[56px] transition-all active:scale-95 px-3 py-1 rounded-xl ${
-                tab.active
-                  ? "bg-[#181B22] border border-[#D9A441]/40"
-                  : "hover:bg-white/5 border border-transparent"
-              }`}
-            >
-              <Icon
-                className="w-4 h-4 stroke-[1.8]"
-                style={{ color: tab.active ? "#D9A441" : "#8A8F9A" }}
-              />
-              <span
-                className="text-[9px] font-bold mt-0.5 tracking-wide"
-                style={{ color: tab.active ? "#D9A441" : "#8A8F9A" }}
-              >
-                {tab.label}
-              </span>
-            </button>
-          );
-        })}
-      </nav>
+      />
     </div>
   );
 };

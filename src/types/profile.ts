@@ -173,26 +173,27 @@ export interface UserProfile {
 export interface AvatarOption {
   id: string;
   label: string;
-  emoji: string;
-  iconBg: string;
+  iconName: "Clapperboard" | "Star" | "Eye" | "Rocket" | "Search" | "Film" | "Camera" | "Trophy";
   cost: number;
-  description: string;
+  emoji?: string;
+  iconBg?: string;
+  description?: string;
 }
 
 export const AVATAR_OPTIONS: AvatarOption[] = [
-  { id: "avatar_director", label: "Yönetmen", emoji: "🎬", iconBg: "from-amber-500 to-rose-500", cost: 0, description: "Kadrajın efendisi" },
-  { id: "avatar_actor", label: "Yıldız Oyuncu", emoji: "🌟", iconBg: "from-indigo-500 to-cyan-500", cost: 0, description: "Işıklar altında bir yıldız" },
-  { id: "avatar_noir", label: "Dedektif", emoji: "🕵️", iconBg: "from-zinc-700 to-zinc-900", cost: 150, description: "Karanlık sokaklar & neo-noir" },
-  { id: "avatar_scifi", label: "Uzay Gezgini", emoji: "🚀", iconBg: "from-cyan-500 to-blue-600", cost: 250, description: "Yıldızlararası vizyon" },
-  { id: "avatar_critics", label: "Festival Jürisi", emoji: "🧐", iconBg: "from-yellow-400 to-amber-600", cost: 350, description: "Cannes & Venedik seçkisi" },
-  { id: "avatar_popcorn", label: "Mısır Sever", emoji: "🍿", iconBg: "from-rose-500 to-pink-500", cost: 150, description: "Keyifli gişe izleyicisi" },
-  { id: "avatar_camera", label: "35mm Kameraman", emoji: "🎥", iconBg: "from-amber-600 to-yellow-700", cost: 450, description: "Analog film tutkunu" },
-  { id: "avatar_oscar", label: "Altın Heykelcik", emoji: "🏆", iconBg: "from-amber-400 to-yellow-500", cost: 600, description: "Akademi prestiji" },
+  { id: "avatar_director", label: "Klaket", iconName: "Clapperboard", cost: 0, emoji: "🎬", iconBg: "from-amber-600 to-amber-900", description: "Klasik yönetmen klaketi" },
+  { id: "avatar_actor", label: "Yıldız", iconName: "Star", cost: 0, emoji: "⭐", iconBg: "from-yellow-500 to-yellow-800", description: "Hollywood yıldızı" },
+  { id: "avatar_lens", label: "Mercek", iconName: "Eye", cost: 0, emoji: "👁️", iconBg: "from-blue-600 to-indigo-900", description: "Sinematik bakış" },
+  { id: "avatar_scifi", label: "Roket", iconName: "Rocket", cost: 0, emoji: "🚀", iconBg: "from-cyan-600 to-blue-900", description: "Bilimkurgu vizyoneri" },
+  { id: "avatar_noir", label: "Dedektif", iconName: "Search", cost: 0, emoji: "🔍", iconBg: "from-zinc-600 to-zinc-900", description: "Film-noir dedektifi" },
+  { id: "avatar_popcorn", label: "Mısır", iconName: "Film", cost: 0, emoji: "🍿", iconBg: "from-red-600 to-amber-900", description: "Sinema salonu ruhu" },
+  { id: "avatar_camera", label: "Kamera", iconName: "Camera", cost: 0, emoji: "🎥", iconBg: "from-purple-600 to-indigo-950", description: "35mm kamera" },
+  { id: "avatar_oscar", label: "Kupa", iconName: "Trophy", cost: 0, emoji: "🏆", iconBg: "from-amber-500 to-yellow-900", description: "Akademi ödülü" },
 ];
 
 export function calculateRank(wins: number): { title: string; level: number; nextWins: number } {
-  if (wins >= 30) return { title: "Oscar Kazanan Yönetmen 🏆", level: 4, nextWins: 50 };
-  if (wins >= 15) return { title: "Cannes Festival Jürisi 🎖️", level: 3, nextWins: 30 };
-  if (wins >= 5) return { title: "Bağımsız Sinemacı 🎬", level: 2, nextWins: 15 };
-  return { title: "Bilet Kontrolörü 🍿", level: 1, nextWins: 5 };
+  if (wins >= 30) return { title: "Usta Yönetmen", level: 4, nextWins: 50 };
+  if (wins >= 15) return { title: "Festival Jürisi", level: 3, nextWins: 30 };
+  if (wins >= 5) return { title: "Bağımsız Sinemacı", level: 2, nextWins: 15 };
+  return { title: "Bilet Kontrolörü", level: 1, nextWins: 5 };
 }

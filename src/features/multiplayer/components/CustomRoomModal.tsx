@@ -1,23 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { CustomRoomSettings, GameBoard } from "@/core";
 import { UserProfile } from "@/types/profile";
 import { PRESET_BOARDS } from "@/data/boards";
-import { isSupabaseConfigured, joinRealtimeRoom } from "@/backend";
+import { isSupabaseConfigured } from "@/backend";
 import { audio } from "@/utils/audio";
-import {
-  Trophy,
-  Swords,
-  Film,
-  Copy,
-  Check,
-  X,
-  Lock,
-  Globe,
-} from "lucide-react";
+import { haptic } from "@/utils/haptics";
+import { Button } from "@/components/ui/Button";
+import { Copy, Share2, Check, X, ChevronRight } from "lucide-react";
 
-// Kriptografik Güvenli 6 Karakterli Kod Üreteci (Unambiguous Alfanümerik: 0/O, 1/I hariç)
+// Kriptografik Güvenli 6 Karakterli Kod Üreteci (Unambiguous: 0/O, 1/I hariç)
 function generateSecureRoomCode(): string {
   const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
   if (typeof window !== "undefined" && window.crypto && window.crypto.getRandomValues) {
@@ -37,163 +30,113 @@ function generateSecureRoomCode(): string {
 }
 
 interface CustomRoomModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  isPage?: boolean;
+  onClose?: () => void;
   onCreateRoom: (settings: CustomRoomSettings, selectedBoard: GameBoard) => void;
   onJoinRoom?: (roomCode: string, settings: CustomRoomSettings, selectedBoard: GameBoard) => void;
   currentUser?: UserProfile;
 }
 
 export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
-  isOpen,
+  isOpen = true,
+  isPage = false,
   onClose,
   onCreateRoom,
   onJoinRoom,
   currentUser,
 }) => {
-  // 1. Ana Sekme: 1v1 Özel Oda vs 8 Kişilik Turnuva
-  const [mainTab, setMainTab] = useState<"1V1_ROOM" | "TOURNAMENT">("1V1_ROOM");
+  // 7C.2 İki seçenek: "Oda kur" ve "Koda katıl"
+  const [subTab, setSubTab] = useState<"CREATE" | "JOIN">("CREATE");
 
-  // 2. Alt Sekmeler: Kur vs Katıl
-  const [roomSubTab, setRoomSubTab] = useState<"CREATE" | "JOIN">("CREATE");
-  const [tournamentSubTab, setTournamentSubTab] = useState<"JOIN" | "CREATE">("JOIN");
-
-  // 3. 1v1 Oda Kurma State'leri (Kriptografik CX- Kod)
+  // Oda Kur state
   const [roomCode] = useState<string>(() => generateSecureRoomCode());
-  const [isPublic, setIsPublic] = useState<boolean>(false);
-  const [matchFormat, setMatchFormat] = useState<"BO1" | "BO3">("BO1");
-  const [shotClock, setShotClock] = useState<10 | 12 | 20>(12);
   const [selectedBoardId, setSelectedBoardId] = useState<string>(PRESET_BOARDS[0].id);
-  const [allowSteal] = useState<boolean>(false);
+  const [showBoardPicker, setShowBoardPicker] = useState<boolean>(false);
+  const [isWaitingForOpponent, setIsWaitingForOpponent] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
 
-  // 4. Odaya Katılma Input State'i & Rate Limiter
+  // Koda Katıl state
   const [joinCodeInput, setJoinCodeInput] = useState<string>("");
   const [joinError, setJoinError] = useState<string | null>(null);
-  const [failedAttempts, setFailedAttempts] = useState<number[]>([]);
-  const [rateLimitSeconds, setRateLimitSeconds] = useState<number>(0);
 
-  // 5. Turnuva Kurma State'leri
-  const [tourneyName, setTourneyName] = useState<string>("Sinefil Şampiyonası");
-  const [tourneyEntryFee, setTourneyEntryFee] = useState<"FREE" | "REELS">("FREE");
-  const [joinedTourneyId, setJoinedTourneyId] = useState<string | null>(null);
-
-  React.useEffect(() => {
-    if (rateLimitSeconds <= 0) return;
-    const interval = setInterval(() => {
-      setRateLimitSeconds((prev) => Math.max(0, prev - 1));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [rateLimitSeconds]);
-
-  if (!isOpen) return null;
+  if (!isOpen && !isPage) return null;
 
   const currentBoard = PRESET_BOARDS.find((b) => b.id === selectedBoardId) || PRESET_BOARDS[0];
+  const displayTitle = currentBoard.title.includes(":")
+    ? currentBoard.title.split(":")[0].trim()
+    : currentBoard.title;
+  const subTitle = currentBoard.title.includes(":")
+    ? currentBoard.title.split(":")[1].trim()
+    : "3×3 Taktik Kadraj";
 
-  const handleStartCustomRoom = (overrideSettings?: Partial<CustomRoomSettings>) => {
-    audio.playPowerup();
+  const handleStartCustomRoom = () => {
+    audio.playSelect();
+    haptic.medium();
+    setIsWaitingForOpponent(true);
     const settings: CustomRoomSettings = {
-      roomCode: overrideSettings?.roomCode || roomCode,
-      roomName: isPublic ? "🌐 Herkese Açık Düello Seansı" : "🔒 Özel Arkadaş Düellosu",
+      roomCode,
+      roomName: "Özel Gösterim",
       roomType: "1V1_ROOM",
-      isPublic,
-      matchFormat,
-      shotClockSeconds: shotClock,
+      isPublic: false,
+      matchFormat: "BO1",
+      shotClockSeconds: 12,
       themeId: selectedBoardId,
       category: currentBoard.title,
-      allowCellStealing: allowSteal,
+      allowCellStealing: false,
       allowPowerups: false,
-      ...overrideSettings,
     };
     onCreateRoom(settings, currentBoard);
-    onClose();
   };
 
-  const handleCopyInvite = () => {
+  const handleCopyCode = () => {
     audio.playSelect();
-    const url = typeof window !== "undefined" ? `${window.location.origin}?room=${roomCode}` : "";
+    haptic.light();
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(
-        `🎬 CINEXOX 1v1 DÜELLO DAVETİ! 🏆\nOda Kodu: #${roomCode}\nTema: ${currentBoard.title}\nFormat: ${
-          matchFormat === "BO1" ? "Tek Maç" : "3 Maçlık Seri (BO3)"
-        }\nSüre: ${shotClock}s\n\nHemen Odaya Katıl: ${url}`
-      );
+      navigator.clipboard.writeText(roomCode);
       setCopiedLink(true);
-      setTimeout(() => setCopiedLink(false), 2500);
+      setTimeout(() => setCopiedLink(false), 2000);
     }
   };
 
-  const handleJoinByCode = (codeToJoin: string) => {
-    const now = Date.now();
-    const recentFailures = failedAttempts.filter((t) => now - t < 60_000);
-
-    if (rateLimitSeconds > 0 || recentFailures.length >= 5) {
-      if (rateLimitSeconds <= 0) setRateLimitSeconds(60);
-      setJoinError(
-        `Güvenlik: Çok fazla başarısız deneme! Lütfen ${
-          rateLimitSeconds > 0 ? rateLimitSeconds : 60
-        } saniye bekleyin.`
-      );
-      audio.playError();
-      return;
-    }
-
-    const cleanCode = codeToJoin.trim().toUpperCase();
-    const isValidFormat = /^([A-Z0-9]{4,8}|CX-[A-Z0-9]{6})$/.test(cleanCode);
-
-    if (!isValidFormat) {
-      const updated = [...recentFailures, now];
-      setFailedAttempts(updated);
-      audio.playError();
-      if (updated.length >= 5) {
-        setRateLimitSeconds(60);
-        setJoinError("5 kez geçersiz kod girildi. 60 saniye bekleyin.");
-      } else {
-        setJoinError(
-          `Geçersiz oda kodu formatı! (Örn: CX-7K9M2P) [Kalan deneme: ${5 - updated.length}]`
-        );
-      }
-      return;
-    }
-
-    audio.playPowerup();
-
-    if (isSupabaseConfigured && currentUser) {
-      joinRealtimeRoom(cleanCode, currentUser).then((res) => {
-        if (res.success && res.room) {
-          if (onJoinRoom) {
-            onJoinRoom(cleanCode, res.room.settings, res.room.board_data);
-          } else {
-            onCreateRoom(res.room.settings, res.room.board_data);
-          }
-          onClose();
-        } else {
-          const settings: CustomRoomSettings = {
-            roomCode: cleanCode,
-            roomName: "Özel Odaya Katılım",
-            roomType: "1V1_ROOM",
-            isPublic: false,
-            matchFormat: "BO1",
-            shotClockSeconds: 12,
-            themeId: PRESET_BOARDS[0].id,
-            category: PRESET_BOARDS[0].title,
-            allowCellStealing: false,
-            allowPowerups: false,
-          };
-          if (onJoinRoom) {
-            onJoinRoom(cleanCode, settings, PRESET_BOARDS[0]);
-          } else {
-            onCreateRoom(settings, PRESET_BOARDS[0]);
-          }
-          onClose();
-        }
+  const handleShareInvite = () => {
+    audio.playSelect();
+    haptic.light();
+    const url = typeof window !== "undefined" ? `${window.location.origin}?room=${roomCode}` : "";
+    const shareText = `CineXOX Düellosu: ${roomCode}`;
+    if (navigator.share) {
+      navigator.share({
+        title: "CineXOX Özel Gösterim",
+        text: shareText,
+        url,
+      }).catch(() => {
+        handleCopyCode();
       });
+    } else {
+      handleCopyCode();
+    }
+  };
+
+  const handleJoinByCode = (e: React.FormEvent) => {
+    e.preventDefault();
+    let raw = joinCodeInput.trim().toUpperCase();
+    if (!raw.startsWith("CX-") && raw.length === 6) {
+      raw = `CX-${raw}`;
+    }
+
+    if (!/^CX-[A-Z0-9]{6}$/.test(raw)) {
+      setJoinError("Bu kodla açık bir salon bulunamadı.");
+      audio.playError();
       return;
     }
+
+    setJoinError(null);
+    audio.playSelect();
+    haptic.medium();
 
     const settings: CustomRoomSettings = {
-      roomCode: cleanCode,
-      roomName: "Özel Odaya Katılım",
+      roomCode: raw,
+      roomName: "Özel Gösterim",
       roomType: "1V1_ROOM",
       isPublic: false,
       matchFormat: "BO1",
@@ -203,549 +146,296 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       allowCellStealing: false,
       allowPowerups: false,
     };
+
     if (onJoinRoom) {
-      onJoinRoom(cleanCode, settings, PRESET_BOARDS[0]);
+      onJoinRoom(raw, settings, PRESET_BOARDS[0]);
     } else {
       onCreateRoom(settings, PRESET_BOARDS[0]);
     }
-    onClose();
+    if (onClose) onClose();
   };
 
-  const handleCreateTournament = () => {
-    audio.playPowerup();
-    const settings: CustomRoomSettings = {
-      roomCode: "TRNY-" + Math.floor(1000 + Math.random() * 9000),
-      roomName: tourneyName || "8 Kişilik Eleme Şampiyonası",
-      roomType: "TOURNAMENT",
-      isPublic: true,
-      matchFormat: "TOURNAMENT",
-      shotClockSeconds: 12,
-      themeId: selectedBoardId,
-      category: currentBoard.title,
-      allowCellStealing: false,
-      allowPowerups: false,
-      entryFee: {
-        type: tourneyEntryFee,
-        amount: tourneyEntryFee === "REELS" ? 200 : 0,
-      },
-      prizePool: "1.500 Makara + Şampiyonluk Rozeti 🏆",
-    };
-    onCreateRoom(settings, currentBoard);
-    onClose();
-  };
+  const content = (
+    <div className="w-full max-w-md mx-auto flex flex-col select-none text-[#E8E6E1] p-4 sm:p-5">
+      {/* 7C.1 Başlık: Serif 'Özel Gösterim', altında 'İki telefon, bir düello.' */}
+      <div className="text-center pb-4 mb-4 border-b border-white/10">
+        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#E8E6E1] tracking-wide">
+          Özel Gösterim
+        </h1>
+        <p className="text-xs text-[#8A8F9A] mt-1 font-sans">
+          İki telefon, bir düello.
+        </p>
+      </div>
 
-  const ACTIVE_TOURNAMENTS = [
-    {
-      id: "trny_1",
-      title: "Haftalık Cinefil Kupası",
-      theme: "Klasik & Kült Sinema",
-      players: "6/8 Dolu",
-      slotsLeft: "Son 2 Koltuk!",
-      entryFee: "ÜCRETSİZ",
-      prize: "2.000 🎞️ + Altın Kupa",
-      boardIdx: 0,
-    },
-    {
-      id: "trny_2",
-      title: "Süper Kahramanlar Şampiyonası",
-      theme: "⚡ DC vs MARVEL Düellosu",
-      players: "7/8 Dolu",
-      slotsLeft: "Son 1 Koltuk!",
-      entryFee: "100 🎞️",
-      prize: "3.500 🎞️ + Şampiyonluk Rozeti",
-      boardIdx: 3,
-    },
-    {
-      id: "trny_3",
-      title: "Midnight Cult Challenge",
-      theme: "🩸 90'lar & Neo-Noir",
-      players: "3/8 Dolu",
-      slotsLeft: "Kayıt Açık",
-      entryFee: "250 🎞️",
-      prize: "1.000 🎞️ + Altın Rozet",
-      boardIdx: 5,
-    },
-  ];
+      {/* 7C.2 İki Seçenek: 'Oda kur' ve 'Koda katıl' (Seçimde yükseklik zıplamaz) */}
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        <button
+          type="button"
+          onClick={() => {
+            audio.playSelect();
+            setSubTab("CREATE");
+            setJoinError(null);
+          }}
+          className={`h-11 rounded-xl text-xs font-sans font-bold uppercase tracking-wider transition-all border ${
+            subTab === "CREATE"
+              ? "bg-[#181B22] border-[#D9A441] text-[#D9A441]"
+              : "bg-transparent border-white/10 text-[#8A8F9A] hover:text-[#E8E6E1]"
+          }`}
+        >
+          Oda kur
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            audio.playSelect();
+            setSubTab("JOIN");
+            setJoinError(null);
+          }}
+          className={`h-11 rounded-xl text-xs font-sans font-bold uppercase tracking-wider transition-all border ${
+            subTab === "JOIN"
+              ? "bg-[#181B22] border-[#D9A441] text-[#D9A441]"
+              : "bg-transparent border-white/10 text-[#8A8F9A] hover:text-[#E8E6E1]"
+          }`}
+        >
+          Koda katıl
+        </button>
+      </div>
 
+      {/* ========================================================
+          7C.3 SEÇENEK A: ODA KUR
+      ======================================================== */}
+      {subTab === "CREATE" && (
+        <div className="space-y-4 min-h-[300px] flex flex-col justify-between">
+          {!isWaitingForOpponent ? (
+            <>
+              {/* Seçili Seans */}
+              <div className="p-3.5 rounded-xl bg-[#14171D] border border-white/10 flex items-center justify-between">
+                <div className="min-w-0 pr-3">
+                  <span className="text-xs font-bold text-[#E8E6E1] block truncate">
+                    {displayTitle}
+                  </span>
+                  <span className="text-[11px] text-[#8A8F9A] truncate block mt-0.5">
+                    {subTitle}
+                  </span>
+                </div>
+                <Button
+                  variant="inline"
+                  onClick={() => setShowBoardPicker(true)}
+                  className="shrink-0"
+                >
+                  Değiştir
+                </Button>
+              </div>
+
+              {/* Oda Kodu & Kopyalama / Paylaşım */}
+              <div className="p-4 rounded-xl bg-[#14171D] border border-white/10 flex flex-col items-center text-center">
+                <span className="text-[10px] font-sans uppercase font-medium text-[#8A8F9A] tracking-wider mb-1">
+                  Oda Kodu
+                </span>
+                <span className="font-mono text-2xl sm:text-3xl font-bold tracking-widest text-[#D9A441] my-1">
+                  {roomCode}
+                </span>
+
+                <div className="flex items-center gap-2 mt-3 w-full justify-center">
+                  <Button
+                    variant="inline"
+                    onClick={handleCopyCode}
+                    className="flex items-center gap-1.5"
+                  >
+                    {copiedLink ? <Check className="w-3.5 h-3.5 text-[#8EBB70]" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedLink ? "Kopyalandı" : "Kopyala"}</span>
+                  </Button>
+                  <Button
+                    variant="inline"
+                    onClick={handleShareInvite}
+                    className="flex items-center gap-1.5"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                    <span>Davet linkini paylaş</span>
+                  </Button>
+                </div>
+              </div>
+
+              {/* 7C.7 Alt Açıklama */}
+              <p className="text-[11px] text-[#8A8F9A] text-center leading-relaxed px-2">
+                Kodu arkadaşınla paylaş. İki telefon bağlanınca düello başlar. Süre 12 saniye.
+              </p>
+
+              {/* 7C.3 Ana Buton: ODAYI AÇ */}
+              <Button
+                variant="primary"
+                fullWidth
+                onClick={handleStartCustomRoom}
+              >
+                ODAYI AÇ
+              </Button>
+            </>
+          ) : (
+            /* Bekleme Durumu */
+            <div className="p-6 rounded-xl bg-[#14171D] border border-white/10 flex flex-col items-center text-center space-y-4 my-auto">
+              <span className="font-mono text-2xl font-bold tracking-widest text-[#D9A441]">
+                {roomCode}
+              </span>
+              <p className="font-serif text-base text-[#E8E6E1]">
+                Salon loş, rakip aranıyor…
+              </p>
+              <p className="text-xs text-[#8A8F9A] max-w-xs">
+                Arkadaşının koda katılması bekleniyor.
+              </p>
+              <Button
+                variant="secondary"
+                fullWidth
+                onClick={() => setIsWaitingForOpponent(false)}
+              >
+                Vazgeç
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ========================================================
+          7C.4 SEÇENEK B: KODA KATIL
+      ======================================================== */}
+      {subTab === "JOIN" && (
+        <form onSubmit={handleJoinByCode} className="space-y-4 min-h-[300px] flex flex-col justify-between">
+          <div className="space-y-3">
+            <div className="p-4 rounded-xl bg-[#14171D] border border-white/10">
+              <label className="text-[10px] font-sans uppercase font-medium text-[#8A8F9A] tracking-wider block mb-2 text-center">
+                Salon Kodu
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  maxLength={9}
+                  value={joinCodeInput}
+                  onChange={(e) => {
+                    let val = e.target.value.toUpperCase();
+                    setJoinCodeInput(val);
+                    if (joinError) setJoinError(null);
+                  }}
+                  placeholder="CX-XXXXXX"
+                  className="w-full text-center font-mono text-2xl font-bold tracking-widest bg-[#0B0D12] border border-white/10 focus:border-[#D9A441] rounded-xl py-3 text-[#E8E6E1] placeholder:text-[#8A8F9A]/30 focus:outline-none transition-colors"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  spellCheck="false"
+                />
+              </div>
+
+              {joinError && (
+                <p className="text-xs text-[#E5484D] text-center mt-2.5 font-medium">
+                  {joinError}
+                </p>
+              )}
+            </div>
+
+            <p className="text-[11px] text-[#8A8F9A] text-center leading-relaxed px-2">
+              Arkadaşının paylaştığı 6 karakterli kodu gir. Süre 12 saniye.
+            </p>
+          </div>
+
+          <Button
+            type="submit"
+            variant="primary"
+            fullWidth
+            disabled={!joinCodeInput.trim()}
+          >
+            KATIL
+          </Button>
+        </form>
+      )}
+
+      {/* Seans Değiştirme Alt Sheet'i */}
+      {showBoardPicker && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowBoardPicker(false);
+          }}
+          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm select-none"
+        >
+          <div className="w-full max-w-lg mx-auto bg-[#14171D] border-t border-x border-white/10 rounded-t-[24px] p-4 sm:p-5 flex flex-col max-h-[80dvh] shadow-2xl animate-in slide-in-from-bottom-5 duration-200">
+            <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
+            <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
+              <h2 className="font-serif text-base font-bold text-[#E8E6E1]">
+                Seans Seç
+              </h2>
+              <Button
+                variant="icon"
+                onClick={() => setShowBoardPicker(false)}
+                title="Kapat"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-1.5 py-3 pr-1 custom-scrollbar">
+              {PRESET_BOARDS.map((b) => {
+                const isSelected = b.id === selectedBoardId;
+                const dTitle = b.title.includes(":") ? b.title.split(":")[0].trim() : b.title;
+                const sTitle = b.title.includes(":") ? b.title.split(":")[1].trim() : "";
+
+                return (
+                  <button
+                    key={b.id}
+                    type="button"
+                    onClick={() => {
+                      audio.playSelect();
+                      setSelectedBoardId(b.id);
+                      setShowBoardPicker(false);
+                    }}
+                    className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all ${
+                      isSelected
+                        ? "bg-[#181B22] border-[#D9A441] text-[#E8E6E1]"
+                        : "bg-[#14171D] border-white/10 text-[#8A8F9A] hover:text-[#E8E6E1] hover:border-white/20"
+                    }`}
+                  >
+                    <div className="min-w-0 pr-3">
+                      <span className="font-sans font-bold text-xs text-[#E8E6E1] block truncate">
+                        {dTitle}
+                      </span>
+                      {sTitle && (
+                        <span className="text-[10px] text-[#8A8F9A] block truncate mt-0.5">
+                          {sTitle}
+                        </span>
+                      )}
+                    </div>
+                    {isSelected && (
+                      <span className="text-[#D9A441] font-bold text-sm">✓</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  // Sayfa modu (Alttan sekme çubuğunun üstünde normal akış)
+  if (isPage) {
+    return (
+      <div className="min-h-screen bg-[#0B0D12] flex flex-col pt-4 pb-28">
+        {content}
+      </div>
+    );
+  }
+
+  // Modal modu fallback (varsa)
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
-      <div
-        className="w-full max-w-md rounded-3xl p-4 sm:p-5 flex flex-col max-h-[92vh] overflow-y-auto custom-scrollbar relative text-[#F1EEE7] tactile-card"
-        style={{
-          background: "linear-gradient(180deg, #1E222B 0%, #14171D 100%)",
-          borderColor: "rgba(255,255,255,0.14)",
-          boxShadow: "0 16px 40px rgba(0,0,0,0.85), 0 6px 0 #08090C, inset 0 1px 0 rgba(255,255,255,0.12)",
-        }}
-      >
-        {/* Kapat Butonu */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-xl tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
-        >
-          <X className="w-4 h-4" />
-        </button>
-
-        {/* 1. ÜST BAŞLIK */}
-        <div className="text-center pb-3 border-b border-white/10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#D9A441]/15 border border-[#D9A441]/35 text-[#D9A441] text-[10px] font-bold uppercase tracking-wider mb-1 font-mono">
-            <Trophy className="w-3.5 h-3.5" />
-            <span>ÖZEL GÖSTERİM</span>
-          </div>
-          <h2 className="text-lg font-serif font-bold text-[#E8E6E1]">İki Telefon, Bir Düello</h2>
-          <p className="text-[11px] text-[#8A8F9A]">
-            Kod paylaş. Rakip bağlanınca maç başlar. Saat 12 saniye.
-          </p>
-        </div>
-
-        {/* Ana Sekme: 1v1 Özel Gösterim vs 8 Kişilik Turnuva */}
-        <div className="grid grid-cols-2 gap-2 my-3">
-          <button
-            type="button"
-            onClick={() => {
-              audio.playSelect();
-              setMainTab("1V1_ROOM");
-            }}
-            className={`py-2 rounded-xl text-xs font-black transition-all ${
-              mainTab === "1V1_ROOM"
-                ? "tactile-btn-amber text-[#0B0D12]"
-                : "tactile-btn-surface text-[#8A8F9A] hover:text-[#E8E6E1]"
-            }`}
+      <div className="w-full max-w-md rounded-2xl bg-[#0B0D12] border border-white/10 shadow-2xl overflow-hidden relative">
+        {onClose && (
+          <Button
+            variant="icon"
+            onClick={onClose}
+            className="absolute top-3 right-3 z-10"
+            title="Kapat"
           >
-            ⚔️ 1v1 Özel Gösterim
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              audio.playSelect();
-              setMainTab("TOURNAMENT");
-            }}
-            className={`py-2 rounded-xl text-xs font-black transition-all ${
-              mainTab === "TOURNAMENT"
-                ? "tactile-btn-cyan text-[#0F1115]"
-                : "tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
-            }`}
-          >
-            🏆 8 Kişilik Turnuva
-          </button>
-        </div>
-
-        {/* ========================================================
-            SEKME 1: 1v1 ÖZEL ODA (DOSTLUK MAÇI)
-        ======================================================== */}
-        {mainTab === "1V1_ROOM" && (
-          <div>
-            {/* Alt Sekme: Oda Kur vs Odaya Katıl */}
-            <div className="flex items-center gap-2 mb-3">
-              <button
-                type="button"
-                onClick={() => {
-                  audio.playSelect();
-                  setRoomSubTab("CREATE");
-                }}
-                className={`flex-1 py-2 rounded-xl text-xs font-black border transition-all ${
-                  roomSubTab === "CREATE"
-                    ? "bg-[#252932] border-[#F5A623] text-[#F5A623] shadow-sm"
-                    : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
-                }`}
-              >
-                ➕ Oda Kur (Host)
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  audio.playSelect();
-                  setRoomSubTab("JOIN");
-                }}
-                className={`flex-1 py-2 rounded-xl text-xs font-black border transition-all ${
-                  roomSubTab === "JOIN"
-                    ? "bg-[#252932] border-[#00D5E8] text-[#00D5E8] shadow-sm"
-                    : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
-                }`}
-              >
-                🔍 Odaya Katıl
-              </button>
-            </div>
-
-            {/* A. ODA KURMA PANELİ */}
-            {roomSubTab === "CREATE" && (
-              <div className="space-y-3">
-                {/* 1. GİZLİLİK SEÇİMİ */}
-                <div className="p-2.5 rounded-2xl bg-[#181B22] border border-white/10 flex items-center justify-between">
-                  <div>
-                    <span className="text-xs font-black text-[#F1EEE7] flex items-center gap-1.5">
-                      {isPublic ? (
-                        <>
-                          <Globe className="w-3.5 h-3.5 text-[#8EBB70]" />
-                          <span className="text-[#8EBB70]">Herkese Açık Seans (Public)</span>
-                        </>
-                      ) : (
-                        <>
-                          <Lock className="w-3.5 h-3.5 text-[#F5A623]" />
-                          <span className="text-[#F5A623]">Gizli & Özel Oda (Private)</span>
-                        </>
-                      )}
-                    </span>
-                    <p className="text-[10px] text-[#A5A8B0] mt-0.5">
-                      {isPublic
-                        ? "Seans listesinde görünür, dileyen oyuncu katılabilir."
-                        : "Sadece oda kodunu verdiğin arkadaşın katılabilir."}
-                    </p>
-                  </div>
-                  <div className="flex bg-[#0F1115] p-0.5 rounded-xl border border-white/10">
-                    <button
-                      type="button"
-                      onClick={() => setIsPublic(false)}
-                      className={`px-2.5 py-1 rounded-lg text-[10px] font-black transition-all ${
-                        !isPublic ? "bg-[#F5A623] text-[#0F1115] shadow" : "text-[#A5A8B0]"
-                      }`}
-                    >
-                      Gizli
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIsPublic(true)}
-                      className={`px-2.5 py-1 rounded-lg text-[10px] font-black transition-all ${
-                        isPublic ? "bg-[#8EBB70] text-[#0F1115] shadow" : "text-[#A5A8B0]"
-                      }`}
-                    >
-                      Açık
-                    </button>
-                  </div>
-                </div>
-
-                {/* 2. MASA SEÇİMİ (5 STRATEJİK MASA) */}
-                <div>
-                  <label className="text-xs font-black text-[#F1EEE7] flex items-center justify-between mb-1.5">
-                    <span className="flex items-center gap-1.5">
-                      <Film className="w-3.5 h-3.5 text-[#F5A623]" />
-                      Seans & Tematik Çarpışma
-                    </span>
-                    <span className="text-[10px] text-[#A5A8B0] font-bold">5 Seans</span>
-                  </label>
-                  <div className="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar pr-0.5">
-                    {PRESET_BOARDS.map((b) => {
-                      const isDcMarvel = b.id === "board_dc_marvel";
-                      const isSelected = selectedBoardId === b.id;
-                      return (
-                        <button
-                          key={b.id}
-                          type="button"
-                          onClick={() => {
-                            audio.playSelect();
-                            setSelectedBoardId(b.id);
-                          }}
-                          className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between transition-all ${
-                            isSelected
-                              ? "bg-[#252932] border-[#F5A623] text-[#F1EEE7] shadow-[0_3px_0_#090A0D] ring-1 ring-[#F5A623]"
-                              : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
-                          }`}
-                        >
-                          <div className="flex-1 pr-2 truncate">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-xs font-black text-[#F1EEE7] truncate">{b.title}</span>
-                              {isDcMarvel && (
-                                <span className="text-[9px] font-black px-1 py-0.2 rounded bg-[#FF334B]/20 text-[#FF334B] border border-[#FF334B]/40">
-                                  🔥
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-[9px] text-[#A5A8B0] truncate mt-0.5">
-                              {b.id === "board_master_1"
-                                ? "Nolan, Tarantino, Scorsese x DiCaprio, Oscar, 2010s+"
-                                : isDcMarvel
-                                ? "Christian Bale, James Gunn, Ryan Reynolds x DC, Marvel"
-                                : b.id === "board_90s_cult"
-                                ? "Brad Pitt, Tarantino, Fincher x Suç, 90'lar, 8.0+ Puan"
-                                : b.id === "board_dune_scifi"
-                                ? "Denis Villeneuve, Nolan, Chalamet x Sci-Fi, Oscar"
-                                : "Brad Pitt, Murphy, De Niro x Suç, 8.0+ Puan, 2010s+"}
-                            </p>
-                          </div>
-                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-[#0F1115] text-[#F5A623] border border-white/10 font-mono">
-                            {b.difficulty}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* 3. MAÇ FORMATI (BO1 vs BO3) */}
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { val: "BO1", label: "Tek Maç (BO1)", sub: "Hızlı Düello" },
-                    { val: "BO3", label: "3 Maçlık Seri (BO3)", sub: "Prestij Rövanşı" },
-                  ].map((f) => (
-                    <button
-                      key={f.val}
-                      type="button"
-                      onClick={() => {
-                        audio.playSelect();
-                        setMatchFormat(f.val as any);
-                      }}
-                      className={`p-2 rounded-xl border text-center transition-all ${
-                        matchFormat === f.val
-                          ? "bg-[#252932] border-[#F5A623] text-[#F1EEE7] shadow-md ring-1 ring-[#F5A623]"
-                          : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
-                      }`}
-                    >
-                      <div className="text-xs font-black">{f.label}</div>
-                      <div className="text-[9px] text-[#A5A8B0] font-bold mt-0.5">{f.sub}</div>
-                    </button>
-                  ))}
-                </div>
-
-                {/* 4. HAMLE SÜRESİ (12S BLITZ) */}
-                <div className="grid grid-cols-1 gap-2">
-                  {[
-                    { val: 12, label: "12 Saniye Blitz", desc: "Standart Rekabetçi Maç Saati" },
-                  ].map((item) => (
-                    <button
-                      key={item.val}
-                      type="button"
-                      onClick={() => {
-                        audio.playSelect();
-                        setShotClock(item.val as any);
-                      }}
-                      className="p-2 rounded-xl border bg-[#252932] border-[#00D5E8] text-[#F1EEE7] text-center shadow-sm"
-                    >
-                      <div className="text-xs font-black text-[#00D5E8] font-mono">{item.label}</div>
-                      <div className="text-[9px] text-[#A5A8B0] font-bold mt-0.5">{item.desc}</div>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Oda Kodu & Başlat */}
-                <div className="pt-2 border-t border-white/10 space-y-2.5">
-                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#0F1115] border border-white/15">
-                    <div className="font-mono text-xs font-black text-[#00D5E8]">
-                      Oda Kodu: #{roomCode}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleCopyInvite}
-                      className="px-3 py-1 rounded-lg tactile-btn-surface text-[#F1EEE7] font-bold text-[10px] flex items-center gap-1"
-                    >
-                      {copiedLink ? <Check className="w-3 h-3 text-[#8EBB70]" /> : <Copy className="w-3 h-3" />}
-                      <span>{copiedLink ? "Kopyalandı!" : "Davet Linki"}</span>
-                    </button>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleStartCustomRoom()}
-                    className="w-full py-3.5 rounded-2xl tactile-btn-amber font-black text-sm flex items-center justify-center gap-2"
-                  >
-                    <Swords className="w-4 h-4 fill-[#0F1115]" />
-                    <span>{isPublic ? "Herkese Açık Seans Başlat" : "Özel Odayı Başlat"}</span>
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* B. ODAYA KATIL PANELİ */}
-            {roomSubTab === "JOIN" && (
-              <div className="space-y-3">
-                <div className="p-3.5 rounded-2xl bg-[#181B22] border border-white/10">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-[#A5A8B0] block mb-1.5 font-mono">
-                    Özel Oda Kodunu Gir
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Örn: CX-7K9M2P"
-                      value={joinCodeInput}
-                      disabled={rateLimitSeconds > 0}
-                      onChange={(e) => {
-                        setJoinCodeInput(e.target.value.toUpperCase());
-                        setJoinError(null);
-                      }}
-                      className="flex-1 px-3 py-2.5 rounded-xl bg-[#0F1115] border border-white/15 text-[#F1EEE7] font-mono text-xs font-bold uppercase placeholder:text-[#A5A8B0]/40 focus:outline-none focus:border-[#00D5E8] disabled:opacity-50"
-                    />
-                    <button
-                      type="button"
-                      disabled={rateLimitSeconds > 0}
-                      onClick={() => handleJoinByCode(joinCodeInput)}
-                      className="px-4 py-2.5 rounded-xl tactile-btn-cyan text-xs font-black disabled:opacity-50"
-                    >
-                      {rateLimitSeconds > 0 ? `${rateLimitSeconds}s` : "Katıl"}
-                    </button>
-                  </div>
-                  {joinError && <p className="text-[10px] text-[#FF334B] mt-1.5 font-bold">{joinError}</p>}
-                </div>
-
-                <p className="text-[11px] text-[#A5A8B0] px-1">
-                  Arkadaşının paylaştığı <span className="font-mono text-[#F5A623]">CX-XXXXXX</span> oda kodunu girerek doğrudan düello kadrajına bağlanabilirsin.
-                </p>
-              </div>
-            )}
-          </div>
+            <X className="w-4 h-4" />
+          </Button>
         )}
-
-        {/* ========================================================
-            SEKME 2: 8 KİŞİLİK TURNUVA ARENASI (ŞAMPİYONA)
-        ======================================================== */}
-        {mainTab === "TOURNAMENT" && (
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <button
-                type="button"
-                onClick={() => {
-                  audio.playSelect();
-                  setTournamentSubTab("JOIN");
-                }}
-                className={`flex-1 py-2 rounded-xl text-xs font-black border transition-all ${
-                  tournamentSubTab === "JOIN"
-                    ? "bg-[#252932] border-[#FF334B] text-[#FF334B] shadow-sm"
-                    : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
-                }`}
-              >
-                📋 Canlı Turnuvalar
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  audio.playSelect();
-                  setTournamentSubTab("CREATE");
-                }}
-                className={`flex-1 py-2 rounded-xl text-xs font-black border transition-all ${
-                  tournamentSubTab === "CREATE"
-                    ? "bg-[#252932] border-[#F5A623] text-[#F5A623] shadow-sm"
-                    : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
-                }`}
-              >
-                👑 Turnuva Kur
-              </button>
-            </div>
-
-            {tournamentSubTab === "JOIN" && (
-              <div className="space-y-2.5">
-                {ACTIVE_TOURNAMENTS.map((t) => (
-                  <div
-                    key={t.id}
-                    className="p-3 rounded-2xl bg-[#181B22] border border-white/12 shadow-[0_4px_0_#090A0D] relative overflow-hidden"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        <Trophy className="w-4 h-4 text-[#F5A623]" />
-                        <h4 className="text-xs font-black text-[#F1EEE7]">{t.title}</h4>
-                      </div>
-                      <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-[#FF334B]/15 text-[#FF334B] border border-[#FF334B]/30">
-                        {t.slotsLeft}
-                      </span>
-                    </div>
-
-                    <p className="text-[10px] text-[#A5A8B0] font-bold mt-1">
-                      Tema: <span className="text-[#F5A623]">{t.theme}</span>
-                    </p>
-
-                    <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/10 text-[10px]">
-                      <div>
-                        <span className="text-[#A5A8B0] block font-bold">ÖDÜL HAVUZU</span>
-                        <span className="text-[#F5A623] font-black font-mono">{t.prize}</span>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-[#A5A8B0] block font-bold">DOLULUK</span>
-                        <span className="text-[#8EBB70] font-black font-mono">{t.players}</span>
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        audio.playPowerup();
-                        setJoinedTourneyId(t.id);
-                        setSelectedBoardId(PRESET_BOARDS[t.boardIdx].id);
-                        setTimeout(() => {
-                          const settings: CustomRoomSettings = {
-                            roomCode: "TRNY-" + Math.floor(1000 + Math.random() * 9000),
-                            roomName: t.title,
-                            roomType: "TOURNAMENT",
-                            isPublic: true,
-                            matchFormat: "TOURNAMENT",
-                            shotClockSeconds: 12,
-                            themeId: PRESET_BOARDS[t.boardIdx].id,
-                            category: t.theme,
-                            allowCellStealing: false,
-                            allowPowerups: false,
-                            prizePool: t.prize,
-                          };
-                          onCreateRoom(settings, PRESET_BOARDS[t.boardIdx]);
-                          onClose();
-                        }, 400);
-                      }}
-                      className="w-full mt-2.5 py-2.5 rounded-xl tactile-btn-amber font-black text-xs flex items-center justify-center gap-1.5"
-                    >
-                      <span>
-                        {joinedTourneyId === t.id ? "Turnuvaya Kaydedildi! ✓" : `Kayıt Ol (${t.entryFee})`}
-                      </span>
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {tournamentSubTab === "CREATE" && (
-              <div className="space-y-3">
-                <div className="p-3 rounded-2xl bg-[#181B22] border border-white/10 space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-[#A5A8B0] block font-mono">
-                    Turnuva Adı
-                  </label>
-                  <input
-                    type="text"
-                    value={tourneyName}
-                    onChange={(e) => setTourneyName(e.target.value)}
-                    placeholder="Örn: Hafta Sonu Sinefil Kupası"
-                    className="w-full px-3 py-2 rounded-xl bg-[#0F1115] border border-white/15 text-[#F1EEE7] text-xs font-bold focus:outline-none focus:border-[#F5A623]"
-                  />
-                </div>
-
-                <div className="p-3 rounded-2xl bg-[#181B22] border border-white/10">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-[#A5A8B0] block mb-1.5 font-mono">
-                    Katılım Ücreti
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {[
-                      { val: "FREE", label: "Ücretsiz", desc: "Açık Katılım" },
-                      { val: "REELS", label: "200 🎞️", desc: "Makara Giriş" },
-                    ].map((f) => (
-                      <button
-                        key={f.val}
-                        type="button"
-                        onClick={() => setTourneyEntryFee(f.val as any)}
-                        className={`p-2 rounded-xl border text-center transition-all ${
-                          tourneyEntryFee === f.val
-                            ? "bg-[#252932] border-[#F5A623] text-[#F1EEE7] shadow"
-                            : "bg-[#0F1115] border-white/10 text-[#A5A8B0]"
-                        }`}
-                      >
-                        <div className="text-xs font-black">{f.label}</div>
-                        <div className="text-[9px] text-[#A5A8B0] mt-0.5">{f.desc}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-2xl bg-[#F5A623]/10 border border-[#F5A623]/30 text-[10px] text-[#F1EEE7] flex items-start gap-2">
-                  <Trophy className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-[#F5A623] font-black block">8 Kişilik Bracket Eleme:</strong>
-                    Çeyrek Final &rarr; Yarı Final &rarr; Büyük Final formatında oynanır. Şampiyon 1.500 Makara ve altın rozet kazanır.
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleCreateTournament}
-                  className="w-full py-3.5 rounded-2xl tactile-btn-amber font-black text-sm flex items-center justify-center gap-2"
-                >
-                  <Trophy className="w-4 h-4 fill-[#0F1115]" />
-                  <span>Turnuvayı Oluştur & Kayıtları Aç</span>
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+        {content}
       </div>
     </div>
   );

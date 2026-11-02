@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { HomeScreen, GameSelectScreen, ErrorBoundary, GlobalModals } from "@/components";
+import { BottomNav } from "@/components/ui/BottomNav";
 import { GameView, useGameSession } from "@/features/gameplay";
-import { useRealtimeMatch } from "@/features/multiplayer";
+import { useRealtimeMatch, CustomRoomModal } from "@/features/multiplayer";
+import { ProfileModal, MatchHistoryModal } from "@/features/profile";
 import {
   createRealtimeRoom,
   joinRealtimeRoom,
@@ -42,7 +44,8 @@ import {
 import { audio } from "@/utils/audio";
 
 function CineXoxApp() {
-  const [currentView, setCurrentView] = useState<"HOME" | "GAME_SELECT" | "GAME">("HOME");
+  const [currentView, setCurrentView] = useState<"HOME" | "GAME_SELECT" | "CUSTOM_ROOM" | "PROFILE" | "GAME">("HOME");
+  const [showMatchHistory, setShowMatchHistory] = useState<boolean>(false);
   const [boardIndex, setBoardIndex] = useState<number>(0);
   const [mode, setMode] = useState<GameMode>("VS_BOT");
   const [contentPool, setContentPool] = useState<ContentPoolType>("HYBRID");
@@ -815,11 +818,11 @@ function CineXoxApp() {
           onOpenProfileModal={() => {
             audio.playSelect();
             setProfileInitialTab("CAREER");
-            setShowProfile(true);
+            setCurrentView("PROFILE");
           }}
           onOpenCustomLobby={() => {
             audio.playSelect();
-            setShowCustomLobby(true);
+            setCurrentView("CUSTOM_ROOM");
           }}
           onOpenDaily={handleOpenDailyFromHome}
           onOpenLeaderboard={() => {
@@ -841,7 +844,7 @@ function CineXoxApp() {
           onOpenDna={() => {
             audio.playSelect();
             setProfileInitialTab("DNA");
-            setShowProfile(true);
+            setCurrentView("PROFILE");
           }}
           onOpenLiveAmbience={() => {
             audio.playSelect();
@@ -886,22 +889,73 @@ function CineXoxApp() {
             setShowMatchFound(true);
           }}
           onOpenCustomLobby={() => {
-            setCurrentView("HOME");
-            setTimeout(() => {
-              audio.playSelect();
-              setShowCustomLobby(true);
-            }, 100);
+            audio.playSelect();
+            setCurrentView("CUSTOM_ROOM");
           }}
           onOpenProfileModal={() => {
-            setCurrentView("HOME");
-            setTimeout(() => {
-              audio.playSelect();
-              setProfileInitialTab("CAREER");
-              setShowProfile(true);
-            }, 100);
+            audio.playSelect();
+            setProfileInitialTab("CAREER");
+            setCurrentView("PROFILE");
           }}
         />
         <GlobalModals {...globalModalsProps} />
+      </main>
+    );
+  }
+
+  // 3. CUSTOM ROOM (ÖZEL GÖSTERİM) SCREEN VIEW
+  if (currentView === "CUSTOM_ROOM") {
+    return (
+      <main className="min-h-[100dvh] bg-[#0B0D12] flex flex-col items-center">
+        <CustomRoomModal
+          isPage={true}
+          currentUser={profile}
+          onCreateRoom={handleCreateCustomRoom}
+          onJoinRoom={handleJoinCustomRoom}
+        />
+        <BottomNav
+          activeTab="CUSTOM_ROOM"
+          onSelectTab={(tab) => {
+            if (tab === "HOME") setCurrentView("HOME");
+            else if (tab === "GAME_SELECT") setCurrentView("GAME_SELECT");
+            else if (tab === "PROFILE") {
+              setProfileInitialTab("CAREER");
+              setCurrentView("PROFILE");
+            }
+          }}
+        />
+        <GlobalModals {...globalModalsProps} showCustomLobby={false} />
+      </main>
+    );
+  }
+
+  // 4. PROFILE (SİNEFİL KARTI) SCREEN VIEW
+  if (currentView === "PROFILE") {
+    return (
+      <main className="min-h-[100dvh] bg-[#0B0D12] flex flex-col items-center">
+        <ProfileModal
+          isPage={true}
+          profile={profile}
+          onUpdateProfile={handleUpdateProfile}
+          onOpenArchive={() => setShowMatchHistory(true)}
+          isMuted={muted}
+          onToggleMute={handleToggleMute}
+          initialTab={profileInitialTab}
+        />
+        <BottomNav
+          activeTab="PROFILE"
+          onSelectTab={(tab) => {
+            if (tab === "HOME") setCurrentView("HOME");
+            else if (tab === "GAME_SELECT") setCurrentView("GAME_SELECT");
+            else if (tab === "CUSTOM_ROOM") setCurrentView("CUSTOM_ROOM");
+          }}
+        />
+        <MatchHistoryModal
+          isOpen={showMatchHistory}
+          onClose={() => setShowMatchHistory(false)}
+          profile={profile}
+        />
+        <GlobalModals {...globalModalsProps} showProfile={false} />
       </main>
     );
   }

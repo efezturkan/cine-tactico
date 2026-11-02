@@ -13,18 +13,17 @@ import {
   isSupabaseConfigured,
 } from "@/backend";
 import {
-  Volume2,
-  VolumeX,
-  Smartphone,
   Edit3,
   Check,
   X,
   Camera,
-  Clapperboard,
+  ChevronRight,
   ShieldCheck,
 } from "lucide-react";
 import { audio } from "@/utils/audio";
-import { haptic, setHapticEnabled } from "@/utils/haptics";
+import { haptic } from "@/utils/haptics";
+import { AvatarIcon } from "@/components/ui/AvatarIcon";
+import { Button } from "@/components/ui/Button";
 
 const FAVORITE_DIRECTORS = [
   "Christopher Nolan",
@@ -40,42 +39,31 @@ const FAVORITE_DIRECTORS = [
 ];
 
 interface ProfileModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  isPage?: boolean;
+  onClose?: () => void;
   profile: UserProfile;
   onUpdateProfile: (updated: Partial<UserProfile>) => void;
-  isMuted: boolean;
-  onToggleMute: () => void;
+  onOpenArchive?: () => void;
+  isMuted?: boolean;
+  onToggleMute?: () => void;
   onOpenLiveAmbience?: () => void;
   initialTab?: "CAREER" | "DNA" | "AMBIENCE";
 }
 
-// 35mm film edge perforations for profile modal
-const ModalSprocketColumn = ({ count = 20 }: { count?: number }) => (
-  <div className="flex flex-col items-center justify-around py-3 gap-2 h-full">
-    {Array.from({ length: count }).map((_, i) => (
-      <div
-        key={i}
-        className="w-2 h-3.5 rounded-[2px] bg-[#07080b] border border-white/10 shrink-0"
-      />
-    ))}
-  </div>
-);
-
 export const ProfileModal: React.FC<ProfileModalProps> = ({
-  isOpen,
+  isOpen = true,
+  isPage = false,
   onClose,
   profile,
   onUpdateProfile,
-  isMuted,
-  onToggleMute,
+  onOpenArchive,
 }) => {
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState(profile.username);
   const [selectedAvatar, setSelectedAvatar] = useState(profile.avatarId);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [showDirectorPicker, setShowDirectorPicker] = useState(false);
-  const [hapticOn, setHapticOn] = useState(true);
 
   const [isAnonymousUser, setIsAnonymousUser] = useState<boolean>(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -88,36 +76,28 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [nameLoading, setNameLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen || isPage) {
       setTempName(profile.username);
       setSelectedAvatar(profile.avatarId);
-      try {
-        setHapticOn(localStorage.getItem("cinexox_haptic") !== "0");
-      } catch {
-        setHapticOn(true);
-      }
     }
-    if (isOpen && isSupabaseConfigured) {
+    if ((isOpen || isPage) && isSupabaseConfigured) {
       ensureAnonymousSession().then((auth) => {
         setIsAnonymousUser(auth.isAnonymous);
         setUserEmail(auth.user?.email || null);
       });
     }
-  }, [isOpen, profile.username, profile.avatarId]);
+  }, [isOpen, isPage, profile.username, profile.avatarId]);
 
-  if (!isOpen) return null;
+  if (!isOpen && !isPage) return null;
 
   const currentRank = calculateRank(profile.wins);
-  const winRate =
+  // 7D.4: Yeni kullanıcıda 0 / 0 / "—" (oran %0 değil)
+  const winRateDisplay =
     profile.totalMatches > 0
-      ? Math.round((profile.wins / profile.totalMatches) * 100)
-      : 0;
-
-  const currentAvatar =
-    AVATAR_OPTIONS.find((a) => a.id === selectedAvatar) || AVATAR_OPTIONS[0];
+      ? `%${Math.round((profile.wins / profile.totalMatches) * 100)}`
+      : "—";
 
   const recent = (profile.lastFiveMatches ?? []).slice(-5);
-  const last5 = [...Array(Math.max(0, 5 - recent.length)).fill("-"), ...recent];
   const favoriteDirector = profile.favoriteDirector || "Christopher Nolan";
 
   const handleSaveName = async () => {
@@ -159,8 +139,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       audio.playVictory();
       setIsAnonymousUser(false);
       setUserEmail(linkEmail.trim());
-      setLinkMessage({ type: "success", text: "Hesabınız başarıyla bağlandı! ✓" });
-      setTimeout(() => setShowLinkAccount(false), 3000);
+      setLinkMessage({ type: "success", text: "Hesabın bağlandı." });
+      setTimeout(() => setShowLinkAccount(false), 2500);
     } else {
       audio.playError();
       setLinkMessage({ type: "error", text: res.error || "Hesap bağlanamadı." });
@@ -186,234 +166,152 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     setShowDirectorPicker(false);
   };
 
-  const toggleHaptic = () => {
-    const next = !hapticOn;
-    setHapticOn(next);
-    setHapticEnabled(next);
-    if (next) haptic.light();
-    try {
-      localStorage.setItem("cinexox_haptic", next ? "1" : "0");
-    } catch {}
-  };
+  const content = (
+    <div className="w-full max-w-sm mx-auto flex flex-col select-none text-[#E8E6E1] p-4 sm:p-5">
+      {/* 7D.1 Başlık: Serif 'Sinefil Kartı', mikro etiket yok, X yok */}
+      <div className="text-center pb-4 mb-4 border-b border-white/5">
+        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#E8E6E1] tracking-wide">
+          Sinefil Kartı
+        </h1>
+      </div>
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
-      <div
-        className="w-full max-w-sm rounded-2xl p-5 sm:p-6 flex flex-col max-h-[92vh] overflow-y-auto custom-scrollbar relative text-[#E8E6E1] bg-[#14171D] border border-white/10 shadow-2xl overflow-hidden"
-      >
-        {/* Left & Right 35mm Film Edge Perforations */}
-        <div className="absolute left-1.5 top-0 bottom-0 w-2.5 flex flex-col items-center overflow-hidden opacity-30 pointer-events-none">
-          <ModalSprocketColumn count={24} />
-        </div>
-        <div className="absolute right-1.5 top-0 bottom-0 w-2.5 flex flex-col items-center overflow-hidden opacity-30 pointer-events-none">
-          <ModalSprocketColumn count={24} />
-        </div>
-
-        {/* Viewfinder corner brackets */}
-        <div className="absolute top-2 left-5 w-2.5 h-2.5 border-t border-l border-white/20 pointer-events-none" />
-        <div className="absolute top-2 right-5 w-2.5 h-2.5 border-t border-r border-white/20 pointer-events-none" />
-        <div className="absolute bottom-2 left-5 w-2.5 h-2.5 border-b border-l border-white/20 pointer-events-none" />
-        <div className="absolute bottom-2 right-5 w-2.5 h-2.5 border-b border-r border-white/20 pointer-events-none" />
-
-        {/* Header: Title & Close Button */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-4">
-          <div className="w-11" />
-          <div className="text-center">
-            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#D9A441] block">
-              CINE-XOX · IDENTİTY
-            </span>
-            <h2 className="text-base font-serif font-bold tracking-wider text-[#E8E6E1] uppercase">
-              Sinefil Kartı
-            </h2>
-          </div>
+      {/* Kimlik Bloğu: Avatar, İsim, Seviye, Favori Yönetmen */}
+      <div className="flex flex-col items-center text-center">
+        {/* Avatar + Kamera Rozeti */}
+        <div className="relative mb-3">
           <button
             type="button"
-            onClick={onClose}
-            className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl bg-[#181B22] border border-white/10 flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] transition-colors active:scale-95"
+            onClick={() => setShowAvatarPicker(true)}
+            className="w-20 h-20 rounded-2xl bg-[#181B22] border border-white/15 flex items-center justify-center shadow-md relative active:scale-95 transition-transform"
           >
-            <X className="w-4 h-4" />
+            <AvatarIcon id={selectedAvatar} className="w-8 h-8 text-[#D9A441]" />
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#14171D] text-[#D9A441] border border-white/20 flex items-center justify-center shadow">
+              <Camera className="w-3 h-3" />
+            </div>
           </button>
         </div>
 
-        {/* Main Identity Block: Avatar, Name, Level & Favorite Director */}
-        <div className="flex flex-col items-center text-center">
-          {/* Avatar with Camera Badge */}
-          <div className="relative mb-3">
-            <button
-              type="button"
-              onClick={() => setShowAvatarPicker(!showAvatarPicker)}
-              className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl bg-[#181B22] border border-white/15 flex items-center justify-center text-4xl shadow-md relative active:scale-95 transition-transform"
-            >
-              <span>{currentAvatar.emoji}</span>
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#181B22] text-[#D9A441] border border-white/20 flex items-center justify-center shadow">
-                <Camera className="w-3 h-3" />
-              </div>
-            </button>
-          </div>
-
-          {/* Avatar Picker Panel */}
-          {showAvatarPicker && (
-            <div className="w-full p-3 rounded-xl bg-[#0F1115] border border-white/10 mb-3 animate-in fade-in">
-              <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#D9A441] block mb-2 text-left">
-                Avatar Seç
-              </span>
-              <div className="grid grid-cols-4 gap-2">
-                {AVATAR_OPTIONS.map((a) => {
-                  const isSelected = selectedAvatar === a.id;
-                  return (
-                    <button
-                      key={a.id}
-                      type="button"
-                      onClick={() => handleSelectAvatar(a.id)}
-                      className={`p-2 rounded-xl bg-[#181B22] flex flex-col items-center justify-center text-xl transition-all border active:scale-95 ${
-                        isSelected
-                          ? "border-[#D9A441] text-[#D9A441] bg-[#181B22]"
-                          : "border-white/5 opacity-80 hover:opacity-100"
-                      }`}
-                    >
-                      <span>{a.emoji}</span>
-                      <span className="text-[8px] font-mono font-bold text-zinc-400 truncate max-w-full mt-1">
-                        {a.label}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+        {/* İsim Satırı & Kalem İkonu */}
+        <div className="flex items-center gap-1.5 mb-1">
+          {isEditingName ? (
+            <div className="flex items-center gap-1.5">
+              <input
+                type="text"
+                value={tempName}
+                onChange={(e) => setTempName(e.target.value)}
+                maxLength={16}
+                className="px-2.5 py-1 bg-[#0F1115] border border-[#D9A441] rounded-lg text-sm font-bold text-[#E8E6E1] text-center focus:outline-none"
+                autoFocus
+              />
+              <button
+                type="button"
+                onClick={handleSaveName}
+                disabled={nameLoading}
+                className="p-1.5 rounded-lg bg-[#D9A441] text-[#0B0D12] font-black disabled:opacity-50"
+              >
+                <Check className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5">
+              <h2 className="text-lg font-serif font-bold text-[#E8E6E1]">
+                {profile.username === "Oyuncu" ? "Sinefil #3095" : profile.username}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setIsEditingName(true)}
+                className="text-[#8A8F9A] hover:text-[#D9A441] transition-colors p-1"
+                title="İsmi Düzenle"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+              </button>
             </div>
           )}
-
-          {/* Username & Level */}
-          <div className="flex items-center gap-1.5 mb-1">
-            {isEditingName ? (
-              <div className="flex items-center gap-1.5">
-                <input
-                  type="text"
-                  value={tempName}
-                  onChange={(e) => setTempName(e.target.value)}
-                  maxLength={16}
-                  className="px-2.5 py-1 bg-[#0F1115] border border-[#D9A441] rounded-lg text-sm font-bold text-[#E8E6E1] text-center focus:outline-none"
-                  autoFocus
-                />
-                <button
-                  type="button"
-                  onClick={handleSaveName}
-                  disabled={nameLoading}
-                  className="p-1.5 rounded-lg bg-[#D9A441] text-[#0B0D12] font-black disabled:opacity-50"
-                >
-                  <Check className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1.5">
-                <h3 className="text-base font-serif font-bold text-[#E8E6E1]">
-                  {profile.username === "Oyuncu" ? "Sinefil #3095" : profile.username}
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setIsEditingName(true)}
-                  className="text-[#8A8F9A] hover:text-[#D9A441] transition-colors p-1"
-                  title="İsmi Düzenle"
-                >
-                  <Edit3 className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Level & Rank */}
-          <div className="flex items-center gap-1 text-[11px] font-mono text-[#8A8F9A] mb-1">
-            <span className="text-[#D9A441] font-bold">Seviye {currentRank.level}</span>
-            <span>·</span>
-            <span>{currentRank.title}</span>
-          </div>
-
-          {/* Favorite Director (Single line) */}
-          <div className="relative mb-4">
-            <button
-              type="button"
-              onClick={() => setShowDirectorPicker(!showDirectorPicker)}
-              className="flex items-center gap-1 text-[11px] font-sans text-zinc-400 hover:text-white transition-colors"
-            >
-              <Clapperboard className="w-3 h-3 text-[#D9A441]" />
-              <span>Favori Yönetmen:</span>
-              <span className="font-semibold text-[#E8E6E1] underline decoration-[#D9A441]/40 underline-offset-2">
-                {favoriteDirector}
-              </span>
-            </button>
-
-            {showDirectorPicker && (
-              <div className="absolute left-1/2 -translate-x-1/2 top-6 z-30 w-56 p-1.5 rounded-xl bg-[#0F1115] border border-white/10 shadow-xl max-h-36 overflow-y-auto custom-scrollbar animate-in fade-in">
-                {FAVORITE_DIRECTORS.map((dir) => (
-                  <button
-                    key={dir}
-                    type="button"
-                    onClick={() => handleSelectDirector(dir)}
-                    className={`w-full text-left px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
-                      favoriteDirector === dir
-                        ? "bg-[#181B22] text-[#D9A441] font-bold"
-                        : "text-[#E8E6E1] hover:bg-white/5"
-                    }`}
-                  >
-                    {dir}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
 
-        {nameError && (
-          <div className="text-[10px] text-[#E5484D] font-mono mb-3 bg-[#E5484D]/10 px-2 py-1 rounded border border-[#E5484D]/30 text-center">
-            {nameError}
-          </div>
-        )}
-
-        {/* 3 Core Stats: Wins, Losses, Ratio */}
-        <div className="w-full p-3 rounded-xl bg-[#0F1115] border border-white/5 text-center mb-3">
-          <div className="flex items-center justify-center gap-1.5 mb-2 pb-1.5 border-b border-white/5">
-            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-[#D9A441]">
-              SİNEFİL SİCİLİ
-            </span>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            <div>
-              <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
-                GALİBİYET
-              </span>
-              <span className="text-base font-mono font-bold text-[#D9A441] mt-0.5 block">
-                {profile.wins}
-              </span>
-            </div>
-            <div className="border-x border-white/5">
-              <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
-                MAĞLUBİYET
-              </span>
-              <span className="text-base font-mono font-bold text-[#E5484D] mt-0.5 block">
-                {profile.losses}
-              </span>
-            </div>
-            <div>
-              <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
-                ORAN
-              </span>
-              <span className="text-base font-mono font-bold text-[#E8E6E1] mt-0.5 block">
-                %{winRate}
-              </span>
-            </div>
-          </div>
+        {/* 7D.3 Seviye Satırı: "Seviye 1 · Bilet Kontrolörü" */}
+        <div className="text-xs font-sans text-[#8A8F9A] mb-1">
+          <span>Seviye {currentRank.level} · {currentRank.title}</span>
         </div>
 
-        {/* Last 5 Matches: Film Strip of 5 mini frames */}
-        <div className="w-full p-3 rounded-xl bg-[#0F1115] border border-white/5 mb-3 flex items-center justify-between">
+        {/* 7D.3 Favori Yönetmen: Dokunulabilir (küçük ok, alt çizgi yok) */}
+        <div className="relative mb-4">
+          <button
+            type="button"
+            onClick={() => setShowDirectorPicker(true)}
+            className="flex items-center gap-1 text-xs text-[#8A8F9A] hover:text-[#E8E6E1] transition-colors py-0.5"
+          >
+            <span>Favori yönetmen:</span>
+            <span className="font-semibold text-[#E8E6E1] ml-0.5">{favoriteDirector}</span>
+            <ChevronRight className="w-3 h-3 text-[#D9A441]" />
+          </button>
+        </div>
+      </div>
+
+      {nameError && (
+        <div className="text-xs text-[#E5484D] mb-3 p-2 rounded-lg bg-[#E5484D]/10 border border-[#E5484D]/30 text-center">
+          {nameError}
+        </div>
+      )}
+
+      {/* 7D.4 Sinefil Sicili: Galibiyet / Mağlubiyet / Oran (Mağlubiyet soluk metin, kırmızı değil!) */}
+      <div className="w-full p-3.5 rounded-xl bg-[#14171D] border border-white/10 text-center mb-3">
+        <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#D9A441] block mb-2 pb-1.5 border-b border-white/5">
+          Sinefil sicili
+        </span>
+        <div className="grid grid-cols-3 gap-2">
           <div>
-            <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#8A8F9A] block">
-              SON 5 MAÇ
+            <span className="text-[9px] font-sans font-bold text-[#8A8F9A] uppercase block">
+              GALİBİYET
             </span>
-            <span className="text-[8px] text-zinc-500 font-sans">Form Şeridi</span>
+            <span className="text-lg font-mono font-bold text-[#D9A441] mt-0.5 block">
+              {profile.wins}
+            </span>
           </div>
+          <div className="border-x border-white/5">
+            <span className="text-[9px] font-sans font-bold text-[#8A8F9A] uppercase block">
+              MAĞLUBİYET
+            </span>
+            <span className="text-lg font-mono font-bold text-[#8A8F9A] mt-0.5 block">
+              {profile.losses}
+            </span>
+          </div>
+          <div>
+            <span className="text-[9px] font-sans font-bold text-[#8A8F9A] uppercase block">
+              ORAN
+            </span>
+            <span className="text-lg font-mono font-bold text-[#E8E6E1] mt-0.5 block">
+              {winRateDisplay}
+            </span>
+          </div>
+        </div>
+      </div>
 
-          <div className="flex items-center gap-1.5">
-            {last5.map((res, idx) => {
+      {/* 7D.5 Son 5 Düello (Dokununca Arşiv açılır) */}
+      <button
+        type="button"
+        onClick={() => {
+          if (onOpenArchive) {
+            audio.playSelect();
+            onOpenArchive();
+          }
+        }}
+        className="w-full p-3.5 rounded-xl bg-[#14171D] border border-white/10 hover:border-white/20 transition-all mb-3 flex items-center justify-between text-left"
+      >
+        <div>
+          <span className="text-xs font-serif font-bold text-[#E8E6E1] block">
+            Son 5 düello
+          </span>
+          <span className="text-[10px] text-[#8A8F9A]">
+            {recent.length === 0 ? "Henüz düello yok." : "Arşivi incele →"}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          {recent.length === 0 ? (
+            <span className="text-xs text-[#8A8F9A] font-mono">—</span>
+          ) : (
+            recent.map((res, idx) => {
               const isWin = res === "W";
               const isLoss = res === "L";
               return (
@@ -423,136 +321,212 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     isWin
                       ? "bg-[#D9A441]/10 text-[#D9A441] border-[#D9A441]/40"
                       : isLoss
-                      ? "bg-[#E5484D]/10 text-[#E5484D] border-[#E5484D]/40"
+                      ? "bg-white/5 text-[#8A8F9A] border-white/10"
                       : "bg-[#181B22] text-[#8A8F9A] border-white/5"
                   }`}
                 >
                   {isWin ? "✓" : isLoss ? "✕" : "·"}
                 </div>
               );
-            })}
-          </div>
+            })
+          )}
         </div>
+      </button>
 
-        {/* Quick Settings: Sound & Haptics Toggles */}
-        <div className="w-full pt-3 border-t border-white/5 space-y-1.5">
-          <div className="flex items-center justify-between p-2 rounded-xl bg-[#0F1115] border border-white/5 text-xs">
-            <div className="flex items-center gap-2">
-              {isMuted ? (
-                <VolumeX className="w-3.5 h-3.5 text-[#8A8F9A]" />
-              ) : (
-                <Volume2 className="w-3.5 h-3.5 text-[#D9A441]" />
-              )}
-              <span className="font-sans text-[11px] text-[#E8E6E1]">Ses Efektleri</span>
-            </div>
-            <button
-              type="button"
-              onClick={onToggleMute}
-              className={`px-3 py-1.5 rounded-lg text-[9px] font-mono font-bold transition-colors min-h-[44px] min-w-[54px] flex items-center justify-center ${
-                !isMuted
-                  ? "bg-[#181B22] text-[#D9A441] border border-[#D9A441]/40"
-                  : "bg-[#14171D] text-[#8A8F9A] border border-white/5"
-              }`}
-            >
-              {!isMuted ? "AÇIK" : "KAPALI"}
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between p-2 rounded-xl bg-[#0F1115] border border-white/5 text-xs">
-            <div className="flex items-center gap-2">
-              <Smartphone className={`w-3.5 h-3.5 ${hapticOn ? "text-[#D9A441]" : "text-[#8A8F9A]"}`} />
-              <span className="font-sans text-[11px] text-[#E8E6E1]">Titreşim &amp; Haptik</span>
-            </div>
-            <button
-              type="button"
-              onClick={toggleHaptic}
-              className={`px-3 py-1.5 rounded-lg text-[9px] font-mono font-bold transition-colors min-h-[44px] min-w-[54px] flex items-center justify-center ${
-                hapticOn
-                  ? "bg-[#181B22] text-[#D9A441] border border-[#D9A441]/40"
-                  : "bg-[#14171D] text-[#8A8F9A] border border-white/5"
-              }`}
-            >
-              {hapticOn ? "AÇIK" : "KAPALI"}
-            </button>
-          </div>
-        </div>
-
-        {/* Account Status / Link */}
-        <div className="w-full mt-2 p-2.5 rounded-xl bg-[#0F1115] border border-white/5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className={`w-3.5 h-3.5 ${isAnonymousUser ? "text-[#8A8F9A]" : "text-[#D9A441]"}`} />
-              <div>
-                <div className="text-[10px] font-sans font-semibold text-[#E8E6E1]">
-                  {isAnonymousUser ? "Misafir Hesabı" : "Bağlı Hesap"}
-                </div>
-                <div className="text-[8px] font-mono text-[#8A8F9A]">
-                  {isAnonymousUser ? "Cihazınızda kayıtlı" : userEmail || "Buluta bağlı"}
-                </div>
+      {/* 7D.7 Hesap Satırı: "Misafir hesabı. Cihazında kayıtlı." + [HESAP OLUŞTUR] */}
+      <div className="w-full p-3.5 rounded-xl bg-[#14171D] border border-white/10 mb-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className={`w-4 h-4 ${isAnonymousUser ? "text-[#8A8F9A]" : "text-[#D9A441]"}`} />
+            <div>
+              <div className="text-xs font-bold text-[#E8E6E1]">
+                {isAnonymousUser ? "Misafir hesabı" : "Kayıtlı hesap"}
+              </div>
+              <div className="text-[10px] text-[#8A8F9A]">
+                {isAnonymousUser ? "Cihazında kayıtlı." : userEmail || "Buluta bağlı"}
               </div>
             </div>
-
-            {isAnonymousUser && (
-              <button
-                type="button"
-                onClick={() => setShowLinkAccount(!showLinkAccount)}
-                className="px-2 py-1 rounded-lg bg-[#181B22] border border-white/10 text-[9px] font-mono font-bold text-[#D9A441] hover:border-[#D9A441]/40 transition-colors"
-              >
-                {showLinkAccount ? "Kapat" : "Kaydet"}
-              </button>
-            )}
           </div>
 
-          {isAnonymousUser && showLinkAccount && (
-            <form
-              onSubmit={handleLinkAccount}
-              className="mt-2.5 pt-2 border-t border-white/5 space-y-1.5 animate-in fade-in"
+          {isAnonymousUser && (
+            <Button
+              variant="inline"
+              onClick={() => setShowLinkAccount(!showLinkAccount)}
             >
-              <input
-                type="email"
-                placeholder="ornek@sinefil.com"
-                value={linkEmail}
-                onChange={(e) => setLinkEmail(e.target.value)}
-                required
-                className="w-full px-2.5 py-1.5 rounded-lg bg-[#14171D] border border-white/10 text-xs text-[#E8E6E1] placeholder-zinc-600 focus:outline-none focus:border-[#D9A441]"
-              />
-              <input
-                type="password"
-                placeholder="Şifre (en az 6 karakter)"
-                value={linkPassword}
-                onChange={(e) => setLinkPassword(e.target.value)}
-                required
-                minLength={6}
-                className="w-full px-2.5 py-1.5 rounded-lg bg-[#14171D] border border-white/10 text-xs text-[#E8E6E1] placeholder-zinc-600 focus:outline-none focus:border-[#D9A441]"
-              />
-              {linkMessage && (
-                <div
-                  className={`text-[9px] font-mono p-1 rounded text-center ${
-                    linkMessage.type === "success"
-                      ? "bg-[#D9A441]/10 text-[#D9A441] border border-[#D9A441]/30"
-                      : "bg-[#E5484D]/10 text-[#E5484D] border border-[#E5484D]/30"
-                  }`}
-                >
-                  {linkMessage.text}
-                </div>
-              )}
-              <button
-                type="submit"
-                disabled={linkLoading}
-                className="w-full py-2 rounded-lg bg-[#D9A441] text-[#0B0D12] text-xs font-black uppercase tracking-wider disabled:opacity-50"
-              >
-                {linkLoading ? "Bağlanıyor..." : "Hesabı Kilitle"}
-              </button>
-            </form>
+              {showLinkAccount ? "Kapat" : "HESAP OLUŞTUR"}
+            </Button>
           )}
         </div>
 
-        {/* Micro-label at bottom */}
-        <div className="text-center mt-3">
-          <span className="text-[8px] font-mono tracking-widest text-[#8A8F9A] opacity-30 uppercase">
-            35MM · 24 FPS
-          </span>
+        {isAnonymousUser && showLinkAccount && (
+          <form
+            onSubmit={handleLinkAccount}
+            className="mt-3 pt-3 border-t border-white/5 space-y-2 animate-in fade-in"
+          >
+            <input
+              type="email"
+              placeholder="ornek@sinefil.com"
+              value={linkEmail}
+              onChange={(e) => setLinkEmail(e.target.value)}
+              required
+              className="w-full px-3 py-2 rounded-lg bg-[#0B0D12] border border-white/10 text-xs text-[#E8E6E1] placeholder:text-[#8A8F9A]/40 focus:outline-none focus:border-[#D9A441]"
+            />
+            <input
+              type="password"
+              placeholder="Şifre (en az 6 karakter)"
+              value={linkPassword}
+              onChange={(e) => setLinkPassword(e.target.value)}
+              required
+              minLength={6}
+              className="w-full px-3 py-2 rounded-lg bg-[#0B0D12] border border-white/10 text-xs text-[#E8E6E1] placeholder:text-[#8A8F9A]/40 focus:outline-none focus:border-[#D9A441]"
+            />
+            {linkMessage && (
+              <div
+                className={`text-xs p-1.5 rounded text-center ${
+                  linkMessage.type === "success"
+                    ? "bg-[#D9A441]/10 text-[#D9A441] border border-[#D9A441]/30"
+                    : "bg-[#E5484D]/10 text-[#E5484D] border border-[#E5484D]/30"
+                }`}
+              >
+                {linkMessage.text}
+              </div>
+            )}
+            <Button
+              type="submit"
+              variant="primary"
+              fullWidth
+              disabled={linkLoading}
+            >
+              {linkLoading ? "Bağlanıyor..." : "ONAYLA"}
+            </Button>
+          </form>
+        )}
+      </div>
+
+      {/* 7D.8 Alt Etiket */}
+      <div className="text-center mt-2">
+        <span className="text-[9px] font-mono tracking-widest text-[#8A8F9A] opacity-40 uppercase">
+          35MM · 24 FPS
+        </span>
+      </div>
+
+      {/* 7D.2 Avatar Seçici Alt Sheet */}
+      {showAvatarPicker && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowAvatarPicker(false);
+          }}
+          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm select-none"
+        >
+          <div className="w-full max-w-lg mx-auto bg-[#14171D] border-t border-x border-white/10 rounded-t-[24px] p-4 sm:p-5 flex flex-col max-h-[85dvh] shadow-2xl animate-in slide-in-from-bottom-5 duration-200">
+            <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
+            <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
+              <h2 className="font-serif text-base font-bold text-[#E8E6E1]">
+                Avatar Seç
+              </h2>
+              <Button
+                variant="icon"
+                onClick={() => setShowAvatarPicker(false)}
+                title="Kapat"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* 8 Tek Renk Çizgi İkon, Tek Kelime Etiketler, Kesilmez */}
+            <div className="grid grid-cols-4 gap-2.5 py-4">
+              {AVATAR_OPTIONS.map((a) => {
+                const isSelected = selectedAvatar === a.id;
+                return (
+                  <button
+                    key={a.id}
+                    type="button"
+                    onClick={() => handleSelectAvatar(a.id)}
+                    className={`p-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all border active:scale-95 ${
+                      isSelected
+                        ? "bg-[#181B22] border-[#D9A441] text-[#D9A441]"
+                        : "bg-[#0B0D12] border-white/5 text-[#8A8F9A] hover:text-[#E8E6E1] hover:border-white/15"
+                    }`}
+                  >
+                    <AvatarIcon id={a.id} className="w-6 h-6" />
+                    <span className="text-[10px] font-sans font-bold truncate max-w-full">
+                      {a.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
+      )}
+
+      {/* Yönetmen Seçici Alt Sheet */}
+      {showDirectorPicker && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowDirectorPicker(false);
+          }}
+          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm select-none"
+        >
+          <div className="w-full max-w-lg mx-auto bg-[#14171D] border-t border-x border-white/10 rounded-t-[24px] p-4 sm:p-5 flex flex-col max-h-[80dvh] shadow-2xl animate-in slide-in-from-bottom-5 duration-200">
+            <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
+            <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
+              <h2 className="font-serif text-base font-bold text-[#E8E6E1]">
+                Favori Yönetmen
+              </h2>
+              <Button
+                variant="icon"
+                onClick={() => setShowDirectorPicker(false)}
+                title="Kapat"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-1.5 py-3 pr-1 custom-scrollbar">
+              {FAVORITE_DIRECTORS.map((dir) => (
+                <button
+                  key={dir}
+                  type="button"
+                  onClick={() => handleSelectDirector(dir)}
+                  className={`w-full text-left p-3 rounded-xl text-xs font-sans font-medium transition-colors border ${
+                    favoriteDirector === dir
+                      ? "bg-[#181B22] border-[#D9A441] text-[#D9A441] font-bold"
+                      : "bg-[#0B0D12] border-white/5 text-[#E8E6E1] hover:bg-white/5 hover:border-white/10"
+                  }`}
+                >
+                  {dir}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  if (isPage) {
+    return (
+      <div className="min-h-screen bg-[#0B0D12] flex flex-col pt-4 pb-28">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
+      <div className="w-full max-w-sm rounded-2xl bg-[#0B0D12] border border-white/10 shadow-2xl overflow-hidden relative">
+        {onClose && (
+          <Button
+            variant="icon"
+            onClick={onClose}
+            className="absolute top-3 right-3 z-10"
+            title="Kapat"
+          >
+            <X className="w-4 h-4" />
+          </Button>
+        )}
+        {content}
       </div>
     </div>
   );

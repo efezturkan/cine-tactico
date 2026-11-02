@@ -32,6 +32,9 @@ import { FLAGS } from "@/config/flags";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { QuickMatchSetupModal } from "@/features/multiplayer";
+import { AvatarIcon } from "./ui/AvatarIcon";
+import { Button } from "./ui/Button";
+import { BottomNav } from "./ui/BottomNav";
 
 export type ArenaModeKey = "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT";
 
@@ -97,6 +100,7 @@ const SprocketStrip = () => (
 const MODE_DEFINITIONS: {
   id: ArenaModeKey;
   title: string;
+  subLabel: string;
   heroSummary: string;
   accent: "amber" | "cyan";
   icon: React.ComponentType<{ className?: string }>;
@@ -104,21 +108,24 @@ const MODE_DEFINITIONS: {
   {
     id: "CLASSIC",
     title: "Klasik Düello",
-    heroSummary: "Yönetmen / Tür × Oyuncu kesişiminde ortak filmi bul",
+    subLabel: "Yönetmen × Oyuncu",
+    heroSummary: "Yönetmen veya tür ile oyuncunun ortak filmini bul.",
     accent: "amber",
     icon: Clapperboard,
   },
   {
     id: "REVERSE_CAST",
     title: "Ters Kadraj",
-    heroSummary: "İki farklı filmin kesişimindeki ortak oyuncuyu bul",
+    subLabel: "Film × Film",
+    heroSummary: "İki farklı yapımın ortak oyuncusunu bul.",
     accent: "cyan",
     icon: Users,
   },
   {
     id: "CINE_CONCEPT",
     title: "Sinefil Konsept",
-    heroSummary: "Kült temalar, dönemler ve anlatı kriterlerinde filmi bul",
+    subLabel: "Tema",
+    heroSummary: "Kült temalar ve anlatı kriterlerinde filmi bul.",
     accent: "amber",
     icon: Compass,
   },
@@ -266,15 +273,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             title="Sinefil Kartı"
           >
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0 transition-transform group-hover:scale-105"
+              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"
               style={{
                 background: "#14171D",
                 border: "1px solid rgba(255,255,255,0.1)",
               }}
             >
-              <span className="leading-none select-none">
-                {currentAvatar.emoji}
-              </span>
+              <AvatarIcon id={profile.avatarId} className="w-4 h-4 text-[#D9A441]" />
             </div>
 
             <div className="min-w-0 flex flex-col">
@@ -290,25 +295,24 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </button>
 
           {/* Sağ Bölüm: Seri Sayısı + Ses Toggle + Ayarlar */}
-          <div className="flex items-center gap-1.5 shrink-0">
-            {/* Seri Sayısı */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* 7A.5 Seri Sayısı (Pill'siz) */}
             <div
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#14171D] border border-white/10 text-xs font-mono font-bold text-[#D9A441]"
+              className="flex items-center gap-1 text-xs font-mono font-bold text-[#D9A441] px-1"
               title={`Galibiyet Serisi: ${profile.dailyStreak || 1}`}
             >
-              <Flame className="w-3.5 h-3.5 fill-[#D9A441] text-[#D9A441]" />
+              <Flame className="w-4 h-4 fill-[#D9A441] text-[#D9A441]" />
               <span>{profile.dailyStreak || 1}</span>
             </div>
 
             {/* Ses Aç / Kapat */}
             {onToggleMute && (
-              <button
-                type="button"
+              <Button
+                variant="icon"
                 onClick={() => {
                   haptic.light();
                   onToggleMute();
                 }}
-                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
                 title="Sesi Aç / Kapat"
               >
                 {muted ? (
@@ -316,22 +320,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 ) : (
                   <Volume2 className="w-4 h-4 text-[#D9A441]" />
                 )}
-              </button>
+              </Button>
             )}
 
             {/* Ayarlar */}
-            <button
-              type="button"
+            <Button
+              variant="icon"
               onClick={() => {
                 audio.playSelect();
                 haptic.light();
                 onOpenProfileModal();
               }}
-              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
               title="Ayarlar & Profil"
             >
               <Settings className="w-4 h-4 text-[#8A8F9A]" />
-            </button>
+            </Button>
 
             {/* FLAGS arkasındaki Ambiyans ve Yardım (UI'da gizli) */}
             {FLAGS.SHOW_HEADER_AMBIENCE_BUTTON && onOpenLiveAmbience && (
@@ -372,42 +375,45 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </p>
         </div>
 
-        {/* ── 3. SINGLE-FOCUS HERO DUEL STAGE (DESIGN.md Düz Kart, 1px Çerçeve, Viewfinder Köşeleri, Altın Buton) ─── */}
+        {/* ── 3. SINGLE-FOCUS HERO DUEL STAGE (7A.1 & 7A.2: pb-7, köşe boşluğu >= 12px, kesilmeyen metin) ─── */}
         <div
-          className="w-full p-4 sm:p-5 rounded-2xl relative overflow-hidden transition-all bg-[#14171D] border border-white/10"
+          className="w-full pt-5 px-5 pb-7 rounded-2xl relative overflow-hidden transition-all bg-[#14171D] border border-white/10"
         >
-          {/* Viewfinder Framing Brackets (İmza Öğesi 2) */}
+          {/* Viewfinder Framing Brackets (İmza Öğesi 2: Köşe boşluğu >= 12px) */}
           <div className="absolute top-2.5 left-2.5 w-3 h-3 border-t-2 border-l-2 border-[#D9A441] pointer-events-none rounded-tl-sm" />
           <div className="absolute top-2.5 right-2.5 w-3 h-3 border-t-2 border-r-2 border-[#D9A441] pointer-events-none rounded-tr-sm" />
           <div className="absolute bottom-2.5 left-2.5 w-3 h-3 border-b-2 border-l-2 border-[#D9A441] pointer-events-none rounded-bl-sm" />
           <div className="absolute bottom-2.5 right-2.5 w-3 h-3 border-b-2 border-r-2 border-[#D9A441] pointer-events-none rounded-br-sm" />
 
           <div className="relative z-10 flex flex-col items-center text-center">
-            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#F1EEE7] tracking-wide leading-tight">
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#E8E6E1] tracking-wide leading-tight">
               {activeModeMeta.title}
             </h2>
 
-            <p className="text-xs sm:text-[13px] text-[#8A8F9A] font-medium mt-1 max-w-[290px] leading-snug truncate">
+            <p className="text-xs sm:text-[13px] text-[#8A8F9A] font-medium mt-1 leading-snug max-w-sm">
               {activeModeMeta.heroSummary}
             </p>
 
-            {/* Primary Centered 3D Tactile Action Button */}
-            <button
-              type="button"
-              data-testid="hero-start-duel-btn"
-              onClick={handleLaunchDuel}
-              className="w-full mt-3.5 py-3 sm:py-3.5 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wider uppercase flex items-center justify-center gap-2.5 transition-transform active:translate-y-[2px] cursor-pointer tactile-btn-amber"
-            >
-              <Play className="w-4 h-4 fill-current shrink-0" />
-              <span>DÜELLOYA GİR</span>
-            </button>
+            {/* 2.3 & 7A.2 Tek Birincil Altın Buton */}
+            <div className="w-full mt-4">
+              <Button
+                variant="primary"
+                fullWidth
+                data-testid="hero-start-duel-btn"
+                onClick={handleLaunchDuel}
+                className="flex items-center justify-center gap-2"
+              >
+                <Play className="w-4 h-4 fill-current shrink-0" />
+                <span>DÜELLOYA GİR</span>
+              </Button>
+            </div>
           </div>
         </div>
 
-        {/* ── 4. YATAY KAYDIRMALI MOD AFİŞLERİ (TUR 2 Madde 4) ─── */}
+        {/* ── 4. YATAY KAYDIRMALI MOD AFİŞLERİ (7A.3: Alt etiketler, nokta yok) ─── */}
         <div className="w-full space-y-1.5">
           <div className="flex items-center justify-between px-1">
-            <span className="text-[10px] font-mono font-bold tracking-[0.18em] uppercase text-[#8A8F9A]">
+            <span className="text-[10px] font-sans font-semibold tracking-wider uppercase text-[#8A8F9A]">
               VİZYONDAKİ MODLAR
             </span>
           </div>
@@ -440,11 +446,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       : "#14171D",
                   }}
                 >
-                  {/* Seçili İndikatörü */}
-                  {isSelected && (
-                    <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#D9A441]" />
-                  )}
-
                   <div
                     className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors"
                     style={{
@@ -466,12 +467,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     >
                       {m.title}
                     </span>
-                    <span className="text-[8px] font-mono uppercase tracking-wider text-[#8A8F9A]/70 block mt-0.5">
-                      {m.id === "CLASSIC"
-                        ? "KLASİK"
-                        : m.id === "REVERSE_CAST"
-                        ? "KADRO"
-                        : "KONSEPT"}
+                    <span className="text-[8.5px] font-sans text-[#8A8F9A] block mt-0.5 whitespace-nowrap">
+                      {m.subLabel}
                     </span>
                   </div>
                 </button>
@@ -480,7 +477,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </div>
 
-        {/* ── 5. GÜNÜN KADRASI (BİLET KUPÜRÜ GÖRÜNÜMÜ - DESIGN.md Kural 5) ─── */}
+        {/* ── 5. GÜNÜN KADRASI (7A.4: NO.xx tarihten, GÜNLÜK rozet kaldırıldı) ─── */}
         <button
           type="button"
           onClick={() => {
@@ -511,7 +508,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <div className="w-9 h-9 rounded-xl bg-[#181B22] border border-[#D9A441]/40 flex flex-col items-center justify-center shrink-0">
               <Ticket className="w-4 h-4 text-[#D9A441]" />
               <span className="text-[7px] font-mono text-[#D9A441] font-bold">
-                NO.01
+                NO.{Math.max(1, Math.floor((Date.now() - new Date("2025-01-01").getTime()) / (1000 * 60 * 60 * 24))).toString().padStart(2, "0")}
               </span>
             </div>
 
@@ -519,22 +516,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <div className="h-8 w-px border-r border-dashed border-white/15 shrink-0" />
 
             <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs sm:text-sm font-serif font-bold text-[#F1EEE7]">
-                  Günün Kadrası
-                </span>
-                <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-[#D9A441]/15 text-[#D9A441]">
-                  GÜNLÜK
-                </span>
-              </div>
-              <p className="text-[10px] sm:text-[11px] text-[#8A8F9A] font-medium truncate mt-0.5">
-                Günde bir sabit kadraj · Paylaşılabilir sonuç
+              <span className="text-xs sm:text-sm font-serif font-bold text-[#F1EEE7] block">
+                Günün Kadrası
+              </span>
+              <p className="text-[10px] sm:text-[11px] text-[#8A8F9A] font-medium mt-0.5 leading-snug">
+                Günde bir kadraj. Sonucunu paylaş.
               </p>
             </div>
           </div>
 
           <div className="pr-2 shrink-0">
-            <span className="text-xs font-bold text-[#D9A441] font-mono flex items-center gap-0.5">
+            <span className="text-xs font-bold text-[#D9A441] font-sans flex items-center gap-0.5">
               Bileti Aç &rarr;
             </span>
           </div>
@@ -550,78 +542,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       </div>
 
       {/* ── 6. BOTTOM NAVIGATION BAR (DESIGN.md 4 Sekme: Gişe, Vizyondakiler, Özel Gösterim, Sinefil Kartı) ─── */}
-      <nav
-        className="fixed bottom-0 left-0 right-0 flex items-center justify-around px-2 sm:px-3 z-40 max-w-[430px] mx-auto w-full"
-        style={{
-          background: "rgba(11, 13, 18, 0.96)",
-          borderTop: "1px solid rgba(255, 255, 255, 0.08)",
-          backdropFilter: "blur(12px)",
-          paddingTop: "0.45rem",
-          paddingBottom: "max(0.55rem, env(safe-area-inset-bottom))",
+      <BottomNav
+        activeTab="HOME"
+        onSelectTab={(tabId) => {
+          if (tabId === "GAME_SELECT") {
+            if (onOpenGameSelect) onOpenGameSelect();
+            else if (onOpenGameModesHub) onOpenGameModesHub();
+          } else if (tabId === "CUSTOM_ROOM") {
+            onOpenCustomLobby();
+          } else if (tabId === "PROFILE") {
+            onOpenProfileModal();
+          }
         }}
-      >
-        {[
-          {
-            label: "Gişe",
-            icon: Ticket,
-            active: true,
-            act: undefined,
-          },
-          {
-            label: "Vizyondakiler",
-            icon: Film,
-            active: false,
-            act: () => {
-              audio.playSelect();
-              if (onOpenGameSelect) onOpenGameSelect();
-              else if (onOpenGameModesHub) onOpenGameModesHub();
-            },
-          },
-          {
-            label: "Özel Gösterim",
-            icon: Swords,
-            active: false,
-            act: () => {
-              audio.playSelect();
-              onOpenCustomLobby();
-            },
-          },
-          {
-            label: "Sinefil Kartı",
-            icon: User,
-            active: false,
-            act: () => {
-              audio.playSelect();
-              onOpenProfileModal();
-            },
-          },
-        ].map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.label}
-              type="button"
-              onClick={tab.act}
-              className={`flex flex-col items-center justify-center min-h-[44px] min-w-[56px] transition-all active:scale-95 px-3 py-1 rounded-xl ${
-                tab.active
-                  ? "bg-[#181B22] border border-[#D9A441]/40"
-                  : "hover:bg-white/5 border border-transparent"
-              }`}
-            >
-              <Icon
-                className="w-4 h-4 stroke-[1.8]"
-                style={{ color: tab.active ? "#D9A441" : "#8A8F9A" }}
-              />
-              <span
-                className="text-[9px] font-bold mt-0.5 tracking-wide"
-                style={{ color: tab.active ? "#D9A441" : "#8A8F9A" }}
-              >
-                {tab.label}
-              </span>
-            </button>
-          );
-        })}
-      </nav>
+      />
 
       {/* ── Quick Match Setup Modal ─── */}
       <QuickMatchSetupModal

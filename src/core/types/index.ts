@@ -153,6 +153,7 @@ export interface CellAnswer {
 export interface GameBoard {
   id: string;
   title: string;
+  displayTitle?: string;
   boardMode?: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT";
   difficulty: "EASY" | "MEDIUM" | "HARD";
   rows: Criterion[];
