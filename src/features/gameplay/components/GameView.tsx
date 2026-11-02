@@ -17,13 +17,14 @@ import { MovieSearchModal } from "./MovieSearchModal";
 import { ActorSearchModal } from "./ActorSearchModal";
 import { GoldenReelModal } from "./GoldenReelModal";
 import { PostGameAnalysisModal } from "./PostGameAnalysisModal";
-import { ClapperCountdown } from "./ClapperCountdown";
+import { ClapperCountdown, IntroPhase } from "./ClapperCountdown";
 
 import {
   ShieldAlert,
   Swords,
   Lightbulb,
   X,
+  Film,
 } from "lucide-react";
 
 export interface GameViewProps {
@@ -88,12 +89,12 @@ export interface GameViewProps {
 
 export function GameView(props: GameViewProps) {
   const [showClapper, setShowClapper] = useState(true);
-  const [introCount, setIntroCount] = useState<3 | 2 | 1 | null>(3);
+  const [introPhase, setIntroPhase] = useState<IntroPhase>("3");
 
   const isIntro = props.isIntroActive !== undefined ? props.isIntroActive : showClapper;
   const handleIntroComplete = () => {
     setShowClapper(false);
-    setIntroCount(null);
+    setIntroPhase(null);
     if (props.onCompleteIntro) {
       props.onCompleteIntro();
     }
@@ -108,25 +109,36 @@ export function GameView(props: GameViewProps) {
 
   return (
     <div
-      className="min-h-[100dvh] text-[#E8E6E1] flex flex-col justify-between font-sans select-none antialiased transition-colors duration-500 relative overflow-hidden"
+      className="h-[100dvh] min-h-[100dvh] text-[#E8E6E1] flex flex-col justify-between font-sans select-none antialiased transition-colors duration-500 relative overflow-hidden"
       style={{
         backgroundColor: gameTheme?.bgColor || "#0B0D12",
         filter: `brightness(${Math.min(1.1, Math.max(0.65, safeGameDimness / 85))})`,
+        // Dynamic arena size: uses 94% on mobile, up to 720px on desktop without vertical scrolling
+        ["--game-arena-size" as string]: "min(94vw, calc(100dvh - 120px), 720px)",
       }}
     >
       {/* Maç Başı First Look & Klaket Animasyonu (Tahtayı İnceleme + 35mm Klaket Çarpması, Dokunarak Geçilebilir) */}
       {isIntro && (
         <ClapperCountdown
           onComplete={handleIntroComplete}
-          onCountChange={setIntroCount}
+          onPhaseChange={setIntroPhase}
           isMuted={props.muted}
         />
       )}
 
-      {/* 35mm Analog Film Grain Overlay in Game */}
+      {/* ── Layer 1: Ambient Projector Beam (Tungsten/Amber Cone) ─── */}
+      <div
+        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{
+          background:
+            "radial-gradient(ellipse 75% 65% at 50% 12%, rgba(217, 164, 65, 0.08) 0%, rgba(217, 164, 65, 0.02) 48%, transparent 75%)",
+        }}
+      />
+
+      {/* ── Layer 2: 35mm Analog Film Grain Overlay in Game ─── */}
       {gameAmbience.grain && gameAmbience.grain !== "OFF" && (
         <div
-          className="absolute inset-0 pointer-events-none z-20 mix-blend-screen transition-opacity duration-300"
+          className="absolute inset-0 pointer-events-none z-10 mix-blend-screen transition-opacity duration-300"
           style={{
             opacity: gameAmbience.grain === "VINTAGE" ? 0.16 : 0.08,
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
@@ -134,60 +146,109 @@ export function GameView(props: GameViewProps) {
         />
       )}
 
-      {/* ── 1. ÜST BAR: SOL REC + TIMECODE | ORTA TAHTA ADI | SAĞ ÇIKIŞ ─── */}
-      <header className="w-full max-w-lg sm:max-w-xl mx-auto px-3 sm:px-4 pt-3 pb-1 flex items-center justify-between z-30 select-none">
-        {/* Sol: REC Noktası (2sn yumuşak nabız, sadece maç aktifken) + Timecode Süre Sayacı */}
-        <div className="flex items-center gap-2 shrink-0">
-          <span
-            className={`w-2.5 h-2.5 rounded-full transition-opacity ${
-              props.winner === null
-                ? "bg-[#E5484D] animate-pulse"
-                : "bg-[#8A8F9A]/40"
-            }`}
-            style={{ animationDuration: "2s" }}
-            title="REC"
+      {/* ── Layer 2b: 35mm Film Sprocket Wings (Widescreen Analog Framing) ─── */}
+      <aside
+        aria-hidden="true"
+        className="hidden md:flex absolute left-0 top-0 bottom-0 w-8 flex-col items-center justify-between py-4 pointer-events-none z-10 border-r border-white/5 opacity-30 select-none overflow-hidden"
+      >
+        <div className="flex flex-col items-center gap-3.5 h-full overflow-hidden">
+          {Array.from({ length: 45 }).map((_, i) => (
+            <React.Fragment key={i}>
+              <div
+                className="w-3.5 h-2.5 rounded-[2px] bg-[#07080B] border border-white/10 shrink-0"
+                style={{ boxShadow: "inset 0 1px 2px rgba(0,0,0,0.9)" }}
+              />
+              {i % 9 === 4 && (
+                <span className="text-[5.5px] font-mono font-bold text-[#D9A441]/60 tracking-widest uppercase -rotate-90 py-1.5 shrink-0">
+                  {i % 18 === 4 ? "KODAK 5219" : "35MM · 24FPS"}
+                </span>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </aside>
+
+      <aside
+        aria-hidden="true"
+        className="hidden md:flex absolute right-0 top-0 bottom-0 w-8 flex-col items-center justify-between py-4 pointer-events-none z-10 border-l border-white/5 opacity-30 select-none overflow-hidden"
+      >
+        <div className="flex flex-col items-center gap-3.5 h-full overflow-hidden">
+          {Array.from({ length: 45 }).map((_, i) => (
+            <React.Fragment key={i}>
+              <div
+                className="w-3.5 h-2.5 rounded-[2px] bg-[#07080B] border border-white/10 shrink-0"
+                style={{ boxShadow: "inset 0 1px 2px rgba(0,0,0,0.9)" }}
+              />
+              {i % 9 === 4 && (
+                <span className="text-[5.5px] font-mono font-bold text-[#D9A441]/60 tracking-widest uppercase -rotate-90 py-1.5 shrink-0">
+                  {i % 18 === 4 ? "▲ 18A" : "SOUND · DOLBY"}
+                </span>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </aside>
+
+      {/* ── Central Arcade Cabinet Arena (Dynamic Scaled Container) ─── */}
+      <div
+        className="w-full flex-1 flex flex-col items-center justify-between mx-auto relative z-20 py-2 sm:py-3 px-2 sm:px-3 min-h-0"
+        style={{ maxWidth: "var(--game-arena-size)" }}
+      >
+        {/* ── 1. ÜST BAR: SOL REC + TIMECODE | ORTA TAHTA ADI | SAĞ ÇIKIŞ ─── */}
+        <header className="w-full px-1 pt-1 pb-1 flex items-center justify-between z-30 relative select-none shrink-0">
+          {/* Sol: REC Noktası (2sn yumuşak nabız, sadece maç aktifken) + Timecode Süre Sayacı */}
+          <div className="flex items-center gap-2 shrink-0">
+            <span
+              className={`w-2.5 h-2.5 rounded-full transition-opacity ${
+                props.winner === null
+                  ? "bg-[#E5484D] animate-pulse"
+                  : "bg-[#8A8F9A]/40"
+              }`}
+              style={{ animationDuration: "2s" }}
+              title="REC"
+            />
+            <span className="font-mono text-xs sm:text-sm font-bold text-[#E8E6E1] tracking-wider">
+              00:00:{Math.max(0, props.secondsRemaining).toString().padStart(2, "0")}:08
+            </span>
+          </div>
+
+          {/* Orta: Tahta Adı (Serif Başlık, Kapsayıcı/Hap Yok) */}
+          <div className="text-center min-w-0 px-2 flex-1">
+            <h1 className="font-serif font-bold text-sm sm:text-base md:text-lg text-[#E8E6E1] truncate leading-tight">
+              {props.board.title}
+            </h1>
+          </div>
+
+          {/* Sağ: Çıkış */}
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              type="button"
+              onClick={props.onRequestExitGame}
+              className="w-8 h-8 rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
+              title="Gişe'ye Dön"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </header>
+
+        {/* ── 2. TAHTA BÜYÜK VE MERKEZDE (SIFIR DİKEY KAYMA, SABİT KADRAJ) ─── */}
+        <main className="w-full flex-1 flex flex-col items-center justify-center min-w-0 min-h-0 my-auto">
+          <XoxBoard
+            board={props.board}
+            cells={props.cells}
+            winningLine={props.winningLine}
+            currentTurn={props.currentTurn}
+            winner={props.winner}
+            onCellClick={isIntro ? () => {} : props.onCellSelect}
+            allowSteal={props.allowSteal}
+            isIntro={isIntro}
+            introPhase={isIntro ? introPhase : null}
           />
-          <span className="font-mono text-xs sm:text-sm font-bold text-[#E8E6E1] tracking-wider">
-            00:00:{Math.max(0, props.secondsRemaining).toString().padStart(2, "0")}:08
-          </span>
-        </div>
-
-        {/* Orta: Tahta Adı (Serif Başlık, Kapsayıcı/Hap Yok) */}
-        <div className="text-center min-w-0 px-2 flex-1">
-          <h1 className="font-serif font-bold text-sm sm:text-base text-[#E8E6E1] truncate leading-tight">
-            {props.board.title}
-          </h1>
-        </div>
-
-        {/* Sağ: Çıkış */}
-        <div className="flex items-center gap-1 shrink-0">
-          <button
-            type="button"
-            onClick={props.onRequestExitGame}
-            className="w-8 h-8 rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
-            title="Gişe'ye Dön"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      </header>
-
-      {/* ── 2. TAHTA BÜYÜK VE MERKEZDE ─── */}
-      <main className="flex-1 flex flex-col items-center justify-center p-1 sm:p-3 max-w-lg sm:max-w-xl mx-auto w-full min-w-0">
-        <XoxBoard
-          board={props.board}
-          cells={props.cells}
-          winningLine={props.winningLine}
-          currentTurn={props.currentTurn}
-          winner={props.winner}
-          onCellClick={isIntro ? () => {} : props.onCellSelect}
-          allowSteal={props.allowSteal}
-          isIntro={isIntro}
-          introCount={isIntro ? introCount : null}
-        />
+        </main>
 
         {/* ── 3. ALTA TEK SATIR SIRA GÖSTERGESİ ─── */}
-        <div className="w-full text-center pt-2 pb-1 select-none">
+        <div className="w-full text-center pt-2 pb-1 select-none shrink-0">
           {props.winner !== null ? (
             <span className="font-serif text-base sm:text-lg font-bold text-[#D9A441] tracking-wider">
               {props.winner === "X"
@@ -206,7 +267,7 @@ export function GameView(props: GameViewProps) {
             </p>
           )}
         </div>
-      </main>
+      </div>
 
       {/* Movie Search Modal / Actor Search Modal (Ters Kadraj) */}
       {props.activeCellIndex !== null && props.board.boardMode === "REVERSE_CAST" ? (

@@ -184,6 +184,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Ortak oyuncunun adını yaz..."
+              enterKeyHint="search"
               className="w-full bg-[#0B0D12] border border-white/10 focus:border-[#4FA3C7] rounded-2xl pl-10 pr-9 py-2.5 sm:py-3 text-base font-semibold text-[#E8E6E1] placeholder:text-[#8A8F9A]/50 outline-none transition-colors"
               autoComplete="off"
               autoCorrect="off"
@@ -201,7 +202,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
           </div>
 
           {suggestedActors.length > 0 && (
-            <div className="flex-1 min-h-0 flex flex-col gap-1.5 p-2 rounded-2xl bg-[#0B0D12] border border-white/10 overflow-y-auto custom-scrollbar">
+            <div className="flex-1 min-h-0 flex flex-col gap-1.5 p-2 rounded-2xl bg-[#0B0D12] border border-white/10 overflow-y-auto overscroll-contain custom-scrollbar">
               <span className="text-[11px] text-[#8A8F9A] px-1 font-semibold shrink-0">
                 Eşleşen Oyuncular ({suggestedActors.length}):
               </span>

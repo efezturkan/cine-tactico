@@ -253,7 +253,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
         )}
 
         {/* Anti-Cheat Search Results List (Flexible Scrollable Area) */}
-        <div className="flex-1 min-h-0 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-1.5 pr-1 custom-scrollbar">
           {query.trim().length < 2 ? (
             <div className="py-6 sm:py-8 px-4 text-center flex flex-col items-center justify-center">
               <div className="w-11 h-11 rounded-2xl bg-[#181B22] border border-white/10 flex items-center justify-center mb-2.5 text-[#D9A441] shadow">

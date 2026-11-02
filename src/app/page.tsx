@@ -254,6 +254,9 @@ function CineXoxApp() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
+    if (params.get("view") === "game" || params.get("play") === "1") {
+      setCurrentView("GAME");
+    }
     const roomParam = params.get("room");
     if (roomParam && isSupabaseConfigured) {
       const clean = roomParam.trim().toUpperCase();
