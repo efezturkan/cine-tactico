@@ -502,52 +502,63 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </div>
 
-        {/* ── 5. SECONDARY MULTIPLAYER & DAILY ACCESS ─── */}
-        <div className="grid grid-cols-2 gap-2.5">
-          <button
-            type="button"
-            onClick={() => {
-              audio.playSelect();
-              haptic.light();
-              onOpenDaily();
-            }}
-            className="p-3 rounded-2xl flex items-center gap-3 text-left transition-all active:translate-y-[1px] tactile-card-interactive"
-          >
-            <div className="w-9 h-9 rounded-xl bg-[#D9A441]/15 border border-[#D9A441]/35 flex items-center justify-center shrink-0">
-              <Clock className="w-4 h-4 text-[#D9A441]" />
-            </div>
-            <div className="min-w-0">
-              <span className="text-xs font-bold text-[#E8E6E1] block truncate">
-                Günün Kadrası
-              </span>
-              <span className="text-[10px] text-[#8A8F9A] block truncate">
-                Bilet Kupürü
-              </span>
-            </div>
-          </button>
+        {/* ── 5. GÜNÜN KADRASI (BİLET KUPÜRÜ GÖRÜNÜMÜ - DESIGN.md Kural 5) ─── */}
+        <button
+          type="button"
+          onClick={() => {
+            audio.playSelect();
+            haptic.light();
+            onOpenDaily();
+          }}
+          className="w-full relative p-3.5 sm:p-4 rounded-2xl flex items-center justify-between transition-all active:scale-[0.98] cursor-pointer overflow-hidden text-left"
+          style={{
+            background: "#14171D",
+            border: "1px dashed rgba(217, 164, 65, 0.4)",
+          }}
+        >
+          {/* Sol ve Sağ Bilet Çentikleri (Ticket Stub Notches) */}
+          <div
+            className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full"
+            style={{ background: "#0B0D12", border: "1px solid rgba(217, 164, 65, 0.3)" }}
+          />
+          <div
+            className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full"
+            style={{ background: "#0B0D12", border: "1px solid rgba(217, 164, 65, 0.3)" }}
+          />
 
-          <button
-            type="button"
-            onClick={() => {
-              audio.playSelect();
-              haptic.light();
-              onOpenCustomLobby();
-            }}
-            className="p-3 rounded-2xl flex items-center gap-3 text-left transition-all active:translate-y-[1px] tactile-card-interactive"
-          >
-            <div className="w-9 h-9 rounded-xl bg-[#4FA3C7]/15 border border-[#4FA3C7]/35 flex items-center justify-center shrink-0">
-              <Swords className="w-4 h-4 text-[#4FA3C7]" />
+          {/* Sol Kupür İkon ve Kod */}
+          <div className="flex items-center gap-3 pl-2">
+            <div className="w-10 h-10 rounded-xl bg-[#181B22] border border-[#D9A441]/40 flex flex-col items-center justify-center shrink-0">
+              <Ticket className="w-4 h-4 text-[#D9A441]" />
+              <span className="text-[7.5px] font-mono text-[#D9A441] font-bold mt-0.5">
+                NO.01
+              </span>
             </div>
+
+            {/* Delikli Ayrım Çizgisi */}
+            <div className="h-9 w-px border-r border-dashed border-white/15 mx-0.5" />
+
             <div className="min-w-0">
-              <span className="text-xs font-bold text-[#E8E6E1] block truncate">
-                Özel Gösterim
-              </span>
-              <span className="text-[10px] text-[#8A8F9A] block truncate">
-                1v1 Canlı Düello
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs sm:text-sm font-serif font-bold text-[#F1EEE7]">
+                  Günün Kadrası
+                </span>
+                <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-[#D9A441]/15 text-[#D9A441]">
+                  GÜNLÜK
+                </span>
+              </div>
+              <p className="text-[10px] sm:text-[11px] text-[#8A8F9A] font-medium truncate mt-0.5">
+                Günde bir sabit tahta · Paylaşılabilir sonuç
+              </p>
             </div>
-          </button>
-        </div>
+          </div>
+
+          <div className="pr-2 shrink-0">
+            <span className="text-xs font-bold text-[#D9A441] font-mono flex items-center gap-1">
+              Bileti Aç &rarr;
+            </span>
+          </div>
+        </button>
 
         {/* ── SIGNATURE FOOTER MICRO-LABEL (DESIGN.md İmza Öğesi 5) ─── */}
         <div className="pt-2 pb-1 text-center select-none pointer-events-none">

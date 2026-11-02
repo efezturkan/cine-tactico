@@ -253,11 +253,6 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
         <span className="text-[7.5px] sm:text-[10px] font-black text-[#F1EEE7] line-clamp-2 leading-tight px-0.5 max-w-full break-words">
           {crit.label}
         </span>
-        {crit.subLabel && crit.type !== "ACTOR" && crit.type !== "DIRECTOR" && crit.type !== "MOVIE_INTERSECTION" && (
-          <span className="text-[6.5px] text-[#A5A8B0] font-bold truncate max-w-full hidden sm:block mt-0.5">
-            {crit.subLabel}
-          </span>
-        )}
       </div>
     );
   };

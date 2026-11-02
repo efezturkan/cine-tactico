@@ -665,20 +665,9 @@ function CineXoxApp() {
   ) => {
     audio.playSelect();
     setQueueMode(modeType);
-    const result = getBoardForMode(modeType, boardIndex);
-    const targetIdx = result.index;
-    const nextBoard = result.board;
-    const opp = getRandomOpponent("MEDIUM", pendingOpponent.name);
-
-    setPendingBoardIndex(targetIdx);
-    setPendingOpponent(opp);
-    setBoardIndex(targetIdx);
-    setBoard(nextBoard);
-    resetGame(nextBoard);
-    setMode("VS_BOT");
+    setQueueDifficulty("NORMAL");
     setBotDifficulty("MEDIUM");
-    setCustomShotClock(12);
-    setCurrentView("GAME");
+    setShowMatchmakingQueue(true);
   };
 
   const handleOpenDailyFromHome = () => {
