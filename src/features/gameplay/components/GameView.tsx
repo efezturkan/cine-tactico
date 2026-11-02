@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   GameBoard,
   CellAnswer,
@@ -88,17 +88,30 @@ export interface GameViewProps {
 }
 
 export function GameView(props: GameViewProps) {
-  const [showClapper, setShowClapper] = useState(true);
+  const [showClapper, setShowClapper] = useState(props.isIntroActive ?? true);
   const [introPhase, setIntroPhase] = useState<IntroPhase>("3");
 
-  const isIntro = props.isIntroActive !== undefined ? props.isIntroActive : showClapper;
-  const handleIntroComplete = () => {
-    setShowClapper(false);
-    setIntroPhase(null);
+  useEffect(() => {
+    if (props.isIntroActive) {
+      setShowClapper(true);
+      setIntroPhase("3");
+    }
+  }, [props.isIntroActive]);
+
+  const handleIntroImpact = () => {
+    // Exact moment of clapper impact (160ms): triggers 12s move shot clock immediately
     if (props.onCompleteIntro) {
       props.onCompleteIntro();
     }
   };
+
+  const handleIntroComplete = () => {
+    // Complete sequence (360ms): smooth fade-out done, unmount overlay
+    setShowClapper(false);
+    setIntroPhase(null);
+  };
+
+  const isIntro = showClapper;
 
   const gameAmbience = { ...DEFAULT_AMBIENCE, ...(props.profile?.ambience || {}) };
   const gameTheme = (gameAmbience.theme && AMBIENCE_THEMES[gameAmbience.theme]) || AMBIENCE_THEMES.velvet_red;
@@ -120,6 +133,7 @@ export function GameView(props: GameViewProps) {
       {/* Maç Başı First Look & Klaket Animasyonu (Tahtayı İnceleme + 35mm Klaket Çarpması, Dokunmaya Duyarsız Doğal Akış) */}
       {isIntro && (
         <ClapperCountdown
+          onImpact={handleIntroImpact}
           onComplete={handleIntroComplete}
           onPhaseChange={setIntroPhase}
           isMuted={props.muted}

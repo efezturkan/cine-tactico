@@ -9,12 +9,14 @@ export type IntroPhase = "3" | "2" | "1" | "ACTION" | null;
 
 interface ClapperCountdownProps {
   onComplete: () => void;
+  onImpact?: () => void;
   isMuted?: boolean;
   onPhaseChange?: (phase: IntroPhase) => void;
 }
 
 export const ClapperCountdown: React.FC<ClapperCountdownProps> = ({
   onComplete,
+  onImpact,
   isMuted = false,
   onPhaseChange,
 }) => {
@@ -24,6 +26,9 @@ export const ClapperCountdown: React.FC<ClapperCountdownProps> = ({
 
   const onCompleteRef = useRef(onComplete);
   onCompleteRef.current = onComplete;
+
+  const onImpactRef = useRef(onImpact);
+  onImpactRef.current = onImpact;
 
   const onPhaseChangeRef = useRef(onPhaseChange);
   onPhaseChangeRef.current = onPhaseChange;
@@ -73,18 +78,25 @@ export const ClapperCountdown: React.FC<ClapperCountdownProps> = ({
   const triggerActionAndComplete = useCallback(() => {
     clearAllTimeouts();
     onPhaseChangeRef.current?.("ACTION");
-    safePlayAudio(() => audio.playChessMove());
-    safePlayHaptic(() => haptic.medium());
 
-    const holdDuration = 550;
-
+    // 1. Klaket kolu tam 160ms'de sert ve tok bir şekilde kapanıp çarpar
     registerTimeout(() => {
-      setIsLetterboxOpen(false); // Siyah bantlar yukarı ve aşağı çekilir
-      // DOM'dan kalkmadan önce mikro aralık
+      // Tam temas anında ahşap klaket çarpma sesi ve medium haptic
+      safePlayAudio(() => audio.playClapperSnap());
+      safePlayHaptic(() => haptic.medium());
+
+      // 12 saniyelik hamle sayacı tam klaketin çarptığı o temas anında başlar
+      onImpactRef.current?.();
+
+      // 2. Çarpmanın hemen ardından sinematik bantlar çekilir ve klaket 200ms içinde kaybolur
+      // Toplam süre: 160ms + 80ms + 120ms = 360ms (500ms tavan kuralına kesinlikle sadık)
       registerTimeout(() => {
-        completeCountdown();
-      }, 150);
-    }, holdDuration);
+        setIsLetterboxOpen(false);
+        registerTimeout(() => {
+          completeCountdown();
+        }, 120);
+      }, 80);
+    }, 160);
   }, [completeCountdown, safePlayAudio, safePlayHaptic]);
 
   // ── TEMPO KURALI (Toplam sekans <= 3.2 sn) ───

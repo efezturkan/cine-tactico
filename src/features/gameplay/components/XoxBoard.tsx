@@ -427,23 +427,22 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
 
                 {/* FAZ 2: KLAKET VURUŞU & AKSİYON! (3x3 ALANIN TAM MERKEZİNDE) */}
                 {introPhase === "ACTION" && (
-                  <div className="relative flex flex-col items-center justify-center animate-in zoom-in-95 duration-120 z-20">
-                    {/* Klaket Kolu (tokat gibi aşağı inen ahşap şerit kol) */}
+                  <div className="relative flex flex-col items-center justify-center animate-in zoom-in-95 duration-120 z-20 clapper-fade-out">
+                    {/* Klaket Kolu (25 derece kalkık başlar, 160ms'de sertçe kapanıp çarpar, mikro sekme yapar) */}
                     <div
-                      className="w-36 sm:w-48 md:w-56 h-5 sm:h-6 md:h-7 rounded-t-md relative overflow-hidden border border-white/20 origin-bottom-left transition-transform duration-100 ease-in"
+                      className="w-36 sm:w-48 md:w-56 h-5 sm:h-6 md:h-7 rounded-t-md relative overflow-hidden border border-white/20 origin-bottom-left clapper-arm-animate"
                       style={{
                         background:
                           "repeating-linear-gradient(45deg, #111, #111 8px, #E8E6E1 8px, #E8E6E1 16px)",
-                        transform: "rotate(0deg)",
                       }}
                     />
 
-                    {/* Klaket Gövdesi & Büyük Serif AKSİYON! */}
-                    <div className="bg-[#14171D] border border-white/15 rounded-b-xl px-4 py-2 sm:px-6 sm:py-2.5 md:px-8 md:py-3 shadow-[0_16px_40px_rgba(0,0,0,0.9)] flex flex-col items-center relative -mt-0.5 min-w-[140px] sm:min-w-[170px] md:min-w-[200px]">
+                    {/* Klaket Gövdesi & Büyük Serif AKSİYON! (Vuruş anında mikro sekme ve altın parlama) */}
+                    <div className="bg-[#14171D] border border-white/15 rounded-b-xl px-4 py-2 sm:px-6 sm:py-2.5 md:px-8 md:py-3 shadow-[0_16px_40px_rgba(0,0,0,0.9)] flex flex-col items-center relative -mt-0.5 min-w-[140px] sm:min-w-[170px] md:min-w-[200px] clapper-body-animate">
                       <span className="font-mono text-[7px] sm:text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-[#8A8F9A] mb-0.5">
                         SAHNE 01 · ÇEKİM 01
                       </span>
-                      <span className="font-serif text-xl sm:text-2xl md:text-3xl font-black text-[#D9A441] tracking-wider drop-shadow-[0_2px_12px_rgba(217,164,65,0.4)]">
+                      <span className="font-serif text-xl sm:text-2xl md:text-3xl font-black text-[#D9A441] tracking-wider action-text-flash drop-shadow-[0_2px_12px_rgba(217,164,65,0.4)]">
                         AKSİYON!
                       </span>
                     </div>

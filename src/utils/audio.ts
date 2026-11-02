@@ -80,6 +80,43 @@ export class AudioService {
     osc.stop(this.context.currentTime + 0.05);
   }
 
+  // Sinematik 35mm film seti ahşap klaket çarpma sesi (tok ahşap rezonans + keskin çat sesi)
+  public playClapperSnap(): void {
+    if (this.muted) return;
+    this.initializeContext();
+    if (!this.context) return;
+
+    const now = this.context.currentTime;
+
+    // 1. Katman: Tok ahşap gövde darbesi (düşük frekanslı tok rezonans)
+    const woodOsc = this.context.createOscillator();
+    const woodGain = this.context.createGain();
+    woodOsc.type = "triangle";
+    woodOsc.frequency.setValueAtTime(260, now);
+    woodOsc.frequency.exponentialRampToValueAtTime(72, now + 0.045);
+    woodGain.gain.setValueAtTime(0.45, now);
+    woodGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+    woodOsc.connect(woodGain);
+    woodGain.connect(this.context.destination);
+    this.registerOscillator(woodOsc);
+    woodOsc.start(now);
+    woodOsc.stop(now + 0.055);
+
+    // 2. Katman: Keskin mekanik klik / clapper arm çat sesi
+    const snapOsc = this.context.createOscillator();
+    const snapGain = this.context.createGain();
+    snapOsc.type = "sawtooth";
+    snapOsc.frequency.setValueAtTime(1400, now);
+    snapOsc.frequency.exponentialRampToValueAtTime(320, now + 0.016);
+    snapGain.gain.setValueAtTime(0.28, now);
+    snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.018);
+    snapOsc.connect(snapGain);
+    snapGain.connect(this.context.destination);
+    this.registerOscillator(snapOsc);
+    snapOsc.start(now);
+    snapOsc.stop(now + 0.02);
+  }
+
   // Analog klaket / mekanik arcade hücre mühürleme sesi (çift katmanlı tok darbe + mekanik klik)
   public playChessMove(): void {
     if (this.muted) return;
