@@ -1,6 +1,6 @@
 # CINE-XOX — DESIGN SYSTEM SPECIFICATION
-**Tarih:** 1 Kasım 2026  
-**Durum:** Palet kilitli. Ekranlar `docs/product/GAME_FEEL.md`.  
+**Tarih:** 2 Kasım 2026  
+**Üst Anayasa:** `docs/design/DESIGN.md` (CineXOX Tasarım Anayasası — Tartışılmaz bağlayıcı anayasa)  
 **Kapsam:** Renk Mimarisi, Tipografi Hiyerarşisi, Hareket & Animasyon İlkeleri, Görsel Bileşenler
 
 ---
