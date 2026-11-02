@@ -372,40 +372,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </p>
         </div>
 
-        {/* ── 3. SINGLE-FOCUS HERO DUEL STAGE ─── */}
+        {/* ── 3. SINGLE-FOCUS HERO DUEL STAGE (DESIGN.md Düz Kart, 1px Çerçeve, Viewfinder Köşeleri, Altın Buton) ─── */}
         <div
-          className="w-full p-5 sm:p-6 rounded-3xl relative overflow-hidden transition-all"
-          style={{
-            background:
-              "linear-gradient(160deg, #232834 0%, #161922 65%, #111319 100%)",
-            border: `1.5px solid ${heroAccentHex}55`,
-            borderBottom: `4px solid ${isCyanMode ? "#0E7490" : "#78350F"}`,
-          }}
+          className="w-full p-4 sm:p-5 rounded-2xl relative overflow-hidden transition-all bg-[#14171D] border border-white/10"
         >
-          {/* Viewfinder Framing Brackets */}
-          <div
-            className="absolute top-3 left-3 w-3 h-3 border-t-2 border-l-2 pointer-events-none rounded-tl-sm"
-            style={{ borderColor: heroAccentHex }}
-          />
-          <div
-            className="absolute top-3 right-3 w-3 h-3 border-t-2 border-r-2 pointer-events-none rounded-tr-sm"
-            style={{ borderColor: heroAccentHex }}
-          />
-          <div
-            className="absolute bottom-3 left-3 w-3 h-3 border-b-2 border-l-2 pointer-events-none rounded-bl-sm"
-            style={{ borderColor: heroAccentHex }}
-          />
-          <div
-            className="absolute bottom-3 right-3 w-3 h-3 border-b-2 border-r-2 pointer-events-none rounded-br-sm"
-            style={{ borderColor: heroAccentHex }}
-          />
+          {/* Viewfinder Framing Brackets (İmza Öğesi 2) */}
+          <div className="absolute top-2.5 left-2.5 w-3 h-3 border-t-2 border-l-2 border-[#D9A441] pointer-events-none rounded-tl-sm" />
+          <div className="absolute top-2.5 right-2.5 w-3 h-3 border-t-2 border-r-2 border-[#D9A441] pointer-events-none rounded-tr-sm" />
+          <div className="absolute bottom-2.5 left-2.5 w-3 h-3 border-b-2 border-l-2 border-[#D9A441] pointer-events-none rounded-bl-sm" />
+          <div className="absolute bottom-2.5 right-2.5 w-3 h-3 border-b-2 border-r-2 border-[#D9A441] pointer-events-none rounded-br-sm" />
 
           <div className="relative z-10 flex flex-col items-center text-center">
-            <h2 className="text-2xl sm:text-[26px] font-serif font-bold text-[#F1EEE7] tracking-wide leading-tight">
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#F1EEE7] tracking-wide leading-tight">
               {activeModeMeta.title}
             </h2>
 
-            <p className="text-xs sm:text-[13px] text-[#A5A8B0] font-medium mt-1 max-w-[290px] leading-snug">
+            <p className="text-xs sm:text-[13px] text-[#8A8F9A] font-medium mt-1 max-w-[290px] leading-snug truncate">
               {activeModeMeta.heroSummary}
             </p>
 
@@ -414,7 +396,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               type="button"
               data-testid="hero-start-duel-btn"
               onClick={handleLaunchDuel}
-              className="w-full mt-4 py-3.5 sm:py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wider uppercase flex items-center justify-center gap-2.5 transition-transform active:translate-y-[2px] cursor-pointer tactile-btn-amber"
+              className="w-full mt-3.5 py-3 sm:py-3.5 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wider uppercase flex items-center justify-center gap-2.5 transition-transform active:translate-y-[2px] cursor-pointer tactile-btn-amber"
             >
               <Play className="w-4 h-4 fill-current shrink-0" />
               <span>DÜELLOYA GİR</span>
@@ -422,38 +404,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </div>
 
-        {/* ── 4. THREE SIMPLIFIED MODE SELECTOR CARDS ─── */}
-        <div className="w-full space-y-2">
+        {/* ── 4. YATAY KAYDIRMALI MOD AFİŞLERİ (TUR 2 Madde 4) ─── */}
+        <div className="w-full space-y-1.5">
           <div className="flex items-center justify-between px-1">
             <span className="text-[10px] font-mono font-bold tracking-[0.18em] uppercase text-[#8A8F9A]">
-              OYUN MODU SEÇİMİ
+              VİZYONDAKİ MODLAR
             </span>
-            {FLAGS.SHOW_BOARD_ARCHIVE && (
-              <button
-                type="button"
-                onClick={() => {
-                  audio.playSelect();
-                  haptic.light();
-                  if (onOpenGameModesHub) onOpenGameModesHub();
-                  else if (onOpenGameSelect) onOpenGameSelect();
-                }}
-                className="text-[10px] font-mono font-bold text-[#D9A441] hover:underline transition-colors cursor-pointer"
-              >
-                Tahta Arşivi &rarr;
-              </button>
-            )}
           </div>
 
           <div
-            className="grid grid-cols-3 gap-2.5"
+            className="flex gap-2.5 overflow-x-auto no-scrollbar py-1 px-0.5 snap-x overscroll-x-contain"
             role="radiogroup"
             aria-label="Oyun Modu Seçimi"
           >
             {MODE_DEFINITIONS.map((m) => {
               const Icon = m.icon;
               const isSelected = activeMode === m.id;
-              const isCyan = m.accent === "cyan";
-              const accentColor = isCyan ? "#4FA3C7" : "#D9A441";
 
               return (
                 <button
@@ -463,39 +429,51 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   aria-checked={isSelected}
                   data-testid={`mode-card-${m.id}`}
                   onClick={() => handleSelectModeCard(m.id)}
-                  className="min-h-[88px] sm:min-h-[94px] p-3 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all active:translate-y-[1px] relative cursor-pointer"
+                  className={`flex-1 min-w-[105px] sm:min-w-[115px] p-3 rounded-2xl flex flex-col items-center justify-between text-center gap-2 transition-all active:scale-[0.98] relative cursor-pointer snap-start shrink-0 select-none ${
+                    isSelected
+                      ? "border-[1.5px] border-[#D9A441]"
+                      : "border border-white/10 hover:border-white/20"
+                  }`}
                   style={{
                     background: isSelected
-                      ? isCyan
-                        ? "rgba(79, 163, 199, 0.12)"
-                        : "rgba(217, 164, 65, 0.12)"
+                      ? "linear-gradient(180deg, #1C2028 0%, #14171D 100%)"
                       : "#14171D",
-                    border: isSelected
-                      ? `1.5px solid ${accentColor}`
-                      : "1px solid rgba(255, 255, 255, 0.08)",
-                    boxShadow: "none",
                   }}
                 >
+                  {/* Seçili İndikatörü */}
+                  {isSelected && (
+                    <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#D9A441]" />
+                  )}
+
                   <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors"
+                    className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors"
                     style={{
                       backgroundColor: isSelected
-                        ? `${accentColor}22`
-                        : "rgba(255,255,255,0.04)",
-                      color: isSelected ? accentColor : "#8A8F9A",
+                        ? "rgba(217, 164, 65, 0.15)"
+                        : "rgba(255, 255, 255, 0.04)",
+                      color: isSelected ? "#D9A441" : "#8A8F9A",
                     }}
                   >
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-4 h-4" />
                   </div>
 
-                  <span
-                    className="text-xs font-bold leading-tight tracking-tight"
-                    style={{
-                      color: isSelected ? "#E8E6E1" : "#8A8F9A",
-                    }}
-                  >
-                    {m.title}
-                  </span>
+                  <div className="min-w-0">
+                    <span
+                      className="text-xs font-serif font-bold leading-tight block truncate"
+                      style={{
+                        color: isSelected ? "#F1EEE7" : "#8A8F9A",
+                      }}
+                    >
+                      {m.title}
+                    </span>
+                    <span className="text-[8px] font-mono uppercase tracking-wider text-[#8A8F9A]/70 block mt-0.5">
+                      {m.id === "CLASSIC"
+                        ? "KLASİK"
+                        : m.id === "REVERSE_CAST"
+                        ? "KADRO"
+                        : "KONSEPT"}
+                    </span>
+                  </div>
                 </button>
               );
             })}
@@ -510,33 +488,35 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             haptic.light();
             onOpenDaily();
           }}
-          className="w-full relative p-3.5 sm:p-4 rounded-2xl flex items-center justify-between transition-all active:scale-[0.98] cursor-pointer overflow-hidden text-left"
-          style={{
-            background: "#14171D",
-            border: "1px dashed rgba(217, 164, 65, 0.4)",
-          }}
+          className="w-full relative p-3 sm:p-3.5 rounded-2xl flex items-center justify-between transition-all active:scale-[0.98] cursor-pointer overflow-hidden text-left bg-[#14171D] border border-dashed border-[#D9A441]/35 hover:border-[#D9A441]/60"
         >
-          {/* Sol ve Sağ Bilet Çentikleri (Ticket Stub Notches) */}
+          {/* Sol ve Sağ Bilet Kupürü Çentikleri */}
           <div
             className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full"
-            style={{ background: "#0B0D12", border: "1px solid rgba(217, 164, 65, 0.3)" }}
+            style={{
+              background: "#0B0D12",
+              border: "1px solid rgba(217, 164, 65, 0.35)",
+            }}
           />
           <div
             className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full"
-            style={{ background: "#0B0D12", border: "1px solid rgba(217, 164, 65, 0.3)" }}
+            style={{
+              background: "#0B0D12",
+              border: "1px solid rgba(217, 164, 65, 0.35)",
+            }}
           />
 
           {/* Sol Kupür İkon ve Kod */}
-          <div className="flex items-center gap-3 pl-2">
-            <div className="w-10 h-10 rounded-xl bg-[#181B22] border border-[#D9A441]/40 flex flex-col items-center justify-center shrink-0">
+          <div className="flex items-center gap-3 pl-2 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-[#181B22] border border-[#D9A441]/40 flex flex-col items-center justify-center shrink-0">
               <Ticket className="w-4 h-4 text-[#D9A441]" />
-              <span className="text-[7.5px] font-mono text-[#D9A441] font-bold mt-0.5">
+              <span className="text-[7px] font-mono text-[#D9A441] font-bold">
                 NO.01
               </span>
             </div>
 
-            {/* Delikli Ayrım Çizgisi */}
-            <div className="h-9 w-px border-r border-dashed border-white/15 mx-0.5" />
+            {/* Perfore Delikli Ayrım Çizgisi */}
+            <div className="h-8 w-px border-r border-dashed border-white/15 shrink-0" />
 
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
@@ -554,7 +534,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
 
           <div className="pr-2 shrink-0">
-            <span className="text-xs font-bold text-[#D9A441] font-mono flex items-center gap-1">
+            <span className="text-xs font-bold text-[#D9A441] font-mono flex items-center gap-0.5">
               Bileti Aç &rarr;
             </span>
           </div>
