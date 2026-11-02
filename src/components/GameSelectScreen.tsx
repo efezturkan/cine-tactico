@@ -122,7 +122,7 @@ const POSTERS_DATA: BoardPosterMeta[] = [
     reel: "09",
     category: "Ters Kadraj",
     badge: "MAFYA HANEDANI",
-    desc: "Kesişmeyen suç yolları · Ters mantık matrisi",
+    desc: "Kesişmeyen suç yolları · Ters mantık kadrajı",
     icon: Swords,
     tone: "from-red-600/15 via-transparent to-transparent",
   },
@@ -131,7 +131,7 @@ const POSTERS_DATA: BoardPosterMeta[] = [
     reel: "10",
     category: "Klasik",
     badge: "GÜNÜN KADRAJI",
-    desc: "Günün özel film kadrajı · 2x Makara bonusu",
+    desc: "Günün özel film kadrajı · Günlük prestij",
     icon: Clock,
     tone: "from-amber-400/20 via-transparent to-transparent",
   },
@@ -268,14 +268,14 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
       />
 
       {/* Top Bar */}
-      <header className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-white/5 bg-[#0B0D12]/95 backdrop-blur-sm">
+      <header className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-2 border-b border-white/5 bg-[#0B0D12]/95 backdrop-blur-sm min-h-[52px]">
         <button
           type="button"
           onClick={() => {
             audio.playSelect();
             onBack();
           }}
-          className="flex items-center gap-1.5 text-zinc-400 hover:text-white transition-colors active:scale-95 px-2 py-1 -ml-2 rounded-lg"
+          className="flex items-center gap-1.5 text-zinc-400 hover:text-white transition-colors active:scale-95 px-2 py-1 -ml-2 rounded-lg min-h-[44px]"
         >
           <ArrowLeft className="w-4 h-4 text-[#D9A441]" />
           <span className="text-[11px] font-mono font-bold uppercase tracking-wider">Gişe</span>
@@ -323,71 +323,78 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
 
       {/* 2-Column Poster Grid */}
       <main className="flex-1 overflow-y-auto px-4 sm:px-6 pt-3 pb-24 custom-scrollbar relative z-10 max-w-xl mx-auto w-full">
-        <div className="grid grid-cols-2 gap-3">
-          {filteredPosters.map((poster) => {
-            const board = PRESET_BOARDS[poster.index];
-            const Icon = poster.icon;
+        {filteredPosters.length === 0 ? (
+          <div className="py-16 text-center text-zinc-400">
+            <Film className="w-8 h-8 text-[#D9A441]/40 mx-auto mb-2" />
+            <p className="font-serif text-sm text-[#E8E6E1]">Arşivde henüz kayıt yok.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            {filteredPosters.map((poster) => {
+              const board = PRESET_BOARDS[poster.index];
+              const Icon = poster.icon;
 
-            return (
-              <button
-                key={poster.index}
-                type="button"
-                data-poster-card="true"
-                onClick={() => handleLaunchPoster(poster)}
-                className="group relative aspect-[3/4] rounded-xl overflow-hidden text-left p-3 flex flex-col justify-between bg-[#12141A] border border-white/10 hover:border-[#D9A441]/50 transition-all duration-200 active:scale-[0.98] shadow-md"
-              >
-                {/* Mood Gradient Accent */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-b ${poster.tone} pointer-events-none`}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D12] via-transparent to-transparent opacity-90 pointer-events-none" />
+              return (
+                <button
+                  key={poster.index}
+                  type="button"
+                  data-poster-card="true"
+                  onClick={() => handleLaunchPoster(poster)}
+                  className="group relative aspect-[3/4] rounded-xl overflow-hidden text-left p-3 flex flex-col justify-between bg-[#12141A] border border-white/10 hover:border-[#D9A441]/50 transition-all duration-200 active:scale-[0.98] shadow-md"
+                >
+                  {/* Mood Gradient Accent */}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-b ${poster.tone} pointer-events-none`}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D12] via-transparent to-transparent opacity-90 pointer-events-none" />
 
-                {/* Viewfinder corner brackets */}
-                <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t border-l border-white/20 pointer-events-none" />
-                <div className="absolute top-1.5 right-1.5 w-2 h-2 border-t border-r border-white/20 pointer-events-none" />
-                <div className="absolute bottom-1.5 left-1.5 w-2 h-2 border-b border-l border-white/20 pointer-events-none" />
-                <div className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b border-r border-white/20 pointer-events-none" />
+                  {/* Viewfinder corner brackets */}
+                  <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t border-l border-white/20 pointer-events-none" />
+                  <div className="absolute top-1.5 right-1.5 w-2 h-2 border-t border-r border-white/20 pointer-events-none" />
+                  <div className="absolute bottom-1.5 left-1.5 w-2 h-2 border-b border-l border-white/20 pointer-events-none" />
+                  <div className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b border-r border-white/20 pointer-events-none" />
 
-                {/* Top Poster Meta */}
-                <div className="relative z-10 flex items-center justify-between w-full">
-                  <span className="font-mono text-[9px] font-semibold text-[#D9A441]/90 tracking-widest">
-                    MAKARA #{poster.reel}
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold tracking-wider uppercase bg-white/5 border border-white/10 text-zinc-300">
-                    {poster.badge}
-                  </span>
-                </div>
-
-                {/* Center Cinema Reel Emblem */}
-                <div className="relative z-10 flex items-center justify-center my-auto py-2">
-                  <div className="w-12 h-12 rounded-full border border-white/5 bg-white/[0.02] flex items-center justify-center text-white/30 group-hover:text-[#D9A441] group-hover:border-[#D9A441]/40 group-hover:scale-105 transition-all duration-200 shadow-inner">
-                    <Icon className="w-5 h-5 stroke-[1.7]" />
-                  </div>
-                </div>
-
-                {/* Bottom Content: Title & Action */}
-                <div className="relative z-10 w-full mt-auto">
-                  <h2 className="font-serif font-bold text-white text-xs sm:text-sm leading-tight line-clamp-2 group-hover:text-[#D9A441] transition-colors">
-                    {board?.title || `Makara #${poster.reel}`}
-                  </h2>
-                  <p className="text-[9px] text-zinc-400 font-sans truncate mt-1">
-                    {poster.desc}
-                  </p>
-
-                  {/* Card Action Row */}
-                  <div className="mt-2 pt-1.5 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-[8px] font-mono text-zinc-500 font-medium tracking-wider">
-                      3×3 MATRİS
+                  {/* Top Poster Meta */}
+                  <div className="relative z-10 flex items-center justify-between w-full">
+                    <span className="font-mono text-[9px] font-semibold text-[#D9A441]/90 tracking-widest">
+                      MAKARA #{poster.reel}
                     </span>
-                    <span className="text-[8px] font-mono text-[#D9A441] font-bold tracking-wider flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
-                      BAŞLAT →
+                    <span className="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold tracking-wider uppercase bg-white/5 border border-white/10 text-zinc-300">
+                      {poster.badge}
                     </span>
                   </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+
+                  {/* Center Cinema Reel Emblem */}
+                  <div className="relative z-10 flex items-center justify-center my-auto py-2">
+                    <div className="w-12 h-12 rounded-full border border-white/5 bg-white/[0.02] flex items-center justify-center text-white/30 group-hover:text-[#D9A441] group-hover:border-[#D9A441]/40 group-hover:scale-105 transition-all duration-200 shadow-inner">
+                      <Icon className="w-5 h-5 stroke-[1.7]" />
+                    </div>
+                  </div>
+
+                  {/* Bottom Content: Title & Action */}
+                  <div className="relative z-10 w-full mt-auto">
+                    <h2 className="font-serif font-bold text-white text-xs sm:text-sm leading-tight line-clamp-2 group-hover:text-[#D9A441] transition-colors">
+                      {board?.title || `Makara #${poster.reel}`}
+                    </h2>
+                    <p className="text-[9px] text-zinc-400 font-sans truncate mt-1">
+                      {poster.desc}
+                    </p>
+
+                    {/* Card Action Row */}
+                    <div className="mt-2 pt-1.5 border-t border-white/5 flex items-center justify-between">
+                      <span className="text-[8px] font-mono text-zinc-500 font-medium tracking-wider">
+                        3×3 KADRAJ
+                      </span>
+                      <span className="text-[8px] font-mono text-[#D9A441] font-bold tracking-wider flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+                        BAŞLAT →
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </main>
 
       {/* Bottom Bar — 4 tabs (Vizyondakiler active in gold) */}
@@ -439,7 +446,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
               key={tab.label}
               type="button"
               onClick={tab.act}
-              className={`flex flex-col items-center transition-all active:scale-95 px-3 py-1 rounded-xl ${
+              className={`flex flex-col items-center justify-center min-h-[44px] min-w-[56px] transition-all active:scale-95 px-3 py-1 rounded-xl ${
                 tab.active
                   ? "bg-[#181B22] border border-[#D9A441]/40"
                   : "hover:bg-white/5 border border-transparent"

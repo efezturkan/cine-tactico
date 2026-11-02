@@ -16,7 +16,7 @@ export interface BotMoveDecision {
  */
 export const BOT_THINKING_PHRASES = [
   "Filmleri hatırlıyor...",
-  "Matrisi inceliyor...",
+  "Kadrajı inceliyor...",
   "Film arşivini tarıyor...",
   "Kriterleri eşleştiriyor...",
   "Hafızasını yokluyor...",

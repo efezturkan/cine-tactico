@@ -201,7 +201,13 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
             )}
           </div>
 
-          {suggestedActors.length > 0 && (
+          {query.trim().length >= 2 && suggestedActors.length === 0 ? (
+            <div className="flex-1 min-h-[100px] flex flex-col items-center justify-center p-4 rounded-2xl bg-[#0B0D12] border border-white/10 text-center text-[#8A8F9A]">
+              <User className="w-7 h-7 text-[#D9A441]/40 mx-auto mb-1.5" />
+              <p className="font-serif text-sm text-[#E8E6E1] mb-0.5">Arşivde henüz kayıt yok.</p>
+              <p className="text-[11px] text-[#8A8F9A]">&quot;{query}&quot; ile eşleşen oyuncu bulunamadı.</p>
+            </div>
+          ) : suggestedActors.length > 0 ? (
             <div className="flex-1 min-h-0 flex flex-col gap-1.5 p-2 rounded-2xl bg-[#0B0D12] border border-white/10 overflow-y-auto overscroll-contain custom-scrollbar">
               <span className="text-[11px] text-[#8A8F9A] px-1 font-semibold shrink-0">
                 Eşleşen Oyuncular ({suggestedActors.length}):
@@ -240,7 +246,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
                 );
               })}
             </div>
-          )}
+          ) : null}
 
           <button
             type="submit"

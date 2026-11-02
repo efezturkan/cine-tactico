@@ -217,7 +217,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
         {/* Header: Title & Close Button */}
         <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-4">
-          <div className="w-7" />
+          <div className="w-11" />
           <div className="text-center">
             <span className="text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#D9A441] block">
               CINE-XOX · IDENTİTY
@@ -229,7 +229,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-7 h-7 rounded-lg bg-[#181B22] border border-white/10 flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] transition-colors active:scale-95"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl bg-[#181B22] border border-white/10 flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] transition-colors active:scale-95"
           >
             <X className="w-4 h-4" />
           </button>
@@ -369,30 +369,37 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         )}
 
         {/* 3 Core Stats: Wins, Losses, Ratio */}
-        <div className="w-full grid grid-cols-3 gap-2 p-3 rounded-xl bg-[#0F1115] border border-white/5 text-center mb-3">
-          <div>
-            <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
-              GALİBİYET
-            </span>
-            <span className="text-base font-mono font-bold text-[#D9A441] mt-0.5 block">
-              {profile.wins}
+        <div className="w-full p-3 rounded-xl bg-[#0F1115] border border-white/5 text-center mb-3">
+          <div className="flex items-center justify-center gap-1.5 mb-2 pb-1.5 border-b border-white/5">
+            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-[#D9A441]">
+              SİNEFİL SİCİLİ
             </span>
           </div>
-          <div className="border-x border-white/5">
-            <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
-              MAĞLUBİYET
-            </span>
-            <span className="text-base font-mono font-bold text-[#E5484D] mt-0.5 block">
-              {profile.losses}
-            </span>
-          </div>
-          <div>
-            <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
-              ORAN
-            </span>
-            <span className="text-base font-mono font-bold text-[#E8E6E1] mt-0.5 block">
-              %{winRate}
-            </span>
+          <div className="grid grid-cols-3 gap-2">
+            <div>
+              <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
+                GALİBİYET
+              </span>
+              <span className="text-base font-mono font-bold text-[#D9A441] mt-0.5 block">
+                {profile.wins}
+              </span>
+            </div>
+            <div className="border-x border-white/5">
+              <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
+                MAĞLUBİYET
+              </span>
+              <span className="text-base font-mono font-bold text-[#E5484D] mt-0.5 block">
+                {profile.losses}
+              </span>
+            </div>
+            <div>
+              <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
+                ORAN
+              </span>
+              <span className="text-base font-mono font-bold text-[#E8E6E1] mt-0.5 block">
+                %{winRate}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -441,7 +448,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <button
               type="button"
               onClick={onToggleMute}
-              className={`px-2.5 py-1 rounded-md text-[9px] font-mono font-bold transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-[9px] font-mono font-bold transition-colors min-h-[44px] min-w-[54px] flex items-center justify-center ${
                 !isMuted
                   ? "bg-[#181B22] text-[#D9A441] border border-[#D9A441]/40"
                   : "bg-[#14171D] text-[#8A8F9A] border border-white/5"
@@ -459,7 +466,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <button
               type="button"
               onClick={toggleHaptic}
-              className={`px-2.5 py-1 rounded-md text-[9px] font-mono font-bold transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-[9px] font-mono font-bold transition-colors min-h-[44px] min-w-[54px] flex items-center justify-center ${
                 hapticOn
                   ? "bg-[#181B22] text-[#D9A441] border border-[#D9A441]/40"
                   : "bg-[#14171D] text-[#8A8F9A] border border-white/5"

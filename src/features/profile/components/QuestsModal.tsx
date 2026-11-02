@@ -60,7 +60,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
     {
       id: "q3",
       title: "Günün Kadresi'nde Kare Kapat",
-      desc: "Günün matrisinde en az 5 kare tamamla",
+      desc: "Günün kadrajında en az 5 kare tamamla",
       rewardReels: 120,
       progress: "3/5",
       completed: false,

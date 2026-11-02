@@ -221,7 +221,7 @@ export const TasteDnaCard: React.FC<TasteDnaCardProps> = ({
           ) : (
             <div className="flex items-center justify-between gap-2 mt-0.5">
               <span className="text-[10px] text-zinc-400">
-                Profilini bağla, izlediğin yönetmenleri arenaya taşı.
+                Profilini bağla, izlediğin yönetmenleri kadraja taşı.
               </span>
               <button
                 type="button"

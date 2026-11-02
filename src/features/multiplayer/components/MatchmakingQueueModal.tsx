@@ -28,7 +28,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
   difficulty,
 }) => {
   const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
-  const [statusText, setStatusText] = useState<string>("Bölgesel sinema lobisi taranıyor...");
+  const [statusText, setStatusText] = useState<string>("Salon loş, rakip aranıyor...");
   const [showAiFallback, setShowAiFallback] = useState<boolean>(false);
   const matchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -39,7 +39,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
     if (!isOpen) {
       setSecondsElapsed(0);
       setShowAiFallback(false);
-      setStatusText("Bölgesel sinema lobisi taranıyor...");
+      setStatusText("Salon loş, rakip aranıyor...");
       if (matchTimeoutRef.current) {
         clearTimeout(matchTimeoutRef.current);
         matchTimeoutRef.current = null;
@@ -54,7 +54,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
         const next = prev + 1;
 
         if (next === 1) {
-          setStatusText("Benzer zevkteki sinefiller taranıyor...");
+          setStatusText("Salon loş, rakip aranıyor...");
         } else if (next === 2) {
           setStatusText("Rakip bulundu! 35mm Perde hazırlanıyor...");
           matchTimeoutRef.current = setTimeout(() => {
@@ -240,9 +240,9 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
             audio.playSelect();
             onCancel();
           }}
-          className="mt-1 text-xs font-semibold text-[#A5A8B0] hover:text-[#F1EEE7] uppercase tracking-wider py-1.5 px-4 rounded-lg transition-colors"
+          className="mt-1 text-xs font-semibold text-[#A5A8B0] hover:text-[#F1EEE7] uppercase tracking-wider h-11 px-4 rounded-lg transition-colors flex items-center justify-center min-h-[44px]"
         >
-          Vazgeç (Lobiye Dön)
+          Vazgeç (Gişe&apos;ye Dön)
         </button>
       </div>
     </div>

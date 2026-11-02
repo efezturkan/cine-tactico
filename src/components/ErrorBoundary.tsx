@@ -45,22 +45,22 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#07080b] text-white flex flex-col items-center justify-center p-6 text-center select-none font-sans">
-          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-4">
-            <AlertTriangle className="w-8 h-8 text-amber-500" />
+        <div className="min-h-screen bg-[#0B0D12] text-[#E8E6E1] flex flex-col items-center justify-center p-6 text-center select-none font-sans">
+          <div className="w-14 h-14 rounded-2xl bg-[#14171D] border border-[#D9A441]/30 flex items-center justify-center mb-4">
+            <AlertTriangle className="w-7 h-7 text-[#D9A441]" />
           </div>
-          <h1 className="text-xl font-black tracking-wider uppercase mb-2">
-            Kadraj Yeniden Başlatılıyor
+          <h1 className="text-lg sm:text-xl font-serif font-bold tracking-wide text-[#E8E6E1] mb-2">
+            Makara koptu, bağlantı yeniden kuruluyor...
           </h1>
-          <p className="text-xs text-zinc-400 max-w-xs mb-6 leading-relaxed">
-            Tarayıcı veya yerel veri uyumsuzluğu nedeniyle bir hata oluştu. Verileri sıfırlayarak oyunu yeniden başlatabilirsiniz.
+          <p className="text-xs text-[#8A8F9A] max-w-xs mb-6 leading-relaxed font-sans">
+            Projeksiyonda beklenmedik bir kesinti oluştu. Seansı tazeleyerek oyunu yeniden başlatabilirsiniz.
           </p>
           <button
             onClick={this.handleReset}
-            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-black font-black text-sm active:scale-95 transition-transform shadow-lg shadow-amber-500/20"
+            className="h-11 px-6 rounded-xl bg-[#D9A441] text-[#0B0D12] font-serif font-bold text-xs flex items-center gap-2 active:scale-95 transition-transform border border-[#D9A441] min-h-[44px]"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>Oyunu Yeniden Başlat</span>
+            <span>Seansı Yeniden Başlat</span>
           </button>
         </div>
       );

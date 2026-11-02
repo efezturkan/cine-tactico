@@ -94,7 +94,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     audio.playPowerup();
     const settings: CustomRoomSettings = {
       roomCode: overrideSettings?.roomCode || roomCode,
-      roomName: isPublic ? "🌐 Herkese Açık Düello Lobisi" : "🔒 Özel Arkadaş Düellosu",
+      roomName: isPublic ? "🌐 Herkese Açık Düello Seansı" : "🔒 Özel Arkadaş Düellosu",
       roomType: "1V1_ROOM",
       isPublic,
       matchFormat,
@@ -376,7 +376,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                       {isPublic ? (
                         <>
                           <Globe className="w-3.5 h-3.5 text-[#8EBB70]" />
-                          <span className="text-[#8EBB70]">Herkese Açık Lobi (Public)</span>
+                          <span className="text-[#8EBB70]">Herkese Açık Seans (Public)</span>
                         </>
                       ) : (
                         <>
@@ -387,7 +387,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                     </span>
                     <p className="text-[10px] text-[#A5A8B0] mt-0.5">
                       {isPublic
-                        ? "Lobi listesinde görünür, dileyen oyuncu katılabilir."
+                        ? "Seans listesinde görünür, dileyen oyuncu katılabilir."
                         : "Sadece oda kodunu verdiğin arkadaşın katılabilir."}
                     </p>
                   </div>
@@ -418,9 +418,9 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   <label className="text-xs font-black text-[#F1EEE7] flex items-center justify-between mb-1.5">
                     <span className="flex items-center gap-1.5">
                       <Film className="w-3.5 h-3.5 text-[#F5A623]" />
-                      Masa & Tematik Çarpışma
+                      Seans & Tematik Çarpışma
                     </span>
-                    <span className="text-[10px] text-[#A5A8B0] font-bold">5 Masa</span>
+                    <span className="text-[10px] text-[#A5A8B0] font-bold">5 Seans</span>
                   </label>
                   <div className="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar pr-0.5">
                     {PRESET_BOARDS.map((b) => {
@@ -537,7 +537,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                     className="w-full py-3.5 rounded-2xl tactile-btn-amber font-black text-sm flex items-center justify-center gap-2"
                   >
                     <Swords className="w-4 h-4 fill-[#0F1115]" />
-                    <span>{isPublic ? "Herkese Açık Lobi Oluştur" : "Özel Odayı Başlat"}</span>
+                    <span>{isPublic ? "Herkese Açık Seans Başlat" : "Özel Odayı Başlat"}</span>
                   </button>
                 </div>
               </div>
@@ -575,7 +575,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                 </div>
 
                 <p className="text-[11px] text-[#A5A8B0] px-1">
-                  Arkadaşının paylaştığı <span className="font-mono text-[#F5A623]">CX-XXXXXX</span> oda kodunu girerek doğrudan düello masasına bağlanabilirsin.
+                  Arkadaşının paylaştığı <span className="font-mono text-[#F5A623]">CX-XXXXXX</span> oda kodunu girerek doğrudan düello kadrajına bağlanabilirsin.
                 </p>
               </div>
             )}

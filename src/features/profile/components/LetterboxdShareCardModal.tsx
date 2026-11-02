@@ -61,7 +61,7 @@ export const LetterboxdShareCardModal: React.FC<LetterboxdShareCardModalProps> =
       `🎬 CINE-XOX · MAÇ KAYDI (${matchOutcome === "VICTORY" ? "ZAFER" : "DÜELLO"})\n\n` +
       `Oyuncu: ${username}${letterboxdUsername ? ` (@${letterboxdUsername})` : ""}\n` +
       `Rakip: ${opponentName}\n` +
-      `Tahta: ${displayBoard.title}\n` +
+      `Kadraj: ${displayBoard.title}\n` +
       `Nadirlik: +${rarityTotal}\n\n` +
       `${resultEmojiGrid}`;
 
@@ -123,7 +123,7 @@ export const LetterboxdShareCardModal: React.FC<LetterboxdShareCardModalProps> =
 
     ctx.font = "bold 26px sans-serif";
     ctx.fillStyle = "#F4F6FA";
-    ctx.fillText(`Tahta: ${displayBoard.title}`, 80, 316);
+    ctx.fillText(`Kadraj: ${displayBoard.title}`, 80, 316);
 
     const startX = 80;
     const startY = 348;

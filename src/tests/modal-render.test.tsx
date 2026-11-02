@@ -97,6 +97,24 @@ assert(
   "CRITICAL ANTI-CHEAT: Modal HTML contains ZERO director names"
 );
 
+// 3. Render modal with non-existent query
+const emptyResultHtml = renderToString(
+  React.createElement(MovieSearchModal, {
+    isOpen: true,
+    onClose: () => {},
+    rowCrit: rowCrit,
+    colCrit: colCrit,
+    usedMovieIds: [],
+    onSelectMovie: () => {},
+    initialQuery: "zzzznonexistent"
+  })
+);
+
+assert(
+  emptyResultHtml.includes("Arşivde henüz kayıt yok."),
+  "Empty search result renders cinematic 'Arşivde henüz kayıt yok.'"
+);
+
 console.log(`\n=================================================`);
 console.log(`TOTAL RESULT: ${passed}/${passed} PASSED (100%)`);
 console.log(`=================================================`);

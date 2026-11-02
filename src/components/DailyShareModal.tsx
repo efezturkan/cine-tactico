@@ -96,7 +96,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
         {/* Kapat Butonu */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-full bg-zinc-800 text-zinc-400 hover:text-white"
+          className="absolute top-3 right-3 w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl bg-[#181B22] border border-white/10 flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
@@ -144,17 +144,17 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
           {/* Normal Skor Paylaşımı */}
           <button
             onClick={handleNativeShare}
-            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-cinema-dark font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-95 transition-all"
+            className="w-full h-11 py-2.5 px-4 rounded-xl bg-[#D9A441] hover:bg-[#c49235] text-[#0B0D12] font-serif font-bold text-xs flex items-center justify-center gap-2 border border-[#D9A441] active:scale-95 transition-all min-h-[44px]"
           >
             <Share2 className="w-4 h-4" />
-            Skorunu Hikayede / X&apos;te Paylaş
+            Skorunu Paylaş
           </button>
 
           {/* SOS (Arkadaşa Boş Kareyi Sor) — Sadece eksik varsa */}
           {filledCount < 9 && emptyIndex !== -1 && (
             <button
               onClick={handleCopySOS}
-              className="w-full py-2.5 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95"
+              className="w-full h-11 py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95 min-h-[44px]"
             >
               <HelpCircle className="w-4 h-4 text-rose-400" />
               {copiedSOS ? "✓ Yardım Mesajı Kopyalandı!" : "Bu Boşluğu Arkadaşına Sor (SOS)"}
@@ -164,7 +164,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
           {/* Panoya Emojili Kopyala */}
           <button
             onClick={handleCopyScore}
-            className="w-full py-2.5 px-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs flex items-center justify-center gap-2 border border-zinc-700 transition-all active:scale-95"
+            className="w-full h-11 py-2 px-3 rounded-xl bg-[#181B22] hover:bg-[#202530] text-[#E8E6E1] font-bold text-xs flex items-center justify-center gap-2 border border-white/10 transition-all active:scale-95 min-h-[44px]"
           >
             {copiedText ? (
               <>

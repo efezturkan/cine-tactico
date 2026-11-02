@@ -308,7 +308,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   haptic.light();
                   onToggleMute();
                 }}
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
                 title="Sesi Aç / Kapat"
               >
                 {muted ? (
@@ -327,7 +327,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 haptic.light();
                 onOpenProfileModal();
               }}
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
               title="Ayarlar & Profil"
             >
               <Settings className="w-4 h-4 text-[#8A8F9A]" />
@@ -528,7 +528,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 </span>
               </div>
               <p className="text-[10px] sm:text-[11px] text-[#8A8F9A] font-medium truncate mt-0.5">
-                Günde bir sabit tahta · Paylaşılabilir sonuç
+                Günde bir sabit kadraj · Paylaşılabilir sonuç
               </p>
             </div>
           </div>
@@ -602,7 +602,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               key={tab.label}
               type="button"
               onClick={tab.act}
-              className={`flex flex-col items-center transition-all active:scale-95 px-3 py-1 rounded-xl ${
+              className={`flex flex-col items-center justify-center min-h-[44px] min-w-[56px] transition-all active:scale-95 px-3 py-1 rounded-xl ${
                 tab.active
                   ? "bg-[#181B22] border border-[#D9A441]/40"
                   : "hover:bg-white/5 border border-transparent"

@@ -270,9 +270,14 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               </p>
             </div>
           ) : visibleMovies.length === 0 ? (
-            <div className="py-8 text-center text-[#8A8F9A] text-xs">
-              <Film className="w-6 h-6 mx-auto mb-2 text-[#8A8F9A]/40" />
-              &quot;{query}&quot; ile eşleşen yapım bulunamadı.
+            <div className="py-8 text-center text-[#8A8F9A]">
+              <Film className="w-7 h-7 mx-auto mb-2 text-[#D9A441]/40" />
+              <p className="font-serif text-sm text-[#E8E6E1] mb-1">
+                Arşivde henüz kayıt yok.
+              </p>
+              <p className="text-xs text-[#8A8F9A]">
+                &quot;{query}&quot; ile eşleşen yapım bulunamadı.
+              </p>
             </div>
           ) : (
             visibleMovies.map((movie) => {

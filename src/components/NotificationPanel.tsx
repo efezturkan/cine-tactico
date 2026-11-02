@@ -39,8 +39,8 @@ const DEFAULT_NOTIFS: CineNotification[] = [
   {
     id: "n1",
     type: "promo",
-    title: "CineXOX Arenasına Hoş Geldin! 🎬",
-    body: "35mm sinema tahtasında düelloya başla, nadir filmleri bil ve ligini yükselt.",
+    title: "CineXOX Kadrajına Hoş Geldin! 🎬",
+    body: "35mm sinema kadrajında düelloya başla, nadir filmleri bil ve rütbeni yükselt.",
     cta: "Düelloya Başla",
     timestamp: new Date(Date.now() - 2 * 60 * 1000),
     read: true,
@@ -48,9 +48,9 @@ const DEFAULT_NOTIFS: CineNotification[] = [
   {
     id: "n2",
     type: "event",
-    title: "⚡ DC vs MARVEL Arenası Açık!",
-    body: "Özel süper kahraman tahtalarında 2x Makara kazanmak için hemen oyna.",
-    cta: "Arenaya Katıl",
+    title: "⚡ DC vs MARVEL Kadrajı Açık!",
+    body: "Özel süper kahraman seanslarında prestij kazanmak için hemen oyna.",
+    cta: "Seansa Katıl",
     timestamp: new Date(Date.now() - 15 * 60 * 1000),
     read: true,
   },

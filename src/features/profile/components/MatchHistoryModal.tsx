@@ -70,12 +70,12 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
               MAÇ GEÇMİŞİ
             </h3>
             <span className="text-xs text-muted">
-              Son Karşılaşmalar &amp; 3×3 Tahta Kayıtları
+              Son Karşılaşmalar &amp; 3×3 Kadraj Kayıtları
             </span>
           </div>
           <button
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted transition hover:bg-white/5 hover:text-ink"
+            className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-muted transition hover:bg-white/5 hover:text-ink"
           >
             <X className="w-5 h-5" />
           </button>
@@ -240,10 +240,10 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
           /* 2. ARCHIVE LIST */
           <div className="my-3 space-y-2.5">
             {matches.length === 0 ? (
-              <div className="py-12 text-center">
-                <Film className="w-8 h-8 text-muted/40 mx-auto mb-2" />
-                <p className="text-sm text-muted">
-                  Henüz tamamlanmış bir maç kaydı bulunmuyor.
+              <div className="py-12 text-center text-[#8A8F9A]">
+                <Film className="w-8 h-8 text-[#D9A441]/40 mx-auto mb-2" />
+                <p className="font-serif text-sm text-[#E8E6E1]">
+                  Arşivde henüz kayıt yok.
                 </p>
               </div>
             ) : (

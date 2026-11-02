@@ -61,14 +61,14 @@
 ---
 
 ## 4. Bitti Tanımı (Definition of Done)
-- [ ] Hiçbir ekranda "panel/dashboard" kelimesi veya sayaç yığını yok (Aktif Masalar, Matris, İstatistik vb.)
-- [ ] Her ekranda tek odak noktası var, bir bakışta ne yapacağım belli
-- [ ] İmza öğeleri (film şeridi kenarı, köşe işaretleri, serif başlık, altın vurgu, tek mikro etiket) tüm ekranlarda tutarlı
-- [ ] REC + timecode sadece oyun ekranında, maç aktifken çalışıyor
-- [ ] Klaket geri sayımı (3-2-1-AKSİYON), deklanşör geri bildirimi, "Kesin!" kazanma anı çalışıyor
-- [ ] Başlık, boşluk, buton boyutu tüm ekranlarda aynı sistemden geliyor (tokenlar)
-- [ ] 360, 390, 430 px genişlikte taşma ve kesilme yok
-- [ ] Boş durum, yükleme ve hata durumlarının hepsi sinema diliyle yazılmış ve tasarlanmış
-- [ ] Ses ve haptic ayarlardan kapanıyor
-- [ ] Bir maç baştan sona oynanıyor: gir, eşleş, hücre doldur, kazan/kaybet, sonuç, tekrar çek
-- [ ] Günün Kadrası açılıyor, bitiriyor, sonucu paylaşılabiliyor
+- [X] Hiçbir ekranda "panel/dashboard" kelimesi veya sayaç yığını yok (Aktif Masalar, Matris, İstatistik vb.)
+- [X] Her ekranda tek odak noktası var, bir bakışta ne yapacağım belli
+- [X] İmza öğeleri (film şeridi kenarı, köşe işaretleri, serif başlık, altın vurgu, tek mikro etiket) tüm ekranlarda tutarlı
+- [X] REC + timecode sadece oyun ekranında, maç aktifken çalışıyor
+- [X] Klaket geri sayımı (3-2-1-AKSİYON), deklanşör geri bildirimi, "Kesin!" kazanma anı çalışıyor
+- [X] Başlık, boşluk, buton boyutu tüm ekranlarda aynı sistemden geliyor (tokenlar)
+- [X] 360, 390, 430 px genişlikte taşma ve kesilme yok
+- [X] Boş durum, yükleme ve hata durumlarının hepsi sinema diliyle yazılmış ve tasarlanmış
+- [X] Ses ve haptic ayarlardan kapanıyor
+- [X] Bir maç baştan sona oynanıyor: gir, eşleş, hücre doldur, kazan/kaybet, sonuç, tekrar çek
+- [X] Günün Kadrası açılıyor, bitiriyor, sonucu paylaşılabiliyor
