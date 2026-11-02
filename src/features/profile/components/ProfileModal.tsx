@@ -231,16 +231,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         <div className="flex items-center justify-between pb-2.5 border-b border-white/10">
           <div className="w-7" />
           <div className="text-center">
-            <span className="text-[9px] font-mono font-black uppercase tracking-[0.25em] text-[#F5A623] block">
-              CINE-XOX CLUB ID
+            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#D9A441] block">
+              CINE-XOX IDENTITY
             </span>
-            <h2 className="text-sm font-black tracking-widest text-[#F1EEE7] uppercase font-mono">
-              SİNEFİL PASAPORTU
+            <h2 className="text-sm font-serif font-bold tracking-wider text-[#E8E6E1] uppercase">
+              SİNEFİL KARTI
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="w-7 h-7 rounded-xl bg-[#252932] border border-white/10 flex items-center justify-center text-[#A5A8B0] hover:text-[#F1EEE7] transition-colors"
+            className="w-7 h-7 rounded-xl bg-[#181B22] border border-white/10 flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>

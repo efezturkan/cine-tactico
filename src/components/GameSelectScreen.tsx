@@ -214,11 +214,11 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
         </button>
 
         <div className="text-center">
-          <div className="text-[9px] font-black text-[#8b151b] tracking-[0.25em] uppercase">
-            KODAK 35mm · SELECT BOARD
+          <div className="text-[9px] font-mono font-bold text-[#D9A441] tracking-[0.25em] uppercase">
+            CINE-XOX · 35MM
           </div>
-          <h2 className="text-sm font-black text-white tracking-widest uppercase">
-            ARENA SEÇ
+          <h2 className="text-base font-serif font-bold text-[#E8E6E1] tracking-wider uppercase">
+            VİZYONDAKİLER
           </h2>
         </div>
 

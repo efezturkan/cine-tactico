@@ -2,40 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── CINE-XOX: Tactile Cinematic Arcade & 35mm Screening Room ─── */
+/* ─── CINE-XOX: CineXOX Tasarım Anayasası Tokenları ─── */
 :root {
-  --background: #0F1115;
+  --background: #0B0D12;
+  --surface: #14171D;
   --surface-secondary: #181B22;
-  --surface-raised: #252932;
-  --foreground: #F1EEE7;
-  --muted-silver: #A5A8B0;
-  --cinematic-amber: #F5A623;
-  --electric-cyan: #00D5E8;
-  --crimson-alert: #FF334B;
+  --surface-2: #181B22;
+  --surface-raised: #1C2029;
+  --foreground: #E8E6E1;
+  --muted-silver: #8A8F9A;
+  --cinematic-amber: #D9A441;
+  --electric-cyan: #4FA3C7;
+  --crimson-alert: #E5484D;
   --success-green: #8EBB70;
 
   --cinema-red: #8b151b;
   --cinema-red-light: #b01e25;
-  --film-amber: #F5A623;
-  --film-gold: #F5A623;
-  --film-dark: #090A0D;
-  --frame-mount: #252932;
-  --velvet-glow: rgba(245, 166, 35, 0.22);
-  --player-one: #F5A623;
-  --player-two: #00D5E8;
-  --state-neutral-lock: #333b4a;
-  --state-error: #FF334B;
+  --film-amber: #D9A441;
+  --film-gold: #D9A441;
+  --cinema-gold: #D9A441;
+  --film-dark: #0B0D12;
+  --frame-mount: #181B22;
+  --player-one: #D9A441;
+  --player-two: #4FA3C7;
+  --state-neutral-lock: #2A2F3A;
+  --state-error: #E5484D;
+  --rec-red: #E5484D;
 }
 
 html {
   height: 100%;
   overscroll-behavior: none;
-  background-color: #090A0D;
+  background-color: #0B0D12;
 }
 
 body {
   color: var(--foreground);
-  background: radial-gradient(circle at 50% 0%, #181B22 0%, #0F1115 65%, #090A0D 100%);
+  background: #0B0D12;
   font-family: var(--font-jakarta), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
@@ -63,33 +66,30 @@ body {
   background-size: 128px 128px;
 }
 
-/* ─── Tactile 3D Arcade Surfaces & Buttons ─────────────────────── */
+/* ─── Flat Card Surfaces & 3D Tactile Buttons (DESIGN.md) ─────── */
 .tactile-card {
-  background: linear-gradient(180deg, #252932 0%, #181B22 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 3.5px solid #090A0D;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-  transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.15s ease;
+  background: #14171D;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
 }
 
 .tactile-card-interactive {
-  background: linear-gradient(180deg, #252932 0%, #181B22 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.12);
-  border-bottom: 3.5px solid #090A0D;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-  transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.15s ease;
+  background: #14171D;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 .tactile-card-interactive:active {
-  transform: translateY(2px);
-  border-bottom-width: 2px;
+  background: #181B22;
+  border-color: rgba(217, 164, 65, 0.4);
 }
 
 .tactile-btn-amber {
-  background: linear-gradient(180deg, #FFB838 0%, #F5A623 100%);
-  color: #0F1115;
-  border: 1.5px solid #FFD27D;
-  border-bottom: 3.5px solid #A36207;
-  box-shadow: 0 3px 0 #A36207;
+  background: linear-gradient(180deg, #E5B253 0%, #D9A441 100%);
+  color: #0B0D12;
+  border: 1.5px solid #F0C475;
+  border-bottom: 3.5px solid #8E651B;
+  box-shadow: 0 3px 0 #8E651B;
   transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), filter 0.12s ease;
 }
 .tactile-btn-amber:hover {
@@ -101,11 +101,11 @@ body {
 }
 
 .tactile-btn-cyan {
-  background: linear-gradient(180deg, #22E4F5 0%, #00D5E8 100%);
-  color: #0F1115;
-  border: 1.5px solid #8BF3FC;
-  border-bottom: 3.5px solid #087E8B;
-  box-shadow: 0 3px 0 #087E8B;
+  background: linear-gradient(180deg, #6BB8D9 0%, #4FA3C7 100%);
+  color: #0B0D12;
+  border: 1.5px solid #99D1EB;
+  border-bottom: 3.5px solid #23617D;
+  box-shadow: 0 3px 0 #23617D;
   transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), filter 0.12s ease;
 }
 .tactile-btn-cyan:active {
@@ -129,15 +129,15 @@ body {
 /* ─── Custom Scrollbar (35mm edition) ────────────────────────── */
 .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #0F1115;
+  background: #0B0D12;
   border-radius: 9999px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #252932;
+  background: #181B22;
   border-radius: 9999px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #F5A623;
+  background: #D9A441;
 }
 
 /* ─── Prevent text selection during fast tap gaming ─────────── */

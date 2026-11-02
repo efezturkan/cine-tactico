@@ -26,6 +26,7 @@ import {
 } from "@/components";
 
 import NotificationPanel, { NotifToast, useNotifications } from "@/components/NotificationPanel";
+import { FLAGS } from "@/config/flags";
 
 export interface GlobalModalsProps {
   showMatchmakingQueue: boolean;
@@ -127,24 +128,28 @@ export function GlobalModals(props: GlobalModalsProps) {
         onJoinRoom={props.onJoinCustomRoom}
       />
 
-      <QuestsModal
-        isOpen={props.showQuests}
-        onClose={props.onCloseQuests}
-        reelsBalance={props.profile.reelsBalance}
-        dailyStreak={props.profile.dailyStreak}
-        onClaimDaily={props.onClaimDailyReward}
-        claimedDaily={props.claimedDaily}
-        claimedQuestIds={props.claimedQuestIds}
-        onClaimQuest={props.onClaimQuest}
-      />
+      {FLAGS.SHOW_DAILY_QUESTS && (
+        <QuestsModal
+          isOpen={props.showQuests}
+          onClose={props.onCloseQuests}
+          reelsBalance={props.profile.reelsBalance}
+          dailyStreak={props.profile.dailyStreak}
+          onClaimDaily={props.onClaimDailyReward}
+          claimedDaily={props.claimedDaily}
+          claimedQuestIds={props.claimedQuestIds}
+          onClaimQuest={props.onClaimQuest}
+        />
+      )}
 
-      <ShopModal
-        isOpen={props.showShop}
-        onClose={props.onCloseShop}
-        profile={props.profile}
-        onSelectAvatar={props.onSelectAvatar}
-        onBuyAvatar={props.onBuyAvatar}
-      />
+      {FLAGS.SHOW_COIN_ECONOMY && (
+        <ShopModal
+          isOpen={props.showShop}
+          onClose={props.onCloseShop}
+          profile={props.profile}
+          onSelectAvatar={props.onSelectAvatar}
+          onBuyAvatar={props.onBuyAvatar}
+        />
+      )}
 
       <GameModesHubModal
         isOpen={props.showGameModesHub}
@@ -167,27 +172,33 @@ export function GlobalModals(props: GlobalModalsProps) {
         onClose={props.onCloseHelp}
       />
 
-      <LeaderboardModal
-        isOpen={props.showLeaderboard}
-        onClose={props.onCloseLeaderboard}
-        currentUser={props.profile}
-      />
+      {FLAGS.SHOW_LEAGUE_BAR && (
+        <LeaderboardModal
+          isOpen={props.showLeaderboard}
+          onClose={props.onCloseLeaderboard}
+          currentUser={props.profile}
+        />
+      )}
 
-      <LiveAmbienceConsole
-        isOpen={props.showAmbienceConsole}
-        onClose={props.onCloseAmbienceConsole}
-        ambience={props.profile.ambience || DEFAULT_AMBIENCE}
-        onUpdateAmbience={props.onUpdateAmbience}
-        onResetAmbience={props.onResetAmbience}
-      />
+      {FLAGS.SHOW_HEADER_AMBIENCE_BUTTON && (
+        <LiveAmbienceConsole
+          isOpen={props.showAmbienceConsole}
+          onClose={props.onCloseAmbienceConsole}
+          ambience={props.profile.ambience || DEFAULT_AMBIENCE}
+          onUpdateAmbience={props.onUpdateAmbience}
+          onResetAmbience={props.onResetAmbience}
+        />
+      )}
 
-      <NotificationPanel
-        isOpen={props.showNotifications}
-        onClose={props.onCloseNotifications}
-        notifications={notifications}
-      />
+      {FLAGS.SHOW_NOTIFICATIONS && (
+        <NotificationPanel
+          isOpen={props.showNotifications}
+          onClose={props.onCloseNotifications}
+          notifications={notifications}
+        />
+      )}
 
-      {activeToast && (
+      {FLAGS.SHOW_NOTIFICATIONS && activeToast && (
         <NotifToast
           notif={activeToast}
           onDismiss={dismissToast}

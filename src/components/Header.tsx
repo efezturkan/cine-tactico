@@ -82,39 +82,39 @@ export const Header: React.FC<HeaderProps> = ({
         {onBackToHome ? (
           <button
             onClick={onBackToHome}
-            title="Ana Sayfaya Dön"
-            className="flex items-center gap-1 px-2 py-1.5 rounded-xl font-black text-xs tactile-btn-surface text-[#F5A623]"
+            title="Gişe'ye Dön"
+            className="flex items-center gap-1 px-2 py-1.5 rounded-xl font-bold text-xs tactile-btn-surface text-[#D9A441]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Lobi</span>
+            <span className="hidden sm:inline">Gişe</span>
           </button>
         ) : (
           <button
             onClick={onOpenProfile}
-            title="Profil ve Ayarlar"
+            title="Sinefil Kartı ve Ayarlar"
             className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-base sm:text-lg tactile-btn-surface"
           >
             {currentAvatar.emoji}
           </button>
         )}
         <div className="min-w-0">
-          <h1 className="text-sm sm:text-base font-serif font-bold tracking-[0.08em] text-[#F1EEE7]">
-            CINE<span className="text-[#F5A623] italic font-serif">·</span>XOX
+          <h1 className="text-sm sm:text-base font-serif font-bold tracking-[0.08em] text-[#E8E6E1]">
+            CINE<span className="text-[#D9A441] italic font-serif">·</span>XOX
           </h1>
         </div>
       </div>
 
-      {/* Scoreboard — Tactile Duel Frame (Amber X vs Cyan O) */}
-      <div className="flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl bg-[#0F1115] border border-white/15 shrink-0">
+      {/* Scoreboard — Tactile Duel Frame (Gold X vs Blue O) */}
+      <div className="flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl bg-[#0B0D12] border border-white/10 shrink-0">
         <div
           className={`flex items-center gap-1.5 px-2 py-0.5 rounded-lg transition-all relative font-mono ${
             currentTurn === "X"
-              ? "bg-[#F5A623]/20 text-[#F5A623] border border-[#F5A623]/40"
-              : "text-[#A5A8B0]"
+              ? "bg-[#D9A441]/20 text-[#D9A441] border border-[#D9A441]/40"
+              : "text-[#8A8F9A]"
           }`}
         >
           {currentTurn === "X" && (
-            <span className="w-1.5 h-1.5 rounded-full bg-[#F5A623]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D9A441]" />
           )}
           <span className="text-xs font-black">X</span>
           <span className="text-xs sm:text-sm font-black">{scoreX}</span>
@@ -123,12 +123,12 @@ export const Header: React.FC<HeaderProps> = ({
         <div
           className={`flex items-center gap-1.5 px-2 py-0.5 rounded-lg transition-all relative font-mono ${
             currentTurn === "O"
-              ? "bg-[#00D5E8]/20 text-[#00D5E8] border border-[#00D5E8]/40"
-              : "text-[#A5A8B0]"
+              ? "bg-[#4FA3C7]/20 text-[#4FA3C7] border border-[#4FA3C7]/40"
+              : "text-[#8A8F9A]"
           }`}
         >
           {currentTurn === "O" && (
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00D5E8]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#4FA3C7]" />
           )}
           <span className="text-xs font-black">O</span>
           <span className="text-xs sm:text-sm font-black">{scoreO}</span>
@@ -137,32 +137,22 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Actions */}
       <div className="flex items-center gap-1 mr-2.5 sm:mr-3 shrink-0">
-        {onOpenHelp && (
-          <button
-            onClick={onOpenHelp}
-            title="Nasıl Oynanır?"
-            className="p-1.5 sm:p-2 rounded-xl tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7] hidden xs:flex"
-          >
-            <HelpCircle className="w-3.5 h-3.5 text-[#F5A623]" />
-          </button>
-        )}
-
         <button
           onClick={onToggleMute}
           title="Sesi Aç/Kapat"
           className="p-1.5 sm:p-2 rounded-xl tactile-btn-surface"
         >
           {isMuted ? (
-            <VolumeX className="w-3.5 h-3.5 text-[#A5A8B0]" />
+            <VolumeX className="w-3.5 h-3.5 text-[#8A8F9A]" />
           ) : (
-            <Volume2 className="w-3.5 h-3.5 text-[#F5A623]" />
+            <Volume2 className="w-3.5 h-3.5 text-[#D9A441]" />
           )}
         </button>
 
         <button
           onClick={onReset}
           title="Yeniden Başlat"
-          className="p-1.5 sm:p-2 rounded-xl tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
+          className="p-1.5 sm:p-2 rounded-xl tactile-btn-surface text-[#8A8F9A] hover:text-[#E8E6E1]"
         >
           <RotateCcw className="w-3.5 h-3.5" />
         </button>

@@ -216,52 +216,52 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
             </div>
 
             <h2
-              className="text-3xl font-serif font-bold tracking-[0.1em] uppercase"
+              className="text-3xl font-serif font-bold tracking-[0.06em]"
               style={{
                 color: isVictory
-                  ? "#F5A623"
+                  ? "#D9A441"
                   : isDraw
-                  ? "#00D5E8"
-                  : "#F1EEE7",
+                  ? "#4FA3C7"
+                  : "#E5484D",
               }}
             >
-              {isVictory ? "ZAFER" : isDraw ? "BERABERE" : "MAĞLUBİYET"}
+              {isVictory ? "Kesin!" : isDraw ? "Berabere" : "Kurgu masasına dönüyoruz."}
             </h2>
 
-            <p className="text-xs text-[#A5A8B0] font-medium mt-1">
+            <p className="text-xs text-[#8A8F9A] font-medium mt-1">
               {board.title}
             </p>
 
             {/* Clean Match Summary Card */}
-            <div className="w-full my-5 p-3.5 rounded-2xl bg-[#111319] border border-white/10 grid grid-cols-3 gap-2 text-center">
+            <div className="w-full my-5 p-3.5 rounded-2xl bg-[#14171D] border border-white/10 grid grid-cols-3 gap-2 text-center">
               <div>
-                <span className="text-[9px] font-mono font-bold text-[#A5A8B0] uppercase block">
+                <span className="text-[9px] font-mono font-bold text-[#8A8F9A] uppercase block">
                   SEN (X)
                 </span>
-                <span className="text-lg font-black text-[#F5A623] font-mono mt-0.5 block">
+                <span className="text-lg font-black text-[#D9A441] font-mono mt-0.5 block">
                   {playerAnswers.length} Kare
                 </span>
               </div>
               <div className="border-x border-white/10">
-                <span className="text-[9px] font-mono font-bold text-[#A5A8B0] uppercase block">
+                <span className="text-[9px] font-mono font-bold text-[#8A8F9A] uppercase block">
                   RAKİP (O)
                 </span>
-                <span className="text-lg font-black text-[#00D5E8] font-mono mt-0.5 block">
+                <span className="text-lg font-black text-[#4FA3C7] font-mono mt-0.5 block">
                   {opponentAnswers.length} Kare
                 </span>
               </div>
               <div>
-                <span className="text-[9px] font-mono font-bold text-[#A5A8B0] uppercase block flex items-center justify-center gap-1">
-                  <Sparkles className="w-2.5 h-2.5 text-[#F5A623]" />
+                <span className="text-[9px] font-mono font-bold text-[#8A8F9A] uppercase block flex items-center justify-center gap-1">
+                  <Sparkles className="w-2.5 h-2.5 text-[#D9A441]" />
                   NADİRLİK
                 </span>
-                <span className="text-lg font-black text-[#F1EEE7] font-mono mt-0.5 block">
+                <span className="text-lg font-black text-[#E8E6E1] font-mono mt-0.5 block">
                   %{rarityScore}
                 </span>
               </div>
             </div>
 
-            {/* PRIMARY ACTION: PLAY AGAIN */}
+            {/* PRIMARY ACTION: TEKRAR ÇEK */}
             <button
               type="button"
               data-testid="final-frame-play-again-btn"
@@ -272,7 +272,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
               className="w-full py-3.5 px-5 rounded-2xl tactile-btn-amber font-black text-sm tracking-wider uppercase flex items-center justify-center gap-2 mb-3 cursor-pointer"
             >
               <RotateCcw className="w-4 h-4 stroke-[2.5]" />
-              <span>TEKRAR OYNA</span>
+              <span>TEKRAR ÇEK</span>
             </button>
 
             {/* SECONDARY ACTIONS GRID */}
@@ -319,10 +319,10 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                   audio.playSelect();
                   if (onBackToHome) onBackToHome();
                 }}
-                className="py-2.5 px-3 rounded-xl tactile-btn-surface text-[#F1EEE7] font-bold text-xs flex items-center justify-center gap-1.5"
+                className="py-2.5 px-3 rounded-xl tactile-btn-surface text-[#E8E6E1] font-bold text-xs flex items-center justify-center gap-1.5"
               >
-                <Home className="w-3.5 h-3.5 text-[#F5A623]" />
-                <span>Lobiye Dön</span>
+                <Home className="w-3.5 h-3.5 text-[#D9A441]" />
+                <span>Gişe&apos;ye Dön</span>
               </button>
             </div>
           </div>

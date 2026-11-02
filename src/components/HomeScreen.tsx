@@ -16,6 +16,9 @@ import {
   Volume2,
   VolumeX,
   User,
+  Flame,
+  Settings,
+  Ticket,
 } from "lucide-react";
 import {
   UserProfile,
@@ -25,6 +28,7 @@ import {
   CORNER_ACCENT_COLORS,
 } from "@/types/profile";
 import { ContentPoolType } from "@/core";
+import { FLAGS } from "@/config/flags";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { QuickMatchSetupModal } from "@/features/multiplayer";
@@ -183,7 +187,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     ambience.cornerAccent !== "AUTO" &&
     CORNER_ACCENT_COLORS[ambience.cornerAccent]
       ? CORNER_ACCENT_COLORS[ambience.cornerAccent].color
-      : activeTheme?.secondaryAccent || "#F5A623";
+      : activeTheme?.secondaryAccent || "#D9A441";
 
   const safeDimness =
     typeof ambience.dimness === "number" && !isNaN(ambience.dimness)
@@ -195,13 +199,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       : 65;
 
   const isCyanMode = activeModeMeta.accent === "cyan";
-  const heroAccentHex = isCyanMode ? "#00D5E8" : "#F5A623";
+  const heroAccentHex = isCyanMode ? "#4FA3C7" : "#D9A441";
 
   return (
     <div
-      className="w-full max-w-full sm:max-w-[430px] mx-auto h-[100dvh] sm:h-auto sm:min-h-[860px] text-[#F1EEE7] flex flex-col justify-between relative select-none antialiased overflow-hidden transition-colors duration-500 sm:my-4 sm:rounded-[36px] sm:border-2 sm:border-[#252932] sm:shadow-2xl"
+      className="w-full max-w-full sm:max-w-[430px] mx-auto h-[100dvh] sm:h-auto sm:min-h-[860px] text-[#E8E6E1] flex flex-col justify-between relative select-none antialiased overflow-hidden transition-colors duration-500 sm:my-4 sm:rounded-[36px] sm:border-2 sm:border-[#181B22] sm:shadow-2xl"
       style={{
-        backgroundColor: activeTheme?.bgColor || "#0F1115",
+        backgroundColor: activeTheme?.bgColor || "#0B0D12",
         filter: `brightness(${Math.min(1.1, Math.max(0.7, safeDimness / 85))})`,
       }}
     >
@@ -248,8 +252,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
       {/* ── MAIN LOBBY CONTENT (NO SCROLL ON 390x844 & 430x932) ─── */}
       <div className="px-4 sm:px-5 relative z-10 flex-1 flex flex-col justify-between pt-3 pb-20 w-full min-w-0 max-w-full">
-        {/* ── 1. TOP BAR: PLAYER IDENTITY & CLEAN CONTROLS ─── */}
+        {/* ── 1. TOP BAR: AVATAR + İSİM, SERİ SAYISI, SES, AYARLAR ─── */}
         <header className="flex items-center justify-between gap-2">
+          {/* Avatar + İsim */}
           <button
             type="button"
             onClick={() => {
@@ -258,16 +263,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               onOpenProfileModal();
             }}
             className="flex items-center gap-2.5 p-1 rounded-2xl hover:bg-white/5 active:translate-y-[1px] transition-all text-left min-w-0 group"
-            title="Sinefil Pasaportu & İstatistikler"
+            title="Sinefil Kartı"
           >
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 transition-transform group-hover:scale-105"
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0 transition-transform group-hover:scale-105"
               style={{
-                background: "linear-gradient(180deg, #252932 0%, #14171E 100%)",
-                border: `1.5px solid ${effectiveCornerColor}`,
-                borderBottom: `3px solid ${effectiveCornerColor}`,
-                boxShadow:
-                  "0 3px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)",
+                background: "#14171D",
+                border: "1px solid rgba(255,255,255,0.1)",
               }}
             >
               <span className="leading-none select-none">
@@ -276,18 +278,29 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </div>
 
             <div className="min-w-0 flex flex-col">
-              <span className="text-xs sm:text-sm font-extrabold text-[#F1EEE7] truncate max-w-[140px] leading-tight">
+              <span className="text-xs sm:text-sm font-bold text-[#E8E6E1] truncate max-w-[120px] leading-tight">
                 {profile.username === "Oyuncu"
                   ? "Sinefil #3095"
                   : profile.username}
               </span>
-              <span className="text-[10px] font-semibold text-[#A5A8B0] truncate leading-tight mt-0.5">
-                Profil &amp; İstatistikler &rarr;
+              <span className="text-[10px] text-[#8A8F9A] truncate leading-tight mt-0.5">
+                Sinefil Kartı &rarr;
               </span>
             </div>
           </button>
 
+          {/* Sağ Bölüm: Seri Sayısı + Ses Toggle + Ayarlar */}
           <div className="flex items-center gap-1.5 shrink-0">
+            {/* Seri Sayısı */}
+            <div
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#14171D] border border-white/10 text-xs font-mono font-bold text-[#D9A441]"
+              title={`Galibiyet Serisi: ${profile.dailyStreak || 1}`}
+            >
+              <Flame className="w-3.5 h-3.5 fill-[#D9A441] text-[#D9A441]" />
+              <span>{profile.dailyStreak || 1}</span>
+            </div>
+
+            {/* Ses Aç / Kapat */}
             {onToggleMute && (
               <button
                 type="button"
@@ -295,45 +308,48 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   haptic.light();
                   onToggleMute();
                 }}
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-[#A5A8B0] hover:text-[#F1EEE7] tactile-btn-surface"
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
                 title="Sesi Aç / Kapat"
               >
                 {muted ? (
-                  <VolumeX className="w-4 h-4 text-[#A5A8B0]" />
+                  <VolumeX className="w-4 h-4 text-[#8A8F9A]" />
                 ) : (
-                  <Volume2 className="w-4 h-4 text-[#F5A623]" />
+                  <Volume2 className="w-4 h-4 text-[#D9A441]" />
                 )}
               </button>
             )}
 
-            {onOpenLiveAmbience && (
+            {/* Ayarlar */}
+            <button
+              type="button"
+              onClick={() => {
+                audio.playSelect();
+                haptic.light();
+                onOpenProfileModal();
+              }}
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
+              title="Ayarlar & Profil"
+            >
+              <Settings className="w-4 h-4 text-[#8A8F9A]" />
+            </button>
+
+            {/* FLAGS arkasındaki Ambiyans ve Yardım (UI'da gizli) */}
+            {FLAGS.SHOW_HEADER_AMBIENCE_BUTTON && onOpenLiveAmbience && (
               <button
                 type="button"
-                onClick={() => {
-                  audio.playSelect();
-                  haptic.light();
-                  onOpenLiveAmbience();
-                }}
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-[#A5A8B0] hover:text-[#F1EEE7] tactile-btn-surface"
-                title="Salon Işıkları & Ambiyans"
+                onClick={onOpenLiveAmbience}
+                className="w-9 h-9 rounded-xl flex items-center justify-center tactile-btn-surface"
               >
-                <Sliders className="w-4 h-4 text-[#F5A623]" />
+                <Sliders className="w-4 h-4 text-[#D9A441]" />
               </button>
             )}
-
-            {onOpenHelp && (
+            {FLAGS.SHOW_HEADER_HELP_BUTTON && onOpenHelp && (
               <button
                 type="button"
-                onClick={() => {
-                  audio.playSelect();
-                  haptic.light();
-                  onOpenHelp();
-                }}
-                aria-label="Nasıl Oynanır"
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-[#A5A8B0] hover:text-[#F1EEE7] tactile-btn-surface"
-                title="Nasıl Oynanır?"
+                onClick={onOpenHelp}
+                className="w-9 h-9 rounded-xl flex items-center justify-center tactile-btn-surface"
               >
-                <HelpCircle className="w-4 h-4 text-[#F5A623]" />
+                <HelpCircle className="w-4 h-4 text-[#D9A441]" />
               </button>
             )}
           </div>
@@ -398,17 +414,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               type="button"
               data-testid="hero-start-duel-btn"
               onClick={handleLaunchDuel}
-              className="w-full mt-4 py-3.5 sm:py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wider uppercase flex items-center justify-center gap-2.5 transition-transform active:translate-y-[2px] cursor-pointer"
-              style={{
-                background:
-                  "linear-gradient(180deg, #FFB838 0%, #F5A623 100%)",
-                color: "#0F1115",
-                border: "1.5px solid #FFD27D",
-                borderBottom: "4px solid #A36207",
-                boxShadow: "0 3px 0 #A36207",
-              }}
+              className="w-full mt-4 py-3.5 sm:py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wider uppercase flex items-center justify-center gap-2.5 transition-transform active:translate-y-[2px] cursor-pointer tactile-btn-amber"
             >
-              <Play className="w-4 h-4 fill-[#0F1115] shrink-0" />
+              <Play className="w-4 h-4 fill-current shrink-0" />
               <span>DÜELLOYA GİR</span>
             </button>
           </div>
@@ -417,21 +425,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* ── 4. THREE SIMPLIFIED MODE SELECTOR CARDS ─── */}
         <div className="w-full space-y-2">
           <div className="flex items-center justify-between px-1">
-            <span className="text-[10px] font-mono font-bold tracking-[0.18em] uppercase text-[#A5A8B0]">
+            <span className="text-[10px] font-mono font-bold tracking-[0.18em] uppercase text-[#8A8F9A]">
               OYUN MODU SEÇİMİ
             </span>
-            <button
-              type="button"
-              onClick={() => {
-                audio.playSelect();
-                haptic.light();
-                if (onOpenGameModesHub) onOpenGameModesHub();
-                else if (onOpenGameSelect) onOpenGameSelect();
-              }}
-              className="text-[10px] font-mono font-bold text-[#F5A623] hover:text-amber-300 transition-colors cursor-pointer"
-            >
-              Tahta Arşivi &rarr;
-            </button>
+            {FLAGS.SHOW_BOARD_ARCHIVE && (
+              <button
+                type="button"
+                onClick={() => {
+                  audio.playSelect();
+                  haptic.light();
+                  if (onOpenGameModesHub) onOpenGameModesHub();
+                  else if (onOpenGameSelect) onOpenGameSelect();
+                }}
+                className="text-[10px] font-mono font-bold text-[#D9A441] hover:underline transition-colors cursor-pointer"
+              >
+                Tahta Arşivi &rarr;
+              </button>
+            )}
           </div>
 
           <div
@@ -443,8 +453,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               const Icon = m.icon;
               const isSelected = activeMode === m.id;
               const isCyan = m.accent === "cyan";
-              const accentColor = isCyan ? "#00D5E8" : "#F5A623";
-              const bottomBorderColor = isCyan ? "#0E7490" : "#9A5B0A";
+              const accentColor = isCyan ? "#4FA3C7" : "#D9A441";
 
               return (
                 <button
@@ -454,19 +463,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   aria-checked={isSelected}
                   data-testid={`mode-card-${m.id}`}
                   onClick={() => handleSelectModeCard(m.id)}
-                  className="min-h-[88px] sm:min-h-[94px] p-3 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all active:translate-y-[2px] relative cursor-pointer"
+                  className="min-h-[88px] sm:min-h-[94px] p-3 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all active:translate-y-[1px] relative cursor-pointer"
                   style={{
                     background: isSelected
                       ? isCyan
-                        ? "linear-gradient(180deg, rgba(0,213,232,0.18) 0%, #161B24 100%)"
-                        : "linear-gradient(180deg, rgba(245,166,35,0.18) 0%, #1A1D24 100%)"
-                      : "linear-gradient(180deg, #1B1F28 0%, #13161D 100%)",
+                        ? "rgba(79, 163, 199, 0.12)"
+                        : "rgba(217, 164, 65, 0.12)"
+                      : "#14171D",
                     border: isSelected
-                      ? `2px solid ${accentColor}`
-                      : "1.5px solid #262B36",
-                    borderBottom: isSelected
-                      ? `4px solid ${bottomBorderColor}`
-                      : "3.5px solid #0B0D12",
+                      ? `1.5px solid ${accentColor}`
+                      : "1px solid rgba(255, 255, 255, 0.08)",
                     boxShadow: "none",
                   }}
                 >
@@ -476,16 +482,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       backgroundColor: isSelected
                         ? `${accentColor}22`
                         : "rgba(255,255,255,0.04)",
-                      color: isSelected ? accentColor : "#A5A8B0",
+                      color: isSelected ? accentColor : "#8A8F9A",
                     }}
                   >
                     <Icon className="w-5 h-5" />
                   </div>
 
                   <span
-                    className="text-xs font-extrabold leading-tight tracking-tight"
+                    className="text-xs font-bold leading-tight tracking-tight"
                     style={{
-                      color: isSelected ? "#F1EEE7" : "#A5A8B0",
+                      color: isSelected ? "#E8E6E1" : "#8A8F9A",
                     }}
                   >
                     {m.title}
@@ -505,17 +511,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               haptic.light();
               onOpenDaily();
             }}
-            className="p-3 rounded-2xl flex items-center gap-3 text-left transition-all active:translate-y-[2px] tactile-card-interactive"
+            className="p-3 rounded-2xl flex items-center gap-3 text-left transition-all active:translate-y-[1px] tactile-card-interactive"
           >
-            <div className="w-9 h-9 rounded-xl bg-[#F5A623]/15 border border-[#F5A623]/35 flex items-center justify-center shrink-0">
-              <Clock className="w-4 h-4 text-[#F5A623]" />
+            <div className="w-9 h-9 rounded-xl bg-[#D9A441]/15 border border-[#D9A441]/35 flex items-center justify-center shrink-0">
+              <Clock className="w-4 h-4 text-[#D9A441]" />
             </div>
             <div className="min-w-0">
-              <span className="text-xs font-extrabold text-[#F1EEE7] block truncate">
-                Günün Kadresi
+              <span className="text-xs font-bold text-[#E8E6E1] block truncate">
+                Günün Kadrası
               </span>
-              <span className="text-[10px] font-medium text-[#A5A8B0] block truncate">
-                Sabit 3×3 Matris
+              <span className="text-[10px] text-[#8A8F9A] block truncate">
+                Bilet Kupürü
               </span>
             </div>
           </button>
@@ -527,48 +533,52 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               haptic.light();
               onOpenCustomLobby();
             }}
-            className="p-3 rounded-2xl flex items-center gap-3 text-left transition-all active:translate-y-[2px] tactile-card-interactive"
+            className="p-3 rounded-2xl flex items-center gap-3 text-left transition-all active:translate-y-[1px] tactile-card-interactive"
           >
-            <div className="w-9 h-9 rounded-xl bg-[#00D5E8]/15 border border-[#00D5E8]/35 flex items-center justify-center shrink-0">
-              <Swords className="w-4 h-4 text-[#00D5E8]" />
+            <div className="w-9 h-9 rounded-xl bg-[#4FA3C7]/15 border border-[#4FA3C7]/35 flex items-center justify-center shrink-0">
+              <Swords className="w-4 h-4 text-[#4FA3C7]" />
             </div>
             <div className="min-w-0">
-              <span className="text-xs font-extrabold text-[#F1EEE7] block truncate">
-                Özel Oda (1v1)
+              <span className="text-xs font-bold text-[#E8E6E1] block truncate">
+                Özel Gösterim
               </span>
-              <span className="text-[10px] font-medium text-[#A5A8B0] block truncate">
-                Kodla Düello
+              <span className="text-[10px] text-[#8A8F9A] block truncate">
+                1v1 Canlı Düello
               </span>
             </div>
           </button>
         </div>
 
+        {/* ── SIGNATURE FOOTER MICRO-LABEL (DESIGN.md İmza Öğesi 5) ─── */}
+        <div className="pt-2 pb-1 text-center select-none pointer-events-none">
+          <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#E8E6E1]/30">
+            KODAK 5219 · 35MM
+          </p>
+        </div>
+
       </div>
 
-      {/* ── 6. BOTTOM NAVIGATION BAR ─── */}
+      {/* ── 6. BOTTOM NAVIGATION BAR (DESIGN.md 4 Sekme: Gişe, Vizyondakiler, Özel Gösterim, Sinefil Kartı) ─── */}
       <nav
         className="fixed bottom-0 left-0 right-0 flex items-center justify-around px-2 sm:px-3 z-40 max-w-[430px] mx-auto w-full"
         style={{
-          background: "rgba(15, 17, 21, 0.96)",
-          borderTop: "1.5px solid #252932",
+          background: "rgba(11, 13, 18, 0.96)",
+          borderTop: "1px solid rgba(255, 255, 255, 0.08)",
           backdropFilter: "blur(12px)",
-          boxShadow: "0 -2px 10px rgba(0,0,0,0.5)",
           paddingTop: "0.45rem",
           paddingBottom: "max(0.55rem, env(safe-area-inset-bottom))",
         }}
       >
         {[
           {
-            label: "Lobi",
-            icon: Home,
-            color: "#F5A623",
+            label: "Gişe",
+            icon: Ticket,
             active: true,
             act: undefined,
           },
           {
-            label: "Arenalar",
+            label: "Vizyondakiler",
             icon: Film,
-            color: "#00D5E8",
             active: false,
             act: () => {
               audio.playSelect();
@@ -577,9 +587,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             },
           },
           {
-            label: "Özel Oda",
+            label: "Özel Gösterim",
             icon: Swords,
-            color: "#00D5E8",
             active: false,
             act: () => {
               audio.playSelect();
@@ -587,9 +596,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             },
           },
           {
-            label: "Profil",
+            label: "Sinefil Kartı",
             icon: User,
-            color: "#F5A623",
             active: false,
             act: () => {
               audio.playSelect();
@@ -603,19 +611,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               key={tab.label}
               type="button"
               onClick={tab.act}
-              className={`flex flex-col items-center transition-all active:scale-95 px-4 py-1 rounded-xl ${
+              className={`flex flex-col items-center transition-all active:scale-95 px-3 py-1 rounded-xl ${
                 tab.active
-                  ? "bg-[#252932]/90 border border-white/10"
-                  : "hover:bg-white/5"
+                  ? "bg-[#181B22] border border-[#D9A441]/40"
+                  : "hover:bg-white/5 border border-transparent"
               }`}
             >
               <Icon
-                className="w-4 h-4"
-                style={{ color: tab.active ? tab.color : "#A5A8B0" }}
+                className="w-4 h-4 stroke-[1.8]"
+                style={{ color: tab.active ? "#D9A441" : "#8A8F9A" }}
               />
               <span
-                className="text-[9px] font-extrabold mt-0.5 uppercase tracking-wide"
-                style={{ color: tab.active ? tab.color : "#A5A8B0" }}
+                className="text-[9px] font-bold mt-0.5 tracking-wide"
+                style={{ color: tab.active ? "#D9A441" : "#8A8F9A" }}
               >
                 {tab.label}
               </span>

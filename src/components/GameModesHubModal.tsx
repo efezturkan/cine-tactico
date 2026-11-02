@@ -21,6 +21,7 @@ import {
 import { audio } from "@/utils/audio";
 
 import { PRESET_BOARDS } from "@/data/boards";
+import { FLAGS } from "@/config/flags";
 
 interface GameModesHubModalProps {
   isOpen: boolean;
@@ -210,61 +211,67 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
         {/* Üst Bar */}
         <div className="flex items-center justify-between pb-3 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <Gamepad2 className="w-5 h-5 text-[#F5A623]" />
-            <h2 className="text-sm font-black tracking-wider uppercase font-mono text-[#F1EEE7]">
-              OYUN MODLARI &amp; <span className="text-[#F5A623]">ARENA</span>
+            <Gamepad2 className="w-5 h-5 text-[#D9A441]" />
+            <h2 className="text-sm font-serif font-bold tracking-wider uppercase text-[#E8E6E1]">
+              VİZYONDAKİLER
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
+            className="p-2 rounded-xl tactile-btn-surface text-[#8A8F9A] hover:text-[#E8E6E1]"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Sekmeler */}
-        <div className="flex gap-1.5 my-3 p-1 rounded-2xl bg-[#11141A] border border-white/10 text-xs font-bold text-[#A5A8B0]">
-          <button
-            onClick={() => {
-              audio.playSelect();
-              setActiveTab("ACTIVE_MODES");
-            }}
-            className={`flex-1 py-1.5 rounded-xl transition-all ${
-              activeTab === "ACTIVE_MODES"
-                ? "tactile-btn-amber text-[#0F1115] font-black shadow-md"
-                : "hover:text-[#F1EEE7]"
-            }`}
-          >
-            Aktif Masalar ({PLAYABLE_ARENAS.length})
-          </button>
-          <button
-            onClick={() => {
-              audio.playSelect();
-              setActiveTab("COMING_SOON");
-            }}
-            className={`flex-1 py-1.5 rounded-xl transition-all ${
-              activeTab === "COMING_SOON"
-                ? "tactile-btn-cyan text-[#0F1115] font-black shadow-md"
-                : "hover:text-[#F1EEE7]"
-            }`}
-          >
-            Yeni Formatlar
-          </button>
-          <button
-            onClick={() => {
-              audio.playSelect();
-              setActiveTab("COMBINATIONS");
-            }}
-            className={`flex-1 py-1.5 rounded-xl transition-all ${
-              activeTab === "COMBINATIONS"
-                ? "tactile-btn-surface text-[#F5A623] font-black shadow-md"
-                : "hover:text-[#F1EEE7]"
-            }`}
-          >
-            Olasılık Matrisi
-          </button>
-        </div>
+        {/* Sekmeler (FLAGS arkasında) */}
+        {(FLAGS.SHOW_NEW_FORMATS || FLAGS.SHOW_PROBABILITY_MATRIX) && (
+          <div className="flex gap-1.5 my-3 p-1 rounded-2xl bg-[#11141A] border border-white/10 text-xs font-bold text-[#8A8F9A]">
+            <button
+              onClick={() => {
+                audio.playSelect();
+                setActiveTab("ACTIVE_MODES");
+              }}
+              className={`flex-1 py-1.5 rounded-xl transition-all ${
+                activeTab === "ACTIVE_MODES"
+                  ? "tactile-btn-amber text-[#0B0D12] font-bold shadow-md"
+                  : "hover:text-[#E8E6E1]"
+              }`}
+            >
+              Vizyondakiler ({PLAYABLE_ARENAS.length})
+            </button>
+            {FLAGS.SHOW_NEW_FORMATS && (
+              <button
+                onClick={() => {
+                  audio.playSelect();
+                  setActiveTab("COMING_SOON");
+                }}
+                className={`flex-1 py-1.5 rounded-xl transition-all ${
+                  activeTab === "COMING_SOON"
+                    ? "tactile-btn-cyan text-[#0B0D12] font-bold shadow-md"
+                    : "hover:text-[#E8E6E1]"
+                }`}
+              >
+                Yeni Formatlar
+              </button>
+            )}
+            {FLAGS.SHOW_PROBABILITY_MATRIX && (
+              <button
+                onClick={() => {
+                  audio.playSelect();
+                  setActiveTab("COMBINATIONS");
+                }}
+                className={`flex-1 py-1.5 rounded-xl transition-all ${
+                  activeTab === "COMBINATIONS"
+                    ? "tactile-btn-surface text-[#D9A441] border-[#D9A441]/40 font-bold shadow-md"
+                    : "hover:text-[#E8E6E1]"
+                }`}
+              >
+                Olasılık Matrisi
+              </button>
+            )}
+          </div>
+        )}
 
         {/* 1. SEKME: OYNANABİLİR CINEXOX ARENALARI */}
         {activeTab === "ACTIVE_MODES" && (

@@ -287,17 +287,17 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
 
         {/* 1. ÜST BAŞLIK */}
         <div className="text-center pb-3 border-b border-white/10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#F5A623]/15 border border-[#F5A623]/35 text-[#F5A623] text-[10px] font-black uppercase tracking-wider mb-1 font-mono">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#D9A441]/15 border border-[#D9A441]/35 text-[#D9A441] text-[10px] font-bold uppercase tracking-wider mb-1 font-mono">
             <Trophy className="w-3.5 h-3.5" />
-            <span>ÖZEL ODA & TURNUVA</span>
+            <span>ÖZEL GÖSTERİM</span>
           </div>
-          <h2 className="text-lg font-black text-[#F1EEE7]">İki Telefon, Bir Düello</h2>
-          <p className="text-[11px] text-[#A5A8B0]">
+          <h2 className="text-lg font-serif font-bold text-[#E8E6E1]">İki Telefon, Bir Düello</h2>
+          <p className="text-[11px] text-[#8A8F9A]">
             Kod paylaş. Rakip bağlanınca maç başlar. Saat 12 saniye.
           </p>
         </div>
 
-        {/* Ana Sekme: 1v1 Özel Oda vs 8 Kişilik Turnuva */}
+        {/* Ana Sekme: 1v1 Özel Gösterim vs 8 Kişilik Turnuva */}
         <div className="grid grid-cols-2 gap-2 my-3">
           <button
             type="button"
@@ -307,11 +307,11 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
             }}
             className={`py-2 rounded-xl text-xs font-black transition-all ${
               mainTab === "1V1_ROOM"
-                ? "tactile-btn-amber text-[#0F1115]"
-                : "tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
+                ? "tactile-btn-amber text-[#0B0D12]"
+                : "tactile-btn-surface text-[#8A8F9A] hover:text-[#E8E6E1]"
             }`}
           >
-            ⚔️ 1v1 Özel Oda
+            ⚔️ 1v1 Özel Gösterim
           </button>
           <button
             type="button"
