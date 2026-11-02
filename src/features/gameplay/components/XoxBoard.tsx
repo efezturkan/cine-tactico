@@ -15,6 +15,8 @@ interface XoxBoardProps {
   winner: PlayerSymbol | "DRAW" | null;
   onCellClick: (index: number) => void;
   allowSteal?: boolean;
+  isIntro?: boolean;
+  introCount?: 3 | 2 | 1 | null;
 }
 
 /**
@@ -144,6 +146,8 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
   winningLine,
   winner,
   onCellClick,
+  isIntro = false,
+  introCount = null,
 }) => {
   const getInitials = (name: string) => {
     const parts = name.trim().split(" ");
@@ -379,7 +383,11 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                           borderRight: "1.5px solid rgba(217, 164, 65, 0.35)",
                         }}
                       />
-                      <div className="absolute inset-0 flex flex-col items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
+                      <div
+                        className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity ${
+                          isIntro ? "opacity-[0.15]" : "opacity-40 group-hover:opacity-100"
+                        }`}
+                      >
                         <span className="text-[7.5px] sm:text-[9px] font-mono font-bold text-[#D9A441] bg-[#0B0D12]/90 px-1.5 py-0.5 rounded border border-[#D9A441]/30">
                           + SEÇ
                         </span>
@@ -396,6 +404,51 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
             })}
           </React.Fragment>
         ))}
+
+        {/* ── 3×3 OYNANABİLİR ALAN RETICLE COUNTDOWN (MATEMATİKSEL MERKEZ KİLİDİ) ─── */}
+        {introCount && (
+          <div
+            className="pointer-events-none z-30 relative flex items-center justify-center animate-in fade-in duration-200"
+            style={{
+              gridColumn: "2 / 5",
+              gridRow: "2 / 5",
+            }}
+          >
+            {/* 3×3 Alanını Saran Zarif Dış Çerçeve ve Vizör Köşe Nişangahları */}
+            <div className="absolute inset-0 rounded-xl border border-[#D9A441]/30 pointer-events-none">
+              <div className="absolute top-1 left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-[#D9A441]" />
+              <div className="absolute top-1 right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-[#D9A441]" />
+              <div className="absolute bottom-1 left-1 w-2.5 h-2.5 border-b-2 border-l-2 border-[#D9A441]" />
+              <div className="absolute bottom-1 right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-[#D9A441]" />
+            </div>
+
+            {/* Tam Merkezdeki (2,2) Hücresine Kusursuz Oturan 35mm Vizör Çemberi */}
+            <div className="relative w-[78%] aspect-square max-w-[96px] rounded-full flex flex-col items-center justify-center bg-black/10 border border-[#D9A441]/50 shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
+              {/* Merkez Kıl Çaprazı (Analog Film Reticle Lines) */}
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-[#D9A441]/20 pointer-events-none" />
+              <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-[#D9A441]/20 pointer-events-none" />
+
+              {/* Dönen İnce Odak Çemberi */}
+              <div
+                className="absolute inset-1 rounded-full border border-dashed border-[#D9A441]/35 animate-spin pointer-events-none"
+                style={{ animationDuration: "10s" }}
+              />
+
+              {/* 3... 2... 1... Rakamı */}
+              <div
+                key={introCount}
+                className="font-serif text-3xl sm:text-4xl font-black text-[#D9A441] leading-none animate-in zoom-in-75 duration-200 select-none z-10"
+              >
+                {introCount}
+              </div>
+
+              {/* Rakamın Hemen Altına Zarifçe Gömülü TAP TO SKIP */}
+              <span className="text-[7px] font-mono tracking-widest text-[#D9A441]/85 uppercase mt-1 z-10 font-bold">
+                TAP TO SKIP
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

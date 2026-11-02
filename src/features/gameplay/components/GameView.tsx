@@ -88,10 +88,12 @@ export interface GameViewProps {
 
 export function GameView(props: GameViewProps) {
   const [showClapper, setShowClapper] = useState(true);
+  const [introCount, setIntroCount] = useState<3 | 2 | 1 | null>(3);
 
   const isIntro = props.isIntroActive !== undefined ? props.isIntroActive : showClapper;
   const handleIntroComplete = () => {
     setShowClapper(false);
+    setIntroCount(null);
     if (props.onCompleteIntro) {
       props.onCompleteIntro();
     }
@@ -116,6 +118,7 @@ export function GameView(props: GameViewProps) {
       {isIntro && (
         <ClapperCountdown
           onComplete={handleIntroComplete}
+          onCountChange={setIntroCount}
           isMuted={props.muted}
         />
       )}
@@ -179,6 +182,8 @@ export function GameView(props: GameViewProps) {
           winner={props.winner}
           onCellClick={isIntro ? () => {} : props.onCellSelect}
           allowSteal={props.allowSteal}
+          isIntro={isIntro}
+          introCount={isIntro ? introCount : null}
         />
 
         {/* ── 3. ALTA TEK SATIR SIRA GÖSTERGESİ ─── */}
