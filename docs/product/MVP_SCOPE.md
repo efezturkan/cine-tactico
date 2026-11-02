@@ -1,74 +1,56 @@
-# CineXOX MVP Kapsamı
+# CineXOX MVP Kapsam & Kilit Dokümanı (v2)
 
-## Ürün Tek Cümle
-İki oyuncu, 3×3 tahta, her hücrede iki sinema kategorisinin kesişimine uyan bir film bul, üçünü hizala, kazan.
+Bu doküman, CineXOX projesinin MVP kapsamını, kilitlenen sınırlarını ve nihai bitti tanımını belirler.
 
 ---
 
-## 1. MVP'de VAR OLANLAR
-
-### Ekranlar (Yalnızca Bu 6 Ekran):
-1. **Gişe** (Lobi ana ekranı)
-2. **Vizyondakiler** (Mod ve masa seçimi tam ekran afiş grid'i)
-3. **Oyun Ekranı** (3×3 film karesi tahta + film/aktör arama modalı)
-4. **Sonuç Ekranı** ("Kesin!" veya "Kurgu masasına dönüyoruz.", Tekrar çek / Gişe'ye dön)
-5. **Sinefil Kartı** (Letterboxd tarzı profil: avatar, seviye, en sevilen tür, 3 temel istatistik)
-6. **Ayarlar** (Ses, haptic, hesap/çıkış)
-
-### Alt Bar (4 Sekme):
-- `Gişe`
-- `Vizyondakiler`
-- `Özel Gösterim`
-- `Sinefil Kartı`
-
-### Modlar:
-- **Klasik Düello** (Yönetmen/Tür × Oyuncu)
-- **Ters Kadraj** (İki film kesişiminde ortak oyuncu)
-- **Sinefil Konsept** (Kült temalar, dönemler, anlatı kuralları)
-- **Günün Kadrası** (Günde bir kez sabit 3×3 tahta, bilet kupürü, paylaşılabilir sonuç)
-- **Özel Gösterim** (Oda koduyla arkadaşını çağır, 1v1 canlı düello)
-
-*Vizyondakiler ekranındaki mevcut masalar (11 adet) olduğu gibi korunur, afiş grid'i olarak sunulur.*
-
-### Üst Bar:
-- Avatar + İsim
-- Seri Sayısı (Galibiyet serisi / streak)
-- Ses aç / kapa
-- Ayarlar
+## 1. MVP'de VAR (Odak)
+- **3 Çekirdek Mod**: Klasik Düello, Ters Kadraj, Sinefil Konsept.
+- **Günün Kadrası**: Takvim gününe göre bilet formatında tekil günlük seans (NO.03).
+- **Tek ve Ortak Oyun Motoru**: Bot (`VS_BOT`) ve Özel Gösterim (`ONLINE_ROOM`) aynı `src/core/` motorunu çalıştırır.
+- **4 Tam Ekran Sayfa**: Gişe, Vizyondakiler, Özel Gösterim, Sinefil Kartı (`BottomNav` ile).
+- **Sinematik Geri Bildirim**: Klaket geri sayımı, 12 saniye süre çubuğu, deklanşör tıkı, "Kesin!" zafer anı, "Kurgu masasına dönüyoruz." kayıp anı, "Kör kadraj" berabere anı.
+- **Salon Işığı**: 4 hazır ayar (Kadife, Analog, Gümüş, Gece mavisi), Loşluk, Projeksiyon (Işık huzmesi), Gren.
+- **Moda Göre Otomatik Atmosfer**: Klasik (`#D9A441`), Ters Kadraj (`#5FB3A8`), Sinefil Konsept (`#9A8FD8`), Günün Kadrası (`#C9A27A`).
+- **İlk Açılış Rehberi**: "Nasıl Oynanır?" (3 adımlı sinematik kart).
+- **Ayarlar**: Ses, titreşim, Salon ışığı, Nasıl oynanır, Gizlilik politikası, Kullanım koşulları.
 
 ---
 
 ## 2. MVP'de GİZLİ (Kod Silinmez, FLAGS Arkasına Alınır)
-- Canlı çevrimiçi sayısı, maç ticker'ı / feed
-- Günlük görev şeridi
-- Zevk DNA'sı / Letterboxd bağlama
-- Lig yerleşimi çubuğu
-- Makara / coin ekonomisi ve ödüller
-- Bildirim zili
-- "Olasılık Matrisi" ve "Yeni Formatlar" sekmeleri
-- Tahta Arşivi
+- `SHOW_ONLINE_COUNT = false` (Canlı çevrimiçi sayısı)
+- `SHOW_LIVE_TICKER = false` (Maç feed'i)
+- `SHOW_DAILY_QUESTS = false` (Görevler)
+- `SHOW_TASTE_DNA = false` (Zevk DNA'sı)
+- `SHOW_LETTERBOXD_CONNECT = false` (Letterboxd bağlama)
+- `SHOW_LEAGUE_BAR = false` (Lig çubuğu)
+- `SHOW_COIN_ECONOMY = false` (Makara / coin ekonomisi)
+- `SHOW_NOTIFICATIONS = false` (Bildirim zili)
+- `SHOW_PROBABILITY_MATRIX = false` (Olasılık matrisi)
+- `SHOW_NEW_FORMATS = false` (Yeni formatlar)
+- `SHOW_BOARD_ARCHIVE = false` (Tahta arşivi)
+- `SHOW_TOURNAMENTS = false` (8 kişilik turnuva)
+- `SHOW_BO3 = false` (BO3 modu)
+- `SHOW_ROOM_PRIVACY = false` (Gizli oda anahtarı)
+- `SHOW_BLITZ = false` (Blitz modu)
+- `SHOW_TIMER_PICKER = false` (Süre seçici)
+- `SHOW_POINTS_SYSTEM = false` (+ Puan sistemi)
+- `PLAYER_PHOTOS = false` (Dış ağdan oyuncu fotoğrafı / afiş yükleme)
 
 ---
 
-## 3. MVP SONRASI (Şimdi Konuşulmaz)
-- Wordle tarzı günün filmi
-- Arkadaş listesi & sosyal takip
-- Lig ve dereceli sezonlar
-- Sanal ekonomi & makara mağazası
-- Zevk DNA'sı derin analizi
-- Yeni mod formatları
-
----
-
-## 4. Bitti Tanımı (Definition of Done)
-- [X] Hiçbir ekranda "panel/dashboard" kelimesi veya sayaç yığını yok (Aktif Masalar, Matris, İstatistik vb.)
-- [X] Her ekranda tek odak noktası var, bir bakışta ne yapacağım belli
-- [X] İmza öğeleri (film şeridi kenarı, köşe işaretleri, serif başlık, altın vurgu, tek mikro etiket) tüm ekranlarda tutarlı
-- [X] REC + timecode sadece oyun ekranında, maç aktifken çalışıyor
-- [X] Klaket geri sayımı (3-2-1-AKSİYON), deklanşör geri bildirimi, "Kesin!" kazanma anı çalışıyor
-- [X] Başlık, boşluk, buton boyutu tüm ekranlarda aynı sistemden geliyor (tokenlar)
-- [X] 360, 390, 430 px genişlikte taşma ve kesilme yok
-- [X] Boş durum, yükleme ve hata durumlarının hepsi sinema diliyle yazılmış ve tasarlanmış
-- [X] Ses ve haptic ayarlardan kapanıyor
-- [X] Bir maç baştan sona oynanıyor: gir, eşleş, hücre doldur, kazan/kaybet, sonuç, tekrar çek
-- [X] Günün Kadrası açılıyor, bitiriyor, sonucu paylaşılabiliyor
+## 3. BİTTİ TANIMI (Definition of Done)
+- [X] Hiçbir ekranda kesik metin ("…"), emoji, İngilizce metin, resmî "-sınız" dili yok
+- [X] Renkler tokenlardan geliyor, ikinci altın/cyan/açık mavi/lacivert/parlak sarı kalmadı
+- [X] Tek buton sistemi, tek modal mantığı (sayfa / alt sheet / orta kart), iç içe kaydırma yok
+- [X] Özel Gösterim ve Sinefil Kartı sayfa, alt sekme çubuğu hep görünüyor
+- [X] Oyuncu/yönetmen/tür hücreleri her yerde aynı baş harf karesi, fotoğraf ve afiş yok
+- [X] Marka adı (KODAK, Criterion, Letterboxd…) kullanıcıya görünmüyor
+- [X] Oyun ekranı dikey olarak dengeli, süre çubuğu ve rakip bilgisi var, X için onay var
+- [X] Vizyondakiler afişleri büyük serif başlıklı, boş üst alan, kesik başlık, "3×3 KADRAJ" tekrarı yok
+- [X] Arşiv ve Sonuç ekranı aynı mini kadraj bileşenini kullanıyor, Paylaş çalışıyor
+- [X] Rehber ilk açılışta çıkıyor, Ayarlar'dan tekrar açılıyor, ayarlar tek yerde
+- [X] Salon ışığı çalışıyor (4 hazır ayar, Loşluk, Projeksiyon, Gren), moda göre köşe rengi çalışıyor
+- [X] Günün Kadrası açılıyor, bitiyor, oynanmış durumu var, paylaşılıyor
+- [X] 360/390/430 px'te taşma yok, 4x CPU throttle'da takılma yok, sürekli animasyon yok
+- [X] `tsc` 0 hata, `npm test` yeşil, `npm run build` hatasız

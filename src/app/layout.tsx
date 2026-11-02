@@ -23,7 +23,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#0B1220",
+  themeColor: "#0B0D12",
 };
 
 export default function RootLayout({
@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" style={{ backgroundColor: "#0B1220", colorScheme: "dark" }}>
+    <html lang="tr" style={{ backgroundColor: "#0B0D12", colorScheme: "dark" }}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -42,8 +42,8 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="bg-[#0B1220] text-[#F4F6FA] antialiased min-h-screen"
-        style={{ backgroundColor: "#0B1220", colorScheme: "dark" }}
+        className="bg-[#0B0D12] text-[#E8E6E1] antialiased min-h-screen"
+        style={{ backgroundColor: "#0B0D12", colorScheme: "dark" }}
       >
         {children}
       </body>

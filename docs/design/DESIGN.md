@@ -1,78 +1,103 @@
-# CineXOX Tasarım Anayasası
+# CineXOX Tasarım Anayasası (v2 - Nihai Kilit)
 
-Bu dosya tartışılmaz. Her görevde önce bunu oku, sonra çalış.
+CineXOX bir sinema oyunudur; form, panel, dashboard, SaaS veya "web uygulaması" hissi KESİNLİKLE barındırmaz.
+Geliştirici veya tasarımcı değil, **yönetmen** gibi hissettirir. Ekranlar tek dilden konuşur: tek renk sistemi, tek buton, tek modal mantığı, tek ses tonu.
 
-## Ruh
-Hızlı tüketilen, hafif, elit bir sinema oyunu. Uygulama değil OYUN hissi.
-His referansı: Letterboxd'un sakinliği + Block Blast'in tek dokunuşluk netliği + Wordle'ın sade günlük ritüeli.
-Her ekranda TEK odak noktası olur. Geri kalan her şey ona hizmet eder veya yoktur.
-Göz yormaz, tatlıdır, şişirilmemiştir.
+---
 
-## Altın kural
-Dekor statik ve soluk kalır. Sadece oyun durumunu anlatan şey canlı olur.
-Bir şeyi silmeden önce "İmza öğeleri" listesine bak. Listede olana dokunma.
-Emin olmadığın şeyi silme, gizle ve özetinde belirt.
+## 1. DİL VE TON
 
-## İmza öğeleri (KORUNUR, ben istemeden silinmez veya değiştirilmez)
-1. Kenarlardaki film şeridi perforasyonu (çok düşük opaklık, tüm ekranlarda)
-2. Viewfinder köşe işaretleri (sadece hero kart ve oyun tahtasında)
-3. Serif başlık tipografisi (logo ve ekran başlıkları)
-4. Tek vurgu rengi: altın. Mavi sadece çok küçük detaylarda
-5. Lobinin en altında TEK satırlık mikro etiket (KODAK 5219 · 35MM), %30 opaklık
-Ekran başına en fazla 1 mikro etiket. Daha fazlası gürültüdür.
+### 1.1 Ton: SEN Dili
+Tüm kullanıcı metinleri doğrudan oyuncuya "sen" ile konuşur. "-sınız / -abilirsiniz / -ınız / -inizde" YASAK.
+- "Cihazınızda kayıtlı" → "Cihazında kayıtlı"
+- "yeniden başlatabilirsiniz" → "yeniden başlat"
+Kısa, insan gibi, buyruk kipi. Robotik ve resmi cümle yok.
 
-## Canlı ruh öğeleri (hareket etmesine İZİN VERİLEN tek şeyler)
-- REC noktası: SADECE maç aktifken, 2 sn döngüyle yumuşak yanıp söner. Lobide ve diğer ekranlarda yok
-- Timecode süre sayacı: 00:00:12:08 formatı, sadece oyun ekranında
-- Maç başı klaket geri sayımı: 3-2-1-AKSİYON, toplam en fazla 1,5 sn, dokunarak geçilebilir
-- Hücre doldurma: kısa deklanşör sesi + hafif haptic + çerçevenin 200 ms parlaması
-- Kazanma: altın çizgi çizilir + büyük serif "Kesin!" yazısı. Konfeti, ışık huzmesi, sallanma yok
-- Buton basışı: scale 0.97, 100 ms
-Bunun dışında hiçbir şey kendi kendine hareket etmez. prefers-reduced-motion'a uy.
-Ses ve haptic ayarlardan kapatılabilir. Ses dosyası yoksa kısa WebAudio ile üret, harici asset arama.
+### 1.2 Nihai Sözlük
 
-## Gürültü (gider)
-- Glow, neon gölge, iç gölge. Gölge en fazla tek seviye ve çok hafif
-- Bilgi taşımayan hap/rozet. Kartta en fazla 1 rozet, o da gerçek bir durum (YENİ gibi)
-- Lobide canlı sayaçlar, ticker, feed, görev şeridi, zevk DNA'sı, lig çubuğu
-- Aynı bilgiyi iki kez söyleyen metin
-- Kart başına emoji yığını. İkon gerekiyorsa tek renk çizgi ikon
+| Eski / Yanlış | Yeni / Onaylı |
+|---|---|
+| Lobi | Gişe |
+| Arena, Masa, Aktif Masalar | Vizyondakiler (ekran adı), tek tek öğe: seans |
+| Tahta, Matris | Kadraj |
+| Maç, Oyun (bir tur için) | Düello |
+| Maç geçmişi, Karşılaşmalar, Form şeridi | Arşiv |
+| Tekrar oyna, Tekrar çek | Yeni çekim |
+| Sıra sende | Hamle sende |
+| Rakip çekiyor, Rakip düşünüyor | Rakip hamlede |
+| Beraberlik | Kör kadraj (alt satır: "Berabere.") |
+| Zafer | Kesin! |
+| Mağlubiyet | Kurgu masasına dönüyoruz. |
+| Profil | Sinefil Kartı |
+| İstatistikler | Sinefil sicili |
+| Özel Oda | Özel Gösterim (ekran), "Oda kur" / "Koda katıl" (seçenekler) |
+| Onayla ve mühürle | Onayla |
+| TAP TO SKIP | (kaldırıldı, doğal akış) |
+| Kadraj kontrolü, Hedef kesişim · 35mm arama | (kaldırıldı, gereksiz etiket) |
+| Host, Private, Blitz, BO1, BO3, MEDIUM, HARD | Kullanıcıya gösterilmez |
+| Gizli/Açık, Turnuva | MVP'de yok (FLAGS arkasında) |
 
-## Tipografi
-Başlık: serif (Fraunces veya Playfair Display). Arayüz: Inter. Mono sadece mikro etiketlerde.
-Ekranda en fazla 3 yazı boyutu: büyük başlık, normal, küçük.
+Parantezli İngilizce eklemeler YASAK ("Aksiyon", "Marvel", "Karakter × Karakter").
 
-## Renk ve yüzey (tokenlar tek yerde tanımlanır, kodda sabit hex yasak)
-Mevcut koddaki değerler bunlara yakınsa mevcudu koru.
-- zemin: #0B0D12
-- yüzey: #14171D, yüzey-2: #181B22
-- çizgi: beyaz %8
-- metin: #E8E6E1, soluk metin: #8A8F9A
-- altın (tek vurgu): #D9A441
-- ikincil mavi (çok az): #4FA3C7
-- REC kırmızısı: #E5484D (sadece REC noktası ve kayıp durumu)
-Kartlar düz renk, 1px düşük opaklıklı çerçeve. Gradyan sadece mod afişlerinde ve çok yumuşak.
-Altın sadece "bastığın şey" içindir: ana buton, aktif sekme, kazanma çizgisi.
+### 1.3 Durum Metinleri
+- Rakip aranıyor: "Salon loş, rakip aranıyor…"
+- Bağlantı koptu: "Bağlantı koptu, yeniden kuruluyor…"
+- Çökme: "Makara koptu." / "Beklenmedik bir şey oldu. Seansı yeniden başlat."
+- Çevrimdışı: "Projeksiyon odasına ulaşılamıyor. İnternetini kontrol et."
+- Rakip ayrıldı: "Rakip salondan ayrıldı."
+- Süre doldu: "Süre doldu, hamle kaçtı."
+- Arşiv boş: "Arşivde henüz kayıt yok."
+- Film arama boş: "Bu adla bir yapım bulamadık." + "Yazımı kontrol et."
+- Günün Kadrası bitti: "Bugünün kadrajı çekildi. Yarın yeni bir tane var."
+- Geçersiz kod: "Bu kodla açık bir salon bulunamadı." / "Salon dolu." / "Kodun süresi dolmuş."
+- Boş isim (ortak oyuncu): "Bir isim yaz."
+- Hatalı oyuncu: "Bu isim arşivde yok." / "Bu iki yapımda birlikte oynamamış."
+- Düelloyu bırakma onayı: "Düelloyu bırakırsan yenilmiş sayılırsın." [Devam et] [Bırak]
 
-## Dil (dashboard kelimeleri yasak)
-- Lobi → Gişe
-- Arenalar, Aktif Masalar → Vizyondakiler
-- Profil & İstatistikler → Sinefil Kartı
-- Özel Oda → Özel Gösterim
-- Olasılık Matrisi, Yeni Formatlar → MVP'de gizli
-Metinler kısa, insan gibi, Türkçe. Örnek: "Düelloya gir", "Sıra sende", "Kesin!", "Tekrar çek".
-Kaybedene yumuşak cümle: "Kurgu masasına dönüyoruz."
+---
 
-## Ekran kuralları
-**Gişe (lobi):** 1 hero (Düelloya Gir). Altında yatay kaydırmalı mod afişleri. Altında Günün Kadrası (bilet kupürü görünümü, kenarları tırtıklı). Üst barda sadece avatar, seri, ses ve ayarlar. En altta tek mikro etiket.
-**Vizyondakiler:** Modal değil tam ekran. 2 sütunlu AFİŞ grid'i, kartlar 3:4. Her afiş: yumuşak tek ton arka plan, serif başlık, tek satır açıklama, en fazla 1 rozet. Raflar: Popüler, Yeni, Zor.
-**Oyun ekranı:** Tahta merkezde ve büyük. Hücreler film karesi gibi (ince çerçeve, köşe işaretleri). Üstte sol REC + timecode, orta tahta adı (serif), sağ çıkış. Altta tek satır sıra göstergesi. Başka hiçbir şey yok.
-**Sonuç ekranı:** Sonuç ("Kesin!" veya yumuşak kayıp cümlesi), ana buton "Tekrar çek", ikincil buton "Gişe'ye dön". Bitti.
-**Sinefil Kartı:** Letterboxd tarzı kimlik kartı. Avatar, seviye, en sevdiği tür, 3 temel istatistik (galibiyet, mağlubiyet, oran). İstatistikler burada yaşar, lobide değil.
+## 2. TASARIM SİSTEMİ & BİLEŞEN STANDARTLARI
 
-## Teknik kurallar
-- Oyun mantığına (eşleşme, sıra, kazanma kontrolü, film arama, veri) DOKUNMA. Sadece görünüm ve geri bildirim.
-- Gizlenecek özellikleri silme. Tek bir FLAGS config dosyası arkasına al, UI'da render etme.
-- Renk, font, radius tek yerde (tailwind config veya CSS değişkenleri). Bileşenlerde sabit hex yok.
-- Hedef ekranlar: 360, 390, 430 px genişlik. Yatay taşma olmayacak. Dokunma hedefi en az 44 px.
-- Yeni bağımlılık ekleme. Çok gerekiyorsa önce sor.
+### 2.1 Renk Sistemi
+Sabit inline renk yok, tek kaynak tokenlardır:
+- Zemin: `#0B0D12` (varsayılan), yüzey `#14171D`, kart/ikincil `#181B22`
+- Metin: `#E8E6E1`, soluk metin: `#8A8F9A`
+- Altın (tek ana vurgu): `#D9A441`
+- Muted mavi (sadece O oyuncusu ve rakip): `#4FA3C7`
+- REC kırmızısı (sadece REC noktası ve hata): `#E5484D`
+- Mod köşe vurguları: Klasik Düello (`#D9A441`), Ters Kadraj (`#5FB3A8`), Sinefil Konsept (`#9A8FD8`), Günün Kadrası (`#C9A27A`).
+
+### 2.2 Tipografi
+- Serif (Newsreader): Ekran başlıkları, afiş başlıkları, büyük anlar (Kesin!, AKSİYON!).
+- Sans (Inter): Gövde metinleri, butonlar, sekmeler, filtre çipleri.
+- Mono (JetBrains Mono): Sayaç, timecode, oda kodları, mikro etiketler ("35MM · 24 FPS").
+
+### 2.3 Buton Sistemi (`Button.tsx`)
+1. **Primary (`variant="primary"`)**: 52px yükseklik, 3px alt bevel (`border-b-[3px] border-[#a07420]`), altın zemin (`#D9A441`), siyah yazı, sans font-black, büyük harf.
+2. **Secondary (`variant="secondary"`)**: 52px yükseklik, 1px sınır, `#181B22` zemin, bevel yok, beyaz yazı.
+3. **Icon (`variant="icon"`)**: 44×44px dokunma alanı, 1px sınır, `#181B22` zemin, bevel yok.
+4. **Inline (`variant="inline"`)**: 36px yükseklik, liste satırı ve çip içi.
+
+### 2.4 Modal ve Ekran Mantığı (3 Tip Kuralı)
+1. **Tam Ekran Sayfa**: Gişe, Vizyondakiler, Özel Gösterim, Sinefil Kartı. Alt gezinme çubuğu (`BottomNav`) sabit kalır.
+2. **Alt Sheet (Bottom Sheet)**: Arama, Arşiv, Ayarlar, Salon Işığı, Avatar Seçici. `rounded-t-[24px]`, tepe sürükleme çubuğu, alttan açılır.
+3. **Orta Kart (Alert / Confirmation)**: Düellodan çıkış onayı, Nasıl Oynanır rehberi, Hata ekranı ("Makara koptu.").
+
+### 2.5 İmza Sinematik Öğeleri
+- 35mm film şeridi perforasyonları (CSS tekrar deseni)
+- Viewfinder vizör köşe işaretleri
+- REC + timecode sayacı
+- Klaket açılışı
+- "Kesin!" anı
+
+---
+
+## 3. EKRAN MİMARİSİ
+
+- **Gişe**: Tek odaklı hero düello alanı, altında 3 mod çipi, Günün Kadrası bilet kartı, üstte avatar/isim, seri ve ayarlar dişlisi.
+- **Vizyondakiler**: 2 sütunlu afiş kataloğu, büyük serif başlıklar, soluk altın oklar `→`.
+- **Özel Gösterim**: Tam ekran sayfa, "Oda kur" ve "Koda katıl" sekmeleri, 6 haneli kod kopyalama/paylaşma.
+- **Sinefil Kartı**: Tam ekran sayfa, avatar seçici alt sheet, tek satır favori yönetmen, galibiyet/mağlubiyet/oran dökümü, Arşiv açılış satırı.
+- **Kadraj (Oyun)**: REC + timecode, tek satır serif başlık, 44px 'X' butonu, SEN (X) vs RAKİP (O) şeridi, ortalanmış kadraj, 12s sayaç çubuğu (son 3s kırmızı), durum metni.
+- **Sonuç**: "Kesin!" veya "Kurgu masasına dönüyoruz.", ortalanmış 3x3 `MiniKadrajPreview`, SEN / RAKİP / NADİRLİK özeti, "Yeni çekim" ve "Gişe'ye dön".
+- **Ayarlar & Salon Işığı**: Ses, titreşim, Salon ışığı (Kadife, Analog, Gümüş, Gece mavisi), Nasıl oynanır, Gizlilik politikası, Kullanım koşulları.

@@ -35,6 +35,11 @@ import { QuickMatchSetupModal } from "@/features/multiplayer";
 import { AvatarIcon } from "./ui/AvatarIcon";
 import { Button } from "./ui/Button";
 import { BottomNav } from "./ui/BottomNav";
+import { SettingsModal } from "./SettingsModal";
+import { SalonLightSheet } from "./SalonLightSheet";
+import { HowToPlayModal } from "./HowToPlayModal";
+import { OpeningLightLeak } from "./OpeningLightLeak";
+import { applySalonConfigToDom, getSavedSalonConfig } from "@/utils/salonConfig";
 
 export type ArenaModeKey = "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT";
 
@@ -102,7 +107,7 @@ const MODE_DEFINITIONS: {
   title: string;
   subLabel: string;
   heroSummary: string;
-  accent: "amber" | "cyan";
+  color: string;
   icon: React.ComponentType<{ className?: string }>;
 }[] = [
   {
@@ -110,7 +115,7 @@ const MODE_DEFINITIONS: {
     title: "Klasik Düello",
     subLabel: "Yönetmen × Oyuncu",
     heroSummary: "Yönetmen veya tür ile oyuncunun ortak filmini bul.",
-    accent: "amber",
+    color: "#D9A441",
     icon: Clapperboard,
   },
   {
@@ -118,7 +123,7 @@ const MODE_DEFINITIONS: {
     title: "Ters Kadraj",
     subLabel: "Film × Film",
     heroSummary: "İki farklı yapımın ortak oyuncusunu bul.",
-    accent: "cyan",
+    color: "#5FB3A8",
     icon: Users,
   },
   {
@@ -126,7 +131,7 @@ const MODE_DEFINITIONS: {
     title: "Sinefil Konsept",
     subLabel: "Tema",
     heroSummary: "Kült temalar ve anlatı kriterlerinde filmi bul.",
-    accent: "amber",
+    color: "#9A8FD8",
     icon: Compass,
   },
 ];
@@ -148,6 +153,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onToggleMute,
 }) => {
   const [showQuickSetup, setShowQuickSetup] = useState<boolean>(false);
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [showSalonLight, setShowSalonLight] = useState<boolean>(false);
+  const [showHowToPlay, setShowHowToPlay] = useState<boolean>(false);
   const [internalMode, setInternalMode] = useState<ArenaModeKey>(
     selectedMode || "CLASSIC"
   );
@@ -157,6 +165,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       setInternalMode(selectedMode);
     }
   }, [selectedMode]);
+
+  useEffect(() => {
+    // 8A. Salon ışığı yapılandırmasını DOM'a uygula
+    applySalonConfigToDom(getSavedSalonConfig());
+
+    // 9A. İlk açılış rehber kontrolü
+    try {
+      const hasSeen = localStorage.getItem("cinexox_seen_guide");
+      if (!hasSeen) {
+        setShowHowToPlay(true);
+      }
+    } catch {}
+  }, []);
 
   const activeMode: ArenaModeKey = selectedMode || internalMode;
   const activeModeMeta =
@@ -184,36 +205,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const currentAvatar =
     AVATAR_OPTIONS.find((a) => a.id === profile.avatarId) || AVATAR_OPTIONS[0];
 
-  const ambience = { ...DEFAULT_AMBIENCE, ...(profile?.ambience || {}) };
-  const activeTheme =
-    (ambience.theme && AMBIENCE_THEMES[ambience.theme]) ||
-    AMBIENCE_THEMES.velvet_red;
-
-  const effectiveCornerColor =
-    ambience.cornerAccent &&
-    ambience.cornerAccent !== "AUTO" &&
-    CORNER_ACCENT_COLORS[ambience.cornerAccent]
-      ? CORNER_ACCENT_COLORS[ambience.cornerAccent].color
-      : activeTheme?.secondaryAccent || "#D9A441";
-
-  const safeDimness =
-    typeof ambience.dimness === "number" && !isNaN(ambience.dimness)
-      ? ambience.dimness
-      : 85;
-  const safeGlow =
-    typeof ambience.glowIntensity === "number" && !isNaN(ambience.glowIntensity)
-      ? ambience.glowIntensity
-      : 65;
-
-  const isCyanMode = activeModeMeta.accent === "cyan";
-  const heroAccentHex = isCyanMode ? "#4FA3C7" : "#D9A441";
+  // 8B. Moda göre otomatik atmosfer: köşe işareti ve mod vurgusu moddan gelir
+  const effectiveCornerColor = activeModeMeta.color;
+  const heroAccentHex = activeModeMeta.color;
 
   return (
     <div
       className="w-full max-w-full sm:max-w-[430px] mx-auto h-[100dvh] sm:h-auto sm:min-h-[860px] text-[#E8E6E1] flex flex-col justify-between relative select-none antialiased overflow-hidden transition-colors duration-500 sm:my-4 sm:rounded-[36px] sm:border-2 sm:border-[#181B22] sm:shadow-2xl"
       style={{
-        backgroundColor: activeTheme?.bgColor || "#0B0D12",
-        filter: `brightness(${Math.min(1.1, Math.max(0.7, safeDimness / 85))})`,
+        backgroundColor: "var(--salon-bg, #0B0D12)",
       }}
     >
       {/* ── 35mm Sprocket Borders ─── */}
@@ -238,15 +238,30 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <SprocketStrip />
       </div>
 
-      {/* ── 35mm Film Grain Layer ─── */}
-      {ambience.grain && ambience.grain !== "OFF" && (
+      {/* ── 35mm Film Grain Layer (Salon Işığı CSS Değişkeni ile) ─── */}
+      <div
+        className="absolute inset-0 pointer-events-none z-20 mix-blend-screen transition-opacity duration-300"
+        style={{
+          opacity: "var(--salon-grain-opacity, 0.028)",
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        }}
+      />
+
+      {/* ── 8C. Statik Işık Huzmesi (Projeksiyon penceresinden Gişe'ye) ─── */}
+      {FLAGS.LIGHT_BEAM && (
         <div
-          className="absolute inset-0 pointer-events-none z-20 mix-blend-screen transition-opacity duration-300"
-          style={{
-            opacity: ambience.grain === "VINTAGE" ? 0.14 : 0.06,
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-          }}
-        />
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
+        >
+          <div
+            className="w-full h-full"
+            style={{
+              clipPath: "polygon(40% 0%, 60% 0%, 95% 100%, 5% 100%)",
+              background: "linear-gradient(to bottom, var(--salon-beam, #F2D9A0) 0%, transparent 80%)",
+              opacity: "var(--salon-beam-opacity, 0.09)",
+            }}
+          />
+        </div>
       )}
 
       {/* ── Top Ambient Accent Line ─── */}
@@ -329,9 +344,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               onClick={() => {
                 audio.playSelect();
                 haptic.light();
-                onOpenProfileModal();
+                setShowSettings(true);
               }}
-              title="Ayarlar & Profil"
+              title="Ayarlar"
             >
               <Settings className="w-4 h-4 text-[#8A8F9A]" />
             </Button>
@@ -565,6 +580,31 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           setShowQuickSetup(false);
           onStartGame(mode, diff, pool);
         }}
+      />
+
+      {/* ── 8D. Açılış Işık Sızıntısı ─── */}
+      <OpeningLightLeak />
+
+      {/* ── 9B. Ayarlar Alt Sheet ─── */}
+      <SettingsModal
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        muted={muted}
+        onToggleMute={onToggleMute}
+        onOpenSalonLight={() => setShowSalonLight(true)}
+        onOpenHowToPlay={() => setShowHowToPlay(true)}
+      />
+
+      {/* ── 8A. Salon Işığı Alt Sheet ─── */}
+      <SalonLightSheet
+        isOpen={showSalonLight}
+        onClose={() => setShowSalonLight(false)}
+      />
+
+      {/* ── 9A. İlk Açılış Rehberi ─── */}
+      <HowToPlayModal
+        isOpen={showHowToPlay}
+        onClose={() => setShowHowToPlay(false)}
       />
     </div>
   );

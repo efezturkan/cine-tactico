@@ -121,7 +121,7 @@ export function GameView(props: GameViewProps) {
     <div
       className="h-[100dvh] min-h-[100dvh] text-[#E8E6E1] flex flex-col justify-between font-sans select-none antialiased transition-colors duration-500 relative overflow-hidden"
       style={{
-        backgroundColor: gameTheme?.bgColor || "#0B0D12",
+        backgroundColor: "var(--salon-bg, #0B0D12)",
         filter: `brightness(${Math.min(1.1, Math.max(0.65, safeGameDimness / 85))})`,
         ["--game-arena-size" as string]: "min(94vw, calc(100dvh - 120px), 640px)",
       }}

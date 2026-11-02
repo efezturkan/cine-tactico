@@ -37,10 +37,10 @@ const CellMoviePoster: React.FC<{
     : assetResolver.resolveForMovie(movie);
 
   const getGenreGradient = () => {
-    if (actorName) return "from-cyan-950 via-[#181B22] to-[#0F1115]";
+    if (actorName) return "from-[#0d2220] via-[#181B22] to-[#0F1115]";
     const g = (movie.genres?.[0] || "").toLowerCase();
     if (g.includes("sci-fi") || g.includes("bilim")) {
-      return "from-cyan-950 via-[#181B22] to-[#0F1115]";
+      return "from-[#1a162b] via-[#181B22] to-[#0F1115]";
     }
     if (g.includes("crime") || g.includes("suç")) {
       return "from-amber-950 via-[#181B22] to-[#0F1115]";

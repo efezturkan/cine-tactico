@@ -135,7 +135,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
     {
       id: "board_90s_cult",
       category: "CLASSIC",
-      title: "🩸 90'lar Kült Arenası: Pulp Fiction & Fight Club",
+      title: "90'lar Kült Düellosu: Pulp Fiction & Fight Club",
       badge: "Kült Bağımsızlar",
       color: "text-emerald-400",
       border: "border-emerald-400/40",
@@ -179,7 +179,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
     },
     {
       id: "boxoffice",
-      title: "Gişe Arenası: Higher or Lower",
+      title: "Gişe Meydanı: Higher or Lower",
       tag: "Hızlı Tüketim (Block Blast Hızı)",
       desc: "'Oppenheimer mı daha çok hasılat yaptı yoksa Inception mı?' Tek tıkla yukarı/aşağı seç, seriyi sürdür, kombo yap!",
       status: "Geliştiriliyor",
@@ -267,7 +267,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
                     : "hover:text-[#E8E6E1]"
                 }`}
               >
-                Olasılık Matrisi
+                Olasılık Kadrajı
               </button>
             )}
           </div>
