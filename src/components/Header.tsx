@@ -98,8 +98,10 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         )}
         <div className="min-w-0">
-          <h1 className="text-xs sm:text-base font-black tracking-tight text-[#F1EEE7] flex items-center gap-1">
-            CINE<span className="text-[#F5A623]">XOX</span>
+          <h1 className="text-sm sm:text-base font-serif font-bold tracking-[0.08em] text-[#F1EEE7] flex items-center gap-1">
+            <span>
+              CINE<span className="text-[#F5A623] italic font-serif">·</span>XOX
+            </span>
             <span className="text-[7.5px] sm:text-[8px] font-black font-mono px-1 py-0.2 rounded bg-[#F5A623]/15 border border-[#F5A623]/35 text-[#F5A623]">
               3×3
             </span>

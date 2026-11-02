@@ -446,7 +446,7 @@ function CineXoxApp() {
       setShowSurrenderConfirm(true);
       return;
     }
-    const { board: nextBoard, index: nextIdx } = getRandomBoard(boardIndex);
+    const { board: nextBoard, index: nextIdx } = getBoardForMode(queueMode, boardIndex);
     const opp = getRandomOpponent(botDifficulty, pendingOpponent.name);
     setBoardIndex(nextIdx);
     setPendingBoardIndex(nextIdx);
@@ -664,6 +664,7 @@ function CineXoxApp() {
     modeType: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL"
   ) => {
     audio.playSelect();
+    setQueueMode(modeType);
     const result = getBoardForMode(modeType, boardIndex);
     const targetIdx = result.index;
     const nextBoard = result.board;
@@ -811,6 +812,8 @@ function CineXoxApp() {
       <main className="w-full min-h-[100dvh] bg-night flex flex-col items-center overflow-x-hidden">
         <HomeScreen
           profile={profile}
+          selectedMode={queueMode === "SINEFIL" ? "CINE_CONCEPT" : queueMode}
+          onSelectMode={(m) => setQueueMode(m)}
           onStartGame={handleStartFromHome}
           onDirectStartMode={handleDirectStartMode}
           onOpenProfileModal={() => {
@@ -969,14 +972,13 @@ function CineXoxApp() {
         onResolveGoldenReelAnswer={resolveGoldenReelAnswer}
         onResolveGoldenReelTimeout={resolveGoldenReelTimeout}
         onPlayAgain={() => {
-          const { board: nextBoard, index: nextIdx } = getRandomBoard(boardIndex);
+          const { board: nextBoard, index: nextIdx } = getBoardForMode(queueMode, boardIndex);
           const opp = getRandomOpponent(botDifficulty, pendingOpponent.name);
           setPendingBoardIndex(nextIdx);
           setPendingOpponent(opp);
           setBoardIndex(nextIdx);
           setBoard(nextBoard);
           resetGame(nextBoard);
-          setShowMatchFound(true);
         }}
         onBackToHome={() => {
           audio.stopAll();

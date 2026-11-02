@@ -23,7 +23,7 @@ interface MovieSearchModalProps {
   initialQuery?: string;
 }
 
-const SearchMovieThumbnail: React.FC<{ movie: Movie }> = ({ movie }) => {
+const SearchMovieThumbnail = React.memo<{ movie: Movie }>(({ movie }) => {
   const [imgError, setImgError] = useState(false);
   const resolved = useMemo(() => assetResolver.resolveForMovie(movie), [movie]);
 
@@ -40,11 +40,12 @@ const SearchMovieThumbnail: React.FC<{ movie: Movie }> = ({ movie }) => {
   }
 
   return (
-    <div className="w-full h-full bg-night flex flex-col items-center justify-center p-1 text-center">
-      <Film className="w-4 h-4 text-gold" />
+    <div className="w-full h-full bg-[#0F1115] flex flex-col items-center justify-center p-1 text-center">
+      <Film className="w-4 h-4 text-[#F5A623]" />
     </div>
   );
-};
+});
+SearchMovieThumbnail.displayName = "SearchMovieThumbnail";
 
 export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
   isOpen,
@@ -58,59 +59,136 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
   initialQuery = "",
 }) => {
   const [query, setQuery] = useState(initialQuery);
+  const [vpStyle, setVpStyle] = useState<{ height?: number; top?: number }>({});
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setQuery(initialQuery);
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         inputRef.current?.focus();
-      }, 45);
+      }, 30);
+      return () => clearTimeout(timer);
     }
   }, [isOpen, initialQuery]);
 
-  const filteredMovies = useMemo(() => {
-    let pool = MOVIES_DATABASE;
-    if (contentPool === "FILM") {
-      pool = pool.filter((m) => m.mediaType !== "SERIES");
-    } else if (contentPool === "SERIES") {
-      pool = pool.filter((m) => m.mediaType === "SERIES");
+  // Adapt to mobile virtual keyboard via visualViewport
+  useEffect(() => {
+    if (!isOpen || typeof window === "undefined" || !window.visualViewport) {
+      return;
     }
+    const vv = window.visualViewport;
+    const updateViewport = () => {
+      setVpStyle({
+        height: vv.height,
+        top: vv.offsetTop,
+      });
+    };
+    updateViewport();
+    vv.addEventListener("resize", updateViewport);
+    vv.addEventListener("scroll", updateViewport);
+    return () => {
+      vv.removeEventListener("resize", updateViewport);
+      vv.removeEventListener("scroll", updateViewport);
+    };
+  }, [isOpen]);
 
-    if (query.trim().length < 2) return [];
-    return pool.filter((movie) => movieMatchesTitleQuery(movie, query));
-  }, [query, contentPool]);
+  const basePool = useMemo(() => {
+    if (contentPool === "FILM") {
+      return MOVIES_DATABASE.filter((m) => m.mediaType !== "SERIES");
+    }
+    if (contentPool === "SERIES") {
+      return MOVIES_DATABASE.filter((m) => m.mediaType === "SERIES");
+    }
+    return MOVIES_DATABASE;
+  }, [contentPool]);
 
-  const rowCritAsset = useMemo(() => assetResolver.resolveForCriterion(rowCrit), [rowCrit]);
-  const colCritAsset = useMemo(() => assetResolver.resolveForCriterion(colCrit), [colCrit]);
-  const rowAvatar = rowCrit.avatarUrl || (rowCritAsset.isAvailable ? rowCritAsset.src : undefined);
-  const colAvatar = colCrit.avatarUrl || (colCritAsset.isAvailable ? colCritAsset.src : undefined);
+  const usedIdsSet = useMemo(() => new Set(usedMovieIds), [usedMovieIds]);
+
+  const filteredMovies = useMemo(() => {
+    const trimmed = query.trim();
+    if (trimmed.length < 2) return [];
+    return basePool.filter((movie) => movieMatchesTitleQuery(movie, trimmed));
+  }, [query, basePool]);
+
+  const visibleMovies = useMemo(
+    () => filteredMovies.slice(0, 40),
+    [filteredMovies]
+  );
+
+  const rowCritAsset = useMemo(
+    () => assetResolver.resolveForCriterion(rowCrit),
+    [rowCrit]
+  );
+  const colCritAsset = useMemo(
+    () => assetResolver.resolveForCriterion(colCrit),
+    [colCrit]
+  );
+  const rowAvatar =
+    rowCrit.avatarUrl ||
+    (rowCritAsset.isAvailable ? rowCritAsset.src : undefined);
+  const colAvatar =
+    colCrit.avatarUrl ||
+    (colCritAsset.isAvailable ? colCritAsset.src : undefined);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-sm select-none">
-      <div className="w-full max-w-[460px] animate-card-in bg-panel border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl p-4 sm:p-5 shadow-2xl flex flex-col max-h-[88dvh] sm:max-h-[82vh] text-ink">
-        {/* Selected Cell Target Intersection Header */}
-        <div className="flex items-start justify-between gap-2 pb-3 border-b border-white/10">
+    <div
+      className="fixed inset-x-0 z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm select-none"
+      style={{
+        top: vpStyle.top !== undefined ? `${vpStyle.top}px` : 0,
+        height: vpStyle.height !== undefined ? `${vpStyle.height}px` : "100dvh",
+      }}
+    >
+      <div
+        className="w-full max-w-[460px] animate-card-in rounded-3xl p-3.5 sm:p-5 shadow-2xl flex flex-col text-[#F1EEE7] overflow-hidden"
+        style={{
+          maxHeight:
+            vpStyle.height !== undefined
+              ? `${Math.max(250, vpStyle.height - 16)}px`
+              : "92dvh",
+          background: "linear-gradient(180deg, #1C2029 0%, #12151C 100%)",
+          border: "1.5px solid #2A2F3A",
+          borderBottom: "4px solid #090A0E",
+          boxShadow:
+            "0 20px 50px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08)",
+        }}
+      >
+        {/* Selected Cell Target Intersection Header (Pinned Shrink-0) */}
+        <div className="flex items-start justify-between gap-2 pb-2.5 border-b border-white/10 shrink-0">
           <div className="min-w-0">
-            <span className="inline-block text-[10px] uppercase font-bold tracking-widest text-gold">
-              HEDEF KESİŞİM
+            <span className="inline-block text-[9px] font-mono uppercase font-bold tracking-[0.2em] text-[#F5A623]">
+              HEDEF KESİŞİM &middot; 35MM ARAMA
             </span>
-            <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-              <span className="text-xs font-bold px-2.5 py-1 rounded-xl bg-control text-ink border border-gold/40 flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+              <span className="text-xs font-bold px-2.5 py-1 rounded-xl bg-[#0F1115] text-[#F1EEE7] border border-[#F5A623]/40 flex items-center gap-1.5">
                 {rowAvatar && (
-                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-gold/60">
-                    <Image src={rowAvatar} alt="" fill className="object-cover" unoptimized />
+                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-[#F5A623]/60">
+                    <Image
+                      src={rowAvatar}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
                   </span>
                 )}
                 {rowCrit.label}
               </span>
-              <span className="font-mono text-gold font-bold text-xs">×</span>
-              <span className="text-xs font-bold px-2.5 py-1 rounded-xl bg-control text-ink border border-team-blue/40 flex items-center gap-1.5">
+              <span className="font-mono text-[#F5A623] font-bold text-xs">
+                ×
+              </span>
+              <span className="text-xs font-bold px-2.5 py-1 rounded-xl bg-[#0F1115] text-[#F1EEE7] border border-[#00D5E8]/40 flex items-center gap-1.5">
                 {colAvatar && (
-                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-team-blue/60">
-                    <Image src={colAvatar} alt="" fill className="object-cover" unoptimized />
+                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-[#00D5E8]/60">
+                    <Image
+                      src={colAvatar}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
                   </span>
                 )}
                 {colCrit.label}
@@ -124,16 +202,16 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               audio.playSelect();
               onClose();
             }}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted transition hover:bg-white/5 hover:text-ink shrink-0"
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#252932] border border-white/10 text-[#A5A8B0] transition hover:text-[#F1EEE7] shrink-0"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Search Input */}
-        <div className="my-3">
+        {/* Search Input (Pinned Shrink-0) */}
+        <div className="my-2.5 shrink-0">
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gold pointer-events-none" />
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#F5A623] pointer-events-none" />
             <input
               ref={inputRef}
               type="text"
@@ -144,24 +222,24 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               autoComplete="off"
               autoCorrect="off"
               spellCheck={false}
-              className="w-full pl-10 pr-9 py-3 bg-night border border-white/15 focus:border-gold rounded-2xl text-base font-semibold text-ink placeholder:text-muted/50 focus:outline-none transition-colors"
+              className="w-full pl-10 pr-9 py-2.5 sm:py-3 bg-[#0F1115] border border-white/15 focus:border-[#F5A623] rounded-2xl text-base font-semibold text-[#F1EEE7] placeholder:text-[#A5A8B0]/50 focus:outline-none transition-colors"
             />
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A5A8B0] hover:text-[#F1EEE7]"
               >
                 <X className="w-4 h-4" />
               </button>
             )}
           </div>
-          <div className="flex items-center justify-between mt-1.5 px-1">
-            <span className="text-[11px] text-muted">
+          <div className="flex items-center justify-between mt-1 px-1">
+            <span className="text-[11px] text-[#A5A8B0]">
               Yalnızca yapım adına göre aranır.
             </span>
             {query.trim().length >= 2 && (
-              <span className="font-mono text-[11px] text-gold font-bold">
+              <span className="font-mono text-[11px] text-[#F5A623] font-bold">
                 {filteredMovies.length} sonuç
               </span>
             )}
@@ -170,41 +248,44 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
 
         {/* Controlled Error Notice */}
         {errorMessage && (
-          <div className="wrong-recoil mb-3 p-2.5 rounded-xl bg-missed/15 border border-missed/50 text-ink text-xs font-semibold flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-missed shrink-0" />
+          <div className="wrong-recoil mb-2.5 p-2.5 rounded-xl bg-[#FF334B]/15 border border-[#FF334B]/50 text-[#F1EEE7] text-xs font-semibold flex items-center gap-2 shrink-0">
+            <AlertTriangle className="w-4 h-4 text-[#FF334B] shrink-0" />
             <span className="leading-tight">{errorMessage}</span>
           </div>
         )}
 
-        {/* Anti-Cheat Search Results List (ZERO metadata leaks) */}
-        <div className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+        {/* Anti-Cheat Search Results List (Flexible Scrollable Area) */}
+        <div className="flex-1 min-h-0 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
           {query.trim().length < 2 ? (
-            <div className="py-10 px-4 text-center flex flex-col items-center justify-center">
-              <div className="w-12 h-12 rounded-2xl bg-control border border-white/10 flex items-center justify-center mb-3 text-gold shadow">
+            <div className="py-6 sm:py-8 px-4 text-center flex flex-col items-center justify-center">
+              <div className="w-11 h-11 rounded-2xl bg-[#181B22] border border-white/10 flex items-center justify-center mb-2.5 text-[#F5A623] shadow">
                 <Film className="w-5 h-5" />
               </div>
-              <p className="font-display text-xl font-extrabold italic uppercase tracking-wide text-ink">
+              <p className="font-serif text-lg sm:text-xl font-bold tracking-wide text-[#F1EEE7]">
                 Film veya Dizi Adını Yazmaya Başla
               </p>
-              <p className="text-xs text-muted mt-1 max-w-xs leading-relaxed">
+              <p className="text-xs text-[#A5A8B0] mt-1 max-w-xs leading-relaxed">
                 Sonuçları listelemek için en az 2 harf girilmelidir.
               </p>
-              <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-scored/15 border border-scored/30 text-[10px] font-bold text-scored">
+              <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8EBB70]/15 border border-[#8EBB70]/30 text-[10px] font-bold text-[#8EBB70]">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Anti-Cheat: Tür ve yıl ipuçları adil oyun için gizlenmiştir</span>
+                <span>
+                  Anti-Cheat: Tür ve yıl ipuçları adil oyun için gizlenmiştir
+                </span>
               </div>
             </div>
-          ) : filteredMovies.length === 0 ? (
-            <div className="py-10 text-center text-muted text-xs">
-              <Film className="w-7 h-7 mx-auto mb-2 text-muted/40" />
+          ) : visibleMovies.length === 0 ? (
+            <div className="py-8 text-center text-[#A5A8B0] text-xs">
+              <Film className="w-6 h-6 mx-auto mb-2 text-[#A5A8B0]/40" />
               &quot;{query}&quot; ile eşleşen yapım bulunamadı.
             </div>
           ) : (
-            filteredMovies.map((movie) => {
-              const isUsed = usedMovieIds.includes(movie.id);
+            visibleMovies.map((movie) => {
+              const isUsed = usedIdsSet.has(movie.id);
               const hasDiffOriginal =
                 movie.originalTitle &&
-                movie.originalTitle.trim().toLowerCase() !== movie.title.trim().toLowerCase();
+                movie.originalTitle.trim().toLowerCase() !==
+                  movie.title.trim().toLowerCase();
 
               return (
                 <button
@@ -217,26 +298,26 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                   }}
                   className={`w-full p-2.5 rounded-2xl flex items-center justify-between text-left transition-all border ${
                     isUsed
-                      ? "opacity-40 bg-night border-white/5 cursor-not-allowed"
-                      : "bg-control hover:bg-control-hover border-white/15 hover:border-gold active:translate-y-[1px]"
+                      ? "opacity-40 bg-[#0F1115] border-white/5 cursor-not-allowed"
+                      : "bg-[#181B22] hover:bg-[#222631] border-white/12 hover:border-[#F5A623] active:translate-y-[1px]"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="relative w-10 h-14 rounded-xl overflow-hidden bg-night shrink-0 border border-white/10">
+                    <div className="relative w-9 h-12 rounded-lg overflow-hidden bg-[#0F1115] shrink-0 border border-white/10">
                       <SearchMovieThumbnail movie={movie} />
                     </div>
 
                     <div className="min-w-0">
-                      <div className="font-sans font-bold text-sm text-ink truncate flex items-center gap-2">
+                      <div className="font-sans font-bold text-sm text-[#F1EEE7] truncate flex items-center gap-2">
                         <span className="truncate">{movie.title}</span>
                         {movie.mediaType === "SERIES" && (
-                          <span className="text-[9px] font-bold font-mono text-team-blue bg-team-blue/15 px-1.5 py-0.5 rounded border border-team-blue/30 shrink-0">
+                          <span className="text-[9px] font-bold font-mono text-[#00D5E8] bg-[#00D5E8]/15 px-1.5 py-0.5 rounded border border-[#00D5E8]/30 shrink-0">
                             DİZİ
                           </span>
                         )}
                       </div>
                       {hasDiffOriginal && (
-                        <div className="text-xs text-muted truncate mt-0.5 italic">
+                        <div className="text-xs text-[#A5A8B0] truncate mt-0.5 italic">
                           {movie.originalTitle}
                         </div>
                       )}
@@ -245,7 +326,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
 
                   <div className="shrink-0 text-right pl-2">
                     {isUsed ? (
-                      <span className="font-mono text-[10px] font-bold text-muted px-2.5 py-1 rounded-lg bg-night">
+                      <span className="font-mono text-[10px] font-bold text-[#A5A8B0] px-2.5 py-1 rounded-lg bg-[#0F1115]">
                         Kullanıldı
                       </span>
                     ) : (
