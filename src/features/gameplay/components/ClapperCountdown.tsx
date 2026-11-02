@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Film } from "lucide-react";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
@@ -10,177 +10,223 @@ interface ClapperCountdownProps {
   isMuted?: boolean;
 }
 
-type IntroPhase = "FIRST_LOOK" | "CLAPPER_SNAP" | "ACTION";
+type IntroPhase = "COUNTDOWN" | "CLAPPER_SNAP" | "ACTION";
 
 export const ClapperCountdown: React.FC<ClapperCountdownProps> = ({
   onComplete,
   isMuted = false,
 }) => {
-  const [phase, setPhase] = useState<IntroPhase>("FIRST_LOOK");
-  const [countdown, setCountdown] = useState<number>(5);
+  const [phase, setPhase] = useState<IntroPhase>("COUNTDOWN");
+  const [count, setCount] = useState<3 | 2 | 1>(3);
   const [isStickClosed, setIsStickClosed] = useState<boolean>(false);
   const [isLetterboxOpen, setIsLetterboxOpen] = useState<boolean>(false);
-  const completedRef = useRef(false);
 
-  const handleFinish = () => {
-    if (completedRef.current) return;
-    completedRef.current = true;
+  const isCompletedRef = useRef<boolean>(false);
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+
+  const registerTimeout = (fn: () => void, ms: number): NodeJS.Timeout => {
+    const id = setTimeout(fn, ms);
+    timeoutsRef.current.push(id);
+    return id;
+  };
+
+  const clearAllTimeouts = () => {
+    timeoutsRef.current.forEach((id) => clearTimeout(id));
+    timeoutsRef.current = [];
+  };
+
+  // Atomik, Idempotent Tekil Bitiş / Başlangıç Akışı
+  const completeCountdown = useCallback(() => {
+    if (isCompletedRef.current) return;
+    isCompletedRef.current = true;
+    clearAllTimeouts();
     onComplete();
-  };
+  }, [onComplete]);
 
-  const triggerClapperSequence = () => {
-    // Sinematik üst ve alt siyah bantları (letterbox) içeri al
-    setIsLetterboxOpen(true);
-    setPhase("CLAPPER_SNAP");
+  // Ses ve Haptic Koruyucu Yürütme (Fail-Safe)
+  const safePlayAudio = useCallback(
+    (action: () => void) => {
+      if (isMuted) return;
+      try {
+        action();
+      } catch {
+        // Ses çalmasa veya izin verilmese dahi akış asla durmaz
+      }
+    },
+    [isMuted]
+  );
 
-    // 150ms sonra klaket kolunu vurdur ve ses çıkar
-    const snapTimer = setTimeout(() => {
-      setIsStickClosed(true);
-      if (!isMuted) audio.playChessMove();
-      haptic.medium();
-    }, 150);
+  const safePlayHaptic = useCallback((action: () => void) => {
+    try {
+      action();
+    } catch {
+      // Fail-safe
+    }
+  }, []);
 
-    // 320ms sonra AKSİYON! yazısına geç
-    const actionTimer = setTimeout(() => {
-      setPhase("ACTION");
-    }, 320);
+  // Klaket Vuruşu ve Aksiyon Geçiş Sekansı
+  const triggerClapperSnap = useCallback(
+    (isImmediateSkip = false) => {
+      clearAllTimeouts();
+      setIsLetterboxOpen(true);
+      setPhase("CLAPPER_SNAP");
 
-    // 1050ms sonra açılışı bitir ve oyuna geç
-    const finishTimer = setTimeout(() => {
-      setIsLetterboxOpen(false);
-      setTimeout(() => {
-        handleFinish();
-      }, 180);
-    }, 1050);
+      // Kol vurma gecikmesi: Hızlı skip'te anında, normal akışta 80ms
+      const snapDelay = isImmediateSkip ? 20 : 80;
+      registerTimeout(() => {
+        setIsStickClosed(true);
+        safePlayAudio(() => audio.playChessMove());
+        safePlayHaptic(() => haptic.medium());
+        setPhase("ACTION");
+      }, snapDelay);
 
-    return () => {
-      clearTimeout(snapTimer);
-      clearTimeout(actionTimer);
-      clearTimeout(finishTimer);
-    };
-  };
+      // AKSİYON süresi: Skip ise 180ms, normal akışta 650ms
+      const actionHoldDuration = isImmediateSkip ? 220 : 650;
+      registerTimeout(() => {
+        setIsLetterboxOpen(false);
+        // DOM'dan kalkmadan önce ghost-click'i önleyen mikro aralık
+        registerTimeout(() => {
+          completeCountdown();
+        }, 50);
+      }, snapDelay + actionHoldDuration);
+    },
+    [completeCountdown, safePlayAudio, safePlayHaptic]
+  );
 
-  const handleSkipOrSnap = () => {
-    if (phase === "FIRST_LOOK") {
-      // 5-4-3-2-1 anında dokunulursa beklemeden doğrudan klaket vuruşuna geç
-      triggerClapperSequence();
+  // Tap-to-Skip (Gecikmesiz, Idempotent ve Ghost-Click Korumalı)
+  const handleUserTap = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (isCompletedRef.current) return;
+
+    if (phase === "COUNTDOWN") {
+      // 3-2-1 anında dokunulursa anında klaketi kapatıp maçı başlat
+      triggerClapperSnap(true);
     } else {
-      // Klaket anında dokunulursa anında oyunu başlat
-      handleFinish();
+      // Klaket açıkken dokunulursa anında bitir
+      completeCountdown();
     }
   };
 
-  // 1. AŞAMA: 5 saniyelik Tahtayı İnceleme / First Look geri sayımı (5, 4, 3, 2, 1)
+  // ── TEMPO KURALI (Toplam sekans <= 3.2 sn) ───
+  // 0ms: 3 -> 800ms: 2 -> 1600ms: 1 -> 2400ms: Klaket Vuruşu & AKSİYON! -> 3050ms: Başlangıç
   useEffect(() => {
-    if (phase !== "FIRST_LOOK") return;
+    // 0ms: "3"
+    safePlayAudio(() => audio.playTick(480));
+    safePlayHaptic(() => haptic.light());
 
-    if (!isMuted) audio.playTick(460);
-    haptic.light();
+    // 800ms: "2"
+    registerTimeout(() => {
+      setCount(2);
+      safePlayAudio(() => audio.playTick(520));
+      safePlayHaptic(() => haptic.light());
+    }, 800);
 
-    const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          // Geri sayım bitti -> Klaket ve sinematik geçişi başlat
-          triggerClapperSequence();
-          return 0;
-        }
-        if (!isMuted) audio.playTick(460 + (6 - prev) * 35);
-        haptic.light();
-        return prev - 1;
-      });
-    }, 1000);
+    // 1600ms: "1"
+    registerTimeout(() => {
+      setCount(1);
+      safePlayAudio(() => audio.playTick(560));
+      safePlayHaptic(() => haptic.light());
+    }, 1600);
 
-    return () => clearInterval(interval);
-  }, [phase, isMuted]);
+    // 2400ms: Klaket vuruşu ve AKSİYON
+    registerTimeout(() => {
+      triggerClapperSnap(false);
+    }, 2400);
+
+    return () => {
+      clearAllTimeouts();
+    };
+  }, [triggerClapperSnap, safePlayAudio, safePlayHaptic]);
 
   return (
     <>
-      {/* ── SİNEMATİK ÜST VE ALT SİYAH GEÇİŞ BANTLARI (CINEMATIC LETTERBOX BARS) ─── */}
+      {/* ── 1. GÜVENLİ ALAN: 2.39:1 SİNEMATİK SİYAH BANTLAR (max-h-[12vh]) ─── */}
       <div
-        className="fixed top-0 left-0 right-0 bg-[#07080B] z-50 pointer-events-none transition-transform duration-300 ease-out border-b border-[#D9A441]/20"
+        className="fixed top-0 left-0 right-0 bg-[#07080B] z-50 pointer-events-none transition-transform duration-250 ease-out border-b border-[#D9A441]/25 max-h-[12vh] h-[10vh] overflow-hidden"
         style={{
-          height: "15vh",
           transform: isLetterboxOpen ? "translateY(0)" : "translateY(-100%)",
         }}
       />
       <div
-        className="fixed bottom-0 left-0 right-0 bg-[#07080B] z-50 pointer-events-none transition-transform duration-300 ease-out border-t border-[#D9A441]/20"
+        className="fixed bottom-0 left-0 right-0 bg-[#07080B] z-50 pointer-events-none transition-transform duration-250 ease-out border-t border-[#D9A441]/25 max-h-[12vh] h-[10vh] overflow-hidden"
         style={{
-          height: "15vh",
           transform: isLetterboxOpen ? "translateY(0)" : "translateY(100%)",
         }}
       />
 
-      {/* ── 1. AŞAMA: KUTULARIN ORTASINDA 5-4-3-2-1 GERİ SAYIM ─── */}
-      {phase === "FIRST_LOOK" && (
+      {/* ── 2. ŞEFFAF VİZÖR & 3-2-1 GERİ SAYIM (Arkası %90 Görünür) ─── */}
+      {phase === "COUNTDOWN" && (
         <div
-          onClick={handleSkipOrSnap}
-          className="fixed inset-0 z-40 flex flex-col items-center justify-center pointer-events-auto select-none cursor-pointer p-4"
+          onClick={handleUserTap}
+          onTouchStart={handleUserTap}
+          className="fixed inset-0 z-40 flex flex-col items-center justify-center select-none cursor-pointer overflow-hidden pointer-events-auto"
           style={{
-            background: "rgba(11, 13, 18, 0.25)",
+            background: "rgba(11, 13, 18, 0.12)", // %88-%90 transparan, tahta net okunur
+            touchAction: "manipulation",
           }}
         >
-          {/* Üst Bilgi Rozeti */}
-          <div className="absolute top-16 sm:top-20 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#14171D]/90 border border-white/10 text-[10px] font-mono text-[#D9A441] animate-in fade-in slide-in-from-top-2 duration-200">
+          {/* Üstte Sinematik Mikro Etiket */}
+          <div className="absolute top-14 sm:top-18 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#14171D]/80 border border-white/10 text-[9px] font-mono text-[#D9A441] shadow-sm pointer-events-none">
             <Film className="w-3 h-3 text-[#D9A441]" />
-            <span>KADRAJI İNCELE</span>
+            <span>KADRAJ KONTROLÜ · 35MM</span>
           </div>
 
-          {/* Tam Ortada (Seçilen Kutuların Üzerinde) 35mm Lens Geri Sayım Çemberi */}
-          <div className="flex flex-col items-center justify-center">
-            <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full flex flex-col items-center justify-center bg-[#14171D]/90 border-2 border-[#D9A441] shadow-[0_12px_40px_rgba(0,0,0,0.85)] backdrop-blur-sm">
-              {/* Dış 35mm Çizgili Halka */}
-              <div
-                className="absolute inset-1.5 rounded-full border border-dashed border-[#D9A441]/40 animate-spin"
-                style={{ animationDuration: "12s" }}
-              />
+          {/* Merkez Vizör Halkası (%90 Transparan + Kehribar Nişangahlar + Film Lider Çizgileri) */}
+          <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full flex items-center justify-center bg-black/10 border border-[#D9A441]/40 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+            {/* Kehribar Vizör Köşe Nişangahları [ ┌ ┐ └ ┘ ] */}
+            <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-[#D9A441]" />
+            <div className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-[#D9A441]" />
+            <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-[#D9A441]" />
+            <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-[#D9A441]" />
 
-              {/* Viewfinder Köşe İşaretleri Çember Üzerinde */}
-              <div className="absolute top-1 left-1 w-2.5 h-2.5 border-t border-l border-[#D9A441]" />
-              <div className="absolute top-1 right-1 w-2.5 h-2.5 border-t border-r border-[#D9A441]" />
-              <div className="absolute bottom-1 left-1 w-2.5 h-2.5 border-b border-l border-[#D9A441]" />
-              <div className="absolute bottom-1 right-1 w-2.5 h-2.5 border-b border-r border-[#D9A441]" />
+            {/* Merkez Analog Film Lideri Kıl Çaprazı (Film Reticle Lines) */}
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-[#D9A441]/20 pointer-events-none" />
+            <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-[#D9A441]/20 pointer-events-none" />
 
-              {/* 5-4-3-2-1 Sayısı (Her saniye yumuşak darbe ile yenilenir) */}
-              <div
-                key={countdown}
-                className="font-serif text-5xl sm:text-6xl font-black text-[#D9A441] leading-none animate-in zoom-in-75 duration-200 select-none"
-              >
-                {countdown}
-              </div>
+            {/* Döner İnce Odak Çemberi */}
+            <div
+              className="absolute inset-2 rounded-full border border-dashed border-[#D9A441]/30 animate-spin pointer-events-none"
+              style={{ animationDuration: "10s" }}
+            />
 
-              <span className="text-[8px] font-mono tracking-widest text-[#A5A8B0] uppercase mt-1">
-                SANİYE
-              </span>
+            {/* 3... 2... 1... Sayı Gösterimi (Her saniye yumuşak darbe ile girer) */}
+            <div
+              key={count}
+              className="font-serif text-5xl sm:text-6xl font-black text-[#D9A441] leading-none animate-in zoom-in-75 duration-200 select-none z-10"
+            >
+              {count}
             </div>
-
-            {/* Alt İpucu Metni */}
-            <span className="text-[10px] font-mono text-[#F1EEE7]/60 tracking-wider mt-5 bg-[#0F1115]/80 px-3 py-1 rounded-full border border-white/10">
-              (Atlamak için ekrana dokun)
-            </span>
           </div>
+
+          {/* Alt İpucu Metni */}
+          <span className="text-[10px] font-mono text-[#F1EEE7]/60 tracking-wider mt-5 bg-[#0F1115]/80 px-3 py-1 rounded-full border border-white/10 pointer-events-none">
+            (Atlamak için dokun)
+          </span>
         </div>
       )}
 
-      {/* ── 2. AŞAMA: ORTAYA GELEN VE VURAN KLAKET & AKSİYON ─── */}
+      {/* ── 3. KLAKET VURUŞU & AKSİYON! ─── */}
       {(phase === "CLAPPER_SNAP" || phase === "ACTION") && (
         <div
-          onClick={handleSkipOrSnap}
-          className="fixed inset-0 z-50 flex items-center justify-center select-none cursor-pointer animate-in fade-in duration-150"
+          onClick={handleUserTap}
+          onTouchStart={handleUserTap}
+          className="fixed inset-0 z-50 flex items-center justify-center select-none cursor-pointer overflow-hidden pointer-events-auto"
+          style={{ touchAction: "manipulation" }}
         >
-          <div className="flex flex-col items-center justify-center p-6 text-center animate-in zoom-in-95 duration-200 relative z-10">
-            {/* Klaket Üst Çubuğu (Açılıp aşağı tokat gibi vuran 35mm kol) */}
+          <div className="flex flex-col items-center justify-center p-6 text-center animate-in zoom-in-95 duration-150 relative z-10 pointer-events-none">
+            {/* Klaket Üst Çubuğu (Tokat gibi aşağı inen ahşap şerit kol) */}
             <div
-              className="w-56 sm:w-64 h-8 rounded-t-lg relative overflow-hidden border border-white/20 origin-bottom-left transition-transform duration-150 ease-in"
+              className="w-56 sm:w-64 h-8 rounded-t-lg relative overflow-hidden border border-white/20 origin-bottom-left transition-transform duration-120 ease-in"
               style={{
                 background:
                   "repeating-linear-gradient(45deg, #111, #111 14px, #E8E6E1 14px, #E8E6E1 28px)",
-                transform: isStickClosed ? "rotate(0deg)" : "rotate(-22deg)",
+                transform: isStickClosed ? "rotate(0deg)" : "rotate(-24deg)",
               }}
             />
 
-            {/* Klaket Gövdesi & Serif Tipografi */}
+            {/* Klaket Gövdesi & Büyük Serif Tipografi */}
             <div className="bg-[#14171D] border border-white/15 rounded-b-2xl p-6 w-56 sm:w-64 shadow-[0_20px_50px_rgba(0,0,0,0.9)] flex flex-col items-center relative -mt-0.5">
               <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#8A8F9A] mb-2">
                 SAHNE 01 · ÇEKİM 01
@@ -188,7 +234,7 @@ export const ClapperCountdown: React.FC<ClapperCountdownProps> = ({
 
               <div className="h-14 flex items-center justify-center">
                 {phase === "ACTION" ? (
-                  <span className="font-serif text-3xl sm:text-4xl font-black text-[#D9A441] tracking-wider animate-in zoom-in-90 duration-150">
+                  <span className="font-serif text-3xl sm:text-4xl font-black text-[#D9A441] tracking-wider animate-in zoom-in-90 duration-120">
                     AKSİYON!
                   </span>
                 ) : (

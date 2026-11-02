@@ -81,8 +81,11 @@ export function useGameSession(
     secondsRemainingRef.current = secondsRemaining;
   }, [secondsRemaining]);
 
+  const turnStartTimeRef = useRef<number>(0);
+
   const switchTurn = useCallback(() => {
     setCurrentTurn(prev => (prev === "X" ? "O" : "X"));
+    turnStartTimeRef.current = performance.now();
     setSecondsRemaining(shotClockLimit);
   }, [shotClockLimit]);
 
@@ -174,7 +177,7 @@ export function useGameSession(
     [board.boardMode, scoreRarityX, scoreRarityO, handleVictoryEffects]
   );
 
-  // Timer Tick Cycle
+  // Timer Tick Cycle (performance.now() tabanlı drift-free sayaç)
   useEffect(() => {
     if (!isActive || !isTimerActive || winner !== null || isGoldenReelActive) {
       if (timerRef.current) {
@@ -184,24 +187,38 @@ export function useGameSession(
       return;
     }
 
+    // Maç başladığı veya aktifleştiği kesin anda referansı mühürle
+    turnStartTimeRef.current = performance.now();
+    setSecondsRemaining(shotClockLimit);
+
     timerRef.current = setInterval(() => {
-      setSecondsRemaining(prev => {
-        if (prev <= 1) {
+      const now = performance.now();
+      const elapsedSec = Math.floor((now - turnStartTimeRef.current) / 1000);
+      const remaining = Math.max(0, shotClockLimit - elapsedSec);
+
+      if (remaining <= 0) {
+        try {
           audio.playError();
           haptic.error();
-          setComboStreak(0);
-          switchTurn();
-          return shotClockLimit;
+        } catch {
+          // Fail-silent
         }
+        setComboStreak(0);
+        switchTurn();
+        return;
+      }
 
-        if (prev <= 5) {
-          audio.playTick(450 + (6 - prev) * 90);
+      if (remaining <= 5 && remaining !== secondsRemainingRef.current) {
+        try {
+          audio.playTick(450 + (6 - remaining) * 90);
           haptic.light();
+        } catch {
+          // Fail-silent
         }
+      }
 
-        return prev - 1;
-      });
-    }, 1000);
+      setSecondsRemaining(remaining);
+    }, 250);
 
     return () => {
       if (timerRef.current) {
@@ -548,6 +565,7 @@ export function useGameSession(
       setCurrentTurn("X");
       setWinner(null);
       setWinningLine(null);
+      turnStartTimeRef.current = performance.now();
       setSecondsRemaining(shotClockLimit);
       setIsTimerActive(true);
       setUsedMovieIds([]);

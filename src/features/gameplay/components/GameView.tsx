@@ -106,7 +106,7 @@ export function GameView(props: GameViewProps) {
 
   return (
     <div
-      className="min-h-[100dvh] text-[#E8E6E1] flex flex-col justify-between font-sans select-none antialiased transition-colors duration-500 relative"
+      className="min-h-[100dvh] text-[#E8E6E1] flex flex-col justify-between font-sans select-none antialiased transition-colors duration-500 relative overflow-hidden"
       style={{
         backgroundColor: gameTheme?.bgColor || "#0B0D12",
         filter: `brightness(${Math.min(1.1, Math.max(0.65, safeGameDimness / 85))})`,
@@ -177,7 +177,7 @@ export function GameView(props: GameViewProps) {
           winningLine={props.winningLine}
           currentTurn={props.currentTurn}
           winner={props.winner}
-          onCellClick={props.onCellSelect}
+          onCellClick={isIntro ? () => {} : props.onCellSelect}
           allowSteal={props.allowSteal}
         />
 
