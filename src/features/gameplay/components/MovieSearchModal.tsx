@@ -267,12 +267,9 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               <p className="text-xs text-[#A5A8B0] mt-1 max-w-xs leading-relaxed">
                 Sonuçları listelemek için en az 2 harf girilmelidir.
               </p>
-              <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8EBB70]/15 border border-[#8EBB70]/30 text-[10px] font-bold text-[#8EBB70]">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>
-                  Anti-Cheat: Tür ve yıl ipuçları adil oyun için gizlenmiştir
-                </span>
-              </div>
+              <p className="text-[10px] text-[#8EBB70] mt-2 font-medium">
+                Anti-Cheat: Tür ve yıl ipuçları adil oyun için gizlenmiştir
+              </p>
             </div>
           ) : visibleMovies.length === 0 ? (
             <div className="py-8 text-center text-[#A5A8B0] text-xs">

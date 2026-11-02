@@ -88,7 +88,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
             : "1.5px solid rgba(255,255,255,0.16)",
           borderBottom: isVictory ? "5px solid #78350F" : "5px solid #090A0E",
           boxShadow:
-            "0 20px 50px rgba(0,0,0,0.88), inset 0 1px 0 rgba(255,255,255,0.1)",
+            "0 10px 25px rgba(0,0,0,0.6)",
         }}
       >
         {showAnalysis ? (
@@ -202,12 +202,8 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
           </div>
         ) : (
           /* 2. EDITORIAL FINAL FRAME OUTCOME VIEW */
-          <div className="flex flex-col items-center text-center">
-            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#A5A8B0] mb-2">
-              KODAK 5219 &middot; FINAL FRAME
-            </span>
-
-            <div className="w-14 h-14 rounded-2xl bg-[#14171E] border border-white/10 flex items-center justify-center mb-3 shadow-inner">
+          <div className="flex flex-col items-center text-center pt-2">
+            <div className="w-14 h-14 rounded-2xl bg-[#14171E] border border-white/10 flex items-center justify-center mb-3">
               <Crown
                 className={`w-8 h-8 ${
                   isVictory

@@ -53,12 +53,9 @@ export const QuickMatchSetupModal: React.FC<QuickMatchSetupModalProps> = ({
         style={{
           background: "linear-gradient(135deg, rgba(14,16,24,0.98), rgba(10,11,16,0.99))",
           borderColor: "rgba(217,119,6,0.4)",
-          boxShadow: "0 12px 40px rgba(0,0,0,0.8), inset 0 0 30px rgba(139,21,27,0.15)",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.6)",
         }}
       >
-        {/* Sinematik Arka Işık */}
-        <div className="absolute -top-12 left-1/3 w-36 h-28 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
-
         {/* Kapat Butonu */}
         <button
           onClick={() => {
@@ -103,7 +100,7 @@ export const QuickMatchSetupModal: React.FC<QuickMatchSetupModalProps> = ({
                     ? "rgba(217,119,6,0.15)"
                     : "rgba(14,16,24,0.8)",
                 borderColor: selectedMode === "CLASSIC" ? "#d97706" : "#1a1c24",
-                boxShadow: selectedMode === "CLASSIC" ? "0 0 15px rgba(217,119,6,0.2)" : "none",
+                boxShadow: "none",
               }}
             >
               <div className="flex items-center justify-between mb-1">
@@ -130,7 +127,7 @@ export const QuickMatchSetupModal: React.FC<QuickMatchSetupModalProps> = ({
                     ? "rgba(139,21,27,0.2)"
                     : "rgba(14,16,24,0.8)",
                 borderColor: selectedMode === "SINEFIL" ? "#8b151b" : "#1a1c24",
-                boxShadow: selectedMode === "SINEFIL" ? "0 0 15px rgba(139,21,27,0.3)" : "none",
+                boxShadow: "none",
               }}
             >
               <div className="flex items-center justify-between mb-1">

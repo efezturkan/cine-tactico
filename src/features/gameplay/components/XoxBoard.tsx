@@ -67,7 +67,7 @@ const CellMoviePoster: React.FC<{
           className={`absolute inset-0 bg-gradient-to-b ${getGenreGradient()} flex flex-col items-center justify-center p-1 text-center min-w-0`}
         >
           <User className="w-3 h-3 text-[#00D5E8] mb-0.5" />
-          <span className="text-[8px] sm:text-xs font-black text-[#F1EEE7] line-clamp-2 uppercase leading-tight tracking-wide drop-shadow max-w-full">
+          <span className="text-[8px] sm:text-xs font-black text-[#F1EEE7] line-clamp-2 uppercase leading-tight tracking-wide max-w-full">
             {actorName}
           </span>
           <span className="text-[6.5px] sm:text-[7.5px] text-[#00D5E8] font-mono mt-0.5 font-bold">
@@ -79,7 +79,7 @@ const CellMoviePoster: React.FC<{
           className={`absolute inset-0 bg-gradient-to-b ${getGenreGradient()} flex flex-col items-center justify-center p-1 text-center min-w-0`}
         >
           <Film className="w-3 h-3 text-[#F5A623]/60 mb-0.5" />
-          <span className="text-[8px] sm:text-xs font-black text-[#F1EEE7] line-clamp-2 uppercase leading-tight tracking-wide drop-shadow max-w-full">
+          <span className="text-[8px] sm:text-xs font-black text-[#F1EEE7] line-clamp-2 uppercase leading-tight tracking-wide max-w-full">
             {movie.title}
           </span>
           <span className="text-[7px] sm:text-[8px] text-[#F5A623] font-mono mt-0.5 font-bold">
@@ -103,14 +103,14 @@ const CellMoviePoster: React.FC<{
       {/* Üst Bar: Rarity Rozeti ve Oyuncu Rozeti */}
       <div className="relative z-10 flex items-center justify-between w-full min-w-0">
         {rarityScore ? (
-          <div className="text-[6.5px] sm:text-[7.5px] font-black px-1 py-0.2 rounded bg-[#0F1115]/90 border border-[#F5A623]/50 text-[#F5A623] font-mono shadow">
+          <div className="text-[6.5px] sm:text-[7.5px] font-black px-1 py-0.2 rounded bg-[#0F1115]/90 border border-[#F5A623]/50 text-[#F5A623] font-mono">
             +{rarityScore}
           </div>
         ) : (
           <div />
         )}
         <div
-          className="w-4 h-4 sm:w-5 sm:h-5 rounded-md flex items-center justify-center font-black font-mono text-[8.5px] sm:text-[9.5px] shadow-lg"
+          className="w-4 h-4 sm:w-5 sm:h-5 rounded-md flex items-center justify-center font-black font-mono text-[8.5px] sm:text-[9.5px]"
           style={{
             background: isPlayerX ? "#F5A623" : "#00D5E8",
             color: "#0F1115",
@@ -123,11 +123,11 @@ const CellMoviePoster: React.FC<{
 
       {/* Alt Bar: Film Adı veya Aktör Adı */}
       <div className="relative z-10 text-left min-w-0">
-        <div className="font-black text-[7.5px] sm:text-[10px] text-[#F1EEE7] truncate drop-shadow-md leading-tight">
+        <div className="font-black text-[7.5px] sm:text-[10px] text-[#F1EEE7] truncate leading-tight">
           {actorName || movie.title}
         </div>
         {!actorName && movie.year > 0 && (
-          <div className="text-[6.5px] sm:text-[7.5px] font-bold text-[#A5A8B0] truncate drop-shadow-sm flex items-center gap-1 font-mono">
+          <div className="text-[6.5px] sm:text-[7.5px] font-bold text-[#A5A8B0] truncate flex items-center gap-1 font-mono">
             <span>{movie.year}</span>
             <span>·</span>
             <span className="text-[#F5A623]">{movie.director.split(" ").pop()}</span>
@@ -263,26 +263,15 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
   };
 
   return (
-    <div className="w-full max-w-md sm:max-w-xl mx-auto px-1 sm:px-4 py-1.5 min-w-0 overflow-hidden">
-      {/* 35mm Sinematik Üst Bilgi */}
-      <div className="flex items-center justify-between px-1 mb-1 font-mono text-[7.5px] sm:text-[8px] font-black uppercase">
-        <span className="tracking-[0.2em] text-[#F5A623]">
-          KODAK 5219 &middot; ARENA 3×3
-        </span>
-        <span className="tracking-widest flex items-center gap-1.5 text-[#FF334B]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#FF334B] animate-pulse shrink-0 shadow-[0_0_6px_#FF334B]" />
-          REC 24FPS &middot; SİNEMATİK DÜELLO
-        </span>
-      </div>
-
+    <div className="w-full max-w-md sm:max-w-xl mx-auto px-1 sm:px-4 py-1 min-w-0 overflow-hidden">
       {/* 4x4 Matris Grid (1 Köşe Rozeti + 3 Sütun Kriteri, 3 Satır Kriteri × 3 Hücre) */}
       <div
         className="grid grid-cols-4 gap-1 sm:gap-2 p-1.5 sm:p-2.5 rounded-2xl relative w-full overflow-hidden"
         style={{
           gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
           background: "linear-gradient(180deg, #181B22 0%, #111318 100%)",
-          border: "2px solid #2A2F3A",
-          boxShadow: "0 6px 0 #08090C, inset 0 1px 0 rgba(255,255,255,0.08), 0 14px 32px rgba(0,0,0,0.75)",
+          border: "1.5px solid #2A2F3A",
+          borderBottom: "4px solid #08090C",
         }}
       >
         {/* Sol Üst Köşe Logo Rozeti */}
@@ -345,14 +334,14 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
 
               if (isWinning) {
                 cellBorder = "#F5A623";
-                cellShadow = "0 3px 0 #9E6300, 0 0 24px rgba(245,166,35,0.6), inset 0 0 10px rgba(245,166,35,0.25)";
+                cellShadow = "0 3px 0 #9E6300";
                 cellRing = "ring-2 ring-[#F5A623]";
               } else if (isOccupied && isPlayerX) {
-                cellBorder = "rgba(245,166,35,0.8)";
-                cellShadow = "0 3px 0 #7C4D00, 0 0 14px rgba(245,166,35,0.22)";
+                cellBorder = "rgba(245,166,35,0.85)";
+                cellShadow = "0 3px 0 #7C4D00";
               } else if (isOccupied && !isPlayerX) {
-                cellBorder = "rgba(0,213,232,0.8)";
-                cellShadow = "0 3px 0 #006673, 0 0 14px rgba(0,213,232,0.22)";
+                cellBorder = "rgba(0,213,232,0.85)";
+                cellShadow = "0 3px 0 #006673";
               }
 
               const isDisabled = winner !== null || isOccupied;

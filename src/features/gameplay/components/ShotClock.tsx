@@ -52,17 +52,10 @@ export const ShotClock: React.FC<ShotClockProps> = ({
               </div>
             ) : (
               <>
-                <span className="relative flex h-3.5 w-3.5 items-center justify-center">
+                <span className="relative flex h-3 w-3 items-center justify-center">
                   <span
-                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                    className={`inline-flex rounded-full h-2 w-2 ${
                       isPlayerX ? "bg-[#F5A623]" : "bg-[#00D5E8]"
-                    }`}
-                  />
-                  <span
-                    className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
-                      isPlayerX
-                        ? "bg-[#F5A623] shadow-[0_0_10px_#F5A623]"
-                        : "bg-[#00D5E8] shadow-[0_0_10px_#00D5E8]"
                     }`}
                   />
                 </span>
@@ -99,7 +92,7 @@ export const ShotClock: React.FC<ShotClockProps> = ({
           <div
             className={`h-full rounded-full transition-all duration-1000 ease-linear ${
               isLowTime
-                ? "bg-[#FF334B] shadow-[0_0_12px_#FF334B]"
+                ? "bg-[#FF334B]"
                 : isPlayerX
                 ? "bg-gradient-to-r from-[#D9820B] to-[#F5A623]"
                 : "bg-gradient-to-r from-[#00A8B8] to-[#00D5E8]"

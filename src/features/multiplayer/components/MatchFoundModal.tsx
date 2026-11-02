@@ -98,7 +98,7 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
           <div className="flex flex-col items-center flex-1">
             <div className="relative">
               <div
-                className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr ${userAvatar.iconBg} flex items-center justify-center text-3xl sm:text-4xl border-2 border-[#F5A623] shadow-[0_4px_0_#9E6300,0_8px_20px_rgba(245,166,35,0.25)]`}
+                className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr ${userAvatar.iconBg} flex items-center justify-center text-3xl sm:text-4xl border-2 border-[#F5A623] shadow-[0_4px_0_#9E6300]`}
               >
                 {userAvatar.emoji}
               </div>
@@ -130,7 +130,7 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
           <div className="flex flex-col items-center flex-1">
             <div className="relative">
               <div
-                className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr ${opponentAvatar.iconBg} flex items-center justify-center text-3xl sm:text-4xl border-2 border-[#00D5E8] shadow-[0_4px_0_#007B8A,0_8px_20px_rgba(0,213,232,0.25)]`}
+                className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr ${opponentAvatar.iconBg} flex items-center justify-center text-3xl sm:text-4xl border-2 border-[#00D5E8] shadow-[0_4px_0_#007B8A]`}
               >
                 {opponentAvatar.emoji}
               </div>

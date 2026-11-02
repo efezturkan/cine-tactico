@@ -104,17 +104,6 @@ export function GameView(props: GameViewProps) {
         filter: `brightness(${Math.min(1.1, Math.max(0.65, safeGameDimness / 85))})`,
       }}
     >
-      {/* Top Dynamic Projector Beam in Game */}
-      <div
-        className="absolute top-0 left-1/4 right-1/4 h-48 pointer-events-none z-0 blur-3xl transition-all duration-700"
-        style={{
-          background: `radial-gradient(ellipse at top, ${
-            gameTheme?.glowRgba || "rgba(245, 166, 35, 0.25)"
-          }, transparent 75%)`,
-          opacity: safeGameGlow / 100,
-        }}
-      />
-
       {/* 35mm Analog Film Grain Overlay in Game */}
       {gameAmbience.grain && gameAmbience.grain !== "OFF" && (
         <div
@@ -159,11 +148,11 @@ export function GameView(props: GameViewProps) {
             </div>
           )}
 
-          {/* Board Title Pill */}
-          <div className="w-full max-w-md px-3 mt-1 flex items-center justify-center">
-            <span className="px-3 py-1 rounded-full bg-[#181B22] border border-white/12 text-xs font-extrabold text-[#F1EEE7] truncate shadow-inner">
+          {/* Board Title Header */}
+          <div className="w-full max-w-md px-3 mt-1.5 mb-0.5 text-center">
+            <h2 className="text-xs sm:text-sm font-serif font-bold text-[#F1EEE7] tracking-wider truncate">
               {props.board.title}
-            </span>
+            </h2>
           </div>
 
           {/* Shot Clock */}

@@ -98,7 +98,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
         {/* Dönen Altın Makara Simgesi */}
         <div className="relative my-3 flex items-center justify-center">
           <div
-            className="w-20 h-20 rounded-full border-[3px] border-gold bg-night flex items-center justify-center shadow-[0_0_25px_rgba(245,196,81,0.3)] animate-spin"
+            className="w-20 h-20 rounded-full border-[3px] border-gold bg-night flex items-center justify-center animate-spin"
             style={{ animationDuration: "5s" }}
           >
             <div className="w-9 h-9 rounded-full bg-gold flex items-center justify-center">

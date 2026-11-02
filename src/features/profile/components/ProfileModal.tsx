@@ -626,7 +626,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     key={idx}
                     className={`h-2 flex-1 rounded-[3px] ${
                       idx < Math.max(profile.totalMatches, 5)
-                        ? "bg-[#F5A623] shadow-[0_0_6px_rgba(245,166,35,0.4)]"
+                        ? "bg-[#F5A623]"
                         : "bg-[#0F1115] border border-[#252932]"
                     }`}
                   />

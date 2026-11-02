@@ -199,23 +199,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
     <div
-      className="w-full max-w-full sm:max-w-[430px] mx-auto h-[100dvh] sm:h-auto sm:min-h-[860px] text-[#F1EEE7] flex flex-col justify-between relative select-none antialiased overflow-hidden transition-colors duration-500 sm:my-4 sm:rounded-[36px] sm:border-2 sm:border-[#252932] sm:shadow-[0_24px_80px_rgba(0,0,0,0.92)]"
+      className="w-full max-w-full sm:max-w-[430px] mx-auto h-[100dvh] sm:h-auto sm:min-h-[860px] text-[#F1EEE7] flex flex-col justify-between relative select-none antialiased overflow-hidden transition-colors duration-500 sm:my-4 sm:rounded-[36px] sm:border-2 sm:border-[#252932] sm:shadow-2xl"
       style={{
         backgroundColor: activeTheme?.bgColor || "#0F1115",
         filter: `brightness(${Math.min(1.1, Math.max(0.7, safeDimness / 85))})`,
       }}
     >
-      {/* ── Top Dynamic Projector Beam ─── */}
-      <div
-        className="absolute top-0 left-1/6 right-1/6 h-44 pointer-events-none z-0 blur-3xl transition-all duration-700"
-        style={{
-          background: `radial-gradient(ellipse at top, ${
-            activeTheme?.glowRgba || "rgba(245, 166, 35, 0.3)"
-          }, transparent 75%)`,
-          opacity: safeGlow / 100,
-        }}
-      />
-
       {/* ── 35mm Sprocket Borders ─── */}
       <div
         className="absolute left-0 top-0 bottom-0 overflow-hidden pointer-events-none z-0"
@@ -352,13 +341,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
         {/* ── 2. EDITORIAL CINEMA BRAND HEADER ─── */}
         <div className="text-center my-1">
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#181B24]/90 border border-[#F5A623]/30 mb-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FF334B] animate-pulse" />
-            <span className="text-[9px] font-mono font-bold tracking-[0.24em] text-[#F5A623] uppercase">
-              KODAK 5219 &middot; 35MM DUEL CLUB
-            </span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-serif tracking-[0.16em] text-[#F1EEE7] leading-none drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+          <h1 className="text-3xl sm:text-4xl font-serif tracking-[0.16em] text-[#F1EEE7] leading-none">
             CINE
             <span
               style={{ color: effectiveCornerColor }}
@@ -368,8 +351,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </span>
             XOX
           </h1>
-          <p className="text-xs text-[#A5A8B0] font-medium mt-1.5">
-            3×3 Sinematik Taktik Düellosu &middot; 12 Saniye Hamle Süresi
+          <p className="text-xs text-[#A5A8B0] font-medium mt-1">
+            3×3 Sinematik Taktik Düellosu
           </p>
         </div>
 
@@ -379,10 +362,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           style={{
             background:
               "linear-gradient(160deg, #232834 0%, #161922 65%, #111319 100%)",
-            border: `1.5px solid ${heroAccentHex}66`,
-            borderBottom: `5px solid ${isCyanMode ? "#0E7490" : "#78350F"}`,
-            boxShadow:
-              "0 14px 34px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.1)",
+            border: `1.5px solid ${heroAccentHex}55`,
+            borderBottom: `4px solid ${isCyanMode ? "#0E7490" : "#78350F"}`,
           }}
         >
           {/* Viewfinder Framing Brackets */}
@@ -404,22 +385,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           />
 
           <div className="relative z-10 flex flex-col items-center text-center">
-            <span
-              className="text-[10px] font-mono font-bold uppercase tracking-[0.22em] px-2.5 py-0.5 rounded-full border mb-2"
-              style={{
-                color: heroAccentHex,
-                borderColor: `${heroAccentHex}44`,
-                backgroundColor: `${heroAccentHex}14`,
-              }}
-            >
-              SEÇİLİ MOD &middot; 3×3 ARENA
-            </span>
-
             <h2 className="text-2xl sm:text-[26px] font-serif font-bold text-[#F1EEE7] tracking-wide leading-tight">
               {activeModeMeta.title}
             </h2>
 
-            <p className="text-xs sm:text-[13px] text-[#A5A8B0] font-medium mt-1.5 max-w-[290px] leading-snug">
+            <p className="text-xs sm:text-[13px] text-[#A5A8B0] font-medium mt-1 max-w-[290px] leading-snug">
               {activeModeMeta.heroSummary}
             </p>
 
@@ -428,15 +398,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               type="button"
               data-testid="hero-start-duel-btn"
               onClick={handleLaunchDuel}
-              className="w-full mt-5 py-3.5 sm:py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wider uppercase flex items-center justify-center gap-2.5 transition-transform active:translate-y-[2.5px] cursor-pointer"
+              className="w-full mt-4 py-3.5 sm:py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wider uppercase flex items-center justify-center gap-2.5 transition-transform active:translate-y-[2px] cursor-pointer"
               style={{
                 background:
                   "linear-gradient(180deg, #FFB838 0%, #F5A623 100%)",
                 color: "#0F1115",
-                border: "1px solid #FFE082",
-                borderBottom: "4px solid #9A5B0A",
-                boxShadow:
-                  "0 6px 20px rgba(245,166,35,0.35), inset 0 1px 0 rgba(255,255,255,0.55)",
+                border: "1.5px solid #FFD27D",
+                borderBottom: "4px solid #A36207",
+                boxShadow: "0 3px 0 #A36207",
               }}
             >
               <Play className="w-4 h-4 fill-[#0F1115] shrink-0" />
@@ -498,13 +467,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     borderBottom: isSelected
                       ? `4px solid ${bottomBorderColor}`
                       : "3.5px solid #0B0D12",
-                    boxShadow: isSelected
-                      ? `0 6px 16px ${
-                          isCyan
-                            ? "rgba(0,213,232,0.22)"
-                            : "rgba(245,166,35,0.22)"
-                        }, inset 0 1px 0 rgba(255,255,255,0.12)`
-                      : "0 4px 10px rgba(0,0,0,0.4)",
+                    boxShadow: "none",
                   }}
                 >
                   <div
@@ -580,28 +543,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </button>
         </div>
 
-        {/* ── 6. 35MM FOOTER METADATA ─── */}
-        <div className="text-center pt-0.5">
-          <div className="inline-flex items-center gap-1.5 text-[7.5px] font-mono font-bold uppercase tracking-[0.2em] text-[#A5A8B0]/60 select-none">
-            <span className="text-[#F5A623]">KODAK 5219</span>
-            <span>&middot;</span>
-            <span>35MM</span>
-            <span>&middot;</span>
-            <span>24FPS</span>
-            <span>&middot;</span>
-            <span>SHUTTER 180&deg;</span>
-          </div>
-        </div>
       </div>
 
-      {/* ── 7. BOTTOM NAVIGATION BAR ─── */}
+      {/* ── 6. BOTTOM NAVIGATION BAR ─── */}
       <nav
         className="fixed bottom-0 left-0 right-0 flex items-center justify-around px-2 sm:px-3 z-40 max-w-[430px] mx-auto w-full"
         style={{
           background: "rgba(15, 17, 21, 0.96)",
           borderTop: "1.5px solid #252932",
-          backdropFilter: "blur(20px)",
-          boxShadow: "0 -6px 24px rgba(0,0,0,0.7)",
+          backdropFilter: "blur(12px)",
+          boxShadow: "0 -2px 10px rgba(0,0,0,0.5)",
           paddingTop: "0.45rem",
           paddingBottom: "max(0.55rem, env(safe-area-inset-bottom))",
         }}

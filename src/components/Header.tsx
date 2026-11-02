@@ -43,7 +43,7 @@ export const Header: React.FC<HeaderProps> = ({
       style={{
         background: "linear-gradient(180deg, rgba(24,27,34,0.98) 0%, rgba(15,17,21,0.98) 100%)",
         borderBottom: "1px solid rgba(255,255,255,0.12)",
-        boxShadow: "0 4px 0 #08090C, 0 8px 24px rgba(0,0,0,0.65)",
+        boxShadow: "0 3px 0 #08090C",
       }}
     >
       {/* 35mm sprocket holes left edge */}
@@ -98,45 +98,37 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         )}
         <div className="min-w-0">
-          <h1 className="text-sm sm:text-base font-serif font-bold tracking-[0.08em] text-[#F1EEE7] flex items-center gap-1">
-            <span>
-              CINE<span className="text-[#F5A623] italic font-serif">·</span>XOX
-            </span>
-            <span className="text-[7.5px] sm:text-[8px] font-black font-mono px-1 py-0.2 rounded bg-[#F5A623]/15 border border-[#F5A623]/35 text-[#F5A623]">
-              3×3
-            </span>
+          <h1 className="text-sm sm:text-base font-serif font-bold tracking-[0.08em] text-[#F1EEE7]">
+            CINE<span className="text-[#F5A623] italic font-serif">·</span>XOX
           </h1>
-          <div className="text-[6.5px] sm:text-[7px] font-black tracking-[0.2em] uppercase text-[#A5A8B0] font-mono truncate">
-            KODAK 35MM
-          </div>
         </div>
       </div>
 
       {/* Scoreboard — Tactile Duel Frame (Amber X vs Cyan O) */}
-      <div className="flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl bg-[#0F1115] border border-white/15 shadow-inner shrink-0">
+      <div className="flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl bg-[#0F1115] border border-white/15 shrink-0">
         <div
-          className={`flex items-center gap-1 px-1.5 py-0.5 rounded-lg transition-all relative font-mono ${
+          className={`flex items-center gap-1.5 px-2 py-0.5 rounded-lg transition-all relative font-mono ${
             currentTurn === "X"
-              ? "bg-[#F5A623]/20 text-[#F5A623] border border-[#F5A623]/40 shadow-[0_0_10px_rgba(245,166,35,0.2)]"
+              ? "bg-[#F5A623]/20 text-[#F5A623] border border-[#F5A623]/40"
               : "text-[#A5A8B0]"
           }`}
         >
           {currentTurn === "X" && (
-            <span className="w-1.5 h-1.5 rounded-full bg-[#F5A623] animate-pulse shadow-[0_0_8px_#F5A623]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#F5A623]" />
           )}
           <span className="text-xs font-black">X</span>
           <span className="text-xs sm:text-sm font-black">{scoreX}</span>
         </div>
         <span className="font-bold text-xs text-white/25 font-mono">:</span>
         <div
-          className={`flex items-center gap-1 px-1.5 py-0.5 rounded-lg transition-all relative font-mono ${
+          className={`flex items-center gap-1.5 px-2 py-0.5 rounded-lg transition-all relative font-mono ${
             currentTurn === "O"
-              ? "bg-[#00D5E8]/20 text-[#00D5E8] border border-[#00D5E8]/40 shadow-[0_0_10px_rgba(0,213,232,0.2)]"
+              ? "bg-[#00D5E8]/20 text-[#00D5E8] border border-[#00D5E8]/40"
               : "text-[#A5A8B0]"
           }`}
         >
           {currentTurn === "O" && (
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00D5E8] animate-pulse shadow-[0_0_8px_#00D5E8]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00D5E8]" />
           )}
           <span className="text-xs font-black">O</span>
           <span className="text-xs sm:text-sm font-black">{scoreO}</span>

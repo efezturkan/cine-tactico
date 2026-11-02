@@ -79,7 +79,7 @@ export const LiveAmbienceConsole: React.FC<LiveAmbienceConsoleProps> = ({
         style={{
           background: "linear-gradient(to top, rgba(7,8,11,0.98), rgba(14,16,24,0.95))",
           borderColor: currentTheme.accentColor,
-          boxShadow: `0 -10px 40px ${currentTheme.glowRgba}, 0 -2px 15px rgba(0,0,0,0.8)`,
+          boxShadow: "0 -4px 16px rgba(0,0,0,0.7)",
         }}
       >
         {/* Konsol Üst Çubuğu (Drag / Minimize / Close) */}
@@ -143,7 +143,7 @@ export const LiveAmbienceConsole: React.FC<LiveAmbienceConsoleProps> = ({
                 style={{
                   background: isSelected ? t.glowRgba : "rgba(14,16,24,0.7)",
                   borderColor: isSelected ? t.accentColor : "#232635",
-                  boxShadow: isSelected ? `0 0 12px ${t.glowRgba}` : "none",
+                  boxShadow: "none",
                 }}
                 title={t.label}
               >

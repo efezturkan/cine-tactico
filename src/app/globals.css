@@ -67,17 +67,17 @@ body {
 .tactile-card {
   background: linear-gradient(180deg, #252932 0%, #181B22 100%);
   border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 4px solid #090A0D;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.1s ease, border-color 0.15s ease;
+  border-bottom: 3.5px solid #090A0D;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.15s ease;
 }
 
 .tactile-card-interactive {
   background: linear-gradient(180deg, #252932 0%, #181B22 100%);
   border: 1.5px solid rgba(255, 255, 255, 0.12);
-  border-bottom: 4px solid #090A0D;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.1s ease, border-color 0.15s ease;
+  border-bottom: 3.5px solid #090A0D;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.15s ease;
 }
 .tactile-card-interactive:active {
   transform: translateY(2px);
@@ -88,37 +88,37 @@ body {
   background: linear-gradient(180deg, #FFB838 0%, #F5A623 100%);
   color: #0F1115;
   border: 1.5px solid #FFD27D;
-  border-bottom: 4px solid #A36207;
-  box-shadow: 0 6px 16px rgba(245, 166, 35, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  border-bottom: 3.5px solid #A36207;
+  box-shadow: 0 3px 0 #A36207;
   transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), filter 0.12s ease;
 }
 .tactile-btn-amber:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.03);
 }
 .tactile-btn-amber:active {
   transform: translateY(2px);
-  border-bottom-width: 2px;
+  border-bottom-width: 1.5px;
 }
 
 .tactile-btn-cyan {
   background: linear-gradient(180deg, #22E4F5 0%, #00D5E8 100%);
   color: #0F1115;
   border: 1.5px solid #8BF3FC;
-  border-bottom: 4px solid #087E8B;
-  box-shadow: 0 6px 16px rgba(0, 213, 232, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  border-bottom: 3.5px solid #087E8B;
+  box-shadow: 0 3px 0 #087E8B;
   transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), filter 0.12s ease;
 }
 .tactile-btn-cyan:active {
   transform: translateY(2px);
-  border-bottom-width: 2px;
+  border-bottom-width: 1.5px;
 }
 
 .tactile-btn-surface {
   background: linear-gradient(180deg, #2A2F3A 0%, #1F232C 100%);
   color: #F1EEE7;
   border: 1.5px solid rgba(255, 255, 255, 0.12);
-  border-bottom: 3.5px solid #090A0D;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-bottom: 3px solid #090A0D;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
   transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.15s ease;
 }
 .tactile-btn-surface:active {
@@ -181,15 +181,15 @@ input, textarea {
   animation: slam-stamp 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* ─── Winning line golden beam ───────────────────────────────── */
-@keyframes winning-beam {
-  0%   { box-shadow: 0 0 0 rgba(245, 166, 35, 0); }
-  50%  { box-shadow: 0 0 24px rgba(245, 166, 35, 0.75), inset 0 0 12px rgba(245, 166, 35, 0.35); }
-  100% { box-shadow: 0 0 14px rgba(245, 166, 35, 0.55), inset 0 0 8px rgba(245, 166, 35, 0.2); }
+/* ─── Winning line indicator ─────────────────────────────────── */
+@keyframes winning-pulse {
+  0%   { border-color: #F5A623; }
+  50%  { border-color: #FFE082; }
+  100% { border-color: #F5A623; }
 }
 
 .winning-beam {
-  animation: winning-beam 1.3s ease-in-out infinite alternate;
+  animation: winning-pulse 1.2s ease-in-out infinite alternate;
 }
 
 @media (prefers-reduced-motion: reduce) {

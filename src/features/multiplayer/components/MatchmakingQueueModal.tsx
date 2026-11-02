@@ -163,8 +163,8 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
             style={{
               animationDuration: "5s",
               background: "radial-gradient(circle, #252932 0%, #0F1115 80%)",
-              border: "3px solid #F5A623",
-              boxShadow: "0 0 28px rgba(245,166,35,0.35), inset 0 0 12px rgba(0,0,0,0.8)",
+              border: "2px solid #F5A623",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
             }}
           >
             {/* Film Perforasyon Delikleri */}
