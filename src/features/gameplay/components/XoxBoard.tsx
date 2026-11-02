@@ -3,8 +3,9 @@
 import React from "react";
 import { GameBoard, CellAnswer, PlayerSymbol, Criterion } from "@/core";
 import { audio } from "@/utils/audio";
-import { Clapperboard, Award, Calendar, Film, Shield, Lock, User, Compass } from "lucide-react";
+import { Clapperboard, Award, Calendar, Film, Shield, Lock, User, Compass, Plus } from "lucide-react";
 import { assetResolver } from "@/utils/assetResolver";
+import { FLAGS } from "@/config/flags";
 import { LocalFace } from "./LocalFace";
 
 interface XoxBoardProps {
@@ -68,30 +69,30 @@ const CellMoviePoster: React.FC<{
         <div
           className={`absolute inset-0 bg-gradient-to-b ${getGenreGradient()} flex flex-col items-center justify-center p-1 sm:p-1.5 text-center min-w-0`}
         >
-          <User className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[#00D5E8] mb-0.5" />
+          <User className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[#4FA3C7] mb-0.5" />
           <span className="text-[8px] sm:text-xs md:text-sm font-black text-[#F1EEE7] line-clamp-2 uppercase leading-tight tracking-wide max-w-full">
             {actorName}
           </span>
-          <span className="text-[6.5px] sm:text-[7.5px] md:text-[9px] text-[#00D5E8] font-mono mt-0.5 font-bold">
-            ORTAK AKTÖR
+          <span className="text-[6.5px] sm:text-[7.5px] md:text-[9px] text-[#4FA3C7] font-sans mt-0.5 font-bold">
+            ORTAK OYUNCU
           </span>
         </div>
       ) : (
         <div
           className={`absolute inset-0 bg-gradient-to-b ${getGenreGradient()} flex flex-col items-center justify-center p-1 sm:p-1.5 text-center min-w-0`}
         >
-          <Film className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[#F5A623]/60 mb-0.5" />
+          <Film className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[#D9A441]/60 mb-0.5" />
           <span className="text-[8px] sm:text-xs md:text-sm font-black text-[#F1EEE7] line-clamp-2 uppercase leading-tight tracking-wide max-w-full">
             {movie.title}
           </span>
-          <span className="text-[7px] sm:text-[8px] md:text-[9.5px] text-[#F5A623] font-mono mt-0.5 font-bold">
+          <span className="text-[7px] sm:text-[8px] md:text-[9.5px] text-[#D9A441] font-mono mt-0.5 font-bold">
             {movie.year || ""}
           </span>
         </div>
       )}
 
-      {/* Varlık Görsel Katmanı */}
-      {cellAsset.isAvailable && cellAsset.src && (
+      {/* Varlık Görsel Katmanı (FLAGS.PLAYER_PHOTOS ile korunur) */}
+      {FLAGS.PLAYER_PHOTOS && cellAsset.isAvailable && cellAsset.src && (
         <img
           src={cellAsset.src}
           alt=""
@@ -104,8 +105,8 @@ const CellMoviePoster: React.FC<{
 
       {/* Üst Bar: Rarity Rozeti ve Oyuncu Rozeti */}
       <div className="relative z-10 flex items-center justify-between w-full min-w-0">
-        {rarityScore ? (
-          <div className="text-[6.5px] sm:text-[7.5px] md:text-[9px] font-black px-1 py-0.2 rounded bg-[#0F1115]/90 border border-[#F5A623]/50 text-[#F5A623] font-mono">
+        {FLAGS.SHOW_POINTS_SYSTEM && rarityScore ? (
+          <div className="text-[6.5px] sm:text-[7.5px] md:text-[9px] font-black px-1 py-0.2 rounded bg-[#0F1115]/90 border border-[#D9A441]/50 text-[#D9A441] font-mono">
             +{rarityScore}
           </div>
         ) : (
@@ -114,9 +115,9 @@ const CellMoviePoster: React.FC<{
         <div
           className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-md flex items-center justify-center font-black font-mono text-[8.5px] sm:text-[9.5px] md:text-[11px]"
           style={{
-            background: isPlayerX ? "#F5A623" : "#00D5E8",
-            color: "#0F1115",
-            border: "1px solid #0F1115",
+            background: isPlayerX ? "#D9A441" : "#4FA3C7",
+            color: "#0B0D12",
+            border: "1px solid #0B0D12",
           }}
         >
           {answeredBy}
@@ -132,7 +133,7 @@ const CellMoviePoster: React.FC<{
           <div className="text-[6.5px] sm:text-[7.5px] md:text-[9px] font-bold text-[#A5A8B0] truncate flex items-center gap-1 font-mono">
             <span>{movie.year}</span>
             <span>·</span>
-            <span className="text-[#F5A623]">{movie.director.split(" ").pop()}</span>
+            <span className="text-[#D9A441]">{movie.director.split(" ").pop()}</span>
           </div>
         )}
       </div>
@@ -155,106 +156,65 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   };
 
+  const rowTypes = new Set(board.rows.map((r) => r.type));
+  const colTypes = new Set(board.cols.map((c) => c.type));
+  const areRowColDifferent =
+    rowTypes.size > 1 || colTypes.size > 1 || board.rows[0]?.type !== board.cols[0]?.type;
+
   const renderCriterionHeader = (crit: Criterion) => {
     let iconElement: React.ReactNode;
-    let badgeLabel: string;
-    let badgeColor: string;
+    let badgeLabel = "";
 
     if (crit.type === "DIRECTOR") {
       badgeLabel = "YÖNETMEN";
-      badgeColor = "text-[#F5A623]";
-      const asset = assetResolver.resolveForCriterion(crit);
       iconElement = (
-        <LocalFace
-          src={asset.isAvailable ? asset.src : undefined}
-          className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full overflow-hidden border border-[#F5A623]/60 shadow-sm shrink-0 mb-0.5 relative bg-[#0F1115]"
-          fallback={
-            <div className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full bg-[#F5A623]/15 border border-[#F5A623]/50 flex items-center justify-center text-[#F5A623] font-mono font-black text-[9px] sm:text-[11px] md:text-xs shadow-sm shrink-0 mb-0.5">
-              {getInitials(crit.label)}
-            </div>
-          }
-        />
+        <span className="font-serif text-[#D9A441]/70 font-bold text-xs sm:text-sm select-none">
+          {getInitials(crit.label)}
+        </span>
       );
     } else if (crit.type === "ACTOR") {
-      badgeLabel = "BAŞROL";
-      badgeColor = "text-[#00D5E8]";
-      const asset = assetResolver.resolveForCriterion(crit);
+      badgeLabel = "OYUNCU";
       iconElement = (
-        <LocalFace
-          src={asset.isAvailable ? asset.src : undefined}
-          className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full overflow-hidden border border-[#00D5E8]/60 shadow-sm shrink-0 mb-0.5 relative bg-[#0F1115]"
-          fallback={
-            <div className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full bg-[#00D5E8]/15 border border-[#00D5E8]/50 flex items-center justify-center text-[#00D5E8] font-mono font-black text-[9px] sm:text-[11px] md:text-xs shadow-sm shrink-0 mb-0.5">
-              {getInitials(crit.label)}
-            </div>
-          }
-        />
+        <span className="font-serif text-[#D9A441]/70 font-bold text-xs sm:text-sm select-none">
+          {getInitials(crit.label)}
+        </span>
       );
     } else if (crit.type === "AWARD") {
       badgeLabel = "ÖDÜL";
-      badgeColor = "text-[#F5A623]";
-      iconElement = (
-        <div className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full bg-[#F5A623]/15 border border-[#F5A623]/40 flex items-center justify-center text-[#F5A623] shadow-sm shrink-0 mb-0.5">
-          <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-        </div>
-      );
+      iconElement = <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]/70" />;
     } else if (crit.type === "DECADE") {
       badgeLabel = "DÖNEM";
-      badgeColor = "text-[#8EBB70]";
-      iconElement = (
-        <div className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full bg-[#8EBB70]/15 border border-[#8EBB70]/40 flex items-center justify-center text-[#8EBB70] shadow-sm shrink-0 mb-0.5">
-          <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-        </div>
-      );
+      iconElement = <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]/70" />;
     } else if (crit.type === "MOVIE_INTERSECTION") {
       badgeLabel = "FİLM";
-      badgeColor = "text-[#F5A623]";
-      const asset = assetResolver.resolveForCriterion(crit);
-      iconElement =
-        asset.isAvailable && asset.src ? (
-          <div className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full overflow-hidden border border-[#F5A623]/50 shadow-sm shrink-0 mb-0.5 relative bg-[#0F1115]">
-            <img src={asset.src} alt="" className="w-full h-full object-cover" />
-          </div>
-        ) : (
-          <div className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full bg-[#F5A623]/20 border border-[#F5A623]/50 flex items-center justify-center text-[#F5A623] font-black text-[9px] sm:text-[11px] md:text-xs shadow-sm shrink-0 mb-0.5">
-            <Film className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[#F5A623]" />
-          </div>
-        );
-    } else if (crit.type === "THEME") {
-      badgeLabel = "KÜLT TEMA";
-      badgeColor = "text-purple-300";
       iconElement = (
-        <div className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full bg-purple-500/20 border border-purple-400/50 flex items-center justify-center text-purple-300 font-mono font-black text-[10px] sm:text-[12px] md:text-sm shadow-sm shrink-0 mb-0.5">
-          <Compass className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-purple-400" />
-        </div>
+        <span className="font-serif text-[#D9A441]/70 font-bold text-xs sm:text-sm select-none">
+          {getInitials(crit.label)}
+        </span>
       );
+    } else if (crit.type === "THEME") {
+      badgeLabel = "TEMA";
+      iconElement = <Compass className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]/70" />;
     } else if (crit.type === "FRANCHISE") {
       badgeLabel = "EVREN";
-      badgeColor = "text-[#FF334B]";
-      iconElement = (
-        <div className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full bg-[#FF334B]/15 border border-[#FF334B]/40 flex items-center justify-center text-[#FF334B] shadow-sm shrink-0 mb-0.5">
-          <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-        </div>
-      );
+      iconElement = <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]/70" />;
     } else {
       badgeLabel = "TÜR";
-      badgeColor = "text-purple-400";
-      iconElement = (
-        <div className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full bg-purple-500/15 border border-purple-500/40 flex items-center justify-center text-purple-400 shadow-sm shrink-0 mb-0.5">
-          <Clapperboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-        </div>
-      );
+      iconElement = <Clapperboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]/70" />;
     }
 
     return (
       <div className="flex flex-col items-center justify-center text-center w-full h-full p-0.5 sm:p-1 md:p-1.5 select-none min-w-0 overflow-hidden">
-        {iconElement}
-        <span
-          className={`text-[6px] sm:text-[8px] md:text-[9.5px] uppercase tracking-wider ${badgeColor} font-black truncate max-w-full leading-none mb-0.5 font-mono`}
-        >
-          {badgeLabel}
-        </span>
-        <span className="text-[7.5px] sm:text-[10px] md:text-xs font-black text-[#F1EEE7] line-clamp-2 leading-tight px-0.5 max-w-full break-words">
+        {/* İnce Çerçeveli KARE (Yüzey-2 Zemin, Altın %70 Harf / Çizgi İkon) */}
+        <div className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-md bg-[#181B22] border border-white/10 flex items-center justify-center shrink-0 mb-0.5 sm:mb-1">
+          {iconElement}
+        </div>
+        {areRowColDifferent && (
+          <span className="text-[5.5px] sm:text-[7px] md:text-[8px] uppercase tracking-wider text-[#8A8F9A] font-sans font-medium mb-0.5 truncate max-w-full leading-none">
+            {badgeLabel}
+          </span>
+        )}
+        <span className="text-[7.5px] sm:text-[10px] md:text-xs font-bold text-[#E8E6E1] line-clamp-2 leading-tight px-0.5 max-w-full break-words">
           {crit.label}
         </span>
       </div>
@@ -289,8 +249,8 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
               }}
             >
               <Clapperboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[#D9A441]" />
-              <span className="text-[6.5px] sm:text-[8px] md:text-[9.5px] font-bold mt-0.5 tracking-widest text-[#D9A441] uppercase font-mono">
-                CINEXOX
+              <span className="text-[6.5px] sm:text-[7.5px] md:text-[9px] font-bold mt-0.5 tracking-wider text-[#D9A441] uppercase font-mono">
+                35MM
               </span>
             </div>
 
@@ -396,9 +356,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                               isIntro ? "opacity-[0.12]" : "opacity-40 group-hover:opacity-100"
                             }`}
                           >
-                            <span className="text-[7.5px] sm:text-[9.5px] md:text-xs font-mono font-bold text-[#D9A441] bg-[#0B0D12]/90 px-1.5 py-0.5 md:px-2 md:py-1 rounded border border-[#D9A441]/30">
-                              + SEÇ
-                            </span>
+                            <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]/40 group-hover:text-[#D9A441] transition-colors" />
                           </div>
                         </>
                       )}

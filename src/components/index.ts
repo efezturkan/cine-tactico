@@ -9,3 +9,4 @@ export * from "./LiveAmbienceConsole";
 export * from "./NotificationPanel";
 export * from "./ErrorBoundary";
 export * from "./GlobalModals";
+export * from "./ui/Button";

@@ -677,13 +677,13 @@ export const PRESET_BOARDS: GameBoard[] = [
       {
         id: "c2_dc",
         type: "FRANCHISE",
-        label: "Marvel (MCU)",
+        label: "Marvel",
         value: "MARVEL",
       },
       {
         id: "c3_dc",
         type: "GENRE",
-        label: "Aksiyon (Action)",
+        label: "Aksiyon",
         subLabel: "Süper Güç & Macera",
         value: "Action",
       },
@@ -928,7 +928,7 @@ export const PRESET_BOARDS: GameBoard[] = [
   },
   {
     id: "board_costars_legends",
-    title: "Yıldızlar Buluşması: Karakter × Karakter (Co-Stars)",
+    title: "Yıldızlar Buluşması: Karakter × Karakter",
     difficulty: "HARD",
     boardMode: "CLASSIC",
     rows: [

@@ -18,14 +18,8 @@ import { ActorSearchModal } from "./ActorSearchModal";
 import { GoldenReelModal } from "./GoldenReelModal";
 import { PostGameAnalysisModal } from "./PostGameAnalysisModal";
 import { ClapperCountdown, IntroPhase } from "./ClapperCountdown";
-
-import {
-  ShieldAlert,
-  Swords,
-  Lightbulb,
-  X,
-  Film,
-} from "lucide-react";
+import { X, Film } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 export interface GameViewProps {
   board: GameBoard;
@@ -99,14 +93,12 @@ export function GameView(props: GameViewProps) {
   }, [props.isIntroActive]);
 
   const handleIntroImpact = () => {
-    // Exact moment of clapper impact (160ms): triggers 12s move shot clock immediately
     if (props.onCompleteIntro) {
       props.onCompleteIntro();
     }
   };
 
   const handleIntroComplete = () => {
-    // Complete sequence (360ms): smooth fade-out done, unmount overlay
     setShowClapper(false);
     setIntroPhase(null);
   };
@@ -120,17 +112,21 @@ export function GameView(props: GameViewProps) {
 
   const isPlayerTurn = props.currentTurn === "X";
 
+  // 2.5 Metin kısaltma: displayTitle (kısa ad)
+  const displayTitle = props.board.title.includes(":")
+    ? props.board.title.split(":")[0].trim()
+    : props.board.title;
+
   return (
     <div
       className="h-[100dvh] min-h-[100dvh] text-[#E8E6E1] flex flex-col justify-between font-sans select-none antialiased transition-colors duration-500 relative overflow-hidden"
       style={{
         backgroundColor: gameTheme?.bgColor || "#0B0D12",
         filter: `brightness(${Math.min(1.1, Math.max(0.65, safeGameDimness / 85))})`,
-        // Dynamic arena size: uses 94% on mobile, up to 720px on desktop without vertical scrolling
-        ["--game-arena-size" as string]: "min(94vw, calc(100dvh - 120px), 720px)",
+        ["--game-arena-size" as string]: "min(94vw, calc(100dvh - 120px), 640px)",
       }}
     >
-      {/* Maç Başı First Look & Klaket Animasyonu (Tahtayı İnceleme + 35mm Klaket Çarpması, Dokunmaya Duyarsız Doğal Akış) */}
+      {/* Klaket & Geri Sayım Overlay (Doğal akış) */}
       {isIntro && (
         <ClapperCountdown
           onImpact={handleIntroImpact}
@@ -140,7 +136,7 @@ export function GameView(props: GameViewProps) {
         />
       )}
 
-      {/* ── Layer 1: Ambient Projector Beam (Tungsten/Amber Cone) ─── */}
+      {/* ── Layer 1: Ambient Projector Beam ─── */}
       <div
         className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
         style={{
@@ -149,7 +145,7 @@ export function GameView(props: GameViewProps) {
         }}
       />
 
-      {/* ── Layer 2: 35mm Analog Film Grain Overlay in Game ─── */}
+      {/* ── Layer 2: 35mm Analog Film Grain Overlay ─── */}
       {gameAmbience.grain && gameAmbience.grain !== "OFF" && (
         <div
           className="absolute inset-0 pointer-events-none z-10 mix-blend-screen transition-opacity duration-300"
@@ -160,63 +156,22 @@ export function GameView(props: GameViewProps) {
         />
       )}
 
-      {/* ── Layer 2b: 35mm Film Sprocket Wings (Widescreen Analog Framing) ─── */}
-      <aside
-        aria-hidden="true"
-        className="hidden md:flex absolute left-0 top-0 bottom-0 w-8 flex-col items-center justify-between py-4 pointer-events-none z-10 border-r border-white/5 opacity-30 select-none overflow-hidden"
-      >
-        <div className="flex flex-col items-center gap-3.5 h-full overflow-hidden">
-          {Array.from({ length: 45 }).map((_, i) => (
-            <React.Fragment key={i}>
-              <div
-                className="w-3.5 h-2.5 rounded-[2px] bg-[#07080B] border border-white/10 shrink-0"
-                style={{ boxShadow: "inset 0 1px 2px rgba(0,0,0,0.9)" }}
-              />
-              {i % 9 === 4 && (
-                <span className="text-[5.5px] font-mono font-bold text-[#D9A441]/60 tracking-widest uppercase -rotate-90 py-1.5 shrink-0">
-                  {i % 18 === 4 ? "KODAK 5219" : "35MM · 24FPS"}
-                </span>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      </aside>
+      {/* ── 2.7 CSS Perforasyon Kenar Şeritleri (DOM düğümleri yerine CSS deseni) ─── */}
+      <div className="hidden md:block absolute left-0 top-0 bottom-0 w-3 film-sprockets-left pointer-events-none z-10 opacity-30" />
+      <div className="hidden md:block absolute right-0 top-0 bottom-0 w-3 film-sprockets-right pointer-events-none z-10 opacity-30" />
 
-      <aside
-        aria-hidden="true"
-        className="hidden md:flex absolute right-0 top-0 bottom-0 w-8 flex-col items-center justify-between py-4 pointer-events-none z-10 border-l border-white/5 opacity-30 select-none overflow-hidden"
-      >
-        <div className="flex flex-col items-center gap-3.5 h-full overflow-hidden">
-          {Array.from({ length: 45 }).map((_, i) => (
-            <React.Fragment key={i}>
-              <div
-                className="w-3.5 h-2.5 rounded-[2px] bg-[#07080B] border border-white/10 shrink-0"
-                style={{ boxShadow: "inset 0 1px 2px rgba(0,0,0,0.9)" }}
-              />
-              {i % 9 === 4 && (
-                <span className="text-[5.5px] font-mono font-bold text-[#D9A441]/60 tracking-widest uppercase -rotate-90 py-1.5 shrink-0">
-                  {i % 18 === 4 ? "▲ 18A" : "SOUND · DOLBY"}
-                </span>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      </aside>
-
-      {/* ── Central Arcade Cabinet Arena (Dynamic Scaled Container) ─── */}
+      {/* ── 6C.3 Merkezi Oyun Arenası (Dikey Dengeli Düzen) ─── */}
       <div
-        className="w-full flex-1 flex flex-col items-center justify-between mx-auto relative z-20 py-2 sm:py-3 px-2 sm:px-3 min-h-0"
+        className="w-full flex-1 flex flex-col items-center justify-between mx-auto relative z-20 py-2 px-2 sm:px-3 min-h-0"
         style={{ maxWidth: "var(--game-arena-size)" }}
       >
-        {/* ── 1. ÜST BAR: SOL REC + TIMECODE | ORTA TAHTA ADI | SAĞ ÇIKIŞ ─── */}
+        {/* ── 1. ÜST BAR: SOL REC + TIMECODE | ORTA DISPLAYTITLE | SAĞ X BUTONU ─── */}
         <header className="w-full px-1 pt-1 pb-1 flex items-center justify-between z-30 relative select-none shrink-0">
-          {/* Sol: REC Noktası (2sn yumuşak nabız, sadece maç aktifken) + Timecode Süre Sayacı */}
+          {/* Sol: REC + Timecode */}
           <div className="flex items-center gap-2 shrink-0">
             <span
               className={`w-2.5 h-2.5 rounded-full transition-opacity ${
-                props.winner === null
-                  ? "bg-[#E5484D] animate-pulse"
-                  : "bg-[#8A8F9A]/40"
+                props.winner === null ? "bg-[#E5484D] animate-pulse" : "bg-[#8A8F9A]/40"
               }`}
               style={{ animationDuration: "2s" }}
               title="REC"
@@ -226,27 +181,57 @@ export function GameView(props: GameViewProps) {
             </span>
           </div>
 
-          {/* Orta: Tahta Adı (Serif Başlık, Kapsayıcı/Hap Yok) */}
+          {/* Orta: Kısa Ad (displayTitle, Tek Satır, Başlık X ile Çakışmaz) */}
           <div className="text-center min-w-0 px-2 flex-1">
             <h1 className="font-serif font-bold text-sm sm:text-base md:text-lg text-[#E8E6E1] truncate leading-tight">
-              {props.board.title}
+              {displayTitle}
             </h1>
           </div>
 
-          {/* Sağ: Çıkış */}
-          <div className="flex items-center gap-1 shrink-0">
-            <button
-              type="button"
+          {/* Sağ: 44×44 Bevelsiz Simge Butonu (X) */}
+          <div className="flex items-center shrink-0">
+            <Button
+              variant="icon"
               onClick={props.onRequestExitGame}
-              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
-              title="Gişe'ye Dön"
+              title="Düellodan Çık"
             >
               <X className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
         </header>
 
-        {/* ── 2. TAHTA BÜYÜK VE MERKEZDE (SIFIR DİKEY KAYMA, SABİT KADRAJ) ─── */}
+        {/* ── 2. OYUNCU ŞERİDİ: SOLD SEN (X, ALTIN) | SAĞDA RAKİP (O, SOLUK MAVİ) ─── */}
+        <div className="w-full flex items-center justify-between px-2 py-1 select-none shrink-0 text-xs">
+          {/* SEN (X) */}
+          <div
+            className={`flex items-center gap-1.5 transition-all ${
+              isPlayerTurn ? "opacity-100 font-bold" : "opacity-60"
+            }`}
+          >
+            <span className="w-5 h-5 rounded-md bg-[#D9A441] text-[#0B0D12] font-mono font-bold flex items-center justify-center text-[10px]">
+              X
+            </span>
+            <span className="text-[#D9A441] tracking-wider uppercase text-[11px] truncate max-w-[120px]">
+              SEN
+            </span>
+          </div>
+
+          {/* RAKİP (O) */}
+          <div
+            className={`flex items-center gap-1.5 transition-all ${
+              !isPlayerTurn ? "opacity-100 font-bold" : "opacity-60"
+            }`}
+          >
+            <span className="text-[#4FA3C7] tracking-wider uppercase text-[11px] truncate max-w-[120px]">
+              RAKİP · {props.pendingOpponent?.name || "Sinefil"}
+            </span>
+            <span className="w-5 h-5 rounded-md bg-[#4FA3C7] text-[#0B0D12] font-mono font-bold flex items-center justify-center text-[10px]">
+              O
+            </span>
+          </div>
+        </div>
+
+        {/* ── 3. KADRAJ (ESNEK ALAN, DİKEY MERKEZ) ─── */}
         <main className="w-full flex-1 flex flex-col items-center justify-center min-w-0 min-h-0 my-auto">
           <XoxBoard
             board={props.board}
@@ -261,29 +246,52 @@ export function GameView(props: GameViewProps) {
           />
         </main>
 
-        {/* ── 3. ALTA TEK SATIR SIRA GÖSTERGESİ ─── */}
-        <div className="w-full text-center pt-2 pb-1 select-none shrink-0">
+        {/* ── 4. ALTA: 12 SANİYE SÜRE ÇUBUĞU + HAMLE SENDE / RAKİP HAMLEDE ─── */}
+        <div className="w-full flex flex-col items-center gap-1.5 px-3 pt-1 pb-2 select-none shrink-0">
+          {/* İnce Süre Çubuğu (Son 3 saniyede kırmızıya döner) */}
+          {props.winner === null && (
+            <div className="w-full max-w-sm h-1 bg-[#181B22] rounded-full overflow-hidden border border-white/5">
+              <div
+                className={`h-full transition-all duration-1000 ease-linear rounded-full ${
+                  props.secondsRemaining <= 3 ? "bg-[#E5484D]" : "bg-[#D9A441]"
+                }`}
+                style={{
+                  width: `${Math.max(
+                    0,
+                    Math.min(100, (props.secondsRemaining / (props.customShotClock || 12)) * 100)
+                  )}%`,
+                }}
+              />
+            </div>
+          )}
+
+          {/* Durum Metni */}
           {props.winner !== null ? (
-            <span className="font-serif text-base sm:text-lg font-bold text-[#D9A441] tracking-wider">
-              {props.winner === "X"
-                ? "Kesin!"
-                : props.winner === "DRAW"
-                ? "Berabere"
-                : "Kurgu masasına dönüyoruz."}
-            </span>
+            props.winner === "DRAW" ? (
+              <div className="flex flex-col items-center text-center">
+                <span className="font-serif text-base font-bold text-[#D9A441] tracking-wider">
+                  Kör kadraj
+                </span>
+                <span className="text-xs text-[#8A8F9A]">Berabere.</span>
+              </div>
+            ) : (
+              <span className="font-serif text-base sm:text-lg font-bold text-[#D9A441] tracking-wider">
+                {props.winner === "X" ? "Kesin!" : "Kurgu masasına dönüyoruz."}
+              </span>
+            )
           ) : (
             <p
-              className={`text-xs font-mono font-bold tracking-widest uppercase ${
+              className={`text-xs font-sans font-semibold tracking-wider ${
                 isPlayerTurn ? "text-[#D9A441]" : "text-[#4FA3C7]"
               }`}
             >
-              {isPlayerTurn ? "Sıra sende" : "Rakip çekiyor"}
+              {isPlayerTurn ? "Hamle sende" : "Rakip hamlede"}
             </p>
           )}
         </div>
       </div>
 
-      {/* Movie Search Modal / Actor Search Modal (Ters Kadraj) */}
+      {/* Film Arama / Ortak Oyuncu Arama (Alt Sheet) */}
       {props.activeCellIndex !== null && props.board.boardMode === "REVERSE_CAST" ? (
         <ActorSearchModal
           isOpen={props.activeCellIndex !== null}
@@ -318,7 +326,7 @@ export function GameView(props: GameViewProps) {
         onTimeout={props.onResolveGoldenReelTimeout}
       />
 
-      {/* Post Game Analysis (Kazanma/Kaybetme ve Rarity Analiz Ekranı) */}
+      {/* Post Game Analysis (Sonuç Ekranı) */}
       <PostGameAnalysisModal
         winner={props.winner}
         board={props.board}
@@ -330,61 +338,51 @@ export function GameView(props: GameViewProps) {
         onBackToHome={props.onBackToHome}
       />
 
-      {/* Maçı Terk Et / Teslim Ol (Surrender) Onay Modalı */}
+      {/* 1.3 & 6C.6 Düelloyu Bırakma Onayı (Orta Kart) */}
       {props.showSurrenderConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
-          <div
-            className="w-full max-w-sm rounded-3xl p-6 flex flex-col items-center text-center text-[#F1EEE7] relative tactile-card"
-            style={{
-              background: "linear-gradient(180deg, #1E222B 0%, #14171D 100%)",
-              borderColor: "rgba(255,51,75,0.65)",
-              boxShadow: "0 16px 40px rgba(0,0,0,0.85), 0 6px 0 #08090C",
-            }}
-          >
-            <div className="w-14 h-14 rounded-2xl bg-[#FF334B]/15 border border-[#FF334B]/40 flex items-center justify-center text-[#FF334B] mb-3 animate-pulse">
-              <ShieldAlert className="w-7 h-7 text-[#FF334B]" />
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              props.onCancelSurrender();
+            }
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm select-none animate-in fade-in duration-150"
+        >
+          <div className="w-full max-w-sm rounded-2xl p-6 flex flex-col items-center text-center text-[#E8E6E1] bg-[#14171D] border border-white/10 shadow-2xl relative">
+            <div className="w-12 h-12 rounded-xl bg-[#E5484D]/15 border border-[#E5484D]/30 flex items-center justify-center text-[#E5484D] mb-3">
+              <Film className="w-6 h-6" />
             </div>
 
-            <h3 className="text-base font-black text-[#FF334B] font-mono tracking-wider mb-1 uppercase">
-              {props.pendingSwitchMode ? "MOD DEĞİŞTİRİLİYOR" : "MAÇTAN ÇEKİLİYOR MUSUN?"}
+            <h3 className="font-serif text-lg font-bold text-[#E8E6E1] mb-1">
+              Düellodan Çekil
             </h3>
 
-            <p className="text-xs text-[#F1EEE7] leading-relaxed mb-4">
-              {props.pendingSwitchMode ? (
-                <>
-                  Devam eden maçı sonlandırıp başka bir oyun moduna geçmek üzeresin. Bu maç hanene{" "}
-                  <strong className="text-[#FF334B] font-black">HÜKMEN MAĞLUBİYET</strong> olarak işlenecektir!
-                </>
-              ) : (
-                <>
-                  Devam eden karşılaşmayı terk edersen bu maç hanene{" "}
-                  <strong className="text-[#FF334B] font-black">HÜKMEN MAĞLUBİYET (Loss)</strong> olarak işlenecek ve serin sıfırlanacaktır!
-                </>
-              )}
+            <p className="text-xs text-[#8A8F9A] leading-relaxed mb-4">
+              Düelloyu bırakırsan yenilmiş sayılırsın.
             </p>
 
-            <div className="w-full p-2.5 rounded-xl bg-[#0F1115] border border-white/10 text-[11px] text-[#A5A8B0] mb-5 flex items-center justify-between">
-              <span className="font-bold">Rakip:</span>
-              <span className="font-extrabold text-[#F1EEE7] flex items-center gap-1">
-                🤖 {props.pendingOpponent.name} ({props.pendingOpponent.rankTitle})
-              </span>
-            </div>
+            {props.pendingOpponent && (
+              <div className="w-full p-2.5 rounded-lg bg-[#0B0D12] border border-white/5 text-[11px] text-[#8A8F9A] mb-5 flex items-center justify-between">
+                <span>Rakip:</span>
+                <span className="font-semibold text-[#E8E6E1]">
+                  {props.pendingOpponent.name}
+                </span>
+              </div>
+            )}
 
-            <div className="grid grid-cols-2 gap-2 w-full">
-              <button
-                type="button"
+            <div className="grid grid-cols-2 gap-2.5 w-full">
+              <Button
+                variant="secondary"
                 onClick={props.onCancelSurrender}
-                className="py-2.5 rounded-xl tactile-btn-surface text-[#F1EEE7] font-black text-xs"
               >
-                Savaşa Devam Et
-              </button>
-              <button
-                type="button"
+                Devam et
+              </Button>
+              <Button
+                variant="primary"
                 onClick={props.onConfirmSurrender}
-                className="py-2.5 rounded-xl bg-[#FF334B] hover:bg-[#e0243c] text-white font-black text-xs shadow-[0_4px_0_#991424] active:translate-y-[2px] transition-all"
               >
-                {props.pendingSwitchMode ? "Modu Değiştir (Terk Et)" : "Terk Et (Teslim Ol)"}
-              </button>
+                Bırak
+              </Button>
             </div>
           </div>
         </div>

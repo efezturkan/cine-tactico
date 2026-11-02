@@ -55,18 +55,18 @@ export const ShotClock: React.FC<ShotClockProps> = ({
                 <span className="relative flex h-3 w-3 items-center justify-center">
                   <span
                     className={`inline-flex rounded-full h-2 w-2 ${
-                      isPlayerX ? "bg-[#F5A623]" : "bg-[#00D5E8]"
+                      isPlayerX ? "bg-[#D9A441]" : "bg-[#4FA3C7]"
                     }`}
                   />
                 </span>
                 <span
                   className={
                     isPlayerX
-                      ? "text-[#F5A623] tracking-wide font-black text-[11px] uppercase"
-                      : "text-[#00D5E8] tracking-wide font-black text-[11px] uppercase"
+                      ? "text-[#D9A441] tracking-wide font-black text-[11px] uppercase"
+                      : "text-[#4FA3C7] tracking-wide font-black text-[11px] uppercase"
                   }
                 >
-                  SIRA OYUNCU {currentTurn}&apos;DE {isPlayerX ? "(SEN)" : "(RAKİP)"}
+                  HAMLE OYUNCU {currentTurn}&apos;DE {isPlayerX ? "(SEN)" : "(RAKİP)"}
                 </span>
               </>
             )}
@@ -74,14 +74,14 @@ export const ShotClock: React.FC<ShotClockProps> = ({
           <div
             className={`flex items-center gap-1 px-2 py-0.5 rounded-lg font-mono transition-all ${
               isLowTime
-                ? "bg-[#FF334B]/20 border border-[#FF334B]/50 text-[#FF334B] animate-pulse-fast font-black text-xs"
+                ? "bg-[#E5484D]/20 border border-[#E5484D]/50 text-[#E5484D] animate-pulse-fast font-black text-xs"
                 : "bg-[#0F1115] border border-white/10 text-[#F1EEE7] font-black text-xs"
             }`}
           >
             {isLowTime ? (
-              <AlertTriangle className="w-3.5 h-3.5 text-[#FF334B]" />
+              <AlertTriangle className="w-3.5 h-3.5 text-[#E5484D]" />
             ) : (
-              <Timer className="w-3.5 h-3.5 text-[#F5A623]" />
+              <Timer className="w-3.5 h-3.5 text-[#D9A441]" />
             )}
             <span>{secondsRemaining}s</span>
           </div>
@@ -92,10 +92,10 @@ export const ShotClock: React.FC<ShotClockProps> = ({
           <div
             className={`h-full rounded-full transition-all duration-1000 ease-linear ${
               isLowTime
-                ? "bg-[#FF334B]"
+                ? "bg-[#E5484D]"
                 : isPlayerX
-                ? "bg-gradient-to-r from-[#D9820B] to-[#F5A623]"
-                : "bg-gradient-to-r from-[#00A8B8] to-[#00D5E8]"
+                ? "bg-gradient-to-r from-[#8E651B] to-[#D9A441]"
+                : "bg-gradient-to-r from-[#23617D] to-[#4FA3C7]"
             }`}
             style={{ width: `${percentage}%` }}
           />

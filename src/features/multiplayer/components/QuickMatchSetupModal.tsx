@@ -245,7 +245,7 @@ export const QuickMatchSetupModal: React.FC<QuickMatchSetupModalProps> = ({
         {/* Alt bilgi: Filtreler nerede? */}
         <div className="mt-3 text-center">
           <span className="text-[9px] text-zinc-500 font-bold">
-            Derin filtreler (ülke, platform, banlar) için <b className="text-zinc-400">Özel Oda</b>'yı kullanabilirsiniz.
+            Derin filtreler için <b className="text-[#E8E6E1]">Özel Gösterim</b>&apos;i kullanabilirsin.
           </span>
         </div>
       </div>

@@ -31,6 +31,24 @@ export interface CineFeatureFlags {
   SHOW_HEADER_AMBIENCE_BUTTON: boolean;
   /** Kılavuz/Yardım üst bar butonu (Ayarlar içine taşınır) */
   SHOW_HEADER_HELP_BUTTON: boolean;
+  /** Oyuncu fotoğrafı ve film afişi render edilmesin */
+  PLAYER_PHOTOS: boolean;
+  /** Işık huzmesi (Gişe) */
+  LIGHT_BEAM: boolean;
+  /** Açılış ışık sızıntısı */
+  OPENING_LEAK: boolean;
+  /** 8 kişilik turnuva modu */
+  SHOW_TOURNAMENTS: boolean;
+  /** Best of 3 modu */
+  SHOW_BO3: boolean;
+  /** Oda gizlilik seçimi */
+  SHOW_ROOM_PRIVACY: boolean;
+  /** Blitz modu */
+  SHOW_BLITZ: boolean;
+  /** Süre seçici */
+  SHOW_TIMER_PICKER: boolean;
+  /** Puan sistemi (+ Puan) */
+  SHOW_POINTS_SYSTEM: boolean;
 }
 
 export const FLAGS: CineFeatureFlags = {
@@ -47,4 +65,13 @@ export const FLAGS: CineFeatureFlags = {
   SHOW_BOARD_ARCHIVE: false,
   SHOW_HEADER_AMBIENCE_BUTTON: false,
   SHOW_HEADER_HELP_BUTTON: false,
+  PLAYER_PHOTOS: false,
+  LIGHT_BEAM: false,
+  OPENING_LEAK: false,
+  SHOW_TOURNAMENTS: false,
+  SHOW_BO3: false,
+  SHOW_ROOM_PRIVACY: false,
+  SHOW_BLITZ: false,
+  SHOW_TIMER_PICKER: false,
+  SHOW_POINTS_SYSTEM: false,
 };

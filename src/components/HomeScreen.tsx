@@ -83,10 +83,10 @@ const SprocketStrip = () => (
         />
         {i % 9 === 4 && (
           <span
-            className="text-[5px] font-mono font-bold text-[#F5A623]/55 tracking-tighter uppercase -rotate-90 py-1 select-none shrink-0"
+            className="text-[5px] font-mono font-bold text-[#D9A441]/55 tracking-tighter uppercase -rotate-90 py-1 select-none shrink-0"
             style={{ transformOrigin: "center center" }}
           >
-            KODAK
+            35MM
           </span>
         )}
       </React.Fragment>
@@ -540,10 +540,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </button>
 
-        {/* ── SIGNATURE FOOTER MICRO-LABEL (DESIGN.md İmza Öğesi 5) ─── */}
+        {/* ── SIGNATURE FOOTER MICRO-LABEL (35MM · 24 FPS) ─── */}
         <div className="pt-2 pb-1 text-center select-none pointer-events-none">
           <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#E8E6E1]/30">
-            KODAK 5219 · 35MM
+            35MM · 24 FPS
           </p>
         </div>
 

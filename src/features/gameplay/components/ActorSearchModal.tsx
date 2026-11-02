@@ -2,12 +2,11 @@
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Criterion, normalizeCinemaString } from "@/core";
-import { X, User, Sparkles, Send, ShieldAlert, Film } from "lucide-react";
+import { X, User, ShieldAlert } from "lucide-react";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
-import { assetResolver } from "@/utils/assetResolver";
-import { LocalFace } from "./LocalFace";
 import { ACTORS_DATABASE } from "@/content/adapters/gameCatalog";
+import { Button } from "@/components/ui/Button";
 
 interface ActorSearchModalProps {
   isOpen: boolean;
@@ -27,15 +26,17 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
   errorMessage,
 }) => {
   const [query, setQuery] = useState("");
+  const [localError, setLocalError] = useState<string | null>(null);
   const [vpStyle, setVpStyle] = useState<{ height?: number; top?: number }>({});
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setQuery("");
+      setLocalError(null);
       const timer = setTimeout(() => {
         inputRef.current?.focus();
-      }, 30);
+      }, 50);
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
@@ -61,14 +62,18 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
     };
   }, [isOpen]);
 
-  const handleSubmitCustom = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = query.trim();
-    if (trimmed.length > 0) {
-      audio.playSelect();
-      haptic.light();
-      onSelectActor(trimmed);
+    if (!trimmed) {
+      // 1.3 & 6E.2: Boş girişte "Bir isim yaz." uyarısı
+      setLocalError("Bir isim yaz.");
+      return;
     }
+    setLocalError(null);
+    audio.playSelect();
+    haptic.light();
+    onSelectActor(trimmed);
   };
 
   const suggestedActors = useMemo(() => {
@@ -83,109 +88,89 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
     }).slice(0, 8);
   }, [query]);
 
-  const rowCritAsset = useMemo(
-    () => assetResolver.resolveForCriterion(rowCrit),
-    [rowCrit]
-  );
-  const colCritAsset = useMemo(
-    () => assetResolver.resolveForCriterion(colCrit),
-    [colCrit]
-  );
+  const activeError = errorMessage || localError;
 
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-x-0 z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm select-none"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm select-none"
       style={{
         top: vpStyle.top !== undefined ? `${vpStyle.top}px` : 0,
         height: vpStyle.height !== undefined ? `${vpStyle.height}px` : "100dvh",
       }}
     >
+      {/* 2.4 Alt Sheet (Bottom Sheet) */}
       <div
-        className="w-full max-w-[460px] animate-card-in rounded-3xl p-3.5 sm:p-5 shadow-2xl flex flex-col text-[#F1EEE7] overflow-hidden"
+        className="w-full max-w-lg mx-auto bg-[#14171D] border-t border-x border-white/10 rounded-t-[24px] p-4 sm:p-5 flex flex-col max-h-[92dvh] shadow-2xl animate-in slide-in-from-bottom-5 duration-200"
         style={{
           maxHeight:
             vpStyle.height !== undefined
-              ? `${Math.max(250, vpStyle.height - 16)}px`
+              ? `${Math.max(260, vpStyle.height - 20)}px`
               : "92dvh",
-          background: "#14171D",
-          border: "1px solid rgba(255,255,255,0.1)",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.9)",
         }}
       >
-        {/* Header & Two-Movie Intersection (Pinned Shrink-0) */}
-        <div className="flex items-start justify-between pb-2.5 border-b border-white/10 shrink-0">
-          <div>
-            <span className="text-[9px] font-mono uppercase font-bold tracking-[0.2em] text-[#4FA3C7] inline-flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3 text-[#4FA3C7]" />
-              <span>TERS KADRAJ &middot; ORTAK OYUNCU</span>
+        {/* Tutamaç Çizgisi */}
+        <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
+
+        {/* 6E.1 Başlık & İki Film Kesişimi (Ters Kadraj Soluk Teal #5FB3A8, Işıltı Yok) */}
+        <div className="flex items-start justify-between pb-3 border-b border-white/10 shrink-0">
+          <div className="min-w-0">
+            <span className="text-[10px] font-sans uppercase font-bold tracking-wider text-[#5FB3A8] block mb-1">
+              TERS KADRAJ · ORTAK OYUNCU
             </span>
-            <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-              <div className="flex items-center gap-1.5 text-xs font-bold px-2 py-0.5 rounded-lg bg-[#0B0D12] text-[#E8E6E1] border border-[#D9A441]/40">
-                {rowCritAsset.isAvailable && rowCritAsset.src ? (
-                  <img
-                    src={rowCritAsset.src}
-                    alt=""
-                    className="w-4 h-5 object-cover rounded-sm border border-white/10 shrink-0"
-                  />
-                ) : (
-                  <Film className="w-3.5 h-3.5 text-[#D9A441] shrink-0" />
-                )}
-                <span>{rowCrit.label}</span>
-              </div>
-              <span className="font-mono text-[#4FA3C7] font-bold text-xs">
-                ×
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#181B22] text-[#E8E6E1] border border-white/10">
+                {rowCrit.label}
               </span>
-              <div className="flex items-center gap-1.5 text-xs font-bold px-2 py-0.5 rounded-lg bg-[#0B0D12] text-[#E8E6E1] border border-[#4FA3C7]/40">
-                {colCritAsset.isAvailable && colCritAsset.src ? (
-                  <img
-                    src={colCritAsset.src}
-                    alt=""
-                    className="w-4 h-5 object-cover rounded-sm border border-white/10 shrink-0"
-                  />
-                ) : (
-                  <Film className="w-3.5 h-3.5 text-[#4FA3C7] shrink-0" />
-                )}
-                <span>{colCrit.label}</span>
-              </div>
+              <span className="text-[#8A8F9A] font-bold text-xs">×</span>
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#181B22] text-[#E8E6E1] border border-white/10">
+                {colCrit.label}
+              </span>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              audio.playSelect();
-              onClose();
-            }}
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#181B22] border border-white/10 text-[#8A8F9A] transition hover:text-[#E8E6E1] shrink-0"
+
+          <Button
+            variant="icon"
+            onClick={onClose}
+            className="shrink-0"
+            title="Kapat"
           >
             <X className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
 
-        {/* Error Notice */}
-        {errorMessage && (
-          <div className="wrong-recoil mt-2.5 p-2.5 rounded-xl bg-[#E5484D]/15 border border-[#E5484D]/50 text-[#E8E6E1] text-xs font-semibold flex items-center gap-2 shrink-0">
+        {/* Hata Bildirimi */}
+        {activeError && (
+          <div className="mt-3 p-2.5 rounded-xl bg-[#E5484D]/15 border border-[#E5484D]/50 text-[#E8E6E1] text-xs font-semibold flex items-center gap-2 shrink-0">
             <ShieldAlert className="w-4 h-4 text-[#E5484D] shrink-0" />
-            <span>{errorMessage}</span>
+            <span>{activeError}</span>
           </div>
         )}
 
-        {/* Search Input & Suggestions */}
+        {/* Arama Kutusu ve Form */}
         <form
-          onSubmit={handleSubmitCustom}
-          className="mt-2.5 flex-1 min-h-0 flex flex-col gap-2.5"
+          onSubmit={handleSubmit}
+          className="mt-3 flex-1 min-h-0 flex flex-col gap-3"
         >
           <div className="relative shrink-0">
-            <User className="w-4 h-4 text-[#4FA3C7] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <User className="w-4 h-4 text-[#5FB3A8] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               ref={inputRef}
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ortak oyuncunun adını yaz..."
-              enterKeyHint="search"
-              className="w-full bg-[#0B0D12] border border-white/10 focus:border-[#4FA3C7] rounded-2xl pl-10 pr-9 py-2.5 sm:py-3 text-base font-semibold text-[#E8E6E1] placeholder:text-[#8A8F9A]/50 outline-none transition-colors"
+              onChange={(e) => {
+                setQuery(e.target.value);
+                if (localError) setLocalError(null);
+              }}
+              placeholder="Ortak oyuncunun adı"
+              enterKeyHint="done"
+              className="w-full bg-[#0B0D12] border border-white/10 focus:border-[#5FB3A8] rounded-xl pl-10 pr-9 py-2.5 sm:py-3 text-base font-medium text-[#E8E6E1] placeholder:text-[#8A8F9A]/50 outline-none transition-colors"
               autoComplete="off"
               autoCorrect="off"
               spellCheck="false"
@@ -201,61 +186,49 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
             )}
           </div>
 
+          {/* Oyuncu Önerileri */}
           {query.trim().length >= 2 && suggestedActors.length === 0 ? (
-            <div className="flex-1 min-h-[100px] flex flex-col items-center justify-center p-4 rounded-2xl bg-[#0B0D12] border border-white/10 text-center text-[#8A8F9A]">
-              <User className="w-7 h-7 text-[#D9A441]/40 mx-auto mb-1.5" />
-              <p className="font-serif text-sm text-[#E8E6E1] mb-0.5">Arşivde henüz kayıt yok.</p>
-              <p className="text-[11px] text-[#8A8F9A]">&quot;{query}&quot; ile eşleşen oyuncu bulunamadı.</p>
+            <div className="flex-1 min-h-[90px] flex flex-col items-center justify-center p-4 rounded-xl bg-[#0B0D12] border border-white/10 text-center text-[#8A8F9A]">
+              <p className="font-serif text-sm font-bold text-[#E8E6E1] mb-0.5">
+                Bu isim arşivde yok.
+              </p>
+              <p className="text-xs text-[#8A8F9A]">
+                Yazımı kontrol et.
+              </p>
             </div>
           ) : suggestedActors.length > 0 ? (
-            <div className="flex-1 min-h-0 flex flex-col gap-1.5 p-2 rounded-2xl bg-[#0B0D12] border border-white/10 overflow-y-auto overscroll-contain custom-scrollbar">
-              <span className="text-[11px] text-[#8A8F9A] px-1 font-semibold shrink-0">
-                Eşleşen Oyuncular ({suggestedActors.length}):
-              </span>
-              {suggestedActors.map((actor) => {
-                const asset = assetResolver.resolveForActor(actor.id);
-                return (
-                  <button
-                    key={actor.id}
-                    type="button"
-                    onClick={() => {
-                      audio.playSelect();
-                      haptic.light();
-                      onSelectActor(actor.primaryName);
-                    }}
-                    className="flex items-center justify-between p-2 rounded-xl bg-[#181B22] hover:bg-[#202530] border border-white/10 hover:border-[#4FA3C7] transition-all text-left group shrink-0"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <LocalFace
-                        src={asset.isAvailable ? asset.src : undefined}
-                        className="w-7 h-7 rounded-full overflow-hidden border border-[#00D5E8]/50 shrink-0"
-                        fallback={
-                          <div className="w-7 h-7 rounded-full bg-[#0F1115] border border-white/10 flex items-center justify-center text-[#00D5E8] text-[10px] font-mono font-bold shrink-0">
-                            {asset.fallbackText}
-                          </div>
-                        }
-                      />
-                      <span className="text-xs font-bold text-[#F1EEE7] group-hover:text-[#00D5E8] truncate">
-                        {actor.primaryName}
-                      </span>
-                    </div>
-                    <span className="tactile-btn-cyan text-xs font-black uppercase tracking-wider px-2.5 py-1 rounded-lg shrink-0 text-[#0F1115]">
-                      Seç &rarr;
-                    </span>
-                  </button>
-                );
-              })}
+            <div className="flex-1 min-h-0 flex flex-col gap-1.5 p-2 rounded-xl bg-[#0B0D12] border border-white/10 overflow-y-auto overscroll-contain custom-scrollbar">
+              {suggestedActors.map((actor) => (
+                <button
+                  key={actor.id}
+                  type="button"
+                  onClick={() => {
+                    audio.playSelect();
+                    haptic.light();
+                    onSelectActor(actor.primaryName);
+                  }}
+                  className="flex items-center justify-between p-2.5 rounded-lg bg-[#181B22] hover:bg-[#1E222B] border border-white/10 hover:border-[#5FB3A8]/50 transition-all text-left shrink-0"
+                >
+                  <span className="text-xs font-bold text-[#E8E6E1]">
+                    {actor.primaryName}
+                  </span>
+                  <span className="text-[#5FB3A8] font-bold text-sm">
+                    &rarr;
+                  </span>
+                </button>
+              ))}
             </div>
           ) : null}
 
-          <button
+          {/* 6E.2 Ana Buton: ONAYLA (Altın #D9A441) */}
+          <Button
             type="submit"
-            disabled={!query.trim()}
-            className="tactile-btn-cyan w-full py-3 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed text-xs sm:text-sm font-black uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 text-[#0F1115]"
+            variant="primary"
+            fullWidth
+            className="mt-auto shrink-0"
           >
-            <span>ONAYLA VE MÜHÜRLE</span>
-            <Send className="w-4 h-4" />
-          </button>
+            ONAYLA
+          </Button>
         </form>
       </div>
     </div>

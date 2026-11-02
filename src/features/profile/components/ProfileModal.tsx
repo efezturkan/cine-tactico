@@ -148,7 +148,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const handleLinkAccount = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!linkEmail.trim() || !linkPassword.trim()) {
-      setLinkMessage({ type: "error", text: "Lütfen e-posta ve şifre giriniz." });
+      setLinkMessage({ type: "error", text: "E-posta ve şifre yaz." });
       return;
     }
     setLinkLoading(true);
@@ -550,7 +550,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         {/* Micro-label at bottom */}
         <div className="text-center mt-3">
           <span className="text-[8px] font-mono tracking-widest text-[#8A8F9A] opacity-30 uppercase">
-            KODAK 5219 · 35MM
+            35MM · 24 FPS
           </span>
         </div>
       </div>

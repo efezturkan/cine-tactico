@@ -1,14 +1,12 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import Image from "next/image";
 import { Criterion, Movie, ContentPoolType, CellAnswer } from "@/core";
 import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
 import { movieMatchesTitleQuery } from "@/content/search/movieTitle";
-import { Search, X, Film, ShieldCheck, AlertTriangle } from "lucide-react";
-import { audio } from "@/utils/audio";
+import { Search, X, AlertTriangle } from "lucide-react";
 import { haptic } from "@/utils/haptics";
-import { assetResolver } from "@/utils/assetResolver";
+import { Button } from "@/components/ui/Button";
 
 interface MovieSearchModalProps {
   isOpen: boolean;
@@ -22,30 +20,6 @@ interface MovieSearchModalProps {
   targetOccupant?: CellAnswer | null;
   initialQuery?: string;
 }
-
-const SearchMovieThumbnail = React.memo<{ movie: Movie }>(({ movie }) => {
-  const [imgError, setImgError] = useState(false);
-  const resolved = useMemo(() => assetResolver.resolveForMovie(movie), [movie]);
-
-  if (resolved.isAvailable && resolved.src && !imgError) {
-    return (
-      <img
-        src={resolved.src}
-        alt=""
-        loading="lazy"
-        onError={() => setImgError(true)}
-        className="w-full h-full object-cover"
-      />
-    );
-  }
-
-  return (
-    <div className="w-full h-full bg-[#0F1115] flex flex-col items-center justify-center p-1 text-center">
-      <Film className="w-4 h-4 text-[#F5A623]" />
-    </div>
-  );
-});
-SearchMovieThumbnail.displayName = "SearchMovieThumbnail";
 
 export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
   isOpen,
@@ -67,7 +41,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
       setQuery(initialQuery);
       const timer = setTimeout(() => {
         inputRef.current?.focus();
-      }, 30);
+      }, 50);
       return () => clearTimeout(timer);
     }
   }, [isOpen, initialQuery]);
@@ -116,98 +90,58 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
     [filteredMovies]
   );
 
-  const rowCritAsset = useMemo(
-    () => assetResolver.resolveForCriterion(rowCrit),
-    [rowCrit]
-  );
-  const colCritAsset = useMemo(
-    () => assetResolver.resolveForCriterion(colCrit),
-    [colCrit]
-  );
-  const rowAvatar =
-    rowCrit.avatarUrl ||
-    (rowCritAsset.isAvailable ? rowCritAsset.src : undefined);
-  const colAvatar =
-    colCrit.avatarUrl ||
-    (colCritAsset.isAvailable ? colCritAsset.src : undefined);
-
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-x-0 z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm select-none"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm select-none"
       style={{
         top: vpStyle.top !== undefined ? `${vpStyle.top}px` : 0,
         height: vpStyle.height !== undefined ? `${vpStyle.height}px` : "100dvh",
       }}
     >
+      {/* 2.4 Alt Sheet (Bottom Sheet) */}
       <div
-        className="w-full max-w-[460px] animate-card-in rounded-3xl p-3.5 sm:p-5 shadow-2xl flex flex-col text-[#F1EEE7] overflow-hidden"
+        className="w-full max-w-lg mx-auto bg-[#14171D] border-t border-x border-white/10 rounded-t-[24px] p-4 sm:p-5 flex flex-col max-h-[92dvh] shadow-2xl animate-in slide-in-from-bottom-5 duration-200"
         style={{
           maxHeight:
             vpStyle.height !== undefined
-              ? `${Math.max(250, vpStyle.height - 16)}px`
+              ? `${Math.max(260, vpStyle.height - 20)}px`
               : "92dvh",
-          background: "#14171D",
-          border: "1px solid rgba(255,255,255,0.1)",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.9)",
         }}
       >
-        {/* Selected Cell Target Intersection Header (Pinned Shrink-0) */}
-        <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 shrink-0">
-          <div className="min-w-0">
-            <span className="inline-block text-[9px] font-mono uppercase font-bold tracking-[0.2em] text-[#D9A441]">
-              HEDEF KESİŞİM
+        {/* Tutamaç Çizgisi (Handle Line) */}
+        <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
+
+        {/* 6D.1 Kriter Çipleri & Kapat Simge Butonu (Başlık Etiketi Yok) */}
+        <div className="flex items-center justify-between gap-2 pb-3 border-b border-white/10 shrink-0">
+          <div className="flex items-center gap-2 flex-wrap min-w-0">
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#181B22] text-[#E8E6E1] border border-white/10">
+              {rowCrit.label}
             </span>
-            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-              <span className="text-xs font-bold px-2 py-0.5 rounded-lg bg-[#0B0D12] text-[#E8E6E1] border border-[#D9A441]/40 flex items-center gap-1.5">
-                {rowAvatar && (
-                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-[#D9A441]/60">
-                    <Image
-                      src={rowAvatar}
-                      alt=""
-                      fill
-                      className="object-cover"
-                      unoptimized
-                    />
-                  </span>
-                )}
-                {rowCrit.label}
-              </span>
-              <span className="font-mono text-[#D9A441] font-bold text-xs">
-                ×
-              </span>
-              <span className="text-xs font-bold px-2 py-0.5 rounded-lg bg-[#0B0D12] text-[#E8E6E1] border border-[#4FA3C7]/40 flex items-center gap-1.5">
-                {colAvatar && (
-                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-[#4FA3C7]/60">
-                    <Image
-                      src={colAvatar}
-                      alt=""
-                      fill
-                      className="object-cover"
-                      unoptimized
-                    />
-                  </span>
-                )}
-                {colCrit.label}
-              </span>
-            </div>
+            <span className="text-[#8A8F9A] font-bold text-xs">×</span>
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#181B22] text-[#E8E6E1] border border-white/10">
+              {colCrit.label}
+            </span>
           </div>
 
-          <button
-            type="button"
-            onClick={() => {
-              audio.playSelect();
-              onClose();
-            }}
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#181B22] border border-white/10 text-[#8A8F9A] transition hover:text-[#E8E6E1] shrink-0"
+          <Button
+            variant="icon"
+            onClick={onClose}
+            className="shrink-0"
+            title="Kapat"
           >
             <X className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
 
-        {/* Search Input (Pinned Shrink-0) */}
-        <div className="my-2.5 shrink-0">
+        {/* Arama Kutusu (Search Input) */}
+        <div className="my-3 shrink-0">
           <div className="relative">
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#D9A441] pointer-events-none" />
             <input
@@ -220,72 +154,61 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               autoComplete="off"
               autoCorrect="off"
               spellCheck={false}
-              className="w-full pl-10 pr-9 py-2.5 sm:py-3 bg-[#0B0D12] border border-white/10 focus:border-[#D9A441] rounded-2xl text-base font-semibold text-[#E8E6E1] placeholder:text-[#8A8F9A]/50 focus:outline-none transition-colors"
+              className="w-full pl-10 pr-9 py-2.5 sm:py-3 bg-[#0B0D12] border border-white/10 focus:border-[#D9A441] rounded-xl text-base font-medium text-[#E8E6E1] placeholder:text-[#8A8F9A]/50 focus:outline-none transition-colors"
             />
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A5A8B0] hover:text-[#F1EEE7]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8A8F9A] hover:text-[#E8E6E1]"
               >
                 <X className="w-4 h-4" />
               </button>
             )}
           </div>
-          <div className="flex items-center justify-between mt-1 px-1">
-            <span className="text-[11px] text-[#A5A8B0]">
+          <div className="flex items-center justify-between mt-1.5 px-1">
+            <span className="text-[11px] text-[#8A8F9A]">
               Yalnızca yapım adına göre aranır.
             </span>
-            {query.trim().length >= 2 && (
-              <span className="font-mono text-[11px] text-[#D9A441] font-bold">
-                {filteredMovies.length} sonuç
-              </span>
-            )}
           </div>
         </div>
 
-        {/* Controlled Error Notice */}
+        {/* Hata Bildirimi */}
         {errorMessage && (
-          <div className="wrong-recoil mb-2.5 p-2.5 rounded-xl bg-[#E5484D]/15 border border-[#E5484D]/50 text-[#E8E6E1] text-xs font-semibold flex items-center gap-2 shrink-0">
+          <div className="mb-2.5 p-2.5 rounded-xl bg-[#E5484D]/15 border border-[#E5484D]/50 text-[#E8E6E1] text-xs font-semibold flex items-center gap-2 shrink-0">
             <AlertTriangle className="w-4 h-4 text-[#E5484D] shrink-0" />
             <span className="leading-tight">{errorMessage}</span>
           </div>
         )}
 
-        {/* Anti-Cheat Search Results List (Flexible Scrollable Area) */}
+        {/* 6D.2 & 6D.4 Sonuç Listesi (Tek İç Kaydırma) */}
         <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-1.5 pr-1 custom-scrollbar">
           {query.trim().length < 2 ? (
-            <div className="py-6 sm:py-8 px-4 text-center flex flex-col items-center justify-center">
-              <div className="w-11 h-11 rounded-2xl bg-[#181B22] border border-white/10 flex items-center justify-center mb-2.5 text-[#D9A441] shadow">
-                <Film className="w-5 h-5" />
-              </div>
-              <p className="font-serif text-lg sm:text-xl font-bold tracking-wide text-[#E8E6E1]">
-                Film veya Dizi Adını Yazmaya Başla
+            <div className="py-8 px-4 text-center flex flex-col items-center justify-center">
+              <p className="font-serif text-base font-bold text-[#E8E6E1]">
+                Film veya Dizi Adını Yaz
               </p>
-              <p className="text-xs text-[#8A8F9A] mt-1 max-w-xs leading-relaxed">
+              <p className="text-xs text-[#8A8F9A] mt-1 leading-relaxed">
                 Sonuçları listelemek için en az 2 harf girilmelidir.
               </p>
-              <p className="text-[10px] text-[#8EBB70] mt-2 font-medium">
+              <p className="text-[10px] text-[#8A8F9A]/80 mt-2 font-medium">
                 Anti-Cheat: Tür ve yıl ipuçları adil oyun için gizlenmiştir
               </p>
             </div>
           ) : visibleMovies.length === 0 ? (
             <div className="py-8 text-center text-[#8A8F9A]">
-              <Film className="w-7 h-7 mx-auto mb-2 text-[#D9A441]/40" />
-              <p className="font-serif text-sm text-[#E8E6E1] mb-1">
-                Arşivde henüz kayıt yok.
+              <p className="font-serif text-sm font-bold text-[#E8E6E1] mb-1">
+                Bu adla bir yapım bulamadık.
               </p>
               <p className="text-xs text-[#8A8F9A]">
-                &quot;{query}&quot; ile eşleşen yapım bulunamadı.
+                Yazımı kontrol et.
               </p>
             </div>
           ) : (
             visibleMovies.map((movie) => {
               const isUsed = usedIdsSet.has(movie.id);
-              const hasDiffOriginal =
-                movie.originalTitle &&
-                movie.originalTitle.trim().toLowerCase() !==
-                  movie.title.trim().toLowerCase();
+              // 6D.2: film simgesi karosu YOK. Özgün başlık. Tüm satır dokunulabilir.
+              const displayTitle = movie.originalTitle || movie.title;
 
               return (
                 <button
@@ -296,42 +219,31 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                     haptic.light();
                     onSelectMovie(movie);
                   }}
-                  className={`w-full p-2.5 rounded-2xl flex items-center justify-between text-left transition-all border ${
+                  className={`w-full p-3 rounded-xl flex items-center justify-between text-left transition-all border ${
                     isUsed
-                      ? "opacity-40 bg-[#0B0D12] border-white/5 cursor-not-allowed"
-                      : "bg-[#181B22] hover:bg-[#202530] border-white/10 hover:border-[#D9A441] active:translate-y-[1px]"
+                      ? "opacity-35 bg-[#0B0D12] border-white/5 cursor-not-allowed"
+                      : "bg-[#181B22] hover:bg-[#1E222B] border-white/10 hover:border-[#D9A441]/50 active:scale-[0.99]"
                   }`}
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="relative w-9 h-12 rounded-lg overflow-hidden bg-[#0B0D12] shrink-0 border border-white/10">
-                      <SearchMovieThumbnail movie={movie} />
-                    </div>
-
-                    <div className="min-w-0">
-                      <div className="font-sans font-bold text-sm text-[#E8E6E1] truncate flex items-center gap-2">
-                        <span className="truncate">{movie.title}</span>
-                        {movie.mediaType === "SERIES" && (
-                          <span className="text-[9px] font-bold font-mono text-[#4FA3C7] bg-[#4FA3C7]/15 px-1.5 py-0.5 rounded border border-[#4FA3C7]/30 shrink-0">
-                            DİZİ
-                          </span>
-                        )}
-                      </div>
-                      {hasDiffOriginal && (
-                        <div className="text-xs text-[#8A8F9A] truncate mt-0.5 italic">
-                          {movie.originalTitle}
-                        </div>
-                      )}
-                    </div>
+                  <div className="flex items-center gap-2 min-w-0 pr-3">
+                    <span className="font-sans font-bold text-sm text-[#E8E6E1] truncate">
+                      {displayTitle}
+                    </span>
+                    {movie.mediaType === "SERIES" && (
+                      <span className="text-[9px] font-sans font-semibold text-[#4FA3C7] bg-[#4FA3C7]/15 px-1.5 py-0.5 rounded border border-[#4FA3C7]/30 shrink-0">
+                        DİZİ
+                      </span>
+                    )}
                   </div>
 
-                  <div className="shrink-0 text-right pl-2">
+                  <div className="shrink-0 text-right">
                     {isUsed ? (
-                      <span className="font-mono text-[10px] font-bold text-[#8A8F9A] px-2.5 py-1 rounded-lg bg-[#0B0D12]">
+                      <span className="text-[10px] text-[#8A8F9A]">
                         Kullanıldı
                       </span>
                     ) : (
-                      <span className="tactile-btn-amber inline-block text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-xl text-[#0B0D12]">
-                        Seç &rarr;
+                      <span className="text-[#D9A441] font-bold text-sm">
+                        &rarr;
                       </span>
                     )}
                   </div>

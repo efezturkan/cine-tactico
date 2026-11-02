@@ -66,6 +66,19 @@ body {
   background-size: 128px 128px;
 }
 
+/* ─── 35mm Film Sprockets Background Pattern (CSS Perforations) ─── */
+.film-sprockets-left {
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='20' viewBox='0 0 10 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='3' width='7' height='10' rx='1.5' fill='%23FFFFFF' fill-opacity='0.16'/%3E%3C/svg%3E");
+  background-repeat: repeat-y;
+  background-position: center top;
+}
+
+.film-sprockets-right {
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='20' viewBox='0 0 10 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='2' y='3' width='7' height='10' rx='1.5' fill='%23FFFFFF' fill-opacity='0.16'/%3E%3C/svg%3E");
+  background-repeat: repeat-y;
+  background-position: center top;
+}
+
 /* ─── Flat Card Surfaces & 3D Tactile Buttons (DESIGN.md) ─────── */
 .tactile-card {
   background: #14171D;
@@ -183,9 +196,9 @@ input, textarea {
 
 /* ─── Winning line indicator ─────────────────────────────────── */
 @keyframes winning-pulse {
-  0%   { border-color: #F5A623; }
-  50%  { border-color: #FFE082; }
-  100% { border-color: #F5A623; }
+  0%   { border-color: #D9A441; }
+  50%  { border-color: #F0C475; }
+  100% { border-color: #D9A441; }
 }
 
 .winning-beam {

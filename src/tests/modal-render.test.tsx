@@ -111,8 +111,8 @@ const emptyResultHtml = renderToString(
 );
 
 assert(
-  emptyResultHtml.includes("Arşivde henüz kayıt yok."),
-  "Empty search result renders cinematic 'Arşivde henüz kayıt yok.'"
+  emptyResultHtml.includes("Bu adla bir yapım bulamadık."),
+  "Empty search result renders cinematic 'Bu adla bir yapım bulamadık.'"
 );
 
 console.log(`\n=================================================`);

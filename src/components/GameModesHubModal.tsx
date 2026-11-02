@@ -45,8 +45,8 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
     {
       id: "board_costars_legends",
       category: "COSTARS",
-      title: "⭐ Karakter × Karakter (Co-Stars: Ortak Film)",
-      badge: "✨ Yeni & Çok İstenen",
+      title: "Karakter × Karakter",
+      badge: "Yeni",
       color: "text-amber-300",
       border: "border-amber-400/50",
       bg: "bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-yellow-500/15",
@@ -120,7 +120,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
       color: "text-rose-400",
       border: "border-rose-500/50",
       bg: "bg-gradient-to-r from-red-600/20 to-blue-600/20",
-      desc: "Christian Bale (Batman), James Gunn, Ryan Reynolds kesişiminde DC Evreni x Marvel (MCU) x 8.0+ Puan Efsaneleri.",
+      desc: "Christian Bale (Batman), James Gunn, Ryan Reynolds kesişiminde DC Evreni x Marvel x 8.0+ Puan Efsaneleri.",
     },
     {
       id: "board_dune_scifi",
@@ -188,7 +188,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
 
   // 3. MATEMATİKSEL KOMBİNATORYAL OLASILIK LİSTESİ (Kullanıcının fikir üretmesi için tüm varyasyonlar)
   const COMBINATORIAL_VARIATIONS = [
-    { cat: "1. İsim & Kadro", combos: ["Yönetmen x Oyuncu", "Oyuncu x Oyuncu (Ortak Film / Co-Stars)", "Yönetmen x Yönetmen (Ortak Yapım)", "Yönetmen x Görüntü Yönetmeni (Roger Deakins vb.)"] },
+    { cat: "1. İsim & Kadro", combos: ["Yönetmen x Oyuncu", "Oyuncu x Oyuncu (Ortak Film)", "Yönetmen x Yönetmen (Ortak Yapım)", "Yönetmen x Görüntü Yönetmeni (Roger Deakins vb.)"] },
     { cat: "2. Ödül & Prestij", combos: ["Yönetmen x Oscar Kazananı", "Oyuncu x Oscar / Altın Küre", "En İyi Film Adayı x Cannes / Altın Palmiye", "BAFTA x Metascore 90+"] },
     { cat: "3. Dönem & Zaman", combos: ["Dönem (90'lar, 2000'ler, 2010+) x Tür", "Dönem x Yönetmen (Örn: Nolan'ın 2000'ler filmleri)", "Süre (150+ Dakika Epik) x Dönem", "Yıl x Bütçe"] },
     { cat: "4. Finansal & Gişe", combos: ["1 Milyar $ Hasılat x Bağımsız Stüdyo", "Düşük Bütçe (<$5M) x Yüksek Hasılat (Gişe Mucizesi)", "Bütçe ($200M+) x Flop (Gişe Batığı)"] },
