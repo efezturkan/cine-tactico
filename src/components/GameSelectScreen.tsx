@@ -1,154 +1,220 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
-  ArrowLeft, Film, Globe, Shuffle, Award, Zap, Swords, Star,
-  Clock, Bot, Lock, ChevronRight, Layers, Play
+  ArrowLeft,
+  Film,
+  Ticket,
+  Swords,
+  User,
+  Sparkles,
+  Zap,
+  Award,
+  Star,
+  Shuffle,
+  Globe,
+  Clapperboard,
+  Compass,
+  Eye,
+  Layers,
+  Flame,
+  Radio,
+  Clock,
 } from "lucide-react";
 import { PRESET_BOARDS } from "@/data/boards";
 import { audio } from "@/utils/audio";
+
+export type BoardCategory = "Hepsi" | "Karakter" | "Ters Kadraj" | "Konsept" | "Klasik";
 
 interface GameSelectScreenProps {
   onBack: () => void;
   onSelectBoard: (boardIndex: number, mode: "VS_BOT" | "PASS_AND_PLAY" | "ONLINE_ROOM") => void;
   onOpenCustomLobby: () => void;
+  onOpenProfileModal?: () => void;
 }
 
-const BOARD_META = [
+interface BoardPosterMeta {
+  index: number;
+  reel: string;
+  category: "Karakter" | "Ters Kadraj" | "Konsept" | "Klasik";
+  badge: string;
+  desc: string;
+  icon: React.ComponentType<{ className?: string }>;
+  tone: string; // Gradient accent
+}
+
+// 17 Preset Boards Mapped to TUR 3 Poster Meta
+const POSTERS_DATA: BoardPosterMeta[] = [
   {
     index: 0,
     reel: "01",
-    icon: Globe,
-    color: "#d97706",
-    colorBg: "rgba(217,119,6,0.08)",
-    colorBorder: "rgba(217,119,6,0.35)",
-    tag: "KLASİK",
-    badge: "Tüm Filmler",
-    desc: "Nolan, Tarantino, Scorsese. Dijital sinema arşivleriyle 3x3 taktik savaşı.",
-    modes: ["VS_BOT"],
-    difficulty: "NORMAL",
-    isLive: false,
+    category: "Klasik",
+    badge: "AUTEUR",
+    desc: "Nolan, Tarantino, Scorsese · 3x3 Usta Yönetmenler",
+    icon: Clapperboard,
+    tone: "from-amber-500/15 via-transparent to-transparent",
   },
   {
     index: 1,
     reel: "02",
-    icon: Shuffle,
-    color: "#a855f7",
-    colorBg: "rgba(168,85,247,0.08)",
-    colorBorder: "rgba(168,85,247,0.35)",
-    tag: "YILDIZLAR",
-    badge: "Yönetmen × Oyuncu",
-    desc: "DiCaprio, Pitt, Hanks. Sinema tarihinin en büyük yıldızları saha doluyor.",
-    modes: ["VS_BOT"],
-    difficulty: "NORMAL",
-    isLive: false,
+    category: "Karakter",
+    badge: "YILDIZLAR",
+    desc: "De Niro, Brad Pitt, Cillian Murphy · Suç & Oscar",
+    icon: Star,
+    tone: "from-purple-500/15 via-transparent to-transparent",
   },
   {
     index: 2,
     reel: "03",
-    icon: Award,
-    color: "#f59e0b",
-    colorBg: "rgba(245,158,11,0.08)",
-    colorBorder: "rgba(245,158,11,0.35)",
-    tag: "OSCAR",
-    badge: "Tür & Ödüller",
-    desc: "En iyi film, tür kesişimleri, 8.5+ puanlı filmlerin karanlık bulmacaları.",
-    modes: ["VS_BOT"],
-    difficulty: "ZOR",
-    isLive: false,
-    isDailyPickup: true,
+    category: "Konsept",
+    badge: "TERS KÖŞE",
+    desc: "Plot twist & akıl oyunları · Şok edici finaller",
+    icon: Eye,
+    tone: "from-emerald-500/15 via-transparent to-transparent",
   },
   {
     index: 3,
     reel: "04",
-    icon: Zap,
-    color: "#8b151b",
-    colorBg: "rgba(139,21,27,0.12)",
-    colorBorder: "rgba(139,21,27,0.5)",
-    tag: "DC vs MARVEL",
-    badge: "⚡ Canlı Etkinlik",
-    desc: "Batman mı Spider-Man mi? Evrenler çarpışıyor. Bu haftasonu 2x Makara ödülü.",
-    modes: ["VS_BOT"],
-    difficulty: "KOLAY",
-    isLive: true,
+    category: "Konsept",
+    badge: "UZAY & ZAMAN",
+    desc: "Solucan delikleri ve zamansal paradokslar",
+    icon: Compass,
+    tone: "from-cyan-500/15 via-transparent to-transparent",
   },
   {
     index: 4,
     reel: "05",
-    icon: Film,
-    color: "#06b6d4",
-    colorBg: "rgba(6,182,212,0.08)",
-    colorBorder: "rgba(6,182,212,0.35)",
-    tag: "EPİK SCI-FI",
-    badge: "Dune Evreni",
-    desc: "Villeneuve, Nolan, Cameron. Bilim kurgunun altın çağı 3x3 arenaya dönüşüyor.",
-    modes: ["VS_BOT"],
-    difficulty: "ZOR",
-    isLive: false,
+    category: "Konsept",
+    badge: "TEK MEKAN",
+    desc: "Klosterfobik gerilimler ve labirent kurgular",
+    icon: Layers,
+    tone: "from-yellow-600/15 via-transparent to-transparent",
   },
   {
     index: 5,
     reel: "06",
-    icon: Star,
-    color: "#f43f5e",
-    colorBg: "rgba(244,63,94,0.08)",
-    colorBorder: "rgba(244,63,94,0.35)",
-    tag: "90'LAR KÜLT",
-    badge: "Kült Arena",
-    desc: "Pulp Fiction, Fight Club, Léon. 90'ların tüm karanlığını tahtaya taşı.",
-    modes: ["VS_BOT"],
-    difficulty: "ZOR",
-    isLive: false,
+    category: "Konsept",
+    badge: "YAPAY ZEKA",
+    desc: "Makinelerin yükselişi ve insan iradesi",
+    icon: Radio,
+    tone: "from-blue-500/15 via-transparent to-transparent",
   },
   {
     index: 6,
     reel: "07",
-    icon: Film,
-    color: "#eab308",
-    colorBg: "rgba(234,179,8,0.08)",
-    colorBorder: "rgba(234,179,8,0.35)",
-    tag: "SİNEMA DEVLERİ",
-    badge: "Ağır Sıkletler",
-    desc: "DiCaprio, Christian Bale, Brad Pitt. Oscar ve drama devlerinin çatışması.",
-    modes: ["VS_BOT"],
-    difficulty: "NORMAL",
-    isLive: false,
+    category: "Konsept",
+    badge: "ANTİ-KAHRAMAN",
+    desc: "Karanlık figürler ve ahlaki gri alanlar",
+    icon: Flame,
+    tone: "from-rose-600/15 via-transparent to-transparent",
   },
   {
     index: 7,
     reel: "08",
+    category: "Ters Kadraj",
+    badge: "TERS KADRAJ",
+    desc: "Oynamadıkları filmleri bul · Negatif eleme",
+    icon: Shuffle,
+    tone: "from-teal-500/15 via-transparent to-transparent",
+  },
+  {
+    index: 8,
+    reel: "09",
+    category: "Ters Kadraj",
+    badge: "MAFYA HANEDANI",
+    desc: "Kesişmeyen suç yolları · Ters mantık matrisi",
+    icon: Swords,
+    tone: "from-red-600/15 via-transparent to-transparent",
+  },
+  {
+    index: 9,
+    reel: "10",
+    category: "Klasik",
+    badge: "GÜNÜN KADRAJI",
+    desc: "Günün özel film kadrajı · 2x Makara bonusu",
+    icon: Clock,
+    tone: "from-amber-400/20 via-transparent to-transparent",
+  },
+  {
+    index: 10,
+    reel: "11",
+    category: "Karakter",
+    badge: "DC vs MARVEL",
+    desc: "Çizgi roman evrenlerinin sinematik çarpışması",
+    icon: Zap,
+    tone: "from-crimson-600/20 via-transparent to-transparent",
+  },
+  {
+    index: 11,
+    reel: "12",
+    category: "Klasik",
+    badge: "SCI-FI",
+    desc: "Villeneuve, Nolan, Cameron · Bilim kurgu kültleri",
+    icon: Globe,
+    tone: "from-cyan-600/15 via-transparent to-transparent",
+  },
+  {
+    index: 12,
+    reel: "13",
+    category: "Klasik",
+    badge: "90'LAR KÜLT",
+    desc: "Tarantino & Fincher · Bağımsız sinema çağı",
+    icon: Film,
+    tone: "from-orange-500/15 via-transparent to-transparent",
+  },
+  {
+    index: 13,
+    reel: "14",
+    category: "Karakter",
+    badge: "BAŞ AKTÖRLER",
+    desc: "Method acting ustaları · Gişe & prestij savaşı",
+    icon: Sparkles,
+    tone: "from-yellow-500/15 via-transparent to-transparent",
+  },
+  {
+    index: 14,
+    reel: "15",
+    category: "Klasik",
+    badge: "GERİLİM",
+    desc: "Kusursuz planlar, çözümsüz sırlar & akıl oyunları",
+    icon: Eye,
+    tone: "from-slate-500/15 via-transparent to-transparent",
+  },
+  {
+    index: 15,
+    reel: "16",
+    category: "Konsept",
+    badge: "OSCAR",
+    desc: "Akademi heykeli kazananlar & prestij avı",
+    icon: Award,
+    tone: "from-amber-500/20 via-transparent to-transparent",
+  },
+  {
+    index: 16,
+    reel: "17",
+    category: "Karakter",
+    badge: "CO-STARS",
+    desc: "Aynı sette devleşen efsane aktör kadroları",
     icon: Star,
-    color: "#6366f1",
-    colorBg: "rgba(99,102,241,0.08)",
-    colorBorder: "rgba(99,102,241,0.35)",
-    tag: "GERİLİM & GİZEM",
-    badge: "Karanlık Zihinler",
-    desc: "Fincher, Nolan, Villeneuve. Sinematik zeka oyunları ve başyapıtlar.",
-    modes: ["VS_BOT"],
-    difficulty: "ZOR",
-    isLive: false,
+    tone: "from-violet-500/15 via-transparent to-transparent",
   },
 ];
 
-const MODE_LABELS: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
-  VS_BOT: { label: "Yapay Zeka", icon: <Bot className="w-3 h-3" />, color: "text-cyan-400" },
-  ONLINE_ROOM: { label: "Özel Oda", icon: <Swords className="w-3 h-3" />, color: "text-[#8b151b]" },
-};
+const CATEGORIES: BoardCategory[] = [
+  "Hepsi",
+  "Karakter",
+  "Ters Kadraj",
+  "Konsept",
+  "Klasik",
+];
 
-// Sprocket hole decoration
-const SprocketColumn = ({ count = 14 }: { count?: number }) => (
-  <div className="flex flex-col items-center justify-around py-3 gap-0" style={{ minHeight: "100%" }}>
+// 35mm film edge perforations
+const SprocketColumn = ({ count = 28 }: { count?: number }) => (
+  <div className="flex flex-col items-center justify-around py-3 gap-2 h-full">
     {Array.from({ length: count }).map((_, i) => (
       <div
         key={i}
-        style={{
-          width: 10,
-          height: 7,
-          background: "#07080b",
-          borderRadius: 2,
-          border: "1px solid #2a2b35",
-          flexShrink: 0,
-        }}
+        className="w-2.5 h-3.5 rounded-[2px] bg-[#07080b] border border-white/10 shrink-0"
       />
     ))}
   </div>
@@ -158,225 +224,241 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
   onBack,
   onSelectBoard,
   onOpenCustomLobby,
+  onOpenProfileModal,
 }) => {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [hoveredMode, setHoveredMode] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<BoardCategory>("Hepsi");
 
-  const selectedMeta = selectedIndex !== null ? BOARD_META[selectedIndex] : null;
+  // Filtered poster list
+  const filteredPosters = useMemo(() => {
+    if (activeCategory === "Hepsi") return POSTERS_DATA;
+    return POSTERS_DATA.filter((p) => p.category === activeCategory);
+  }, [activeCategory]);
 
-  const handleSelectBoard = (boardIndex: number) => {
+  const handleLaunchPoster = (poster: BoardPosterMeta) => {
     audio.playSelect();
-    setSelectedIndex(boardIndex);
-  };
-
-  const handlePlay = (mode: "VS_BOT") => {
-    if (selectedIndex === null) return;
-    audio.playCombo(3);
-    onSelectBoard(selectedIndex, mode);
+    onSelectBoard(poster.index, "VS_BOT");
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex flex-col font-sans"
-      style={{ background: "#07080b" }}
-    >
-      {/* Film strip borders */}
-      <div className="absolute left-0 top-0 bottom-0 w-5 flex flex-col items-center overflow-hidden opacity-60">
-        <SprocketColumn count={20} />
+    <div className="fixed inset-0 z-50 flex flex-col font-sans bg-[#0B0D12] overflow-hidden select-none">
+      {/* 35mm Film Sprocket Strips (Left & Right) */}
+      <div className="absolute left-0 top-0 bottom-0 w-4 flex flex-col items-center overflow-hidden opacity-30 pointer-events-none z-0">
+        <SprocketColumn count={32} />
       </div>
-      <div className="absolute right-0 top-0 bottom-0 w-5 flex flex-col items-center overflow-hidden opacity-60">
-        <SprocketColumn count={20} />
+      <div className="absolute right-0 top-0 bottom-0 w-4 flex flex-col items-center overflow-hidden opacity-30 pointer-events-none z-0">
+        <SprocketColumn count={32} />
       </div>
 
       {/* Film grain overlay */}
       <div
-        className="absolute inset-0 pointer-events-none z-0 opacity-[0.025]"
+        className="absolute inset-0 pointer-events-none z-0 opacity-[0.02]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
           backgroundSize: "120px 120px",
         }}
       />
 
-      {/* Top velvet accent bar */}
+      {/* Top velvet gold accent line */}
       <div
-        className="h-0.5 w-full flex-shrink-0 z-10 relative"
-        style={{ background: "linear-gradient(to right, transparent, #8b151b 30%, #8b151b 70%, transparent)" }}
+        className="h-0.5 w-full flex-shrink-0 z-20 relative"
+        style={{
+          background: "linear-gradient(to right, transparent, #D9A441 30%, #D9A441 70%, transparent)",
+          opacity: 0.4,
+        }}
       />
 
-      {/* Header */}
-      <div className="relative z-10 flex items-center justify-between px-6 py-3 border-b border-[#1a1c24] mx-5">
+      {/* Top Bar */}
+      <header className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-white/5 bg-[#0B0D12]/95 backdrop-blur-sm">
         <button
-          onClick={() => { audio.playSelect(); onBack(); }}
-          className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors active:scale-95"
+          type="button"
+          onClick={() => {
+            audio.playSelect();
+            onBack();
+          }}
+          className="flex items-center gap-1.5 text-zinc-400 hover:text-white transition-colors active:scale-95 px-2 py-1 -ml-2 rounded-lg"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span className="text-xs font-black uppercase tracking-wider">Geri</span>
+          <ArrowLeft className="w-4 h-4 text-[#D9A441]" />
+          <span className="text-[11px] font-mono font-bold uppercase tracking-wider">Gişe</span>
         </button>
 
         <div className="text-center">
           <div className="text-[9px] font-mono font-bold text-[#D9A441] tracking-[0.25em] uppercase">
             CINE-XOX · 35MM
           </div>
-          <h2 className="text-base font-serif font-bold text-[#E8E6E1] tracking-wider uppercase">
-            VİZYONDAKİLER
-          </h2>
+          <h1 className="text-base sm:text-lg font-serif font-bold text-[#E8E6E1] tracking-wider uppercase">
+            Vizyondakiler
+          </h1>
         </div>
 
-        <div className="w-16" />
+        <div className="text-right">
+          <span className="text-[9px] font-mono text-zinc-500 tracking-wider font-semibold">
+            {filteredPosters.length} AFİŞ
+          </span>
+        </div>
+      </header>
+
+      {/* Filter Strip */}
+      <div className="relative z-20 flex items-center gap-1.5 overflow-x-auto scrollbar-none px-4 sm:px-6 py-2 border-b border-white/5 bg-[#0D0F15]">
+        {CATEGORIES.map((cat) => {
+          const isActive = activeCategory === cat;
+          return (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => {
+                audio.playSelect();
+                setActiveCategory(cat);
+              }}
+              className={`px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider whitespace-nowrap transition-all active:scale-95 ${
+                isActive
+                  ? "bg-[#181B22] text-[#D9A441] border border-[#D9A441]/50 shadow-sm"
+                  : "bg-[#12141A] text-zinc-400 border border-white/5 hover:text-white hover:border-white/15"
+              }`}
+            >
+              {cat}
+            </button>
+          );
+        })}
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar px-5 py-3 relative z-10">
-
-        {/* Board Grid */}
-        <div className="grid grid-cols-1 gap-2 max-w-md mx-auto">
-          {BOARD_META.map((meta) => {
-            const Icon = meta.icon;
-            const isSelected = selectedIndex === meta.index;
-            const board = PRESET_BOARDS[meta.index];
+      {/* 2-Column Poster Grid */}
+      <main className="flex-1 overflow-y-auto px-4 sm:px-6 pt-3 pb-24 custom-scrollbar relative z-10 max-w-xl mx-auto w-full">
+        <div className="grid grid-cols-2 gap-3">
+          {filteredPosters.map((poster) => {
+            const board = PRESET_BOARDS[poster.index];
+            const Icon = poster.icon;
 
             return (
               <button
-                key={meta.index}
-                onClick={() => handleSelectBoard(meta.index)}
-                className="relative text-left rounded-2xl overflow-hidden transition-all active:scale-[0.98] border-2"
-                style={{
-                  background: isSelected
-                    ? `linear-gradient(135deg, ${meta.colorBg}, rgba(7,8,11,0.95))`
-                    : "rgba(14,16,24,0.8)",
-                  borderColor: isSelected ? meta.color : "#1a1c24",
-                  boxShadow: isSelected
-                    ? `0 0 20px ${meta.color}30, 0 4px 16px rgba(0,0,0,0.6)`
-                    : "0 2px 8px rgba(0,0,0,0.4)",
-                }}
+                key={poster.index}
+                type="button"
+                data-poster-card="true"
+                onClick={() => handleLaunchPoster(poster)}
+                className="group relative aspect-[3/4] rounded-xl overflow-hidden text-left p-3 flex flex-col justify-between bg-[#12141A] border border-white/10 hover:border-[#D9A441]/50 transition-all duration-200 active:scale-[0.98] shadow-md"
               >
-                {/* Live badge */}
-                {meta.isLive && (
-                  <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#8b151b] text-white text-[8px] font-black uppercase tracking-wider z-10">
-                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                    CANLI
-                  </div>
-                )}
+                {/* Mood Gradient Accent */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-b ${poster.tone} pointer-events-none`}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D12] via-transparent to-transparent opacity-90 pointer-events-none" />
 
-                {/* Daily badge */}
-                {meta.isDailyPickup && (
-                  <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/50 text-amber-400 text-[8px] font-black z-10">
-                    <Clock className="w-2.5 h-2.5" />
-                    GÜNÜN KADRESİ
-                  </div>
-                )}
+                {/* Viewfinder corner brackets */}
+                <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t border-l border-white/20 pointer-events-none" />
+                <div className="absolute top-1.5 right-1.5 w-2 h-2 border-t border-r border-white/20 pointer-events-none" />
+                <div className="absolute bottom-1.5 left-1.5 w-2 h-2 border-b border-l border-white/20 pointer-events-none" />
+                <div className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b border-r border-white/20 pointer-events-none" />
 
-                <div className="flex items-center gap-3 p-3">
-                  {/* Reel number */}
-                  <div
-                    className="w-11 h-11 rounded-xl flex flex-col items-center justify-center shrink-0 border"
-                    style={{
-                      background: meta.colorBg,
-                      borderColor: meta.colorBorder,
-                    }}
-                  >
-                    <Icon className="w-4 h-4" style={{ color: meta.color }} />
-                    <span className="text-[7px] font-black mt-0.5" style={{ color: meta.color }}>
-                      REEL #{meta.reel}
+                {/* Top Poster Meta */}
+                <div className="relative z-10 flex items-center justify-between w-full">
+                  <span className="font-mono text-[9px] font-semibold text-[#D9A441]/90 tracking-widest">
+                    MAKARA #{poster.reel}
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold tracking-wider uppercase bg-white/5 border border-white/10 text-zinc-300">
+                    {poster.badge}
+                  </span>
+                </div>
+
+                {/* Center Cinema Reel Emblem */}
+                <div className="relative z-10 flex items-center justify-center my-auto py-2">
+                  <div className="w-12 h-12 rounded-full border border-white/5 bg-white/[0.02] flex items-center justify-center text-white/30 group-hover:text-[#D9A441] group-hover:border-[#D9A441]/40 group-hover:scale-105 transition-all duration-200 shadow-inner">
+                    <Icon className="w-5 h-5 stroke-[1.7]" />
+                  </div>
+                </div>
+
+                {/* Bottom Content: Title & Action */}
+                <div className="relative z-10 w-full mt-auto">
+                  <h2 className="font-serif font-bold text-white text-xs sm:text-sm leading-tight line-clamp-2 group-hover:text-[#D9A441] transition-colors">
+                    {board?.title || `Makara #${poster.reel}`}
+                  </h2>
+                  <p className="text-[9px] text-zinc-400 font-sans truncate mt-1">
+                    {poster.desc}
+                  </p>
+
+                  {/* Card Action Row */}
+                  <div className="mt-2 pt-1.5 border-t border-white/5 flex items-center justify-between">
+                    <span className="text-[8px] font-mono text-zinc-500 font-medium tracking-wider">
+                      3×3 MATRİS
+                    </span>
+                    <span className="text-[8px] font-mono text-[#D9A441] font-bold tracking-wider flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+                      BAŞLAT →
                     </span>
                   </div>
-
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                      <span
-                        className="text-[9px] font-black uppercase tracking-wider"
-                        style={{ color: meta.color }}
-                      >
-                        {meta.tag}
-                      </span>
-                      <span className="text-[8px] text-zinc-500 font-bold">·</span>
-                      <span className="text-[8px] text-zinc-500 font-bold uppercase">
-                        {meta.difficulty}
-                      </span>
-                    </div>
-                    <div className="text-xs font-black text-white truncate">
-                      {board?.title || meta.badge}
-                    </div>
-                    <div className="text-[10px] text-zinc-500 mt-0.5 line-clamp-1">
-                      {meta.desc}
-                    </div>
-                  </div>
-
-                  <ChevronRight
-                    className="w-4 h-4 transition-colors shrink-0"
-                    style={{ color: isSelected ? meta.color : "#4b5563" }}
-                  />
                 </div>
               </button>
             );
           })}
         </div>
+      </main>
 
-        {/* Custom / Tournament Row */}
-        <div className="max-w-md mx-auto mt-3">
-          <div
-            className="h-px w-full mb-3"
-            style={{ background: "linear-gradient(to right, transparent, #2a1518, transparent)" }}
-          />
-          <button
-            onClick={() => { audio.playSelect(); onOpenCustomLobby(); }}
-            className="w-full p-3 rounded-2xl border border-[#2a1518] text-left flex items-center gap-3 transition-all active:scale-[0.98] hover:border-[#8b151b]/40"
-            style={{ background: "rgba(139,21,27,0.05)" }}
-          >
-            <div className="w-10 h-10 rounded-xl bg-[#8b151b]/10 border border-[#8b151b]/30 flex items-center justify-center shrink-0">
-              <Swords className="w-4 h-4 text-[#8b151b]" />
-            </div>
-            <div className="flex-1">
-              <div className="text-xs font-black text-white">ÖZEL DÜELLO & TURNUVA</div>
-              <div className="text-[10px] text-zinc-500 mt-0.5">
-                1v1 Özel Oda · 8 Kişilik Şampiyona · Public / Private
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-[#8b151b]/60" />
-          </button>
-        </div>
-
-        {/* Bottom padding */}
-        <div className="h-36" />
-      </div>
-
-      {/* Bottom Action Area — mode picker + play */}
-      <div
-        className="absolute bottom-0 left-0 right-0 z-20 px-5 pb-6 pt-4 border-t border-[#1a1c24]"
+      {/* Bottom Bar — 4 tabs (Vizyondakiler active in gold) */}
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around px-3 pt-2 bg-[#0B0D12]/95 backdrop-blur-md border-t border-white/5 max-w-lg mx-auto"
         style={{
-          background: "linear-gradient(to top, #07080b 80%, transparent)",
+          paddingBottom: "max(0.55rem, env(safe-area-inset-bottom))",
         }}
       >
-        <div className="max-w-md mx-auto">
-          {selectedMeta ? (
-            <>
-              {/* Big Play Button */}
-              <button
-                onClick={() => handlePlay("VS_BOT")}
-                className="w-full py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2.5 transition-all active:scale-[0.98] shadow-2xl"
-                style={{
-                  background: `linear-gradient(135deg, #8b151b, #b01e25)`,
-                  boxShadow: "0 8px 32px rgba(139,21,27,0.5), 0 2px 8px rgba(0,0,0,0.6)",
-                  color: "white",
-                }}
+        {[
+          {
+            label: "Gişe",
+            icon: Ticket,
+            active: false,
+            act: () => {
+              audio.playSelect();
+              onBack();
+            },
+          },
+          {
+            label: "Vizyondakiler",
+            icon: Film,
+            active: true,
+            act: undefined,
+          },
+          {
+            label: "Özel Gösterim",
+            icon: Swords,
+            active: false,
+            act: () => {
+              audio.playSelect();
+              onOpenCustomLobby();
+            },
+          },
+          {
+            label: "Sinefil Kartı",
+            icon: User,
+            active: false,
+            act: () => {
+              audio.playSelect();
+              if (onOpenProfileModal) onOpenProfileModal();
+              else onBack();
+            },
+          },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.label}
+              type="button"
+              onClick={tab.act}
+              className={`flex flex-col items-center transition-all active:scale-95 px-3 py-1 rounded-xl ${
+                tab.active
+                  ? "bg-[#181B22] border border-[#D9A441]/40"
+                  : "hover:bg-white/5 border border-transparent"
+              }`}
+            >
+              <Icon
+                className="w-4 h-4 stroke-[1.8]"
+                style={{ color: tab.active ? "#D9A441" : "#8A8F9A" }}
+              />
+              <span
+                className="text-[9px] font-bold mt-0.5 tracking-wide"
+                style={{ color: tab.active ? "#D9A441" : "#8A8F9A" }}
               >
-                <Play className="w-5 h-5 fill-white" />
-                MAÇ BAŞLAT — {selectedMeta.tag}
-              </button>
-            </>
-          ) : (
-            <div className="py-4 text-center">
-              <div className="text-xs font-black text-zinc-600 uppercase tracking-widest">
-                Yukarıdan bir arena seç
-              </div>
-              <div className="text-[10px] text-zinc-700 mt-1">
-                6 farklı sinema arenası seni bekliyor
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+                {tab.label}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 };

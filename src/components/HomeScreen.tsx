@@ -573,8 +573,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             active: false,
             act: () => {
               audio.playSelect();
-              if (onOpenGameModesHub) onOpenGameModesHub();
-              else if (onOpenGameSelect) onOpenGameSelect();
+              if (onOpenGameSelect) onOpenGameSelect();
+              else if (onOpenGameModesHub) onOpenGameModesHub();
             },
           },
           {

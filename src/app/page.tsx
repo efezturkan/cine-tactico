@@ -836,7 +836,7 @@ function CineXoxApp() {
           }}
           onOpenGameModesHub={() => {
             audio.playSelect();
-            setShowGameModesHub(true);
+            setCurrentView("GAME_SELECT");
           }}
           onOpenDna={() => {
             audio.playSelect();
@@ -890,6 +890,14 @@ function CineXoxApp() {
             setTimeout(() => {
               audio.playSelect();
               setShowCustomLobby(true);
+            }, 100);
+          }}
+          onOpenProfileModal={() => {
+            setCurrentView("HOME");
+            setTimeout(() => {
+              audio.playSelect();
+              setProfileInitialTab("CAREER");
+              setShowProfile(true);
             }, 100);
           }}
         />
