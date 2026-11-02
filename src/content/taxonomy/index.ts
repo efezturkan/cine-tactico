@@ -1,3 +1,4 @@
+import bulkFile from "../ingest/wikidataBulk.json";
 import type {
   AwardId,
   ContentTypeId,
@@ -6,6 +7,11 @@ import type {
   PersonRoleId,
   ReleasePeriodId,
 } from "../types";
+
+const bulkLabels = bulkFile as {
+  countryLabels: Record<string, string>;
+  languageLabels: Record<string, string>;
+};
 
 export const GENRE_LABELS: Record<GenreId, string> = {
   ACTION: "Aksiyon",
@@ -37,6 +43,11 @@ export const CONTENT_TYPE_LABELS: Record<ContentTypeId, string> = {
 };
 
 export const RELEASE_PERIOD_LABELS: Record<ReleasePeriodId, string> = {
+  Y1910s: "1910'lar",
+  Y1920s: "1920'ler",
+  Y1930s: "1930'lar",
+  Y1940s: "1940'lar",
+  Y1950s: "1950'ler",
   Y1960s: "1960'lar",
   Y1970s: "1970'ler",
   Y1980s: "1980'ler",
@@ -75,8 +86,9 @@ export const FRANCHISE_LABELS: Record<FranchiseId, string> = {
   STAR_WARS: "Yıldız Savaşları",
 };
 
-/** Ülkeler yalnızca doğrulanmış kayıt geldikçe eklenir. Kod ISO 3166-1 alpha-2. */
+/** Ülke kodu ISO 3166-1 alpha-2. Etiket Wikidata'daki addır. */
 export const COUNTRY_LABELS: Record<string, string> = {
+  ...bulkLabels.countryLabels,
   DE: "Almanya",
   FR: "Fransa",
   JP: "Japonya",
@@ -84,8 +96,9 @@ export const COUNTRY_LABELS: Record<string, string> = {
   TR: "Türkiye",
 };
 
-/** Diller yalnızca doğrulanmış kayıt geldikçe eklenir. Kod ISO 639-1. */
+/** Dil kodu ISO 639-1. Etiket Wikidata'daki addır. */
 export const LANGUAGE_LABELS: Record<string, string> = {
+  ...bulkLabels.languageLabels,
   de: "Almanca",
   en: "İngilizce",
   ja: "Japonca",

@@ -50,25 +50,32 @@ export const ShopModal: React.FC<ShopModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-md bg-[#0a1122] border border-amber-500/25 rounded-3xl p-5 shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto custom-scrollbar relative text-white">
+      <div
+        className="w-full max-w-md rounded-3xl p-5 flex flex-col max-h-[90vh] overflow-y-auto custom-scrollbar relative text-[#F1EEE7] tactile-card"
+        style={{
+          background: "linear-gradient(180deg, #1E222B 0%, #14171D 100%)",
+          borderColor: "rgba(255,255,255,0.14)",
+          boxShadow: "0 16px 40px rgba(0,0,0,0.85), 0 6px 0 #08090C, inset 0 1px 0 rgba(255,255,255,0.12)",
+        }}
+      >
         {/* Üst Bar: Başlık, Makara Bakiyesi & Kapat */}
-        <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-amber-400" />
+            <div className="w-8 h-8 rounded-xl bg-[#F5A623]/15 border border-[#F5A623]/30 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-[#F5A623]" />
             </div>
             <div>
-              <h2 className="text-sm font-black tracking-wider uppercase font-mono text-zinc-100">
-                SİNEFİL <span className="text-amber-400">İKON PAZARI</span>
+              <h2 className="text-sm font-black tracking-wider uppercase font-mono text-[#F1EEE7]">
+                SİNEFİL <span className="text-[#F5A623]">İKON PAZARI</span>
               </h2>
-              <p className="text-[10px] text-zinc-400 font-bold">Profil Avatarları & Rozetler</p>
+              <p className="text-[10px] text-[#A5A8B0] font-bold">Profil Avatarları &amp; Rozetler</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             {/* Makara Bakiyesi */}
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#11192d] border border-amber-500/35 text-amber-400 text-xs font-black shadow-inner">
-              <Film className="w-3.5 h-3.5 fill-amber-400" />
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#11141A] border border-[#F5A623]/35 text-[#F5A623] text-xs font-black shadow-inner">
+              <Film className="w-3.5 h-3.5 fill-[#F5A623]" />
               <span>{profile.reelsBalance.toLocaleString()}</span>
             </div>
 
@@ -78,7 +85,7 @@ export const ShopModal: React.FC<ShopModalProps> = ({
                 audio.playSelect();
                 onClose();
               }}
-              className="p-1.5 rounded-full bg-[#131f38] text-zinc-400 hover:text-white transition-colors"
+              className="p-2 rounded-xl tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
             >
               <X className="w-4 h-4" />
             </button>

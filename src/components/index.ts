@@ -1,3 +1,4 @@
+export * from "./CineXoxLogo";
 export * from "./Header";
 export * from "./HomeScreen";
 export * from "./GameSelectScreen";

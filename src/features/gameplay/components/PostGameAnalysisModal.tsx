@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import { PlayerSymbol, GameBoard, CellAnswer, Movie } from "@/core";
+import { PlayerSymbol, GameBoard, CellAnswer } from "@/core";
 import { UserProfile } from "@/types/profile";
 import { findMatchingMovies, getSharedActors } from "@/core";
 import { LetterboxdShareCardModal } from "@/features/profile";
@@ -13,12 +12,8 @@ import {
   Share2,
   Heart,
   Eye,
-  Gift,
-  Trophy,
   Sparkles,
   Check,
-  Film,
-  Zap,
   ExternalLink,
   Shuffle,
 } from "lucide-react";
@@ -45,17 +40,13 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   onPlayAgain,
   onNextBoard,
   onBackToHome,
-  onDoubleReward,
 }) => {
   const [selectedCell, setSelectedCell] = useState<number | null>(null);
   const [showAnalysis, setShowAnalysis] = useState<boolean>(false);
   const [showViralShareModal, setShowViralShareModal] = useState<boolean>(false);
   const [isDoubleClaimed, setIsDoubleClaimed] = useState<boolean>(false);
-  const [isWatchingAd, setIsWatchingAd] = useState<boolean>(false);
-  const [adTimer, setAdTimer] = useState<number>(3);
   const [isShared, setIsShared] = useState<boolean>(false);
   const [isRated, setIsRated] = useState<boolean>(false);
-  const [rewardSeconds, setRewardSeconds] = useState<number>(7);
   const adIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -73,18 +64,8 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
         clearInterval(adIntervalRef.current);
         adIntervalRef.current = null;
       }
-      setIsWatchingAd(false);
       setIsDoubleClaimed(false);
     }
-  }, [winner]);
-
-  // 7s Geri sayım (7s double reward badge)
-  useEffect(() => {
-    if (winner === null) return;
-    const interval = setInterval(() => {
-      setRewardSeconds(prev => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(interval);
   }, [winner]);
 
   if (winner === null) return null;
@@ -92,16 +73,16 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   const isVictory = winner === "X";
   const isDraw = winner === "DRAW";
 
-  // Oyuncunun (X) verdiği cevapların ortalama nadirlik (rarity) bonusunu hesapla
-  const playerAnswers = cells.filter(c => c && c.answeredBy === "X");
-  const rarityScore = playerAnswers.length > 0
-    ? Math.round(
-        playerAnswers.reduce((acc, c) => {
-          const bonus = c?.rarityScore ?? (c?.movie?.hasOscar ? 5 : 8);
-          return acc + bonus;
-        }, 0) / playerAnswers.length
-      )
-    : 5;
+  const playerAnswers = cells.filter((c) => c && c.answeredBy === "X");
+  const rarityScore =
+    playerAnswers.length > 0
+      ? Math.round(
+          playerAnswers.reduce((acc, c) => {
+            const bonus = c?.rarityScore ?? (c?.movie?.hasOscar ? 5 : 8);
+            return acc + bonus;
+          }, 0) / playerAnswers.length
+        )
+      : 5;
 
   const isReverseCast = board.boardMode === "REVERSE_CAST";
 
@@ -121,29 +102,6 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
         )
       : [];
 
-  const handleClaimDouble = () => {
-    if (isDoubleClaimed || isWatchingAd) return;
-    setIsWatchingAd(true);
-    setAdTimer(3);
-    if (adIntervalRef.current) clearInterval(adIntervalRef.current);
-    adIntervalRef.current = setInterval(() => {
-      setAdTimer(t => {
-        if (t <= 1) {
-          if (adIntervalRef.current) {
-            clearInterval(adIntervalRef.current);
-            adIntervalRef.current = null;
-          }
-          setIsWatchingAd(false);
-          setIsDoubleClaimed(true);
-          audio.playSuccess();
-          if (onDoubleReward) onDoubleReward();
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-  };
-
   const handleShareResult = () => {
     audio.playSelect();
     const resultText = `🎬 CineXOX SONUCU 🏆\n${
@@ -160,25 +118,32 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-300 select-none">
-      <div className="w-full max-w-sm bg-[#0e1018] border border-amber-500/40 rounded-3xl p-5 shadow-[0_12px_40px_rgba(0,0,0,0.85)] flex flex-col relative text-white max-h-[95vh] overflow-y-auto custom-scrollbar">
+      <div
+        className="w-full max-w-sm rounded-3xl p-5 flex flex-col relative text-[#F1EEE7] max-h-[95vh] overflow-y-auto custom-scrollbar tactile-card"
+        style={{
+          background: "linear-gradient(180deg, #1E222B 0%, #14171D 100%)",
+          borderColor: isVictory ? "rgba(245,166,35,0.55)" : "rgba(255,255,255,0.16)",
+          boxShadow: "0 16px 40px rgba(0,0,0,0.85), 0 6px 0 #08090C, inset 0 1px 0 rgba(255,255,255,0.12)",
+        }}
+      >
         {/* 1. TAHTA İNCELEME GÖRÜNÜMÜ (CHESS.COM STYLE CELL ANALYSIS) */}
         {showAnalysis ? (
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-sky-500/15 mb-3">
-              <h3 className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-3">
+              <h3 className="text-xs font-black text-[#F5A623] uppercase tracking-wider flex items-center gap-1.5 font-mono">
                 <Eye className="w-4 h-4" />
                 <span>Tahta İncelemesi (Hamle Analizi)</span>
               </h3>
               <button
                 type="button"
                 onClick={() => setShowAnalysis(false)}
-                className="text-[10px] font-black text-cyan-400 hover:underline"
+                className="text-[10px] font-black text-[#00D5E8] hover:underline"
               >
                 &larr; Özet Ekrana Dön
               </button>
             </div>
 
-            <p className="text-[11px] text-zinc-400 mb-3">
+            <p className="text-[11px] text-[#A5A8B0] mb-3">
               Bir hücreye tıklayarak o kesişime uyabilecek diğer sinema başyapıtlarını inceleyin:
             </p>
 
@@ -192,12 +157,12 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                   }}
                   className={`p-2 rounded-xl text-center text-[10px] font-bold border transition-all truncate ${
                     selectedCell === idx
-                      ? "bg-amber-400/20 border-amber-400 text-amber-300 scale-105"
+                      ? "bg-[#F5A623]/20 border-[#F5A623] text-[#F5A623] scale-105"
                       : cell
                       ? cell.answeredBy === "X"
-                        ? "bg-cyan-950/40 border-cyan-500/50 text-cyan-300"
-                        : "bg-rose-950/40 border-rose-500/50 text-rose-300"
-                      : "bg-[#0b101f] border-zinc-800 text-zinc-500"
+                        ? "bg-[#F5A623]/15 border-[#F5A623]/50 text-[#F5A623]"
+                        : "bg-[#00D5E8]/15 border-[#00D5E8]/50 text-[#00D5E8]"
+                      : "bg-[#0F1115] border-white/10 text-[#A5A8B0]"
                   }`}
                 >
                   {cell?.isLockedNeutral
@@ -210,11 +175,12 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
             </div>
 
             {selectedCell !== null && (
-              <div className="bg-[#0b101f] border border-sky-500/20 rounded-2xl p-3 mb-3">
-                <div className="text-[11px] font-bold text-zinc-300 mb-1">
+              <div className="bg-[#0F1115] border border-white/12 rounded-2xl p-3 mb-3">
+                <div className="text-[11px] font-bold text-[#F1EEE7] mb-1.5">
                   Kesişim:{" "}
-                  <span className="text-amber-400">
-                    {board.rows[Math.floor(selectedCell / 3)].label} + {board.cols[selectedCell % 3].label}
+                  <span className="text-[#F5A623]">
+                    {board.rows[Math.floor(selectedCell / 3)].label} +{" "}
+                    {board.cols[selectedCell % 3].label}
                   </span>
                 </div>
                 <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
@@ -222,27 +188,33 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                     validActorsForSelected.map((actor, aIdx) => (
                       <div
                         key={aIdx}
-                        className="text-[10px] p-2 rounded-xl bg-[#121c33] border border-zinc-800 text-cyan-200 flex items-center justify-between gap-2"
+                        className="text-[10px] p-2 rounded-xl bg-[#181B22] border border-white/10 text-[#00D5E8] flex items-center justify-between gap-2"
                       >
                         <span className="font-bold truncate">🎭 {actor}</span>
-                        <span className="text-[8px] font-mono text-cyan-400 font-bold">Ortak Aktör</span>
+                        <span className="text-[8px] font-mono text-[#00D5E8] font-bold">
+                          Ortak Aktör
+                        </span>
                       </div>
                     ))
                   ) : (
-                    validMoviesForSelected.map(m => {
-                      const letterboxdSearchUrl = `https://letterboxd.com/search/${encodeURIComponent(m.title)}/`;
+                    validMoviesForSelected.map((m) => {
+                      const letterboxdSearchUrl = `https://letterboxd.com/search/${encodeURIComponent(
+                        m.title
+                      )}/`;
                       return (
                         <div
                           key={m.id}
-                          className="text-[10px] p-2 rounded-xl bg-[#121c33] border border-zinc-800 text-zinc-200 flex items-center justify-between gap-2"
+                          className="text-[10px] p-2 rounded-xl bg-[#181B22] border border-white/10 text-[#F1EEE7] flex items-center justify-between gap-2"
                         >
-                          <span className="font-bold truncate">{m.title} ({m.year})</span>
+                          <span className="font-bold truncate">
+                            {m.title} ({m.year})
+                          </span>
                           <a
                             href={letterboxdSearchUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-[9px] font-black transition-all"
-                            title="Letterboxd'da İncele & Watchlist'e At"
+                            className="shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#8EBB70]/15 hover:bg-[#8EBB70]/25 text-[#8EBB70] border border-[#8EBB70]/35 text-[9px] font-black transition-all"
+                            title="Letterboxd'da İncele"
                           >
                             <span>Letterboxd</span>
                             <ExternalLink className="w-2.5 h-2.5" />
@@ -258,24 +230,36 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
             <button
               type="button"
               onClick={() => setShowAnalysis(false)}
-              className="w-full py-2.5 rounded-xl bg-[#121c33] border border-zinc-700 text-white font-black text-xs"
+              className="w-full py-2.5 rounded-xl tactile-btn-surface text-[#F1EEE7] font-black text-xs"
             >
               Tamam
             </button>
           </div>
         ) : (
-          /* 2. CINEXOX BİREBİR KAZANMA / KAYBETME EKRANI */
+          /* 2. CINEXOX FINAL FRAME KAZANMA / KAYBETME EKRANI */
           <div className="flex flex-col items-center text-center">
+            <div className="text-[9px] font-mono font-black uppercase tracking-[0.22em] text-[#A5A8B0] mb-1">
+              KODAK 5219 · FINAL FRAME
+            </div>
+
             {/* Büyük Altın Taç 👑 */}
-            <div className="mb-2">
-              <Crown className="w-16 h-16 text-amber-400 fill-amber-400 animate-bounce" />
+            <div className="mb-1.5">
+              <Crown
+                className={`w-14 h-14 ${
+                  isVictory
+                    ? "text-[#F5A623] fill-[#F5A623] animate-bounce"
+                    : isDraw
+                    ? "text-[#00D5E8] fill-[#00D5E8]"
+                    : "text-[#A5A8B0]"
+                }`}
+              />
             </div>
 
             {/* VICTORY! / DEFEAT! */}
-            <h2 className="text-2xl font-black text-amber-400 font-mono tracking-widest uppercase">
+            <h2 className="text-2xl font-black text-[#F5A623] font-mono tracking-widest uppercase">
               {isVictory ? "VICTORY!" : isDraw ? "BERABERE!" : "DEFEAT!"}
             </h2>
-            <p className="text-xs text-zinc-400 font-bold mt-0.5">
+            <p className="text-xs text-[#A5A8B0] font-bold mt-0.5">
               {isVictory
                 ? "Harika maç şampiyon!"
                 : isDraw
@@ -284,49 +268,55 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
             </p>
 
             {/* Ödül & Skor Kutusu */}
-            <div className="w-full my-4 p-3 rounded-2xl bg-[#0b101f] border border-sky-500/15">
+            <div className="w-full my-4 p-3 rounded-2xl bg-[#181B22] border border-white/12 shadow-inner">
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div>
-                  <span className="text-[10px] font-bold text-zinc-400 block">★ XP</span>
-                  <span className="text-base font-black text-cyan-400">
+                  <span className="text-[10px] font-bold text-[#A5A8B0] block font-mono">★ XP</span>
+                  <span className="text-base font-black text-[#00D5E8] font-mono">
                     +{isVictory ? (isDoubleClaimed ? 120 : 60) : 25}
                   </span>
                 </div>
-                <div className="border-x border-zinc-800">
-                  <span className="text-[10px] font-bold text-zinc-400 block">🏆 SCORE</span>
-                  <span className="text-base font-black text-emerald-400">
+                <div className="border-x border-white/10">
+                  <span className="text-[10px] font-bold text-[#A5A8B0] block font-mono">🏆 SCORE</span>
+                  <span className="text-base font-black text-[#8EBB70] font-mono">
                     +{isVictory ? (isDoubleClaimed ? 46 : 23) : 5}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-zinc-400 block">🎞️ COINS</span>
-                  <span className="text-base font-black text-amber-400">
+                  <span className="text-[10px] font-bold text-[#A5A8B0] block font-mono">🎞️ COINS</span>
+                  <span className="text-base font-black text-[#F5A623] font-mono">
                     +{isVictory ? (isDoubleClaimed ? 110 : 55) : 20}
                   </span>
                 </div>
               </div>
 
               {/* Hard Bonus & Rarity (Nadirlik) Rozeti */}
-              <div className="mt-2.5 pt-2 border-t border-sky-500/10 flex flex-col gap-1.5">
+              <div className="mt-2.5 pt-2 border-t border-white/10 flex flex-col gap-1.5">
                 <div className="flex items-center justify-between px-1">
                   <div className="flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                    <span className="text-[10px] font-bold text-zinc-300">Nadirlik Puanı (Rarity):</span>
+                    <Sparkles className="w-3.5 h-3.5 text-[#F5A623]" />
+                    <span className="text-[10px] font-bold text-[#F1EEE7]">
+                      Nadirlik Puanı (Rarity):
+                    </span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-black text-amber-400 font-mono">%{rarityScore}</span>
-                    <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-400/15 text-amber-300 border border-amber-400/30">
-                      {rarityScore < 20 ? "💎 Çok Nadir Keşif" : rarityScore < 35 ? "⭐ Prestijli Seçim" : "🍿 Popüler"}
+                    <span className="text-xs font-black text-[#F5A623] font-mono">%{rarityScore}</span>
+                    <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-[#F5A623]/15 text-[#F5A623] border border-[#F5A623]/30">
+                      {rarityScore < 20
+                        ? "💎 Çok Nadir Keşif"
+                        : rarityScore < 35
+                        ? "⭐ Prestijli Seçim"
+                        : "🍿 Popüler"}
                     </span>
                   </div>
                 </div>
-                <div className="text-[9px] text-zinc-400 text-left px-1">
-                  Seçtiğin filmler diğer oyuncuların ortalama %{rarityScore}'si tarafından akla getirildi.
+                <div className="text-[9px] text-[#A5A8B0] text-left px-1">
+                  Seçtiğin filmler diğer oyuncuların ortalama %{rarityScore}&apos;si tarafından akla getirildi.
                 </div>
               </div>
             </div>
 
-            {/* BUTON: PLAY AGAIN & NEXT BOARD (Tekrar Oyna & Farklı Tahta) */}
+            {/* BUTON: PLAY AGAIN & NEXT BOARD */}
             <div className="grid grid-cols-2 gap-2 w-full mb-2.5">
               <button
                 type="button"
@@ -334,7 +324,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                   audio.playSelect();
                   onPlayAgain();
                 }}
-                className="py-3 px-2 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-400 text-black font-black text-xs flex items-center justify-center gap-1.5 shadow-xl active:scale-[0.98] transition-all"
+                className="py-3 px-2 rounded-2xl tactile-btn-amber font-black text-xs flex items-center justify-center gap-1.5"
               >
                 <RotateCcw className="w-3.5 h-3.5 stroke-[3]" />
                 <span>TEKRAR OYNA</span>
@@ -346,7 +336,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                   audio.playSelect();
                   onNextBoard();
                 }}
-                className="py-3 px-2 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-black text-xs flex items-center justify-center gap-1.5 shadow-xl active:scale-[0.98] transition-all"
+                className="py-3 px-2 rounded-2xl tactile-btn-cyan font-black text-xs flex items-center justify-center gap-1.5"
               >
                 <Shuffle className="w-3.5 h-3.5 stroke-[3]" />
                 <span>FARKLI TAHTA</span>
@@ -360,9 +350,9 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                 audio.playSelect();
                 setShowViralShareModal(true);
               }}
-              className="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-black font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all mb-2"
+              className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#8EBB70] via-teal-500 to-[#00D5E8] text-[#0F1115] font-black text-xs flex items-center justify-center gap-2 shadow-[0_4px_0_#2F5222] active:translate-y-[2px] transition-all mb-2.5"
             >
-              <Sparkles className="w-4 h-4 text-black stroke-[2.5]" />
+              <Sparkles className="w-4 h-4 text-[#0F1115] stroke-[2.5]" />
               <span>🎞️ 35MM VİRAL KART (LETTERBOXD & INSTAGRAM)</span>
             </button>
 
@@ -371,9 +361,13 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
               <button
                 type="button"
                 onClick={handleShareResult}
-                className="py-2.5 rounded-xl bg-amber-400/90 hover:bg-amber-400 text-black font-black text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all"
+                className="py-2.5 rounded-xl tactile-btn-surface text-[#F5A623] font-black text-xs flex items-center justify-center gap-1.5"
               >
-                {isShared ? <Check className="w-3.5 h-3.5 text-black" /> : <Share2 className="w-3.5 h-3.5" />}
+                {isShared ? (
+                  <Check className="w-3.5 h-3.5 text-[#8EBB70]" />
+                ) : (
+                  <Share2 className="w-3.5 h-3.5" />
+                )}
                 <span>{isShared ? "Kopyalandı!" : "SHARE"}</span>
               </button>
 
@@ -383,28 +377,28 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                   audio.playVictory();
                   setIsRated(true);
                 }}
-                className={`py-2.5 rounded-xl font-black text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all ${
+                className={`py-2.5 rounded-xl font-black text-xs flex items-center justify-center gap-1.5 transition-all ${
                   isRated
-                    ? "bg-emerald-500 text-black border border-emerald-400"
-                    : "bg-amber-400/90 hover:bg-amber-400 text-black"
+                    ? "bg-[#8EBB70] text-[#0F1115] border border-[#8EBB70]"
+                    : "tactile-btn-surface text-[#F5A623]"
                 }`}
               >
-                <Heart className={`w-3.5 h-3.5 ${isRated ? "fill-black text-black" : "fill-black"}`} />
+                <Heart className="w-3.5 h-3.5 fill-current" />
                 <span>{isRated ? "⭐ TEŞEKKÜRLER!" : "RATE US"}</span>
               </button>
             </div>
 
-            {/* BUTON 5 & 6: REVIEW BOARD & BACK TO LOBBY (Alt İkili Butonlar) */}
-            <div className="grid grid-cols-2 gap-2 w-full pt-2 border-t border-sky-500/10">
+            {/* BUTON 5 & 6: REVIEW BOARD & BACK TO LOBBY */}
+            <div className="grid grid-cols-2 gap-2 w-full pt-2 border-t border-white/10">
               <button
                 type="button"
                 onClick={() => {
                   audio.playSelect();
                   setShowAnalysis(true);
                 }}
-                className="py-2.5 rounded-xl bg-[#121c33] hover:bg-[#182747] text-zinc-300 font-black text-[11px] flex items-center justify-center gap-1.5 border border-zinc-700 transition-all active:scale-95"
+                className="py-2.5 rounded-xl tactile-btn-surface text-[#F1EEE7] font-black text-[11px] flex items-center justify-center gap-1.5"
               >
-                <Eye className="w-3.5 h-3.5 text-cyan-400" />
+                <Eye className="w-3.5 h-3.5 text-[#00D5E8]" />
                 <span>REVIEW BOARD</span>
               </button>
 
@@ -414,9 +408,9 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                   audio.playSelect();
                   if (onBackToHome) onBackToHome();
                 }}
-                className="py-2.5 rounded-xl bg-[#121c33] hover:bg-[#182747] text-zinc-300 font-black text-[11px] flex items-center justify-center gap-1.5 border border-zinc-700 transition-all active:scale-95"
+                className="py-2.5 rounded-xl tactile-btn-surface text-[#F1EEE7] font-black text-[11px] flex items-center justify-center gap-1.5"
               >
-                <Home className="w-3.5 h-3.5 text-amber-400" />
+                <Home className="w-3.5 h-3.5 text-[#F5A623]" />
                 <span>BACK TO LOBBY</span>
               </button>
             </div>

@@ -42,7 +42,9 @@ interface BulkProduction {
   awards: BulkAward[];
 }
 
-const bulk: { productions: BulkProduction[] } = { productions: [] };
+import bulkFile from "./wikidataBulk.json";
+
+const bulk = bulkFile as unknown as { productions: BulkProduction[] };
 const VERIFIED_ON = "2026-11-01";
 
 function provenance(externalId: string) {
@@ -69,11 +71,12 @@ export function mergeWikidataCatalog(catalog: CanonicalCatalog): CanonicalCatalo
   let awards = catalog.awards.filter((award) => award.provenance.verificationStatus === "VERIFIED");
 
   const byExternal = new Map<string, MovieEntity | TvSeriesEntity>();
-  const byTitle = new Map<string, MovieEntity | TvSeriesEntity>();
+  const byTitleYear = new Map<string, MovieEntity | TvSeriesEntity>();
+  const titleYearKey = (title: string, year: number) => `${normalizeForSearch(title)}|${year}`;
   for (const production of [...movies, ...series]) {
     if (production.provenance.externalId) byExternal.set(production.provenance.externalId, production);
-    const titled = byTitle.get(normalizeForSearch(production.title));
-    if (!titled) byTitle.set(normalizeForSearch(production.title), production);
+    const key = titleYearKey(production.title, production.year);
+    if (!byTitleYear.has(key)) byTitleYear.set(key, production);
   }
   const existingSeries = new Set(series.map((item) => item.id));
   const peopleByExternal = new Map<string, Person>();
@@ -156,11 +159,16 @@ export function mergeWikidataCatalog(catalog: CanonicalCatalog): CanonicalCatalo
     creditKeys.add(key);
   };
 
+  let created = 0;
+  let skipped = 0;
   for (const record of bulk.productions) {
     let production = byExternal.get(record.wikidataId);
     if (!production) {
-      const titled = byTitle.get(normalizeForSearch(record.title));
-      if (titled?.provenance.externalId && titled.provenance.externalId !== record.wikidataId) continue;
+      const titled = byTitleYear.get(titleYearKey(record.title, record.year));
+      if (titled?.provenance.externalId && titled.provenance.externalId !== record.wikidataId) {
+        skipped += 1;
+        continue;
+      }
       production = titled;
     }
 
@@ -184,8 +192,9 @@ export function mergeWikidataCatalog(catalog: CanonicalCatalog): CanonicalCatalo
         : { ...base, contentType: "TV_SERIES" };
       if (production.contentType === "MOVIE") movies.push(production);
       else series.push(production);
+      created += 1;
       byExternal.set(record.wikidataId, production);
-      byTitle.set(normalizeForSearch(record.title), production);
+      byTitleYear.set(titleYearKey(record.title, record.year), production);
     } else {
       if (!production.provenance.externalId) production.provenance = provenance(record.wikidataId);
       if (!production.originalTitle && record.originalTitle) production.originalTitle = record.originalTitle;
@@ -234,7 +243,12 @@ export function mergeWikidataCatalog(catalog: CanonicalCatalog): CanonicalCatalo
     production.awardIds = winnerOrgs.get(production.id) ?? [];
   }
 
-  credits = credits.filter((credit, index, all) => all.findIndex((item) => item.id === credit.id) === index);
+  const seenCreditIds = new Set<string>();
+  credits = credits.filter((credit) => {
+    if (seenCreditIds.has(credit.id)) return false;
+    seenCreditIds.add(credit.id);
+    return true;
+  });
 
   return {
     movies,

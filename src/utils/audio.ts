@@ -80,29 +80,41 @@ export class AudioService {
     osc.stop(this.context.currentTime + 0.05);
   }
 
-  // Chess.com tarzı tok ahşap/taş hamle vuruş sesi
+  // Analog klaket / mekanik arcade hücre mühürleme sesi (çift katmanlı tok darbe + mekanik klik)
   public playChessMove(): void {
     if (this.muted) return;
     this.initializeContext();
     if (!this.context) return;
 
     const now = this.context.currentTime;
-    const osc = this.context.createOscillator();
-    const gain = this.context.createGain();
 
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(220, now);
-    osc.frequency.exponentialRampToValueAtTime(70, now + 0.04);
+    // 1. Katman: Tok mekanik gövde vuruşu
+    const bodyOsc = this.context.createOscillator();
+    const bodyGain = this.context.createGain();
+    bodyOsc.type = "sine";
+    bodyOsc.frequency.setValueAtTime(210, now);
+    bodyOsc.frequency.exponentialRampToValueAtTime(62, now + 0.055);
+    bodyGain.gain.setValueAtTime(0.36, now);
+    bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+    bodyOsc.connect(bodyGain);
+    bodyGain.connect(this.context.destination);
+    this.registerOscillator(bodyOsc);
+    bodyOsc.start(now);
+    bodyOsc.stop(now + 0.065);
 
-    gain.gain.setValueAtTime(0.35, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
-
-    osc.connect(gain);
-    gain.connect(this.context.destination);
-
-    this.registerOscillator(osc);
-    osc.start(now);
-    osc.stop(now + 0.05);
+    // 2. Katman: Kısa klaket mandalı klik geçişi
+    const clickOsc = this.context.createOscillator();
+    const clickGain = this.context.createGain();
+    clickOsc.type = "triangle";
+    clickOsc.frequency.setValueAtTime(1180, now);
+    clickOsc.frequency.exponentialRampToValueAtTime(340, now + 0.018);
+    clickGain.gain.setValueAtTime(0.16, now);
+    clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+    clickOsc.connect(clickGain);
+    clickGain.connect(this.context.destination);
+    this.registerOscillator(clickOsc);
+    clickOsc.start(now);
+    clickOsc.stop(now + 0.022);
   }
 
   // Kafa Topu 2 tarzı süper güç / joker açılış sesi

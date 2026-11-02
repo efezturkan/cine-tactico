@@ -2,21 +2,15 @@
 
 import React, { useState } from "react";
 import { MatchRecord, UserProfile } from "@/types/profile";
-import { GameBoard, CellAnswer } from "@/core";
-import { findMatchingMovies, getSharedActors } from "@/core";
+import { GameBoard, findMatchingMovies, getSharedActors } from "@/core";
 import { LetterboxdShareCardModal } from "@/features/profile";
 import { audio } from "@/utils/audio";
 import {
-  Trophy,
-  Swords,
   X,
   Eye,
   Share2,
-  Calendar,
-  Sparkles,
   ExternalLink,
-  ChevronRight,
-  RotateCcw,
+  Film,
 } from "lucide-react";
 
 interface MatchHistoryModalProps {
@@ -38,7 +32,19 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
 
   const matches: MatchRecord[] = profile.matchHistory ?? [];
 
-  // Seçili maçın incelenen hücresindeki alternatif çözümler
+  const formatDate = (ts: number) => {
+    try {
+      return new Intl.DateTimeFormat("tr-TR", {
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(new Date(ts));
+    } catch {
+      return "";
+    }
+  };
+
   const getInspectSolutions = (board: GameBoard, cellIdx: number) => {
     const r = Math.floor(cellIdx / 3);
     const c = cellIdx % 3;
@@ -55,32 +61,29 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-xl animate-in fade-in duration-200 select-none">
-      <div className="w-full max-w-lg bg-[#0e121d] border-2 border-sky-500/30 rounded-3xl p-5 shadow-2xl flex flex-col relative text-white max-h-[92vh] overflow-y-auto custom-scrollbar">
-        {/* Üst Bar */}
-        <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
-          <div className="flex items-center gap-2">
-            <Swords className="w-5 h-5 text-amber-400" />
-            <div>
-              <h3 className="text-sm font-black text-white uppercase tracking-wider font-mono">
-                SAVAŞ GEÇMİŞİ &middot; AKTİVİTE GÜNLÜĞÜ
-              </h3>
-              <span className="text-[10px] text-zinc-400 font-bold">
-                Clash Royale Formatı &middot; Tahta İncelemesi &middot; Son 20 Düello
-              </span>
-            </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm select-none">
+      <div className="w-full max-w-md animate-card-in bg-panel border border-white/10 rounded-2xl p-5 shadow-2xl flex flex-col relative text-ink max-h-[90dvh] overflow-y-auto custom-scrollbar">
+        {/* Top Bar */}
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+          <div>
+            <h3 className="font-display text-2xl font-extrabold italic uppercase tracking-wide text-ink">
+              MAÇ GEÇMİŞİ
+            </h3>
+            <span className="text-xs text-muted">
+              Son Karşılaşmalar &amp; 3×3 Tahta Kayıtları
+            </span>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full bg-zinc-800 text-zinc-400 hover:text-white"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted transition hover:bg-white/5 hover:text-ink"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* 1. TAHTA İNCELEME MODU (Detay Görünüm) */}
+        {/* 1. BOARD INSPECTION VIEW */}
         {selectedMatch ? (
-          <div className="my-3 space-y-3 animate-in fade-in">
+          <div className="my-3 space-y-3">
             <div className="flex items-center justify-between">
               <button
                 onClick={() => {
@@ -88,124 +91,140 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
                   setSelectedMatch(null);
                   setInspectCellIndex(null);
                 }}
-                className="text-xs font-black text-cyan-400 hover:underline flex items-center gap-1"
+                className="text-xs font-bold text-gold hover:underline flex items-center gap-1"
               >
-                &larr; Maç Listesine Dön
+                &larr; Listeye Dön
               </button>
               <button
                 onClick={() => {
                   audio.playSelect();
                   setShareMatch(selectedMatch);
                 }}
-                className="px-3 py-1 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-400/40 text-[10px] font-black flex items-center gap-1 active:scale-95"
+                className="tactile-btn-surface px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 text-[#F1EEE7]"
               >
-                <Share2 className="w-3 h-3" />
-                <span>Letterboxd Kartı</span>
+                <Share2 className="w-3.5 h-3.5 text-gold" />
+                <span>Maç Kartı</span>
               </button>
             </div>
 
-            {/* Maç Başlığı */}
-            <div className="p-3 rounded-2xl bg-black/60 border border-zinc-800 flex items-center justify-between">
-              <div>
-                <span className="text-xs font-black text-white block">
+            {/* Match Record Header */}
+            <div className="p-3.5 rounded-xl bg-night border border-white/10 flex items-center justify-between">
+              <div className="min-w-0 pr-2">
+                <span className="font-display text-base font-bold text-ink block truncate">
                   {selectedMatch.board.title}
                 </span>
-                <span className="text-[10px] text-zinc-400 font-mono mt-0.5 block">
-                  vs @{selectedMatch.opponent.name} &middot; {selectedMatch.modeLabel}
+                <span className="text-xs text-muted mt-0.5 block">
+                  vs {selectedMatch.opponent.name} · {formatDate(selectedMatch.timestamp)}
                 </span>
               </div>
               <div
-                className={`px-2.5 py-1 rounded-xl text-xs font-mono font-black border ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-display font-bold uppercase tracking-wider border shrink-0 ${
                   selectedMatch.outcome === "VICTORY"
-                    ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40"
-                    : "bg-rose-500/20 text-rose-400 border-rose-500/40"
+                    ? "bg-gold/15 text-gold border-gold/40"
+                    : selectedMatch.outcome === "DRAW"
+                    ? "bg-control text-muted border-white/10"
+                    : "bg-team-blue/15 text-team-blue border-team-blue/40"
                 }`}
               >
-                {selectedMatch.outcome === "VICTORY" ? "👑 ZAFER" : "BOZGUN"} (+{selectedMatch.trophyDelta} 🏆)
+                {selectedMatch.outcome === "VICTORY"
+                  ? "GALİBİYET"
+                  : selectedMatch.outcome === "DRAW"
+                  ? "BERABERE"
+                  : "MAĞLUBİYET"}
               </div>
             </div>
 
-            {/* 3x3 İnteraktif İnceleme Grid'i */}
+            {/* 3x3 Interactive Inspection Grid */}
             <div>
-              <div className="text-[10px] font-black text-zinc-400 uppercase tracking-widest px-1 mb-1.5">
-                Karelere Tıklayarak Alternatif Çözümleri Görün:
+              <div className="text-xs text-muted px-1 mb-2">
+                Karelere dokunarak olası tüm çözümleri incele:
               </div>
               <div className="grid grid-cols-3 gap-2">
-                {selectedMatch.cells.map((cell, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      audio.playSelect();
-                      setInspectCellIndex(idx);
-                    }}
-                    className={`p-2 rounded-xl text-left border flex flex-col justify-between min-h-[64px] transition-all active:scale-95 ${
-                      inspectCellIndex === idx
-                        ? "ring-2 ring-amber-400 scale-[1.03] z-10"
-                        : ""
-                    } ${
-                      cell?.answeredBy === "X"
-                        ? "bg-cyan-950/40 border-cyan-500/60 text-cyan-200"
-                        : cell?.answeredBy === "O"
-                        ? "bg-rose-950/40 border-rose-500/60 text-rose-200"
-                        : "bg-zinc-900 border-zinc-800 text-zinc-500"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[8px] font-mono font-black uppercase">
-                        {cell ? (cell.answeredBy === "X" ? "Sen (X)" : "Rakip (O)") : "Boş"}
-                      </span>
-                      {cell?.rarityScore ? (
-                        <span className="text-[8px] font-bold text-amber-400 font-mono">
-                          +{cell.rarityScore}
+                {selectedMatch.cells.map((cell, idx) => {
+                  const isX = cell?.answeredBy === "X";
+                  const isO = cell?.answeredBy === "O";
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        audio.playSelect();
+                        setInspectCellIndex(idx);
+                      }}
+                      className={`p-2.5 rounded-xl text-left border flex flex-col justify-between min-h-[60px] transition-all ${
+                        inspectCellIndex === idx ? "ring-2 ring-gold" : ""
+                      }`}
+                      style={{
+                        backgroundColor: isX
+                          ? "rgba(245, 196, 81, 0.14)"
+                          : isO
+                          ? "rgba(76, 154, 255, 0.14)"
+                          : "#0B1220",
+                        borderColor: isX
+                          ? "rgba(245, 196, 81, 0.5)"
+                          : isO
+                          ? "rgba(76, 154, 255, 0.5)"
+                          : "rgba(255,255,255,0.1)",
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span
+                          className="font-mono text-[9px] font-bold uppercase"
+                          style={{ color: isX ? "#F5C451" : isO ? "#4C9AFF" : "#9AA6BD" }}
+                        >
+                          {cell ? (isX ? "SEN (X)" : "RAKİP (O)") : "BOŞ"}
                         </span>
-                      ) : null}
-                    </div>
-                    <div className="text-[10px] font-black line-clamp-2 leading-tight mt-1">
-                      {cell ? (cell.actorName || cell.movie.title) : "Boş"}
-                    </div>
-                  </button>
-                ))}
+                        {cell?.rarityScore ? (
+                          <span className="font-mono text-[9px] font-bold text-scored">
+                            +{cell.rarityScore}
+                          </span>
+                        ) : null}
+                      </div>
+                      <div className="text-xs font-bold text-ink line-clamp-2 leading-tight mt-1">
+                        {cell ? cell.actorName || cell.movie.title : "Boş"}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Hücre Detay Çözümleri */}
             {inspectCellIndex !== null && (
-              <div className="p-3 rounded-2xl bg-black/80 border border-sky-500/30 animate-in fade-in">
-                <div className="text-[11px] font-bold text-zinc-300 mb-2">
+              <div className="p-3.5 rounded-xl bg-night border border-white/10">
+                <div className="text-xs font-semibold text-muted mb-2">
                   Kesişim:{" "}
-                  <span className="text-amber-400 font-black">
-                    {selectedMatch.board.rows[Math.floor(inspectCellIndex / 3)].label} +{" "}
+                  <span className="text-gold font-bold">
+                    {selectedMatch.board.rows[Math.floor(inspectCellIndex / 3)].label} ×{" "}
                     {selectedMatch.board.cols[inspectCellIndex % 3].label}
                   </span>
                 </div>
 
-                <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
                   {(() => {
                     const sol = getInspectSolutions(selectedMatch.board, inspectCellIndex);
                     if (sol.type === "ACTOR") {
                       return (sol.items as string[]).map((actor, aIdx) => (
                         <div
                           key={aIdx}
-                          className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between text-xs"
+                          className="p-2 rounded-lg bg-panel border border-white/10 flex items-center justify-between text-xs"
                         >
-                          <span className="font-bold text-cyan-300">🎭 {actor}</span>
-                          <span className="text-[9px] font-mono text-zinc-400">Ortak Aktör</span>
+                          <span className="font-bold text-team-blue">{actor}</span>
+                          <span className="text-[10px] text-muted">Ortak Aktör</span>
                         </div>
                       ));
                     }
-                    return (sol.items as any[]).map(m => (
+                    return (sol.items as { id: string; title: string; year: number }[]).map((m) => (
                       <div
                         key={m.id}
-                        className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between text-xs gap-2"
+                        className="p-2 rounded-lg bg-panel border border-white/10 flex items-center justify-between text-xs gap-2"
                       >
-                        <span className="font-bold text-white truncate">
+                        <span className="font-semibold text-ink truncate">
                           {m.title} ({m.year})
                         </span>
                         <a
                           href={`https://letterboxd.com/search/${encodeURIComponent(m.title)}/`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[9px] font-black"
+                          className="shrink-0 flex items-center gap-1 px-2 py-0.5 rounded bg-control text-gold border border-white/10 text-[10px] font-semibold"
                         >
                           <span>Letterboxd</span>
                           <ExternalLink className="w-2.5 h-2.5" />
@@ -218,108 +237,105 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
             )}
           </div>
         ) : (
-          /* 2. MAÇ LİSTESİ (Clash Royale Tarzı Karşılaşma Kartları) */
+          /* 2. ARCHIVE LIST */
           <div className="my-3 space-y-2.5">
             {matches.length === 0 ? (
-              <p className="py-10 text-center text-sm text-zinc-500">Henüz maç yok.</p>
-            ) : null}
-            {matches.map(m => {
-              const isWin = m.outcome === "VICTORY";
-              return (
-                <div
-                  key={m.id}
-                  className="p-3.5 rounded-2xl bg-[#131929] border border-zinc-800 hover:border-sky-500/40 transition-all flex flex-col gap-2.5 shadow-sm"
-                >
-                  {/* Kart Üst Bilgisi */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-black border ${
-                          isWin
-                            ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
-                            : "bg-rose-500/15 text-rose-300 border-rose-500/30"
-                        }`}
-                      >
-                        {isWin ? "👑 ZAFER" : "BOZGUN"}
-                      </span>
-                      <span className="text-[10px] font-mono font-bold text-zinc-400">
-                        {m.modeLabel}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-xs font-mono font-black">
-                      <span className={isWin ? "text-emerald-400" : "text-rose-400"}>
-                        {isWin ? `+${m.trophyDelta}` : `-${m.trophyDelta}`} 🏆
-                      </span>
-                      <span className="text-zinc-600">&middot;</span>
-                      <span className="text-amber-400">+{m.scoreRarity} ✨</span>
-                    </div>
-                  </div>
-
-                  {/* Orta Kısım: Rakip & Mini 3x3 Grid Görünümü */}
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500/20 to-rose-500/20 border border-zinc-700 flex items-center justify-center text-lg shrink-0">
-                        🎬
-                      </div>
-                      <div className="min-w-0">
-                        <div className="font-black text-xs text-white truncate">
-                          vs @{m.opponent.name}
-                        </div>
-                        <div className="text-[10px] font-bold text-zinc-400 truncate">
-                          {m.opponent.rankTitle || "Sinefil Düellocusu"}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Mini 3x3 Savaş Alanı Kartviziti */}
-                    <div className="grid grid-cols-3 gap-0.5 p-1 rounded-lg bg-black/60 border border-zinc-800 shrink-0">
-                      {m.cells.slice(0, 9).map((c, cIdx) => (
-                        <div
-                          key={cIdx}
-                          className={`w-3.5 h-3.5 rounded-xs ${
-                            c?.answeredBy === "X"
-                              ? "bg-cyan-500"
-                              : c?.answeredBy === "O"
-                              ? "bg-rose-500"
-                              : "bg-zinc-700/60"
+              <div className="py-12 text-center">
+                <Film className="w-8 h-8 text-muted/40 mx-auto mb-2" />
+                <p className="text-sm text-muted">
+                  Henüz tamamlanmış bir maç kaydı bulunmuyor.
+                </p>
+              </div>
+            ) : (
+              matches.map((m) => {
+                const isWin = m.outcome === "VICTORY";
+                const isDraw = m.outcome === "DRAW";
+                return (
+                  <div
+                    key={m.id}
+                    className="p-3.5 rounded-xl bg-night border border-white/10 hover:border-white/25 transition-colors flex flex-col gap-2.5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`px-2 py-0.5 rounded text-[10px] font-display font-bold uppercase tracking-wider border ${
+                            isWin
+                              ? "bg-gold/15 text-gold border-gold/40"
+                              : isDraw
+                              ? "bg-control text-muted border-white/10"
+                              : "bg-team-blue/15 text-team-blue border-team-blue/40"
                           }`}
-                        />
-                      ))}
+                        >
+                          {isWin ? "GALİBİYET" : isDraw ? "BERABERE" : "MAĞLUBİYET"}
+                        </span>
+                        <span className="text-xs text-muted">
+                          {formatDate(m.timestamp)}
+                        </span>
+                      </div>
+
+                      <span className="text-xs font-bold text-scored">
+                        +{m.scoreRarity} Puan
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="font-semibold text-sm text-ink truncate">
+                          {m.board.title}
+                        </div>
+                        <div className="text-xs text-muted truncate mt-0.5">
+                          vs {m.opponent.name}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-0.5 p-1 rounded-lg bg-panel border border-white/10 shrink-0">
+                        {m.cells.slice(0, 9).map((c, cIdx) => (
+                          <div
+                            key={cIdx}
+                            className="w-3 h-3 rounded-[2px]"
+                            style={{
+                              backgroundColor:
+                                c?.answeredBy === "X"
+                                  ? "#F5C451"
+                                  : c?.answeredBy === "O"
+                                  ? "#4C9AFF"
+                                  : "#16213A",
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/5">
+                      <button
+                        onClick={() => {
+                          audio.playSelect();
+                          setShareMatch(m);
+                        }}
+                        className="px-2.5 py-1 rounded-lg bg-panel hover:bg-control border border-white/10 text-muted hover:text-ink text-xs font-semibold flex items-center gap-1"
+                      >
+                        <Share2 className="w-3 h-3" />
+                        <span>Paylaş</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          audio.playSelect();
+                          setSelectedMatch(m);
+                        }}
+                        className="px-2.5 py-1 rounded-lg bg-control hover:border-gold border border-white/15 text-gold text-xs font-bold flex items-center gap-1"
+                      >
+                        <Eye className="w-3 h-3" />
+                        <span>İncele &rarr;</span>
+                      </button>
                     </div>
                   </div>
-
-                  {/* Alt Aksiyon Butonları */}
-                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800/80">
-                    <button
-                      onClick={() => {
-                        audio.playSelect();
-                        setShareMatch(m);
-                      }}
-                      className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs flex items-center gap-1 transition-all active:scale-95"
-                    >
-                      <Share2 className="w-3.5 h-3.5" />
-                      <span>Letterboxd Paylaş</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        audio.playSelect();
-                        setSelectedMatch(m);
-                      }}
-                      className="px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 font-black text-xs flex items-center gap-1 transition-all active:scale-95"
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>Tahtayı İncele &rarr;</span>
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         )}
 
-        {/* Letterboxd Viral Kart Modalı */}
         {shareMatch && (
           <LetterboxdShareCardModal
             isOpen={shareMatch !== null}

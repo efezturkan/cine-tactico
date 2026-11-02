@@ -199,25 +199,32 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-lg bg-[#0a1122] border border-sky-500/20 rounded-3xl p-5 shadow-2xl flex flex-col max-h-[92vh] overflow-y-auto custom-scrollbar relative text-white">
+      <div
+        className="w-full max-w-lg rounded-3xl p-5 flex flex-col max-h-[92vh] overflow-y-auto custom-scrollbar relative text-[#F1EEE7] tactile-card"
+        style={{
+          background: "linear-gradient(180deg, #1E222B 0%, #14171D 100%)",
+          borderColor: "rgba(255,255,255,0.14)",
+          boxShadow: "0 16px 40px rgba(0,0,0,0.85), 0 6px 0 #08090C, inset 0 1px 0 rgba(255,255,255,0.12)",
+        }}
+      >
         {/* Üst Bar */}
-        <div className="flex items-center justify-between pb-3 border-b border-sky-500/10">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <Gamepad2 className="w-5 h-5 text-amber-400" />
-            <h2 className="text-sm font-black tracking-wider uppercase font-mono text-zinc-100">
-              OYUN MODLARI & <span className="text-amber-400">ARENA</span>
+            <Gamepad2 className="w-5 h-5 text-[#F5A623]" />
+            <h2 className="text-sm font-black tracking-wider uppercase font-mono text-[#F1EEE7]">
+              OYUN MODLARI &amp; <span className="text-[#F5A623]">ARENA</span>
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full bg-[#131f38] text-zinc-400 hover:text-white"
+            className="p-2 rounded-xl tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Sekmeler */}
-        <div className="flex gap-1.5 my-3 p-1 rounded-2xl bg-[#0f172a] border border-sky-500/15 text-xs font-bold text-zinc-400">
+        <div className="flex gap-1.5 my-3 p-1 rounded-2xl bg-[#11141A] border border-white/10 text-xs font-bold text-[#A5A8B0]">
           <button
             onClick={() => {
               audio.playSelect();
@@ -225,8 +232,8 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
             }}
             className={`flex-1 py-1.5 rounded-xl transition-all ${
               activeTab === "ACTIVE_MODES"
-                ? "bg-amber-400 text-cinema-dark font-black shadow-md"
-                : "hover:text-white"
+                ? "tactile-btn-amber text-[#0F1115] font-black shadow-md"
+                : "hover:text-[#F1EEE7]"
             }`}
           >
             Aktif Masalar ({PLAYABLE_ARENAS.length})
@@ -238,8 +245,8 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
             }}
             className={`flex-1 py-1.5 rounded-xl transition-all ${
               activeTab === "COMING_SOON"
-                ? "bg-cyan-500 text-cinema-dark font-black shadow-md"
-                : "hover:text-white"
+                ? "tactile-btn-cyan text-[#0F1115] font-black shadow-md"
+                : "hover:text-[#F1EEE7]"
             }`}
           >
             Yeni Formatlar
@@ -251,8 +258,8 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
             }}
             className={`flex-1 py-1.5 rounded-xl transition-all ${
               activeTab === "COMBINATIONS"
-                ? "bg-purple-500 text-white font-black shadow-md"
-                : "hover:text-white"
+                ? "tactile-btn-surface text-[#F5A623] font-black shadow-md"
+                : "hover:text-[#F1EEE7]"
             }`}
           >
             Olasılık Matrisi
@@ -329,7 +336,7 @@ export const GameModesHubModal: React.FC<GameModesHubModalProps> = ({
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-xs font-black text-white">{mode.title}</span>
-                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full bg-[#0a1122]/70 ${mode.color}`}>
+                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full bg-[#0F1115]/80 ${mode.color}`}>
                           {mode.badge}
                         </span>
                       </div>

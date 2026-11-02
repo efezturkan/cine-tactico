@@ -667,9 +667,43 @@ export const PILOT_PRODUCTIONS: PilotProduction[] = [
     "originalLanguageIds": [
       "tr"
     ],
-    "genreIds": [],
-    "aliases": [],
+    "genreIds": [
+      "CRIME",
+      "DRAMA",
+      "MYSTERY"
+    ],
+    "aliases": [
+      {
+        "text": "Behzat Ç.",
+        "kind": "ALTERNATIVE_TITLE",
+        "languageId": "tr"
+      }
+    ],
     "credits": [
+      {
+        "wikidataId": "Q2272186",
+        "name": "Serdar Akar",
+        "role": "DIRECTOR",
+        "birthYear": 1964
+      },
+      {
+        "wikidataId": "Q5374824",
+        "name": "Emrah Serbes",
+        "role": "CREATOR",
+        "birthYear": 1981
+      },
+      {
+        "wikidataId": "Q23920677",
+        "name": "Ercan Mehmet Erdem",
+        "role": "CREATOR",
+        "birthYear": 1981
+      },
+      {
+        "wikidataId": "Q23920677",
+        "name": "Ercan Mehmet Erdem",
+        "role": "WRITER",
+        "birthYear": 1981
+      },
       {
         "wikidataId": "Q4822342",
         "name": "Erdal Beşikcioğlu",
@@ -691,9 +725,25 @@ export const PILOT_PRODUCTIONS: PilotProduction[] = [
     "originalLanguageIds": [
       "tr"
     ],
-    "genreIds": [],
+    "genreIds": [
+      "COMEDY",
+      "DRAMA",
+      "FANTASY"
+    ],
     "aliases": [],
     "credits": [
+      {
+        "wikidataId": "Q6094628",
+        "name": "Burak Aksak",
+        "role": "CREATOR",
+        "birthYear": 1985
+      },
+      {
+        "wikidataId": "Q6094628",
+        "name": "Burak Aksak",
+        "role": "WRITER",
+        "birthYear": 1985
+      },
       {
         "wikidataId": "Q6090129",
         "name": "Onur Ünlü",
@@ -808,9 +858,13 @@ export const PILOT_PRODUCTIONS: PilotProduction[] = [
     "countryIds": [
       "TR"
     ],
-    "originalLanguageIds": [],
+    "originalLanguageIds": [
+      "tr"
+    ],
     "genreIds": [
-      "DRAMA"
+      "CRIME",
+      "DRAMA",
+      "MYSTERY"
     ],
     "aliases": [
       {
@@ -820,6 +874,18 @@ export const PILOT_PRODUCTIONS: PilotProduction[] = [
       }
     ],
     "credits": [
+      {
+        "wikidataId": "Q374360",
+        "name": "Hakan Günday",
+        "role": "CREATOR",
+        "birthYear": 1976
+      },
+      {
+        "wikidataId": "Q374360",
+        "name": "Hakan Günday",
+        "role": "WRITER",
+        "birthYear": 1976
+      },
       {
         "wikidataId": "Q6094037",
         "name": "Onur Saylak",
@@ -831,6 +897,12 @@ export const PILOT_PRODUCTIONS: PilotProduction[] = [
         "name": "Haluk Bilginer",
         "role": "ACTOR",
         "birthYear": 1954
+      },
+      {
+        "wikidataId": "Q265512",
+        "name": "Cansu Dere",
+        "role": "ACTOR",
+        "birthYear": 1980
       }
     ],
     "awards": []

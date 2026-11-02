@@ -89,13 +89,18 @@ export interface GameViewProps {
 export function GameView(props: GameViewProps) {
   const gameAmbience = { ...DEFAULT_AMBIENCE, ...(props.profile?.ambience || {}) };
   const gameTheme = (gameAmbience.theme && AMBIENCE_THEMES[gameAmbience.theme]) || AMBIENCE_THEMES.velvet_red;
-  const safeGameDimness = typeof gameAmbience.dimness === "number" && !isNaN(gameAmbience.dimness) ? gameAmbience.dimness : 85;
-  const safeGameGlow = typeof gameAmbience.glowIntensity === "number" && !isNaN(gameAmbience.glowIntensity) ? gameAmbience.glowIntensity : 65;
+  const safeGameDimness =
+    typeof gameAmbience.dimness === "number" && !isNaN(gameAmbience.dimness) ? gameAmbience.dimness : 85;
+  const safeGameGlow =
+    typeof gameAmbience.glowIntensity === "number" && !isNaN(gameAmbience.glowIntensity)
+      ? gameAmbience.glowIntensity
+      : 65;
+
   return (
     <div
-      className="min-h-[100dvh] text-white flex flex-col font-sans select-none antialiased transition-colors duration-500 relative"
+      className="min-h-[100dvh] text-[#F1EEE7] flex flex-col font-sans select-none antialiased transition-colors duration-500 relative"
       style={{
-        backgroundColor: gameTheme?.bgColor || "#07080b",
+        backgroundColor: gameTheme?.bgColor || "#0F1115",
         filter: `brightness(${Math.min(1.1, Math.max(0.65, safeGameDimness / 85))})`,
       }}
     >
@@ -103,10 +108,23 @@ export function GameView(props: GameViewProps) {
       <div
         className="absolute top-0 left-1/4 right-1/4 h-48 pointer-events-none z-0 blur-3xl transition-all duration-700"
         style={{
-          background: `radial-gradient(ellipse at top, ${gameTheme?.glowRgba || "rgba(139, 21, 27, 0.45)"}, transparent 75%)`,
+          background: `radial-gradient(ellipse at top, ${
+            gameTheme?.glowRgba || "rgba(245, 166, 35, 0.25)"
+          }, transparent 75%)`,
           opacity: safeGameGlow / 100,
         }}
       />
+
+      {/* 35mm Analog Film Grain Overlay in Game */}
+      {gameAmbience.grain && gameAmbience.grain !== "OFF" && (
+        <div
+          className="absolute inset-0 pointer-events-none z-20 mix-blend-screen transition-opacity duration-300"
+          style={{
+            opacity: gameAmbience.grain === "VINTAGE" ? 0.16 : 0.08,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          }}
+        />
+      )}
 
       {/* Top Header */}
       <Header
@@ -120,29 +138,32 @@ export function GameView(props: GameViewProps) {
         userAvatarId={props.profile.avatarId}
         onBackToHome={props.onRequestExitGame}
         onOpenHelp={props.onOpenHelp}
+        onOpenQuests={props.onOpenQuests}
       />
 
       {/* Block Blast Floating Combo Pop-up */}
       <ComboBanner comboStreak={props.comboStreak} lastPoints={props.lastEarnedPoints} />
 
       {/* Main Container */}
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
-        <main className="flex-1 flex flex-col items-center justify-start p-2 sm:p-4 max-w-2xl mx-auto w-full">
+      <div className="flex-1 flex max-w-7xl w-full mx-auto relative z-10 min-w-0">
+        <main className="flex-1 flex flex-col items-center justify-start p-1.5 sm:p-4 max-w-lg sm:max-w-xl mx-auto w-full min-w-0 overflow-x-hidden">
           {/* Özel Oda Bilgi Çubuğu */}
           {props.mode === "ONLINE_ROOM" && props.customRoomCode && (
-            <div className="w-full max-w-md mx-auto mb-2 flex items-center justify-between px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs">
-              <span className="font-bold text-rose-300 flex items-center gap-1.5">
+            <div className="w-full max-w-md mx-auto mb-2 flex items-center justify-between px-3 py-1.5 rounded-xl bg-[#00D5E8]/15 border border-[#00D5E8]/40 text-xs">
+              <span className="font-bold text-[#00D5E8] flex items-center gap-1.5 font-mono">
                 <Swords className="w-3.5 h-3.5" /> Oda #{props.customRoomCode}
               </span>
-              <span className="text-[10px] font-mono text-zinc-400">
-                {props.customShotClock}s
+              <span className="text-[10px] font-mono text-[#F1EEE7] font-bold">
+                {props.customShotClock}s Blitz
               </span>
             </div>
           )}
 
-          {/* Board Title & Randomizer */}
-          <div className="w-full max-w-md px-3 mt-1 text-center text-xs font-bold text-zinc-300 truncate">
-            {props.board.title}
+          {/* Board Title Pill */}
+          <div className="w-full max-w-md px-3 mt-1 flex items-center justify-center">
+            <span className="px-3 py-1 rounded-full bg-[#181B22] border border-white/12 text-xs font-extrabold text-[#F1EEE7] truncate shadow-inner">
+              {props.board.title}
+            </span>
           </div>
 
           {/* Shot Clock */}
@@ -166,10 +187,10 @@ export function GameView(props: GameViewProps) {
             allowSteal={props.allowSteal}
           />
 
-          {/* Joker / İpucu Bildirim Kartı */}
+          {/* Joker / İpucu / Hata Bildirim Kartı */}
           {props.hintMessage && (
-            <div className="w-full max-w-md mx-auto my-1.5 p-2.5 rounded-2xl bg-amber-400/20 border border-amber-400/50 text-amber-300 text-xs font-black text-center flex items-center justify-center gap-2 animate-in fade-in shadow-lg">
-              <Lightbulb className="w-4 h-4 text-amber-400 shrink-0" />
+            <div className="w-full max-w-md mx-auto my-1.5 p-2.5 rounded-2xl bg-[#F5A623]/15 border border-[#F5A623]/50 text-[#F5A623] text-xs font-black text-center flex items-center justify-center gap-2 animate-in fade-in shadow-lg">
+              <Lightbulb className="w-4 h-4 text-[#F5A623] shrink-0" />
               <span>{props.hintMessage}</span>
             </div>
           )}
@@ -234,32 +255,39 @@ export function GameView(props: GameViewProps) {
       {/* Maçı Terk Et / Teslim Ol (Surrender) Onay Modalı */}
       {props.showSurrenderConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
-          <div className="w-full max-w-sm bg-[#121622] border-2 border-rose-500/70 rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center text-white relative">
-            <div className="w-14 h-14 rounded-full bg-rose-500/15 border border-rose-500/40 flex items-center justify-center text-rose-400 mb-3 animate-pulse">
-              <ShieldAlert className="w-7 h-7 text-rose-500" />
+          <div
+            className="w-full max-w-sm rounded-3xl p-6 flex flex-col items-center text-center text-[#F1EEE7] relative tactile-card"
+            style={{
+              background: "linear-gradient(180deg, #1E222B 0%, #14171D 100%)",
+              borderColor: "rgba(255,51,75,0.65)",
+              boxShadow: "0 16px 40px rgba(0,0,0,0.85), 0 6px 0 #08090C",
+            }}
+          >
+            <div className="w-14 h-14 rounded-2xl bg-[#FF334B]/15 border border-[#FF334B]/40 flex items-center justify-center text-[#FF334B] mb-3 animate-pulse">
+              <ShieldAlert className="w-7 h-7 text-[#FF334B]" />
             </div>
 
-            <h3 className="text-base font-black text-rose-400 font-mono tracking-wider mb-1 uppercase">
+            <h3 className="text-base font-black text-[#FF334B] font-mono tracking-wider mb-1 uppercase">
               {props.pendingSwitchMode ? "MOD DEĞİŞTİRİLİYOR" : "MAÇTAN ÇEKİLİYOR MUSUN?"}
             </h3>
 
-            <p className="text-xs text-zinc-300 leading-relaxed mb-4">
+            <p className="text-xs text-[#F1EEE7] leading-relaxed mb-4">
               {props.pendingSwitchMode ? (
                 <>
                   Devam eden maçı sonlandırıp başka bir oyun moduna geçmek üzeresin. Bu maç hanene{" "}
-                  <strong className="text-rose-400 font-black">HÜKMEN MAĞLUBİYET</strong> olarak işlenecektir!
+                  <strong className="text-[#FF334B] font-black">HÜKMEN MAĞLUBİYET</strong> olarak işlenecektir!
                 </>
               ) : (
                 <>
                   Devam eden karşılaşmayı terk edersen bu maç hanene{" "}
-                  <strong className="text-rose-400 font-black">HÜKMEN MAĞLUBİYET (Loss)</strong> olarak işlenecek ve serin sıfırlanacaktır!
+                  <strong className="text-[#FF334B] font-black">HÜKMEN MAĞLUBİYET (Loss)</strong> olarak işlenecek ve serin sıfırlanacaktır!
                 </>
               )}
             </p>
 
-            <div className="w-full p-2.5 rounded-xl bg-zinc-900/80 border border-zinc-800 text-[11px] text-zinc-400 mb-5 flex items-center justify-between">
+            <div className="w-full p-2.5 rounded-xl bg-[#0F1115] border border-white/10 text-[11px] text-[#A5A8B0] mb-5 flex items-center justify-between">
               <span className="font-bold">Rakip:</span>
-              <span className="font-extrabold text-white flex items-center gap-1">
+              <span className="font-extrabold text-[#F1EEE7] flex items-center gap-1">
                 🤖 {props.pendingOpponent.name} ({props.pendingOpponent.rankTitle})
               </span>
             </div>
@@ -268,14 +296,14 @@ export function GameView(props: GameViewProps) {
               <button
                 type="button"
                 onClick={props.onCancelSurrender}
-                className="py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-black text-xs transition-all active:scale-95"
+                className="py-2.5 rounded-xl tactile-btn-surface text-[#F1EEE7] font-black text-xs"
               >
                 Savaşa Devam Et
               </button>
               <button
                 type="button"
                 onClick={props.onConfirmSurrender}
-                className="py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-black text-xs shadow-lg shadow-rose-600/30 transition-all active:scale-95"
+                className="py-2.5 rounded-xl bg-[#FF334B] hover:bg-[#e0243c] text-white font-black text-xs shadow-[0_4px_0_#991424] active:translate-y-[2px] transition-all"
               >
                 {props.pendingSwitchMode ? "Modu Değiştir (Terk Et)" : "Terk Et (Teslim Ol)"}
               </button>

@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { LEGACY_MOVIE_RECORDS } from "../data/movies";
 import { MOVIES_DATABASE } from "../content/adapters/gameCatalog";
 import { movieMatchesTitleQuery } from "../content/search/movieTitle";
 import { isMovieMatchingCriterion } from "../core/engine/validator";
@@ -46,7 +45,7 @@ assert.equal(leo?.provenance.sourceUrl, undefined);
 const inception = canonicalCatalog.movies.find((movie) => movie.id === "m_inception");
 assert.ok(inception?.genreIds.includes("SCI_FI"));
 assert.ok(inception?.awardIds.includes("OSCAR"));
-assert.deepEqual(inception?.countryIds, []);
+assert.ok(inception?.countryIds.includes("US") || inception?.countryIds.includes("GB"));
 
 const nolanCredits = canonicalCatalog.credits.filter(
   (credit) => credit.role === "DIRECTOR" && credit.productionId === "m_inception"
@@ -112,10 +111,20 @@ assert.equal(MOVIES_DATABASE.length, playableCount);
 
 const inventory = buildInventory(canonicalCatalog);
 assert.equal(inventory.movies + inventory.series, canonicalCatalog.movies.length + canonicalCatalog.series.length);
-assert.equal(inventory.creators, 0);
+assert.ok(inventory.creators > 0);
 assert.equal(inventory.showrunners, 0);
 assert.ok(inventory.directors > 0);
 assert.ok(inventory.ambiguousCredits > 0);
+assert.ok(
+  canonicalCatalog.credits.some(
+    (credit) => credit.productionId === "s_breaking_bad" && credit.role === "CREATOR"
+  )
+);
+assert.ok(
+  canonicalCatalog.credits.some(
+    (credit) => credit.productionId === "s_behzat_c" && credit.role === "CREATOR"
+  )
+);
 
 const sciFi = answersByGenre(contentIndex).find((row) => row.genreId === "SCI_FI");
 assert.ok(sciFi && sciFi.count > 0);

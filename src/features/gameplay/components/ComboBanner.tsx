@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Flame, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 interface ComboBannerProps {
   comboStreak: number;
@@ -14,7 +14,7 @@ export const ComboBanner: React.FC<ComboBannerProps> = ({ comboStreak, lastPoint
   useEffect(() => {
     if (comboStreak > 0) {
       setVisible(true);
-      const timer = setTimeout(() => setVisible(false), 1400);
+      const timer = setTimeout(() => setVisible(false), 1200);
       return () => clearTimeout(timer);
     }
   }, [comboStreak, lastPoints]);
@@ -22,21 +22,21 @@ export const ComboBanner: React.FC<ComboBannerProps> = ({ comboStreak, lastPoint
   if (!visible || comboStreak <= 0) return null;
 
   const titles = [
-    "İYİ HAMLE! +100",
-    "COMBO x2! 🔥 HARİKA!",
-    "COMBO x3! ⚡ SİNEFİL!",
-    "COMBO x4! 💥 EFSANE VURUŞ!",
-    "DURDURULAMAZ! 🏆 REKOR!",
+    "KARE MÜHÜRLENDİ",
+    "İKİLİ SERİ · ×2",
+    "SİNEFİL SERİSİ · ×3",
+    "KUSURSUZ KADRAJ · ×4",
+    "USTA YÖNETMEN · ×5",
   ];
 
   const title = titles[Math.min(comboStreak - 1, titles.length - 1)];
 
   return (
-    <div className="fixed top-20 left-1/2 -translate-x-1/2 z-40 pointer-events-none animate-in zoom-in-50 fade-in slide-in-from-bottom-3 duration-200">
-      <div className="px-5 py-2 rounded-2xl bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 text-white font-black text-sm sm:text-base tracking-wider shadow-2xl shadow-amber-500/50 border border-white/30 flex items-center gap-2">
-        <Flame className="w-5 h-5 text-yellow-300 animate-bounce" />
+    <div className="fixed top-16 left-1/2 -translate-x-1/2 z-40 pointer-events-none animate-banner-in">
+      <div className="px-4 py-1.5 rounded-2xl bg-panel border-2 border-scored text-ink font-display font-extrabold italic uppercase text-sm tracking-wide shadow-2xl flex items-center gap-2">
+        <Sparkles className="w-3.5 h-3.5 text-scored" />
         <span>{title}</span>
-        <span className="text-xs bg-black/30 px-2 py-0.5 rounded-full font-bold">
+        <span className="text-xs font-mono bg-scored/20 text-scored border border-scored/40 px-2 py-0.5 rounded-lg font-bold">
           +{lastPoints}
         </span>
       </div>

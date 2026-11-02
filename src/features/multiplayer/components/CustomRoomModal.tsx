@@ -9,25 +9,12 @@ import { audio } from "@/utils/audio";
 import {
   Trophy,
   Swords,
-  Clock,
   Film,
-  ShieldAlert,
-  Sparkles,
   Copy,
   Check,
   X,
-  Users,
-  Zap,
-  Layers,
-  Crown,
   Lock,
   Globe,
-  PlusCircle,
-  Search,
-  ChevronRight,
-  Flame,
-  Award,
-  Wallet,
 } from "lucide-react";
 
 // Kriptografik Güvenli 6 Karakterli Kod Üreteci (Unambiguous Alfanümerik: 0/O, 1/I hariç)
@@ -73,14 +60,14 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
 
   // 3. 1v1 Oda Kurma State'leri (Kriptografik CX- Kod)
   const [roomCode] = useState<string>(() => generateSecureRoomCode());
-  const [isPublic, setIsPublic] = useState<boolean>(false); // 🔒 Özel vs 🌐 Herkese Açık
+  const [isPublic, setIsPublic] = useState<boolean>(false);
   const [matchFormat, setMatchFormat] = useState<"BO1" | "BO3">("BO1");
   const [shotClock, setShotClock] = useState<10 | 12 | 20>(12);
   const [selectedBoardId, setSelectedBoardId] = useState<string>(PRESET_BOARDS[0].id);
-  const [allowSteal, setAllowSteal] = useState<boolean>(false);
+  const [allowSteal] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
 
-  // 4. Odaya Katılma Input State'i & Rate Limiter (Brute-Force Koruması: max 5 deneme / 60 sn)
+  // 4. Odaya Katılma Input State'i & Rate Limiter
   const [joinCodeInput, setJoinCodeInput] = useState<string>("");
   const [joinError, setJoinError] = useState<string | null>(null);
   const [failedAttempts, setFailedAttempts] = useState<number[]>([]);
@@ -91,20 +78,18 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
   const [tourneyEntryFee, setTourneyEntryFee] = useState<"FREE" | "REELS">("FREE");
   const [joinedTourneyId, setJoinedTourneyId] = useState<string | null>(null);
 
-  // Rate-limit sayacını her saniye geri say
   React.useEffect(() => {
     if (rateLimitSeconds <= 0) return;
     const interval = setInterval(() => {
-      setRateLimitSeconds(prev => Math.max(0, prev - 1));
+      setRateLimitSeconds((prev) => Math.max(0, prev - 1));
     }, 1000);
     return () => clearInterval(interval);
   }, [rateLimitSeconds]);
 
   if (!isOpen) return null;
 
-  const currentBoard = PRESET_BOARDS.find(b => b.id === selectedBoardId) || PRESET_BOARDS[0];
+  const currentBoard = PRESET_BOARDS.find((b) => b.id === selectedBoardId) || PRESET_BOARDS[0];
 
-  // 1v1 Odayı Başlat
   const handleStartCustomRoom = (overrideSettings?: Partial<CustomRoomSettings>) => {
     audio.playPowerup();
     const settings: CustomRoomSettings = {
@@ -124,7 +109,6 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     onClose();
   };
 
-  // Davet Linkini Kopyala
   const handleCopyInvite = () => {
     audio.playSelect();
     const url = typeof window !== "undefined" ? `${window.location.origin}?room=${roomCode}` : "";
@@ -132,21 +116,24 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       navigator.clipboard.writeText(
         `🎬 CINEXOX 1v1 DÜELLO DAVETİ! 🏆\nOda Kodu: #${roomCode}\nTema: ${currentBoard.title}\nFormat: ${
           matchFormat === "BO1" ? "Tek Maç" : "3 Maçlık Seri (BO3)"
-        }\nSüre: ${shotClock}s | Kare Çalma: ${allowSteal ? "AÇIK 🔥" : "KAPALI"}\n\nHemen Odaya Katıl: ${url}`
+        }\nSüre: ${shotClock}s\n\nHemen Odaya Katıl: ${url}`
       );
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2500);
     }
   };
 
-  // Kod ile Odaya Katıl (Rate Limit & Crypto Format Denetimi)
   const handleJoinByCode = (codeToJoin: string) => {
     const now = Date.now();
-    const recentFailures = failedAttempts.filter(t => now - t < 60_000);
+    const recentFailures = failedAttempts.filter((t) => now - t < 60_000);
 
     if (rateLimitSeconds > 0 || recentFailures.length >= 5) {
       if (rateLimitSeconds <= 0) setRateLimitSeconds(60);
-      setJoinError(`Güvenlik: Çok fazla başarısız deneme! Lütfen ${rateLimitSeconds > 0 ? rateLimitSeconds : 60} saniye bekleyin.`);
+      setJoinError(
+        `Güvenlik: Çok fazla başarısız deneme! Lütfen ${
+          rateLimitSeconds > 0 ? rateLimitSeconds : 60
+        } saniye bekleyin.`
+      );
       audio.playError();
       return;
     }
@@ -162,16 +149,17 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
         setRateLimitSeconds(60);
         setJoinError("5 kez geçersiz kod girildi. 60 saniye bekleyin.");
       } else {
-        setJoinError(`Geçersiz oda kodu formatı! (Örn: CX-7K9M2P) [Kalan deneme: ${5 - updated.length}]`);
+        setJoinError(
+          `Geçersiz oda kodu formatı! (Örn: CX-7K9M2P) [Kalan deneme: ${5 - updated.length}]`
+        );
       }
       return;
     }
 
     audio.playPowerup();
 
-    // Supabase bağlıysa sunucudan gerçek odayı ve kurucusunun seçtiği tahtayı getir
     if (isSupabaseConfigured && currentUser) {
-      joinRealtimeRoom(cleanCode, currentUser).then(res => {
+      joinRealtimeRoom(cleanCode, currentUser).then((res) => {
         if (res.success && res.room) {
           if (onJoinRoom) {
             onJoinRoom(cleanCode, res.room.settings, res.room.board_data);
@@ -180,7 +168,6 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
           }
           onClose();
         } else {
-          // Oda bulunamadıysa varsayılan ayarlarla odaya katılımı başlat
           const settings: CustomRoomSettings = {
             roomCode: cleanCode,
             roomName: "Özel Odaya Katılım",
@@ -224,7 +211,6 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     onClose();
   };
 
-  // Turnuva Başlat
   const handleCreateTournament = () => {
     audio.playPowerup();
     const settings: CustomRoomSettings = {
@@ -233,10 +219,10 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       roomType: "TOURNAMENT",
       isPublic: true,
       matchFormat: "TOURNAMENT",
-      shotClockSeconds: 20,
+      shotClockSeconds: 12,
       themeId: selectedBoardId,
       category: currentBoard.title,
-      allowCellStealing: allowSteal,
+      allowCellStealing: false,
       allowPowerups: false,
       entryFee: {
         type: tourneyEntryFee,
@@ -248,41 +234,6 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     onClose();
   };
 
-  // Örnek Canlı Açık Odalar (Public Lobiler - CX- Kod Standardı)
-  const PUBLIC_ROOMS = [
-    {
-      code: "CX-4K9M2P",
-      host: "Kadir (Level 7)",
-      boardTitle: "⚡ DC vs MARVEL Düellosu",
-      boardIdx: 3,
-      format: "Tek Maç",
-      time: "20s",
-      players: "1/2 Bekliyor",
-      badgeColor: "text-rose-400 border-rose-500/30 bg-rose-500/10",
-    },
-    {
-      code: "CX-8B7D1A",
-      host: "Selin (Level 5)",
-      boardTitle: "🩸 90'lar Kült: Fight Club",
-      boardIdx: 5,
-      format: "BO1 Düello",
-      time: "10s Blitz",
-      players: "1/2 Bekliyor",
-      badgeColor: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
-    },
-    {
-      code: "CX-3N8X4W",
-      host: "Emre (Level 9)",
-      boardTitle: "🎬 Auteur Savaşları: Nolan",
-      boardIdx: 0,
-      format: "BO3 Seri",
-      time: "20s",
-      players: "1/2 Bekliyor",
-      badgeColor: "text-amber-400 border-amber-500/30 bg-amber-500/10",
-    },
-  ];
-
-  // Canlı Turnuva Listesi (Saf Makara & Kupa)
   const ACTIVE_TOURNAMENTS = [
     {
       id: "trny_1",
@@ -292,7 +243,6 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       slotsLeft: "Son 2 Koltuk!",
       entryFee: "ÜCRETSİZ",
       prize: "2.000 🎞️ + Altın Kupa",
-      badge: "CANLI",
       boardIdx: 0,
     },
     {
@@ -303,7 +253,6 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       slotsLeft: "Son 1 Koltuk!",
       entryFee: "100 🎞️",
       prize: "3.500 🎞️ + Şampiyonluk Rozeti",
-      badge: "DOLUYOR",
       boardIdx: 3,
     },
     {
@@ -314,34 +263,71 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       slotsLeft: "Kayıt Açık",
       entryFee: "250 🎞️",
       prize: "1.000 🎞️ + Altın Rozet",
-      badge: "KAYITTA",
       boardIdx: 5,
     },
   ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
-      <div className="w-full max-w-md bg-[#0a1122] border border-sky-500/25 rounded-3xl p-4 sm:p-5 shadow-2xl flex flex-col max-h-[92vh] overflow-y-auto custom-scrollbar relative text-white">
+      <div
+        className="w-full max-w-md rounded-3xl p-4 sm:p-5 flex flex-col max-h-[92vh] overflow-y-auto custom-scrollbar relative text-[#F1EEE7] tactile-card"
+        style={{
+          background: "linear-gradient(180deg, #1E222B 0%, #14171D 100%)",
+          borderColor: "rgba(255,255,255,0.14)",
+          boxShadow: "0 16px 40px rgba(0,0,0,0.85), 0 6px 0 #08090C, inset 0 1px 0 rgba(255,255,255,0.12)",
+        }}
+      >
         {/* Kapat Butonu */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-full bg-zinc-800 text-zinc-400 hover:text-white"
+          className="absolute top-4 right-4 p-2 rounded-xl tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
         >
           <X className="w-4 h-4" />
         </button>
 
-        {/* 1. ÜST BAŞLIK (Clash Royale Style Arena Header) */}
-        <div className="text-center pb-2.5 border-b border-sky-500/15">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#131f38] border border-amber-400/30 text-amber-400 text-[10px] font-black uppercase tracking-wider mb-1">
+        {/* 1. ÜST BAŞLIK */}
+        <div className="text-center pb-3 border-b border-white/10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#F5A623]/15 border border-[#F5A623]/35 text-[#F5A623] text-[10px] font-black uppercase tracking-wider mb-1 font-mono">
             <Trophy className="w-3.5 h-3.5" />
-            <span>ODA</span>
+            <span>ÖZEL ODA & TURNUVA</span>
           </div>
-          <h2 className="text-lg font-black text-white">İki telefon, bir oda</h2>
-          <p className="text-[11px] text-zinc-400">
+          <h2 className="text-lg font-black text-[#F1EEE7]">İki Telefon, Bir Düello</h2>
+          <p className="text-[11px] text-[#A5A8B0]">
             Kod paylaş. Rakip bağlanınca maç başlar. Saat 12 saniye.
           </p>
         </div>
 
+        {/* Ana Sekme: 1v1 Özel Oda vs 8 Kişilik Turnuva */}
+        <div className="grid grid-cols-2 gap-2 my-3">
+          <button
+            type="button"
+            onClick={() => {
+              audio.playSelect();
+              setMainTab("1V1_ROOM");
+            }}
+            className={`py-2 rounded-xl text-xs font-black transition-all ${
+              mainTab === "1V1_ROOM"
+                ? "tactile-btn-amber text-[#0F1115]"
+                : "tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
+            }`}
+          >
+            ⚔️ 1v1 Özel Oda
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              audio.playSelect();
+              setMainTab("TOURNAMENT");
+            }}
+            className={`py-2 rounded-xl text-xs font-black transition-all ${
+              mainTab === "TOURNAMENT"
+                ? "tactile-btn-cyan text-[#0F1115]"
+                : "tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
+            }`}
+          >
+            🏆 8 Kişilik Turnuva
+          </button>
+        </div>
 
         {/* ========================================================
             SEKME 1: 1v1 ÖZEL ODA (DOSTLUK MAÇI)
@@ -356,10 +342,10 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   audio.playSelect();
                   setRoomSubTab("CREATE");
                 }}
-                className={`flex-1 py-1.5 rounded-lg text-xs font-black border transition-all ${
+                className={`flex-1 py-2 rounded-xl text-xs font-black border transition-all ${
                   roomSubTab === "CREATE"
-                    ? "bg-[#111e3b] border-amber-400 text-amber-300 shadow-sm"
-                    : "bg-[#0b101f] border-zinc-800 text-zinc-400 hover:text-white"
+                    ? "bg-[#252932] border-[#F5A623] text-[#F5A623] shadow-sm"
+                    : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
                 }`}
               >
                 ➕ Oda Kur (Host)
@@ -370,47 +356,47 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   audio.playSelect();
                   setRoomSubTab("JOIN");
                 }}
-                className={`flex-1 py-1.5 rounded-lg text-xs font-black border transition-all ${
+                className={`flex-1 py-2 rounded-xl text-xs font-black border transition-all ${
                   roomSubTab === "JOIN"
-                    ? "bg-[#111e3b] border-cyan-400 text-cyan-300 shadow-sm"
-                    : "bg-[#0b101f] border-zinc-800 text-zinc-400 hover:text-white"
+                    ? "bg-[#252932] border-[#00D5E8] text-[#00D5E8] shadow-sm"
+                    : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
                 }`}
               >
-                🔍 Odaya Katıl & Lobiler
+                🔍 Odaya Katıl
               </button>
             </div>
 
             {/* A. ODA KURMA PANELİ */}
             {roomSubTab === "CREATE" && (
               <div className="space-y-3">
-                {/* 1. GİZLİLİK SEÇİMİ: ÖZEL vs HERKESE AÇIK (PUBLIC / PRIVATE) */}
-                <div className="p-2.5 rounded-2xl bg-[#0b101f] border border-sky-500/15 flex items-center justify-between">
+                {/* 1. GİZLİLİK SEÇİMİ */}
+                <div className="p-2.5 rounded-2xl bg-[#181B22] border border-white/10 flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-black text-white flex items-center gap-1.5">
+                    <span className="text-xs font-black text-[#F1EEE7] flex items-center gap-1.5">
                       {isPublic ? (
                         <>
-                          <Globe className="w-3.5 h-3.5 text-emerald-400" />
-                          <span className="text-emerald-400">Herkese Açık Lobi (Public)</span>
+                          <Globe className="w-3.5 h-3.5 text-[#8EBB70]" />
+                          <span className="text-[#8EBB70]">Herkese Açık Lobi (Public)</span>
                         </>
                       ) : (
                         <>
-                          <Lock className="w-3.5 h-3.5 text-amber-400" />
-                          <span className="text-amber-400">Gizli & Özel Oda (Private)</span>
+                          <Lock className="w-3.5 h-3.5 text-[#F5A623]" />
+                          <span className="text-[#F5A623]">Gizli & Özel Oda (Private)</span>
                         </>
                       )}
                     </span>
-                    <p className="text-[10px] text-zinc-400 mt-0.5">
+                    <p className="text-[10px] text-[#A5A8B0] mt-0.5">
                       {isPublic
                         ? "Lobi listesinde görünür, dileyen oyuncu katılabilir."
                         : "Sadece oda kodunu verdiğin arkadaşın katılabilir."}
                     </p>
                   </div>
-                  <div className="flex bg-[#121a30] p-0.5 rounded-xl border border-zinc-800">
+                  <div className="flex bg-[#0F1115] p-0.5 rounded-xl border border-white/10">
                     <button
                       type="button"
                       onClick={() => setIsPublic(false)}
-                      className={`px-2 py-1 rounded-lg text-[10px] font-black transition-all ${
-                        !isPublic ? "bg-amber-400 text-black shadow" : "text-zinc-400"
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-black transition-all ${
+                        !isPublic ? "bg-[#F5A623] text-[#0F1115] shadow" : "text-[#A5A8B0]"
                       }`}
                     >
                       Gizli
@@ -418,8 +404,8 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setIsPublic(true)}
-                      className={`px-2 py-1 rounded-lg text-[10px] font-black transition-all ${
-                        isPublic ? "bg-emerald-500 text-white shadow" : "text-zinc-400"
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-black transition-all ${
+                        isPublic ? "bg-[#8EBB70] text-[#0F1115] shadow" : "text-[#A5A8B0]"
                       }`}
                     >
                       Açık
@@ -429,15 +415,15 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
 
                 {/* 2. MASA SEÇİMİ (5 STRATEJİK MASA) */}
                 <div>
-                  <label className="text-xs font-black text-zinc-300 flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-black text-[#F1EEE7] flex items-center justify-between mb-1.5">
                     <span className="flex items-center gap-1.5">
-                      <Film className="w-3.5 h-3.5 text-purple-400" />
+                      <Film className="w-3.5 h-3.5 text-[#F5A623]" />
                       Masa & Tematik Çarpışma
                     </span>
-                    <span className="text-[10px] text-zinc-500 font-bold">5 Masa</span>
+                    <span className="text-[10px] text-[#A5A8B0] font-bold">5 Masa</span>
                   </label>
                   <div className="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar pr-0.5">
-                    {PRESET_BOARDS.map(b => {
+                    {PRESET_BOARDS.map((b) => {
                       const isDcMarvel = b.id === "board_dc_marvel";
                       const isSelected = selectedBoardId === b.id;
                       return (
@@ -448,24 +434,22 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                             audio.playSelect();
                             setSelectedBoardId(b.id);
                           }}
-                          className={`w-full p-2 rounded-xl border text-left flex items-center justify-between transition-all ${
+                          className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between transition-all ${
                             isSelected
-                              ? isDcMarvel
-                                ? "bg-gradient-to-r from-red-950/60 via-[#10182b] to-blue-950/60 border-rose-500 text-white shadow-md ring-1 ring-rose-500"
-                                : "bg-[#111e3b] border-amber-400 text-white shadow-md ring-1 ring-amber-400"
-                              : "bg-[#10182b] border-zinc-800 text-zinc-400 hover:text-white"
+                              ? "bg-[#252932] border-[#F5A623] text-[#F1EEE7] shadow-[0_3px_0_#090A0D] ring-1 ring-[#F5A623]"
+                              : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
                           }`}
                         >
                           <div className="flex-1 pr-2 truncate">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-xs font-black text-zinc-200 truncate">{b.title}</span>
+                              <span className="text-xs font-black text-[#F1EEE7] truncate">{b.title}</span>
                               {isDcMarvel && (
-                                <span className="text-[9px] font-black px-1 py-0.2 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                                <span className="text-[9px] font-black px-1 py-0.2 rounded bg-[#FF334B]/20 text-[#FF334B] border border-[#FF334B]/40">
                                   🔥
                                 </span>
                               )}
                             </div>
-                            <p className="text-[9px] text-zinc-500 truncate mt-0.5">
+                            <p className="text-[9px] text-[#A5A8B0] truncate mt-0.5">
                               {b.id === "board_master_1"
                                 ? "Nolan, Tarantino, Scorsese x DiCaprio, Oscar, 2010s+"
                                 : isDcMarvel
@@ -477,7 +461,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                                 : "Brad Pitt, Murphy, De Niro x Suç, 8.0+ Puan, 2010s+"}
                             </p>
                           </div>
-                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-zinc-900 text-amber-400 border border-zinc-800">
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-[#0F1115] text-[#F5A623] border border-white/10 font-mono">
                             {b.difficulty}
                           </span>
                         </button>
@@ -491,7 +475,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   {[
                     { val: "BO1", label: "Tek Maç (BO1)", sub: "Hızlı Düello" },
                     { val: "BO3", label: "3 Maçlık Seri (BO3)", sub: "Prestij Rövanşı" },
-                  ].map(f => (
+                  ].map((f) => (
                     <button
                       key={f.val}
                       type="button"
@@ -501,21 +485,21 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                       }}
                       className={`p-2 rounded-xl border text-center transition-all ${
                         matchFormat === f.val
-                          ? "bg-[#111e3b] border-amber-400 text-white shadow-md ring-1 ring-amber-400"
-                          : "bg-[#10182b] border-zinc-800 text-zinc-400 hover:text-white"
+                          ? "bg-[#252932] border-[#F5A623] text-[#F1EEE7] shadow-md ring-1 ring-[#F5A623]"
+                          : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
                       }`}
                     >
                       <div className="text-xs font-black">{f.label}</div>
-                      <div className="text-[9px] text-zinc-500 font-bold mt-0.5">{f.sub}</div>
+                      <div className="text-[9px] text-[#A5A8B0] font-bold mt-0.5">{f.sub}</div>
                     </button>
                   ))}
                 </div>
 
-                {/* 4. HAMLE SÜRESİ (CHESS BLITZ SAATİ) */}
+                {/* 4. HAMLE SÜRESİ (12S BLITZ) */}
                 <div className="grid grid-cols-1 gap-2">
                   {[
-                    { val: 12, label: "12 saniye", desc: "Maç saati" },
-                  ].map(item => (
+                    { val: 12, label: "12 Saniye Blitz", desc: "Standart Rekabetçi Maç Saati" },
+                  ].map((item) => (
                     <button
                       key={item.val}
                       type="button"
@@ -523,31 +507,26 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                         audio.playSelect();
                         setShotClock(item.val as any);
                       }}
-                      className={`p-2 rounded-xl border text-center transition-all ${
-                        shotClock === item.val
-                          ? "bg-[#111e3b] border-cyan-400 text-white shadow-md ring-1 ring-cyan-400"
-                          : "bg-[#10182b] border-zinc-800 text-zinc-400 hover:text-white"
-                      }`}
+                      className="p-2 rounded-xl border bg-[#252932] border-[#00D5E8] text-[#F1EEE7] text-center shadow-sm"
                     >
-                      <div className="text-xs font-black">{item.label}</div>
-                      <div className="text-[9px] text-zinc-500 font-bold mt-0.5">{item.desc}</div>
+                      <div className="text-xs font-black text-[#00D5E8] font-mono">{item.label}</div>
+                      <div className="text-[9px] text-[#A5A8B0] font-bold mt-0.5">{item.desc}</div>
                     </button>
                   ))}
                 </div>
 
-
                 {/* Oda Kodu & Başlat */}
-                <div className="pt-2 border-t border-sky-500/10 space-y-2">
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#121c33] border border-sky-500/20">
-                    <div className="font-mono text-xs font-black text-cyan-400">
+                <div className="pt-2 border-t border-white/10 space-y-2.5">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#0F1115] border border-white/15">
+                    <div className="font-mono text-xs font-black text-[#00D5E8]">
                       Oda Kodu: #{roomCode}
                     </div>
                     <button
                       type="button"
                       onClick={handleCopyInvite}
-                      className="px-2.5 py-1 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-bold text-[10px] flex items-center gap-1"
+                      className="px-3 py-1 rounded-lg tactile-btn-surface text-[#F1EEE7] font-bold text-[10px] flex items-center gap-1"
                     >
-                      {copiedLink ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                      {copiedLink ? <Check className="w-3 h-3 text-[#8EBB70]" /> : <Copy className="w-3 h-3" />}
                       <span>{copiedLink ? "Kopyalandı!" : "Davet Linki"}</span>
                     </button>
                   </div>
@@ -555,21 +534,20 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   <button
                     type="button"
                     onClick={() => handleStartCustomRoom()}
-                    className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-black font-black text-sm flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-all"
+                    className="w-full py-3.5 rounded-2xl tactile-btn-amber font-black text-sm flex items-center justify-center gap-2"
                   >
-                    <Swords className="w-4 h-4 fill-black" />
+                    <Swords className="w-4 h-4 fill-[#0F1115]" />
                     <span>{isPublic ? "Herkese Açık Lobi Oluştur" : "Özel Odayı Başlat"}</span>
                   </button>
                 </div>
               </div>
             )}
 
-            {/* B. ODAYA KATIL & CANLI AÇIK LOBİLER */}
+            {/* B. ODAYA KATIL PANELİ */}
             {roomSubTab === "JOIN" && (
               <div className="space-y-3">
-                {/* Kod ile Doğrudan Katıl (No ugly browser prompts!) */}
-                <div className="p-3 rounded-2xl bg-[#0b101f] border border-sky-500/20">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 block mb-1.5">
+                <div className="p-3.5 rounded-2xl bg-[#181B22] border border-white/10">
+                  <label className="text-[10px] font-black uppercase tracking-wider text-[#A5A8B0] block mb-1.5 font-mono">
                     Özel Oda Kodunu Gir
                   </label>
                   <div className="flex gap-2">
@@ -578,26 +556,26 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                       placeholder="Örn: CX-7K9M2P"
                       value={joinCodeInput}
                       disabled={rateLimitSeconds > 0}
-                      onChange={e => {
+                      onChange={(e) => {
                         setJoinCodeInput(e.target.value.toUpperCase());
                         setJoinError(null);
                       }}
-                      className="flex-1 px-3 py-2 rounded-xl bg-[#121a30] border border-zinc-700 text-white font-mono text-xs font-bold uppercase placeholder:text-zinc-600 focus:outline-none focus:border-cyan-400 disabled:opacity-50"
+                      className="flex-1 px-3 py-2.5 rounded-xl bg-[#0F1115] border border-white/15 text-[#F1EEE7] font-mono text-xs font-bold uppercase placeholder:text-[#A5A8B0]/40 focus:outline-none focus:border-[#00D5E8] disabled:opacity-50"
                     />
                     <button
                       type="button"
                       disabled={rateLimitSeconds > 0}
                       onClick={() => handleJoinByCode(joinCodeInput)}
-                      className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:bg-zinc-700 disabled:text-zinc-500 text-black font-black text-xs transition-transform active:scale-95"
+                      className="px-4 py-2.5 rounded-xl tactile-btn-cyan text-xs font-black disabled:opacity-50"
                     >
                       {rateLimitSeconds > 0 ? `${rateLimitSeconds}s` : "Katıl"}
                     </button>
                   </div>
-                  {joinError && <p className="text-[10px] text-rose-400 mt-1 font-bold">{joinError}</p>}
+                  {joinError && <p className="text-[10px] text-[#FF334B] mt-1.5 font-bold">{joinError}</p>}
                 </div>
 
-                <p className="text-[11px] text-zinc-500">
-                  Açık lobi listesi yok. Yalnızca kodu bildiğin odaya katılırsın.
+                <p className="text-[11px] text-[#A5A8B0] px-1">
+                  Arkadaşının paylaştığı <span className="font-mono text-[#F5A623]">CX-XXXXXX</span> oda kodunu girerek doğrudan düello masasına bağlanabilirsin.
                 </p>
               </div>
             )}
@@ -609,7 +587,6 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
         ======================================================== */}
         {mainTab === "TOURNAMENT" && (
           <div>
-            {/* Alt Sekme: Turnuvaya Katıl vs Turnuva Kur */}
             <div className="flex items-center gap-2 mb-3">
               <button
                 type="button"
@@ -617,10 +594,10 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   audio.playSelect();
                   setTournamentSubTab("JOIN");
                 }}
-                className={`flex-1 py-1.5 rounded-lg text-xs font-black border transition-all ${
+                className={`flex-1 py-2 rounded-xl text-xs font-black border transition-all ${
                   tournamentSubTab === "JOIN"
-                    ? "bg-[#1f1122] border-rose-500 text-rose-300 shadow-sm"
-                    : "bg-[#0b101f] border-zinc-800 text-zinc-400 hover:text-white"
+                    ? "bg-[#252932] border-[#FF334B] text-[#FF334B] shadow-sm"
+                    : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
                 }`}
               >
                 📋 Canlı Turnuvalar
@@ -631,46 +608,45 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   audio.playSelect();
                   setTournamentSubTab("CREATE");
                 }}
-                className={`flex-1 py-1.5 rounded-lg text-xs font-black border transition-all ${
+                className={`flex-1 py-2 rounded-xl text-xs font-black border transition-all ${
                   tournamentSubTab === "CREATE"
-                    ? "bg-[#1f1122] border-amber-400 text-amber-300 shadow-sm"
-                    : "bg-[#0b101f] border-zinc-800 text-zinc-400 hover:text-white"
+                    ? "bg-[#252932] border-[#F5A623] text-[#F5A623] shadow-sm"
+                    : "bg-[#181B22] border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7]"
                 }`}
               >
                 👑 Turnuva Kur
               </button>
             </div>
 
-            {/* A. CANLI TURNUVALAR LİSTESİ */}
             {tournamentSubTab === "JOIN" && (
               <div className="space-y-2.5">
-                {ACTIVE_TOURNAMENTS.map(t => (
+                {ACTIVE_TOURNAMENTS.map((t) => (
                   <div
                     key={t.id}
-                    className="p-3 rounded-2xl bg-gradient-to-br from-[#141024] to-[#0c142b] border border-rose-500/20 shadow-lg relative overflow-hidden"
+                    className="p-3 rounded-2xl bg-[#181B22] border border-white/12 shadow-[0_4px_0_#090A0D] relative overflow-hidden"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
-                        <Trophy className="w-4 h-4 text-amber-400" />
-                        <h4 className="text-xs font-black text-white">{t.title}</h4>
+                        <Trophy className="w-4 h-4 text-[#F5A623]" />
+                        <h4 className="text-xs font-black text-[#F1EEE7]">{t.title}</h4>
                       </div>
-                      <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                      <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-[#FF334B]/15 text-[#FF334B] border border-[#FF334B]/30">
                         {t.slotsLeft}
                       </span>
                     </div>
 
-                    <p className="text-[10px] text-zinc-300 font-bold mt-1">
-                      Tema: <span className="text-amber-400">{t.theme}</span>
+                    <p className="text-[10px] text-[#A5A8B0] font-bold mt-1">
+                      Tema: <span className="text-[#F5A623]">{t.theme}</span>
                     </p>
 
-                    <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/5 text-[10px]">
+                    <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/10 text-[10px]">
                       <div>
-                        <span className="text-zinc-500 block font-bold">ÖDÜL HAVUZU</span>
-                        <span className="text-amber-300 font-black">{t.prize}</span>
+                        <span className="text-[#A5A8B0] block font-bold">ÖDÜL HAVUZU</span>
+                        <span className="text-[#F5A623] font-black font-mono">{t.prize}</span>
                       </div>
                       <div className="text-right">
-                        <span className="text-zinc-500 block font-bold">DOLULUK</span>
-                        <span className="text-emerald-400 font-black">{t.players}</span>
+                        <span className="text-[#A5A8B0] block font-bold">DOLULUK</span>
+                        <span className="text-[#8EBB70] font-black font-mono">{t.players}</span>
                       </div>
                     </div>
 
@@ -687,82 +663,83 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                             roomType: "TOURNAMENT",
                             isPublic: true,
                             matchFormat: "TOURNAMENT",
-                            shotClockSeconds: 20,
+                            shotClockSeconds: 12,
                             themeId: PRESET_BOARDS[t.boardIdx].id,
                             category: t.theme,
-                            allowCellStealing: true,
-                            allowPowerups: true,
+                            allowCellStealing: false,
+                            allowPowerups: false,
                             prizePool: t.prize,
                           };
                           onCreateRoom(settings, PRESET_BOARDS[t.boardIdx]);
                           onClose();
-                        }, 500);
+                        }, 400);
                       }}
-                      className="w-full mt-2.5 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 text-white font-black text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                      className="w-full mt-2.5 py-2.5 rounded-xl tactile-btn-amber font-black text-xs flex items-center justify-center gap-1.5"
                     >
-                      <span>{joinedTourneyId === t.id ? "Turnuvaya Kaydedildi! ✓" : `Kayıt Ol (${t.entryFee})`}</span>
+                      <span>
+                        {joinedTourneyId === t.id ? "Turnuvaya Kaydedildi! ✓" : `Kayıt Ol (${t.entryFee})`}
+                      </span>
                     </button>
                   </div>
                 ))}
               </div>
             )}
 
-            {/* B. TURNUVA KURMA PANELİ */}
             {tournamentSubTab === "CREATE" && (
               <div className="space-y-3">
-                <div className="p-3 rounded-2xl bg-[#0b101f] border border-sky-500/20 space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 block">
+                <div className="p-3 rounded-2xl bg-[#181B22] border border-white/10 space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-wider text-[#A5A8B0] block font-mono">
                     Turnuva Adı
                   </label>
                   <input
                     type="text"
                     value={tourneyName}
-                    onChange={e => setTourneyName(e.target.value)}
+                    onChange={(e) => setTourneyName(e.target.value)}
                     placeholder="Örn: Hafta Sonu Sinefil Kupası"
-                    className="w-full px-3 py-2 rounded-xl bg-[#121a30] border border-zinc-700 text-white text-xs font-bold focus:outline-none focus:border-amber-400"
+                    className="w-full px-3 py-2 rounded-xl bg-[#0F1115] border border-white/15 text-[#F1EEE7] text-xs font-bold focus:outline-none focus:border-[#F5A623]"
                   />
                 </div>
 
-                <div className="p-3 rounded-2xl bg-[#0b101f] border border-sky-500/20">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 block mb-1.5">
+                <div className="p-3 rounded-2xl bg-[#181B22] border border-white/10">
+                  <label className="text-[10px] font-black uppercase tracking-wider text-[#A5A8B0] block mb-1.5 font-mono">
                     Katılım Ücreti
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     {[
                       { val: "FREE", label: "Ücretsiz", desc: "Açık Katılım" },
                       { val: "REELS", label: "200 🎞️", desc: "Makara Giriş" },
-                    ].map(f => (
+                    ].map((f) => (
                       <button
                         key={f.val}
                         type="button"
                         onClick={() => setTourneyEntryFee(f.val as any)}
                         className={`p-2 rounded-xl border text-center transition-all ${
                           tourneyEntryFee === f.val
-                            ? "bg-[#1f1122] border-rose-500 text-white shadow"
-                            : "bg-[#10182b] border-zinc-800 text-zinc-400"
+                            ? "bg-[#252932] border-[#F5A623] text-[#F1EEE7] shadow"
+                            : "bg-[#0F1115] border-white/10 text-[#A5A8B0]"
                         }`}
                       >
                         <div className="text-xs font-black">{f.label}</div>
-                        <div className="text-[9px] text-zinc-500 mt-0.5">{f.desc}</div>
+                        <div className="text-[9px] text-[#A5A8B0] mt-0.5">{f.desc}</div>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div className="p-3 rounded-2xl bg-amber-400/10 border border-amber-400/30 text-[10px] text-zinc-300 flex items-start gap-2">
-                  <Trophy className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <div className="p-3 rounded-2xl bg-[#F5A623]/10 border border-[#F5A623]/30 text-[10px] text-[#F1EEE7] flex items-start gap-2">
+                  <Trophy className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-amber-400 font-black block">8 Kişilik Bracket Eleme:</strong>
-                    Çeyrek Final &rarr; Yarı Final &rarr; Büyük Final formatında oynanır. Şampiyon 1.500 Makara ve altın şampiyonluk rozeti kazanır.
+                    <strong className="text-[#F5A623] font-black block">8 Kişilik Bracket Eleme:</strong>
+                    Çeyrek Final &rarr; Yarı Final &rarr; Büyük Final formatında oynanır. Şampiyon 1.500 Makara ve altın rozet kazanır.
                   </div>
                 </div>
 
                 <button
                   type="button"
                   onClick={handleCreateTournament}
-                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-all"
+                  className="w-full py-3.5 rounded-2xl tactile-btn-amber font-black text-sm flex items-center justify-center gap-2"
                 >
-                  <Trophy className="w-4 h-4 fill-white" />
+                  <Trophy className="w-4 h-4 fill-[#0F1115]" />
                   <span>Turnuvayı Oluştur & Kayıtları Aç</span>
                 </button>
               </div>

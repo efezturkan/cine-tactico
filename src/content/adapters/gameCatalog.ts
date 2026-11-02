@@ -3,6 +3,7 @@ import { LEGACY_MOVIE_RECORDS } from "@/data/movies";
 import type { Actor, Movie } from "@/core";
 import type { GenreId } from "../types";
 import { canonicalCatalog } from "../index";
+import { normalizeForSearch } from "../search/normalize";
 
 const GAME_GENRE_LABEL: Record<GenreId, string> = {
   ACTION: "Action",
@@ -115,9 +116,69 @@ export const MOVIES_DATABASE: Movie[] = [
   ...pilotMovies(),
 ];
 
-export const ACTORS_DATABASE: Actor[] = LEGACY_ACTOR_RECORDS.filter((actor) =>
-  verifiedPersonIds.has(actor.id)
-);
+function buildActorsDatabase(): Actor[] {
+  const result: Actor[] = [];
+  const seenIds = new Set<string>();
+
+  for (const actor of LEGACY_ACTOR_RECORDS) {
+    if (verifiedPersonIds.has(actor.id)) {
+      result.push(actor);
+      seenIds.add(actor.id);
+    }
+  }
+
+  const actorPersonIds = new Set(
+    canonicalCatalog.credits
+      .filter((credit) => credit.role === "ACTOR")
+      .map((credit) => credit.personId)
+  );
+
+  const aliasesByPerson = new Map<string, string[]>();
+  for (const alias of canonicalCatalog.aliases) {
+    if (alias.entityType === "PERSON") {
+      const bucket = aliasesByPerson.get(alias.entityId) ?? [];
+      bucket.push(alias.text);
+      aliasesByPerson.set(alias.entityId, bucket);
+    }
+  }
+
+  for (const person of canonicalCatalog.people) {
+    if (seenIds.has(person.id)) continue;
+    if (person.provenance.verificationStatus !== "VERIFIED") continue;
+    if (!actorPersonIds.has(person.id)) continue;
+
+    const personAliases = aliasesByPerson.get(person.id) ?? [];
+    const normalizedName = normalizeForSearch(person.name);
+    const normalizedAliases = personAliases
+      .map(normalizeForSearch)
+      .filter((alias) => alias.length > 0 && alias !== normalizedName);
+
+    result.push({
+      id: person.id,
+      primaryName: person.name,
+      normalizedName,
+      aliases: personAliases,
+      normalizedAliases,
+      birthYear: person.birthYear,
+      ...(person.provenance.externalId
+        ? { sourceIds: { wikidata: person.provenance.externalId } }
+        : {}),
+      provenance: {
+        source: "WIKIDATA",
+        sourceId: person.provenance.externalId,
+        license: "CC0",
+        verified: true,
+        verifiedAt: person.provenance.lastVerifiedAt ?? "2026-11-01",
+        verifiedBy: "CineXOX Pipeline",
+      },
+    });
+    seenIds.add(person.id);
+  }
+
+  return result;
+}
+
+export const ACTORS_DATABASE: Actor[] = buildActorsDatabase();
 
 export const ACTOR_ALIAS_MAP: Map<string, string> = new Map();
 ACTORS_DATABASE.forEach((actor) => {

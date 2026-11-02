@@ -96,35 +96,42 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-md bg-[#0a1122] border border-sky-500/20 rounded-3xl p-5 shadow-2xl flex flex-col max-h-[92vh] overflow-y-auto custom-scrollbar relative text-white">
+      <div
+        className="w-full max-w-md rounded-3xl p-5 flex flex-col max-h-[92vh] overflow-y-auto custom-scrollbar relative text-[#F1EEE7] tactile-card"
+        style={{
+          background: "linear-gradient(180deg, #1E222B 0%, #14171D 100%)",
+          borderColor: "rgba(255,255,255,0.14)",
+          boxShadow: "0 16px 40px rgba(0,0,0,0.85), 0 6px 0 #08090C, inset 0 1px 0 rgba(255,255,255,0.12)",
+        }}
+      >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-full bg-zinc-800 text-zinc-400 hover:text-white"
+          className="absolute top-4 right-4 p-2 rounded-xl tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Başlık ve Kredi Bakiyesi */}
-        <div className="text-center pb-3 border-b border-sky-500/10">
-          <div className="w-12 h-12 mx-auto mb-2 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-cinema-dark shadow-md">
-            <Gift className="w-6 h-6 fill-cinema-dark" />
+        <div className="text-center pb-3 border-b border-white/10">
+          <div className="w-12 h-12 mx-auto mb-2 rounded-2xl flex items-center justify-center text-[#0F1115] shadow-md tactile-btn-amber">
+            <Gift className="w-6 h-6 fill-[#0F1115]" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/20">
-            DUOLINGO STİLİ ÖDÜL MERKEZİ
+          <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#F5A623] bg-[#F5A623]/10 px-2.5 py-0.5 rounded-md border border-[#F5A623]/30">
+            SİNEFİL ÖDÜL KÜRSÜSÜ &middot; SEZON 01
           </span>
-          <h2 className="text-lg font-black text-white mt-1">Görevler & Günlük Ödüller</h2>
+          <h2 className="text-xl font-serif tracking-wide text-[#F1EEE7] mt-1">Görevler &amp; Günlük Ödüller</h2>
 
           {/* Günlük Seri Rozeti */}
           <div className="flex items-center justify-center gap-3 mt-2">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-black">
-              <Flame className="w-4 h-4 fill-rose-400 animate-pulse" />
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF334B]/10 border border-[#FF334B]/30 text-[#FF334B] text-xs font-black">
+              <Flame className="w-4 h-4 fill-[#FF334B] animate-pulse" />
               <span>{dailyStreak} Günlük Seri</span>
             </div>
           </div>
         </div>
 
         {/* Sekmeler: Günlük Görevler, Haftalık Mücadele, 7 Günlük Giriş */}
-        <div className="flex gap-1.5 my-3 p-1 rounded-2xl bg-[#0f172a] border border-sky-500/15 text-xs font-bold text-zinc-400">
+        <div className="flex gap-1.5 my-3 p-1 rounded-2xl bg-[#11141A] border border-white/10 text-xs font-bold text-[#A5A8B0]">
           <button
             onClick={() => {
               audio.playSelect();
@@ -132,8 +139,8 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
             }}
             className={`flex-1 py-1.5 rounded-xl transition-all ${
               activeTab === "DAILY_QUESTS"
-                ? "bg-amber-400 text-cinema-dark font-black shadow-md"
-                : "hover:text-white"
+                ? "tactile-btn-amber text-[#0F1115] font-black shadow-md"
+                : "hover:text-[#F1EEE7]"
             }`}
           >
             Günlük (3)
@@ -145,8 +152,8 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
             }}
             className={`flex-1 py-1.5 rounded-xl transition-all ${
               activeTab === "WEEKLY_MEGA"
-                ? "bg-purple-500 text-white font-black shadow-md"
-                : "hover:text-white"
+                ? "tactile-btn-surface text-[#F5A623] font-black shadow-md"
+                : "hover:text-[#F1EEE7]"
             }`}
           >
             Haftalık Sandık
@@ -158,8 +165,8 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
             }}
             className={`flex-1 py-1.5 rounded-xl transition-all ${
               activeTab === "DAILY_LOGIN"
-                ? "bg-cyan-500 text-cinema-dark font-black shadow-md"
-                : "hover:text-white"
+                ? "tactile-btn-cyan text-[#0F1115] font-black shadow-md"
+                : "hover:text-[#F1EEE7]"
             }`}
           >
             7 Günlük Seri

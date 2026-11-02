@@ -61,6 +61,7 @@ function CineXoxApp() {
   const [showCustomLobby, setShowCustomLobby] = useState<boolean>(false);
   const [showQuests, setShowQuests] = useState<boolean>(false);
   const [showProfile, setShowProfile] = useState<boolean>(false);
+  const [profileInitialTab, setProfileInitialTab] = useState<"CAREER" | "DNA" | "AMBIENCE">("CAREER");
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [showShop, setShowShop] = useState<boolean>(false);
   const [showGameModesHub, setShowGameModesHub] = useState<boolean>(false);
@@ -79,7 +80,7 @@ function CineXoxApp() {
 
   // Kullanıcı Profili
   const [profile, setProfile] = useState<UserProfile>({
-    username: "Oyuncu",
+    username: "Sinefil #3095",
     avatarId: "avatar_director",
     rankTitle: "Bilet Kontrolörü",
     rankLevel: 1,
@@ -88,13 +89,13 @@ function CineXoxApp() {
     losses: 0,
     draws: 0,
     highestCombo: 0,
-    dailyStreak: 0,
+    dailyStreak: 3,
     streakProtected: false,
     favoriteGenre: "Sci-Fi",
     favoriteDirector: "Christopher Nolan",
     favoriteMode: "Klasik 3x3",
     lastFiveMatches: [],
-    reelsBalance: 0,
+    reelsBalance: 350,
     diamondsBalance: 45,
     powerups: {
       freezeTime: 2,
@@ -740,6 +741,7 @@ function CineXoxApp() {
     showShop,
     showGameModesHub,
     showProfile,
+    profileInitialTab,
     showHelp,
     showLeaderboard,
     showAmbienceConsole,
@@ -806,13 +808,14 @@ function CineXoxApp() {
   // 1. HOME SCREEN VIEW
   if (currentView === "HOME") {
     return (
-      <main className="min-h-[100dvh] bg-[#07080b] flex flex-col items-center">
+      <main className="w-full min-h-[100dvh] bg-night flex flex-col items-center overflow-x-hidden">
         <HomeScreen
           profile={profile}
           onStartGame={handleStartFromHome}
           onDirectStartMode={handleDirectStartMode}
           onOpenProfileModal={() => {
             audio.playSelect();
+            setProfileInitialTab("CAREER");
             setShowProfile(true);
           }}
           onOpenCustomLobby={() => {
@@ -838,6 +841,7 @@ function CineXoxApp() {
           }}
           onOpenDna={() => {
             audio.playSelect();
+            setProfileInitialTab("DNA");
             setShowProfile(true);
           }}
           onOpenLiveAmbience={() => {
@@ -848,10 +852,16 @@ function CineXoxApp() {
             audio.playSelect();
             setShowNotifications(true);
           }}
+          onOpenHelp={() => {
+            audio.playSelect();
+            setShowHelp(true);
+          }}
           onOpenGameSelect={() => {
             audio.playSelect();
             setCurrentView("GAME_SELECT");
           }}
+          muted={muted}
+          onToggleMute={handleToggleMute}
         />
         <GlobalModals {...globalModalsProps} />
       </main>
@@ -861,7 +871,7 @@ function CineXoxApp() {
   // 2. GAME SELECT SCREEN VIEW
   if (currentView === "GAME_SELECT") {
     return (
-      <main className="min-h-[100dvh] bg-[#07080b] flex flex-col items-center">
+      <main className="min-h-[100dvh] bg-night flex flex-col items-center">
         <GameSelectScreen
           onBack={() => setCurrentView("HOME")}
           onSelectBoard={(boardIdx, selectedMode) => {

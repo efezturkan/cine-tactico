@@ -1458,7 +1458,9 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     themes: ["SURVIVAL"],
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    overview: "American car designer Carroll Shelby and driver Ken Miles battle corporate interference to build a revolutionary race car for Ford."
+    overview: "American car designer Carroll Shelby and driver Ken Miles battle corporate interference to build a revolutionary race car for Ford.",
+    sourceIds: { wikidata: "Q58927242" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }
   },
   {
     id: "m_the_revenant",
@@ -1471,7 +1473,9 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     themes: ["SURVIVAL", "REVENGE"],
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    overview: "A frontiersman on a fur trading expedition in the 1820s fights for survival after being mauled by a bear."
+    overview: "A frontiersman on a fur trading expedition in the 1820s fights for survival after being mauled by a bear.",
+    sourceIds: { wikidata: "Q18002795" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }
   },
   {
     id: "m_heat",
@@ -1484,7 +1488,9 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     themes: ["HEIST", "NEO_NOIR"],
     hasOscar: false,
     boxOfficeCategory: "BLOCKBUSTER",
-    overview: "A group of high-end professional thieves start to feel the heat from the LAPD when they unwittingly leave a clue at their latest heist."
+    overview: "A group of high-end professional thieves start to feel the heat from the LAPD when they unwittingly leave a clue at their latest heist.",
+    sourceIds: { wikidata: "Q42198" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }
   },
   {
     id: "m_the_big_short",
@@ -1497,6 +1503,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     themes: ["HEIST", "SATIRE"],
     hasOscar: true,
     boxOfficeCategory: "BLOCKBUSTER",
-    overview: "In 2006-2007 a group of investors bet against the US mortgage market."
+    overview: "In 2006-2007 a group of investors bet against the US mortgage market.",
+    sourceIds: { wikidata: "Q19850715" },
+    provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }
   }
 ];

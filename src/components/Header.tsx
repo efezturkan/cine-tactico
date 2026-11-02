@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Volume2, VolumeX, RotateCcw, Clapperboard, Gift, HelpCircle, User, ArrowLeft, Home } from "lucide-react";
+import { Volume2, VolumeX, RotateCcw, Gift, HelpCircle, ArrowLeft } from "lucide-react";
 import { PlayerSymbol } from "@/core";
 import { AVATAR_OPTIONS } from "@/types/profile";
 
@@ -27,7 +27,7 @@ export const Header: React.FC<HeaderProps> = ({
   onReset,
   isMuted,
   onToggleMute,
-  reelsBalance = 150,
+  reelsBalance = 350,
   userAvatarId = "avatar_director",
   onOpenQuests,
   onOpenProfile,
@@ -35,172 +35,142 @@ export const Header: React.FC<HeaderProps> = ({
   onBackToHome,
 }) => {
   const currentAvatar =
-    AVATAR_OPTIONS.find(a => a.id === userAvatarId) || AVATAR_OPTIONS[0];
+    AVATAR_OPTIONS.find((a) => a.id === userAvatarId) || AVATAR_OPTIONS[0];
 
   return (
     <header
-      className="w-full max-w-4xl mx-auto px-3 sm:px-4 py-1.5 sm:py-2.5 flex items-center justify-between sticky top-0 z-30"
+      className="w-full max-w-4xl mx-auto px-3 sm:px-4 py-2 flex items-center justify-between sticky top-0 z-30 relative"
       style={{
-        background: "rgba(7,8,11,0.97)",
-        borderBottom: "1px solid #1a1c24",
-        backdropFilter: "blur(20px)",
-        boxShadow: "0 2px 20px rgba(0,0,0,0.6)",
+        background: "linear-gradient(180deg, rgba(24,27,34,0.98) 0%, rgba(15,17,21,0.98) 100%)",
+        borderBottom: "1px solid rgba(255,255,255,0.12)",
+        boxShadow: "0 4px 0 #08090C, 0 8px 24px rgba(0,0,0,0.65)",
       }}
     >
       {/* 35mm sprocket holes left edge */}
-      <div className="absolute left-0 top-0 bottom-0 w-4 flex flex-col items-center justify-around py-1 pointer-events-none opacity-50">
+      <div className="absolute left-0 top-0 bottom-0 w-3.5 flex flex-col items-center justify-around py-1 pointer-events-none opacity-60">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            style={{ width: 7, height: 5, background: "#07080b", borderRadius: 1, border: "1px solid #2a2b35" }}
+            style={{
+              width: 6,
+              height: 4,
+              background: "#0F1115",
+              borderRadius: 1,
+              border: "1px solid #2A2E39",
+            }}
           />
         ))}
       </div>
       {/* 35mm sprocket holes right edge */}
-      <div className="absolute right-0 top-0 bottom-0 w-4 flex flex-col items-center justify-around py-1 pointer-events-none opacity-50">
+      <div className="absolute right-0 top-0 bottom-0 w-3.5 flex flex-col items-center justify-around py-1 pointer-events-none opacity-60">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            style={{ width: 7, height: 5, background: "#07080b", borderRadius: 1, border: "1px solid #2a2b35" }}
+            style={{
+              width: 6,
+              height: 4,
+              background: "#0F1115",
+              borderRadius: 1,
+              border: "1px solid #2A2E39",
+            }}
           />
         ))}
       </div>
 
       {/* Brand / Back */}
-      <div className="flex items-center gap-2 ml-4">
+      <div className="flex items-center gap-1.5 ml-2.5 sm:ml-3 shrink-0">
         {onBackToHome ? (
           <button
             onClick={onBackToHome}
             title="Ana Sayfaya Dön"
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl font-bold text-xs transition-all active:scale-95"
-            style={{
-              background: "rgba(139,21,27,0.08)",
-              border: "1px solid rgba(139,21,27,0.3)",
-              color: "#d97706",
-            }}
+            className="flex items-center gap-1 px-2 py-1.5 rounded-xl font-black text-xs tactile-btn-surface text-[#F5A623]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline font-black">Lobi</span>
+            <span className="hidden sm:inline">Lobi</span>
           </button>
         ) : (
           <button
             onClick={onOpenProfile}
             title="Profil ve Ayarlar"
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shadow-md active:scale-95 transition-transform"
-            style={{
-              background: "linear-gradient(135deg, #1f2230, #0e1018)",
-              border: "1.5px solid rgba(217,119,6,0.4)",
-            }}
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-base sm:text-lg tactile-btn-surface"
           >
             {currentAvatar.emoji}
           </button>
         )}
-        <div>
-          <h1 className="text-sm sm:text-base font-black tracking-tight text-white flex items-center gap-1">
-            CINE<span style={{ color: "#d97706" }}>XOX</span>
-            <span
-              className="text-[8px] font-black px-1.5 py-0.5 rounded"
-              style={{ background: "rgba(139,21,27,0.1)", border: "1px solid rgba(139,21,27,0.3)", color: "#8b151b" }}
-            >
+        <div className="min-w-0">
+          <h1 className="text-xs sm:text-base font-black tracking-tight text-[#F1EEE7] flex items-center gap-1">
+            CINE<span className="text-[#F5A623]">XOX</span>
+            <span className="text-[7.5px] sm:text-[8px] font-black font-mono px-1 py-0.2 rounded bg-[#F5A623]/15 border border-[#F5A623]/35 text-[#F5A623]">
               3×3
             </span>
           </h1>
-          <div
-            className="text-[7px] font-black tracking-[0.2em] uppercase"
-            style={{ color: "#2a2b35", fontFamily: "monospace" }}
-          >
-            KODAK 35mm
+          <div className="text-[6.5px] sm:text-[7px] font-black tracking-[0.2em] uppercase text-[#A5A8B0] font-mono truncate">
+            KODAK 35MM
           </div>
         </div>
       </div>
 
-      {/* Scoreboard — velvet frame */}
-      <div
-        className="flex items-center gap-2 px-2.5 sm:px-3 py-1 rounded-xl shadow-inner"
-        style={{
-          background: "#0a0b10",
-          border: "1px solid #1e1f28",
-        }}
-      >
+      {/* Scoreboard — Tactile Duel Frame (Amber X vs Cyan O) */}
+      <div className="flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl bg-[#0F1115] border border-white/15 shadow-inner shrink-0">
         <div
-          className="flex items-center gap-1 px-2 py-0.5 rounded-lg transition-all relative"
-          style={
+          className={`flex items-center gap-1 px-1.5 py-0.5 rounded-lg transition-all relative font-mono ${
             currentTurn === "X"
-              ? { background: "rgba(6,182,212,0.18)", color: "#06b6d4" }
-              : { color: "#4b5563" }
-          }
+              ? "bg-[#F5A623]/20 text-[#F5A623] border border-[#F5A623]/40 shadow-[0_0_10px_rgba(245,166,35,0.2)]"
+              : "text-[#A5A8B0]"
+          }`}
         >
           {currentTurn === "X" && (
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#06b6d4]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#F5A623] animate-pulse shadow-[0_0_8px_#F5A623]" />
           )}
           <span className="text-xs font-black">X</span>
-          <span className="text-sm font-semibold">{scoreX}</span>
+          <span className="text-xs sm:text-sm font-black">{scoreX}</span>
         </div>
-        <span className="font-bold text-xs" style={{ color: "#2a2b35" }}>:</span>
+        <span className="font-bold text-xs text-white/25 font-mono">:</span>
         <div
-          className="flex items-center gap-1 px-2 py-0.5 rounded-lg transition-all relative"
-          style={
+          className={`flex items-center gap-1 px-1.5 py-0.5 rounded-lg transition-all relative font-mono ${
             currentTurn === "O"
-              ? { background: "rgba(139,21,27,0.22)", color: "#ff2a55" }
-              : { color: "#4b5563" }
-          }
+              ? "bg-[#00D5E8]/20 text-[#00D5E8] border border-[#00D5E8]/40 shadow-[0_0_10px_rgba(0,213,232,0.2)]"
+              : "text-[#A5A8B0]"
+          }`}
         >
           {currentTurn === "O" && (
-            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_#ff2a55]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00D5E8] animate-pulse shadow-[0_0_8px_#00D5E8]" />
           )}
           <span className="text-xs font-black">O</span>
-          <span className="text-sm font-semibold">{scoreO}</span>
+          <span className="text-xs sm:text-sm font-black">{scoreO}</span>
         </div>
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-1 sm:gap-1.5 mr-4">
-        {onOpenQuests && (
-          <button
-            onClick={onOpenQuests}
-            title="Günlük Ödüller & Görevler"
-            className="flex items-center gap-1 px-2 py-1.5 rounded-xl text-xs font-black transition-all active:scale-95"
-            style={{
-              background: "rgba(217,119,6,0.08)",
-              border: "1px solid rgba(217,119,6,0.25)",
-              color: "#d97706",
-            }}
-          >
-            <Gift className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">{reelsBalance}</span>
-          </button>
-        )}
-
+      <div className="flex items-center gap-1 mr-2.5 sm:mr-3 shrink-0">
         {onOpenHelp && (
           <button
             onClick={onOpenHelp}
             title="Nasıl Oynanır?"
-            className="p-2 rounded-xl transition-all active:scale-95"
-            style={{ background: "#0a0b10", border: "1px solid #1e1f28", color: "#4b5563" }}
+            className="p-1.5 sm:p-2 rounded-xl tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7] hidden xs:flex"
           >
-            <HelpCircle className="w-4 h-4" style={{ color: "#8b151b" }} />
+            <HelpCircle className="w-3.5 h-3.5 text-[#F5A623]" />
           </button>
         )}
 
         <button
           onClick={onToggleMute}
           title="Sesi Aç/Kapat"
-          className="p-2 rounded-xl transition-all active:scale-95"
-          style={{ background: "#0a0b10", border: "1px solid #1e1f28" }}
+          className="p-1.5 sm:p-2 rounded-xl tactile-btn-surface"
         >
-          {isMuted
-            ? <VolumeX className="w-4 h-4" style={{ color: "#4b5563" }} />
-            : <Volume2 className="w-4 h-4" style={{ color: "#d97706" }} />
-          }
+          {isMuted ? (
+            <VolumeX className="w-3.5 h-3.5 text-[#A5A8B0]" />
+          ) : (
+            <Volume2 className="w-3.5 h-3.5 text-[#F5A623]" />
+          )}
         </button>
 
         <button
           onClick={onReset}
           title="Yeniden Başlat"
-          className="p-2 rounded-xl transition-all active:scale-95"
-          style={{ background: "#0a0b10", border: "1px solid #1e1f28", color: "#4b5563" }}
+          className="p-1.5 sm:p-2 rounded-xl tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
         >
-          <RotateCcw className="w-4 h-4" />
+          <RotateCcw className="w-3.5 h-3.5" />
         </button>
       </div>
     </header>

@@ -6,7 +6,7 @@ import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
 import { movieMatchesTitleQuery } from "@/content/search/movieTitle";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
-import { Sparkles, Trophy, Film, Send, Clock, X, AlertTriangle } from "lucide-react";
+import { Sparkles, Film, Clock, X, AlertTriangle } from "lucide-react";
 
 interface GoldenReelModalProps {
   isOpen: boolean;
@@ -47,7 +47,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
       }, 100);
 
       timerRef.current = setInterval(() => {
-        setSeconds(prev => {
+        setSeconds((prev) => {
           if (prev <= 1) {
             if (timerRef.current) clearInterval(timerRef.current);
             setIsPhotoFinish(true);
@@ -93,109 +93,100 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/95 backdrop-blur-xl animate-in fade-in duration-300">
-      {/* 35mm Sinema Perdesi Arka Plan Efekti */}
-      <div className="relative w-full max-w-md bg-gradient-to-b from-amber-950/40 via-zinc-950 to-black border-2 border-amber-500/80 rounded-3xl p-5 sm:p-6 shadow-[0_0_60px_rgba(245,158,11,0.35)] flex flex-col items-center text-center overflow-hidden">
-        {/* Üst Sinematik Şerit */}
-        <div className="w-full flex items-center justify-between pb-3 border-b border-amber-500/30">
-          <span className="text-[9px] font-mono font-black text-amber-400 uppercase tracking-[0.25em]">
-            35MM FILM CELL · SUDDEN DEATH
-          </span>
-          <span className="text-[9px] font-mono font-black text-amber-500 uppercase tracking-widest">
-            FOTO-FİNİŞ PROTOKOLÜ
-          </span>
-        </div>
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-night/95 backdrop-blur-md select-none">
+      <div className="relative w-full max-w-md animate-card-in bg-panel border-2 border-gold rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center overflow-hidden text-ink">
         {/* Dönen Altın Makara Simgesi */}
-        <div className="relative my-4 flex items-center justify-center">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-600 to-yellow-400 p-1 shadow-[0_0_30px_rgba(245,158,11,0.6)] animate-spin" style={{ animationDuration: "6s" }}>
-            <div className="w-full h-full rounded-full bg-black flex items-center justify-center border-2 border-amber-300">
-              <Film className="w-8 h-8 text-amber-400" />
+        <div className="relative my-3 flex items-center justify-center">
+          <div
+            className="w-20 h-20 rounded-full border-[3px] border-gold bg-night flex items-center justify-center shadow-[0_0_25px_rgba(245,196,81,0.3)] animate-spin"
+            style={{ animationDuration: "5s" }}
+          >
+            <div className="w-9 h-9 rounded-full bg-gold flex items-center justify-center">
+              <Film className="w-5 h-5 text-night" />
             </div>
           </div>
-          <Sparkles className="w-6 h-6 text-yellow-300 absolute -top-1 -right-1 animate-pulse" />
+          <Sparkles className="w-5 h-5 text-gold absolute -top-1 -right-1 animate-pulse" />
         </div>
 
         {/* Başlık & Kural */}
-        <h2 className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 uppercase tracking-wider drop-shadow">
-          ALTIN MAKARA
+        <div className="text-xs font-semibold uppercase tracking-widest text-gold">
+          ALTIN MAKARA · UZATMA
+        </div>
+        <h2 className="mt-1 font-display text-4xl font-extrabold italic uppercase tracking-wide text-ink">
+          SON KARAR
         </h2>
-        <p className="text-xs text-zinc-300 font-medium mt-1 max-w-xs">
+        <p className="text-xs text-muted mt-1 max-w-xs">
           9 kare doldu, 3&apos;lü hat çıkmadı! İlk doğru filmi yazan anında kazanır.
         </p>
 
-        {/* 12 Saniye Buzzer Geri Sayımı */}
-        <div className="my-3 flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-500/15 border border-amber-400/40">
-          <Clock className={`w-5 h-5 ${seconds <= 4 ? "text-rose-500 animate-ping" : "text-amber-400 animate-pulse"}`} />
-          <span className={`text-2xl font-black font-mono tracking-tight ${seconds <= 4 ? "text-rose-400" : "text-amber-300"}`}>
+        {/* 12 Saniye Geri Sayımı */}
+        <div className="my-3 flex items-center gap-2 px-4 py-1.5 rounded-full bg-night border border-gold/40">
+          <Clock className={`w-4 h-4 ${seconds <= 4 ? "text-missed animate-ping" : "text-gold"}`} />
+          <span className={`text-xl font-bold font-mono ${seconds <= 4 ? "text-missed" : "text-gold"}`}>
             00:{seconds < 10 ? `0${seconds}` : seconds}
           </span>
         </div>
 
         {/* Soru Görevi */}
-        <div className="w-full p-3 rounded-xl bg-zinc-900/90 border border-zinc-800 text-left my-2">
-          <div className="text-[10px] font-black text-amber-400 uppercase tracking-widest">
+        <div className="w-full p-3.5 rounded-xl bg-night border border-white/10 text-left my-2">
+          <div className="text-[10px] font-bold text-gold uppercase tracking-wider">
             Altın Kriter:
           </div>
-          <div className="text-sm font-bold text-white mt-0.5">
+          <div className="text-sm font-bold text-ink mt-0.5">
             {question}
           </div>
         </div>
 
-        {/* Foto-finiş İstatistik Çubuğu */}
-        <div className="w-full grid grid-cols-2 gap-2 my-2 p-2 rounded-xl bg-black/60 border border-zinc-800 text-xs">
+        {/* İstatistik Çubuğu */}
+        <div className="w-full grid grid-cols-2 gap-2 my-2 p-2.5 rounded-xl bg-night border border-white/10 text-xs">
           <div className="flex flex-col items-center">
-            <span className="text-[9px] font-bold text-cyan-400">OYUNCU X</span>
-            <span className="text-base font-black text-white font-mono">{scoreRarityX} Nadirlik</span>
+            <span className="text-[10px] font-bold text-gold">SEN (X)</span>
+            <span className="text-base font-extrabold text-ink font-display">{scoreRarityX} Puan</span>
           </div>
           <div className="flex flex-col items-center">
-            <span className="text-[9px] font-bold text-rose-400">OYUNCU O</span>
-            <span className="text-base font-black text-white font-mono">{scoreRarityO} Nadirlik</span>
+            <span className="text-[10px] font-bold text-team-blue">RAKİP (O)</span>
+            <span className="text-base font-extrabold text-ink font-display">{scoreRarityO} Puan</span>
           </div>
         </div>
 
-        {/* Hata Bildirimi */}
         {errorMessage && (
-          <div className="text-rose-400 text-xs font-bold my-1 flex items-center justify-center gap-1.5">
+          <div className="text-missed text-xs font-bold my-1 flex items-center justify-center gap-1.5">
             <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
             <span>{errorMessage}</span>
           </div>
         )}
 
-        {/* Foto-finiş Süre Doldu Mesajı */}
         {isPhotoFinish ? (
-          <div className="my-3 p-3 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-200 text-sm font-black animate-bounce flex items-center justify-center gap-2">
-            <Clock className="w-4 h-4 animate-spin text-amber-400" />
-            <span>Süre Doldu! Foto-finiş kararı hesaplanıyor...</span>
+          <div className="my-3 p-3 rounded-xl bg-gold/15 border border-gold text-gold text-xs font-bold flex items-center justify-center gap-2">
+            <Clock className="w-4 h-4 animate-spin text-gold" />
+            <span>Süre Doldu! Karar hesaplanıyor...</span>
           </div>
         ) : (
-          /* Arama / Film Yazma Alanı */
           <div className="w-full mt-2">
             <div className="relative">
               <input
                 ref={inputRef}
                 type="text"
                 value={query}
-                onChange={e => setQuery(e.target.value)}
+                onChange={(e) => setQuery(e.target.value)}
                 placeholder="Hemen bir film adı yaz..."
-                className="w-full bg-zinc-900 border border-amber-500/50 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 font-medium outline-none shadow-inner"
+                className="w-full bg-night border border-white/15 focus:border-gold rounded-xl px-4 py-3 text-sm text-ink placeholder-muted/50 font-semibold outline-none"
                 autoComplete="off"
               />
               {query && (
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
                 >
                   <X className="w-4 h-4" />
                 </button>
               )}
             </div>
 
-            {/* Otomatik Eşleşmeler */}
             {filteredMovies.length > 0 && (
-              <div className="mt-2 space-y-1 max-h-36 overflow-y-auto">
-                {filteredMovies.map(movie => {
+              <div className="mt-2 space-y-1 max-h-36 overflow-y-auto custom-scrollbar">
+                {filteredMovies.map((movie) => {
                   const hasDiffOriginal =
                     movie.originalTitle &&
                     movie.originalTitle.trim().toLowerCase() !== movie.title.trim().toLowerCase();
@@ -204,17 +195,19 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
                     <button
                       key={movie.id}
                       onClick={() => handleSelectMovie(movie)}
-                      className="w-full p-2.5 rounded-xl bg-zinc-900 hover:bg-amber-500/20 border border-zinc-800 hover:border-amber-400 flex items-center justify-between text-left transition-all"
+                      className="w-full p-2.5 rounded-xl bg-control hover:bg-control-hover border border-white/10 hover:border-gold flex items-center justify-between text-left transition-all"
                     >
                       <div>
-                        <div className="font-black text-xs text-white">{movie.title}</div>
+                        <div className="font-bold text-xs text-ink">{movie.title}</div>
                         {hasDiffOriginal && (
-                          <div className="text-[10px] text-zinc-400 italic">
+                          <div className="text-[10px] text-muted italic">
                             {movie.originalTitle}
                           </div>
                         )}
                       </div>
-                      <span className="text-xs font-bold text-amber-400">GÖNDER &rarr;</span>
+                      <span className="font-display text-xs font-extrabold uppercase text-gold">
+                        GÖNDER &rarr;
+                      </span>
                     </button>
                   );
                 })}

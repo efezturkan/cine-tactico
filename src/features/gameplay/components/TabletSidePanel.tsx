@@ -2,7 +2,7 @@
 
 import React from "react";
 import { CellAnswer, PlayerSymbol } from "@/core";
-import { Film, Trophy, Clock, Star, Award, ShieldAlert } from "lucide-react";
+import { Film, Trophy, Award } from "lucide-react";
 
 interface TabletSidePanelProps {
   cells: (CellAnswer | null)[];
@@ -13,83 +13,87 @@ interface TabletSidePanelProps {
 
 export const TabletSidePanel: React.FC<TabletSidePanelProps> = ({
   cells,
-  currentTurn,
-  playerXScore,
-  playerOScore
 }) => {
   const answeredCells = cells.filter((c): c is CellAnswer => c !== null);
 
   return (
-    <aside className="w-80 shrink-0 hidden lg:flex flex-col gap-4 p-4 bg-cinema-card/50 border-l border-cinema-border/50 overflow-y-auto">
-      {/* Taktik & Kurallar Kartı */}
-      <div className="bg-cinema-card border border-cinema-border rounded-2xl p-4 shadow-sm">
-        <h3 className="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5 mb-2">
+    <aside className="w-72 shrink-0 hidden lg:flex flex-col gap-3 p-4 border-l border-white/10 bg-night/60 overflow-y-auto">
+      {/* Rules Summary Card */}
+      <div className="rounded-2xl bg-panel border border-white/10 p-4 shadow-md">
+        <h3 className="font-display text-sm font-extrabold italic uppercase tracking-wider text-gold flex items-center gap-1.5 mb-2">
           <Trophy className="w-3.5 h-3.5" />
-          CineXOX Kuralları
+          <span>OYUN KURALLARI</span>
         </h3>
-        <ul className="text-[11px] text-zinc-300 space-y-1.5">
+        <ul className="text-xs text-muted space-y-1.5 leading-relaxed">
           <li className="flex items-start gap-1.5">
-            <span className="text-amber-400 font-bold">&bull;</span>
-            Kareye tıklayıp satır ve sütundaki 2 kurala da uyan bir film seçin.
+            <span className="text-gold font-bold">&bull;</span>
+            <span>Satır ve sütundaki iki kritere de uyan ortak filmi seç.</span>
           </li>
           <li className="flex items-start gap-1.5">
-            <span className="text-amber-400 font-bold">&bull;</span>
-            Yatay, dikey veya çapraz <b className="text-white">3&apos;lü hat</b> kuran kazanır.
+            <span className="text-gold font-bold">&bull;</span>
+            <span>
+              Yatay, dikey veya çapraz <strong className="text-ink">3&apos;lü hat</strong> kuran kazanır.
+            </span>
           </li>
           <li className="flex items-start gap-1.5">
-            <span className="text-amber-400 font-bold">&bull;</span>
-            Süre: 12 saniye (Blitz). Süresi bitenin sırası rakibe geçer.
+            <span className="text-gold font-bold">&bull;</span>
+            <span>Hamle süresi 12 saniyedir. Mühürlenen kare çalınamaz.</span>
           </li>
         </ul>
       </div>
 
-      {/* Oynanan Filmler Canlı Kartları */}
-      <div className="flex-1 flex flex-col min-h-0 bg-cinema-card border border-cinema-border rounded-2xl p-4 shadow-sm">
-        <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 flex items-center justify-between mb-3">
+      {/* Live Match Film Log */}
+      <div className="flex-1 flex flex-col min-h-0 rounded-2xl bg-panel border border-white/10 p-4 shadow-md">
+        <h3 className="font-display text-sm font-extrabold italic uppercase tracking-wider text-muted flex items-center justify-between mb-3">
           <span className="flex items-center gap-1.5">
-            <Film className="w-3.5 h-3.5 text-zinc-400" />
-            Oynanan Filmler ({answeredCells.length}/9)
+            <Film className="w-3.5 h-3.5 text-gold" />
+            <span>MÜHÜRLENEN KARELER ({answeredCells.length}/9)</span>
           </span>
         </h3>
 
         <div className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
           {answeredCells.length === 0 ? (
-            <div className="text-center py-10 text-xs text-zinc-500">
-              Henüz hamle yapılmadı.
-              <br />İlk kareyi kim kapacak?
+            <div className="text-center py-10 text-xs text-muted/60">
+              Henüz kare mühürlenmedi.
+              <br />
+              İlk hamleyi yapmak için bir kesişim seç.
             </div>
           ) : (
-            answeredCells.map((item, idx) => (
-              <div
-                key={idx}
-                className="p-3 rounded-xl bg-cinema-dark border border-cinema-border flex items-start gap-3"
-              >
+            answeredCells.map((item, idx) => {
+              const isX = item.answeredBy === "X";
+              return (
                 <div
-                  className={`w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs shrink-0 ${
-                    item.answeredBy === "X"
-                      ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
-                      : "bg-rose-500/20 text-rose-400 border border-rose-500/30"
-                  }`}
+                  key={idx}
+                  className="p-2.5 rounded-xl bg-night border border-white/10 flex items-start gap-2.5"
                 >
-                  {item.answeredBy}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="font-bold text-xs text-zinc-100 truncate">
-                    {item.movie.title}
+                  <div
+                    className="w-6 h-6 rounded-lg flex items-center justify-center font-display font-extrabold text-xs shrink-0"
+                    style={{
+                      backgroundColor: isX ? "rgba(245, 196, 81, 0.18)" : "rgba(76, 154, 255, 0.18)",
+                      color: isX ? "#F5C451" : "#4C9AFF",
+                      border: `1px solid ${isX ? "rgba(245, 196, 81, 0.45)" : "rgba(76, 154, 255, 0.45)"}`,
+                    }}
+                  >
+                    {item.answeredBy}
                   </div>
-                  <div className="text-[10px] text-zinc-400 truncate mt-0.5">
-                    {item.movie.director} · {item.movie.year}
-                  </div>
-                  <div className="flex items-center gap-2 mt-1.5 text-[10px] font-semibold text-zinc-400">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-bold text-xs text-ink truncate">
+                      {item.actorName || item.movie.title}
+                    </div>
+                    {!item.actorName && item.movie.year > 0 && (
+                      <div className="text-[10px] text-muted truncate mt-0.5">
+                        {item.movie.director} · {item.movie.year}
+                      </div>
+                    )}
                     {item.movie.hasOscar && (
-                      <span className="flex items-center gap-0.5 text-yellow-400">
+                      <div className="flex items-center gap-1 mt-1 text-[10px] font-bold text-gold">
                         <Award className="w-3 h-3" /> Oscar
-                      </span>
+                      </div>
                     )}
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

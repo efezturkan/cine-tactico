@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { HelpCircle, CheckCircle2, ChevronRight, ChevronLeft, Film, Trophy, Swords, X } from "lucide-react";
+import { CheckCircle2, ChevronRight, ChevronLeft, X, Lock } from "lucide-react";
 import { audio } from "@/utils/audio";
+import { haptic } from "@/utils/haptics";
 
 interface HowToPlayModalProps {
   isOpen: boolean;
@@ -16,55 +17,65 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ isOpen, onClose 
 
   const slides = [
     {
-      title: "1. Kesişimi Gör, Kareyi Seç",
-      desc: "Her satır ve sütunun başında bir sinema kuralı yer alır (Yönetmen, Oyuncu, Tür, Oscar vb.). İki kuralın kesiştiği kareye dokun.",
-      badge: "TEMEL MANTIK",
+      title: "1. Kesişimi Oku, Kareyi Seç",
+      desc: "Her satır ve sütunda bir sinema kriteri yer alır (Yönetmen, Başrol, Tür, Ödül, Dönem). İki kriterin kesiştiği hedef kareye dokun.",
+      badge: "ADIM 1",
       visual: (
-        <div className="p-4 rounded-2xl bg-zinc-900/90 border border-zinc-800 text-center my-3">
-          <div className="flex items-center justify-center gap-2 text-xs font-black mb-2">
-            <span className="px-2 py-1 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30">
+        <div className="p-4 rounded-xl bg-night border border-white/10 text-center my-4">
+          <div className="flex items-center justify-center gap-2 text-xs font-bold mb-2 flex-wrap">
+            <span className="px-3 py-1 rounded-lg bg-gold/15 text-gold border border-gold/40">
               Christopher Nolan
             </span>
-            <span>+</span>
-            <span className="px-2 py-1 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">
+            <span className="font-mono text-muted">×</span>
+            <span className="px-3 py-1 rounded-lg bg-team-blue/15 text-team-blue border border-team-blue/40">
               Leonardo DiCaprio
             </span>
           </div>
-          <div className="text-[11px] text-zinc-400">
-            Hedef: İki ismin de yer aldığı ortak filmi bul!
+          <div className="text-xs text-muted">
+            Hedef: İki kriteri aynı anda sağlayan ortak filmi bulmak.
           </div>
         </div>
       ),
     },
     {
-      title: "2. Hafızana Güven, Filmi Seç",
-      desc: "Arama kutusuna aklındaki filmi yaz. Arama listesinde kopya yok! Filmin o yönetmene veya oyuncuya ait olduğunu kendin bilmelisin.",
-      badge: "SPOILER-FREE",
+      title: "2. 12 Saniyede Filmi Doğrula",
+      desc: "Arama kutusuna aklındaki filmi yaz. Adil rekabet için arama listesinde yönetmen, yıl veya tür ipucu gösterilmez.",
+      badge: "ADIM 2",
       visual: (
-        <div className="p-4 rounded-2xl bg-zinc-900/90 border border-zinc-800 text-center my-3">
-          <div className="p-2.5 rounded-xl bg-zinc-800/80 border border-emerald-500/50 flex items-center justify-between text-xs font-bold text-emerald-400">
-            <span>Inception (2010)</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+        <div className="p-4 rounded-xl bg-night border border-white/10 text-center my-4">
+          <div className="p-2.5 rounded-lg bg-control border border-scored/60 flex items-center justify-between text-xs font-bold text-scored">
+            <span>Inception</span>
+            <CheckCircle2 className="w-4 h-4 text-scored" />
           </div>
-          <div className="text-[11px] text-zinc-400 mt-2">
-            Doğru cevap verince kare afişiyle kaplanır ve senin renginle mühürlenir!
+          <div className="text-xs text-muted mt-2">
+            Doğru cevapta kare senin renginle mühürlenir.
           </div>
         </div>
       ),
     },
     {
-      title: "3. 3'lü Hat Kur & Taktiksel Çal",
-      desc: "Yatay, dikey veya çapraz 3 kareyi ilk tamamlayan maçı kazanır. 'Kare Çalma' açıkken rakibin karesini daha yüksek puanlı bir filmle geri alabilirsin!",
-      badge: "TAKTIK VE ZAFER",
+      title: "3. Üçlü Hattı Kur & Kazan",
+      desc: "Yatay, dikey veya çapraz 3 kareyi ilk birleştiren düelloyu kazanır. İki oyuncu da bir karede yanılırsa o kare sahipsiz kilitlenir.",
+      badge: "ADIM 3",
       visual: (
-        <div className="p-4 rounded-2xl bg-zinc-900/90 border border-zinc-800 text-center my-3">
-          <div className="grid grid-cols-3 gap-1.5 max-w-[140px] mx-auto mb-2">
-            <div className="aspect-square rounded bg-cyan-500 text-black font-black flex items-center justify-center text-xs">X</div>
-            <div className="aspect-square rounded bg-cyan-500 text-black font-black flex items-center justify-center text-xs">X</div>
-            <div className="aspect-square rounded bg-cyan-500 text-black font-black flex items-center justify-center text-xs ring-2 ring-amber-400 animate-pulse">X</div>
+        <div className="p-4 rounded-xl bg-night border border-white/10 text-center my-4">
+          <div className="grid grid-cols-3 gap-1.5 max-w-[144px] mx-auto mb-2.5">
+            <div className="aspect-square rounded-lg bg-gold text-night font-display font-extrabold flex items-center justify-center text-base">
+              X
+            </div>
+            <div className="aspect-square rounded-lg bg-gold text-night font-display font-extrabold flex items-center justify-center text-base">
+              X
+            </div>
+            <div className="aspect-square rounded-lg bg-gold text-night font-display font-extrabold flex items-center justify-center text-base ring-2 ring-ink">
+              X
+            </div>
           </div>
-          <div className="text-xs font-black text-amber-400">
-            🏆 3&apos;LÜ HAT = ANINDA ZAFER!
+          <div className="flex items-center justify-center gap-2 text-xs font-semibold text-gold">
+            <span>3&apos;LÜ HAT = ZAFER</span>
+            <span>•</span>
+            <span className="inline-flex items-center gap-1 text-muted">
+              <Lock className="w-3 h-3" /> Kilitli kare çalınamaz
+            </span>
           </div>
         </div>
       ),
@@ -74,49 +85,57 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ isOpen, onClose 
   const currentSlide = slides[step];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-sm bg-cinema-card border border-cinema-border rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-col relative overflow-hidden">
-        {/* Kapat */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm select-none">
+      <div className="w-full max-w-sm animate-card-in rounded-2xl bg-panel border border-white/10 p-6 shadow-2xl flex flex-col relative text-ink">
+        {/* Close */}
         <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-full bg-zinc-800 text-zinc-400 hover:text-white"
+          onClick={() => {
+            audio.playSelect();
+            onClose();
+          }}
+          className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-lg text-muted transition hover:bg-white/5 hover:text-ink"
         >
-          <X className="w-4 h-4" />
+          <X className="w-5 h-5" />
         </button>
 
-        {/* Başlık */}
-        <div className="text-center pb-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded-md border border-amber-400/20">
+        {/* Header */}
+        <div className="text-center">
+          <span className="text-xs font-semibold uppercase tracking-widest text-gold">
             {currentSlide.badge}
           </span>
-          <h2 className="text-lg font-black text-white mt-1.5">{currentSlide.title}</h2>
-          <p className="text-xs text-zinc-400 mt-1 leading-relaxed">{currentSlide.desc}</p>
+          <h2 className="font-display text-2xl font-extrabold italic uppercase tracking-wide text-ink mt-1">
+            {currentSlide.title}
+          </h2>
+          <p className="text-sm text-muted mt-2 leading-relaxed">
+            {currentSlide.desc}
+          </p>
         </div>
 
-        {/* Görsel Simülasyon */}
+        {/* Visual Simulation */}
         {currentSlide.visual}
 
-        {/* Sayfa İndikatörleri */}
-        <div className="flex justify-center gap-1.5 my-3">
+        {/* Step Indicators */}
+        <div className="flex justify-center gap-1.5 my-2">
           {slides.map((_, i) => (
             <div
               key={i}
               className={`h-1.5 rounded-full transition-all ${
-                step === i ? "w-6 bg-amber-400" : "w-2 bg-zinc-700"
+                step === i ? "w-6 bg-gold" : "w-2 bg-control"
               }`}
             />
           ))}
         </div>
 
-        {/* Navigasyon Butonları */}
-        <div className="flex gap-2 pt-2 border-t border-cinema-border">
+        {/* Navigation Buttons */}
+        <div className="flex gap-2 pt-3 border-t border-white/10">
           {step > 0 && (
             <button
               onClick={() => {
                 audio.playSelect();
-                setStep(s => s - 1);
+                haptic.light();
+                setStep((s) => s - 1);
               }}
-              className="py-2.5 px-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs flex items-center justify-center gap-1 transition-all"
+              className="tactile-btn-surface h-11 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-1 text-[#F1EEE7]"
             >
               <ChevronLeft className="w-4 h-4" />
               Geri
@@ -127,22 +146,24 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ isOpen, onClose 
             <button
               onClick={() => {
                 audio.playSelect();
-                setStep(s => s + 1);
+                haptic.light();
+                setStep((s) => s + 1);
               }}
-              className="flex-1 py-2.5 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-cinema-dark font-black text-xs flex items-center justify-center gap-1 transition-all shadow-md shadow-amber-500/20"
+              className="tactile-btn-amber flex-1 h-11 px-4 rounded-xl text-sm font-black uppercase tracking-wider flex items-center justify-center gap-1 text-[#0F1115]"
             >
-              İleri
+              <span>İLERİ</span>
               <ChevronRight className="w-4 h-4" />
             </button>
           ) : (
             <button
               onClick={() => {
-                audio.playVictory();
+                audio.playSuccess();
+                haptic.light();
                 onClose();
               }}
-              className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-400 hover:to-rose-400 text-white font-black text-xs flex items-center justify-center gap-1 transition-all shadow-md shadow-rose-500/20"
+              className="tactile-btn-amber flex-1 h-11 px-4 rounded-xl text-sm font-black uppercase tracking-wider flex items-center justify-center gap-1.5 text-[#0F1115]"
             >
-              Anladım, Oyuna Başla! 🎬
+              <span>OYUNA BAŞLA</span>
             </button>
           )}
         </div>

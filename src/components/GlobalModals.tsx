@@ -36,6 +36,7 @@ export interface GlobalModalsProps {
   showShop: boolean;
   showGameModesHub: boolean;
   showProfile: boolean;
+  profileInitialTab?: "CAREER" | "DNA" | "AMBIENCE";
   showHelp: boolean;
   showLeaderboard: boolean;
   showAmbienceConsole: boolean;
@@ -158,6 +159,7 @@ export function GlobalModals(props: GlobalModalsProps) {
         onUpdateProfile={props.onUpdateProfile}
         isMuted={props.muted}
         onToggleMute={props.onToggleMute}
+        initialTab={props.profileInitialTab}
       />
 
       <HowToPlayModal

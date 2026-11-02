@@ -24,6 +24,11 @@ export type GenreId =
   | "WESTERN";
 
 export type ReleasePeriodId =
+  | "Y1910s"
+  | "Y1920s"
+  | "Y1930s"
+  | "Y1940s"
+  | "Y1950s"
   | "Y1960s"
   | "Y1970s"
   | "Y1980s"

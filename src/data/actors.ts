@@ -133,10 +133,10 @@ export const LEGACY_ACTOR_RECORDS: Actor[] = [
     aliases: ["Edward Thomas Hardy"],
     normalizedAliases: ["edward thomas hardy"],
     birthYear: 1977,
-    sourceIds: { wikidata: "Q208009" },
+    sourceIds: { wikidata: "Q208026" },
     provenance: {
       source: "WIKIDATA",
-      sourceId: "Q208009",
+      sourceId: "Q208026",
       license: "CC0",
       verified: true,
       verifiedAt: "2026-11-01",
