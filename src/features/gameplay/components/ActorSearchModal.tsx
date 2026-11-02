@@ -109,22 +109,20 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
             vpStyle.height !== undefined
               ? `${Math.max(250, vpStyle.height - 16)}px`
               : "92dvh",
-          background: "linear-gradient(180deg, #1C2029 0%, #12151C 100%)",
-          border: "1.5px solid #2A2F3A",
-          borderBottom: "4px solid #090A0E",
-          boxShadow:
-            "0 20px 50px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08)",
+          background: "#14171D",
+          border: "1px solid rgba(255,255,255,0.1)",
+          boxShadow: "0 24px 60px rgba(0,0,0,0.9)",
         }}
       >
         {/* Header & Two-Movie Intersection (Pinned Shrink-0) */}
         <div className="flex items-start justify-between pb-2.5 border-b border-white/10 shrink-0">
           <div>
-            <span className="text-[9px] font-mono uppercase font-bold tracking-[0.2em] text-[#00D5E8] inline-flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3 text-[#00D5E8]" />
+            <span className="text-[9px] font-mono uppercase font-bold tracking-[0.2em] text-[#4FA3C7] inline-flex items-center gap-1.5">
+              <Sparkles className="w-3 h-3 text-[#4FA3C7]" />
               <span>TERS KADRAJ &middot; ORTAK OYUNCU</span>
             </span>
             <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-              <div className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-xl bg-[#0F1115] text-[#F1EEE7] border border-[#F5A623]/40">
+              <div className="flex items-center gap-1.5 text-xs font-bold px-2 py-0.5 rounded-lg bg-[#0B0D12] text-[#E8E6E1] border border-[#D9A441]/40">
                 {rowCritAsset.isAvailable && rowCritAsset.src ? (
                   <img
                     src={rowCritAsset.src}
@@ -132,14 +130,14 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
                     className="w-4 h-5 object-cover rounded-sm border border-white/10 shrink-0"
                   />
                 ) : (
-                  <Film className="w-3.5 h-3.5 text-[#F5A623] shrink-0" />
+                  <Film className="w-3.5 h-3.5 text-[#D9A441] shrink-0" />
                 )}
                 <span>{rowCrit.label}</span>
               </div>
-              <span className="font-mono text-[#00D5E8] font-bold text-xs">
+              <span className="font-mono text-[#4FA3C7] font-bold text-xs">
                 ×
               </span>
-              <div className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-xl bg-[#0F1115] text-[#F1EEE7] border border-[#00D5E8]/40">
+              <div className="flex items-center gap-1.5 text-xs font-bold px-2 py-0.5 rounded-lg bg-[#0B0D12] text-[#E8E6E1] border border-[#4FA3C7]/40">
                 {colCritAsset.isAvailable && colCritAsset.src ? (
                   <img
                     src={colCritAsset.src}
@@ -147,7 +145,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
                     className="w-4 h-5 object-cover rounded-sm border border-white/10 shrink-0"
                   />
                 ) : (
-                  <Film className="w-3.5 h-3.5 text-[#00D5E8] shrink-0" />
+                  <Film className="w-3.5 h-3.5 text-[#4FA3C7] shrink-0" />
                 )}
                 <span>{colCrit.label}</span>
               </div>
@@ -159,7 +157,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
               audio.playSelect();
               onClose();
             }}
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#252932] border border-white/10 text-[#A5A8B0] transition hover:text-[#F1EEE7] shrink-0"
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#181B22] border border-white/10 text-[#8A8F9A] transition hover:text-[#E8E6E1] shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
@@ -167,8 +165,8 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
 
         {/* Error Notice */}
         {errorMessage && (
-          <div className="wrong-recoil mt-2.5 p-2.5 rounded-xl bg-[#FF334B]/15 border border-[#FF334B]/50 text-[#F1EEE7] text-xs font-semibold flex items-center gap-2 shrink-0">
-            <ShieldAlert className="w-4 h-4 text-[#FF334B] shrink-0" />
+          <div className="wrong-recoil mt-2.5 p-2.5 rounded-xl bg-[#E5484D]/15 border border-[#E5484D]/50 text-[#E8E6E1] text-xs font-semibold flex items-center gap-2 shrink-0">
+            <ShieldAlert className="w-4 h-4 text-[#E5484D] shrink-0" />
             <span>{errorMessage}</span>
           </div>
         )}
@@ -179,14 +177,14 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
           className="mt-2.5 flex-1 min-h-0 flex flex-col gap-2.5"
         >
           <div className="relative shrink-0">
-            <User className="w-4 h-4 text-[#00D5E8] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <User className="w-4 h-4 text-[#4FA3C7] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               ref={inputRef}
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Ortak oyuncunun adını yaz..."
-              className="w-full bg-[#0F1115] border border-white/15 focus:border-[#00D5E8] rounded-2xl pl-10 pr-9 py-2.5 sm:py-3 text-base font-semibold text-[#F1EEE7] placeholder:text-[#A5A8B0]/50 outline-none transition-colors"
+              className="w-full bg-[#0B0D12] border border-white/10 focus:border-[#4FA3C7] rounded-2xl pl-10 pr-9 py-2.5 sm:py-3 text-base font-semibold text-[#E8E6E1] placeholder:text-[#8A8F9A]/50 outline-none transition-colors"
               autoComplete="off"
               autoCorrect="off"
               spellCheck="false"
@@ -195,7 +193,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
               <button
                 type="button"
                 onClick={() => setQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A5A8B0] hover:text-[#F1EEE7]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8A8F9A] hover:text-[#E8E6E1]"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -203,8 +201,8 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
           </div>
 
           {suggestedActors.length > 0 && (
-            <div className="flex-1 min-h-0 flex flex-col gap-1.5 p-2 rounded-2xl bg-[#0F1115] border border-white/10 overflow-y-auto custom-scrollbar">
-              <span className="text-[11px] text-[#A5A8B0] px-1 font-semibold shrink-0">
+            <div className="flex-1 min-h-0 flex flex-col gap-1.5 p-2 rounded-2xl bg-[#0B0D12] border border-white/10 overflow-y-auto custom-scrollbar">
+              <span className="text-[11px] text-[#8A8F9A] px-1 font-semibold shrink-0">
                 Eşleşen Oyuncular ({suggestedActors.length}):
               </span>
               {suggestedActors.map((actor) => {
@@ -218,7 +216,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
                       haptic.light();
                       onSelectActor(actor.primaryName);
                     }}
-                    className="flex items-center justify-between p-2 rounded-xl bg-[#181B22] hover:bg-[#222631] border border-white/10 hover:border-[#00D5E8] transition-all text-left group shrink-0"
+                    className="flex items-center justify-between p-2 rounded-xl bg-[#181B22] hover:bg-[#202530] border border-white/10 hover:border-[#4FA3C7] transition-all text-left group shrink-0"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <LocalFace

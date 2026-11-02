@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   GameBoard,
   CellAnswer,
@@ -12,20 +12,18 @@ import {
 } from "@/core";
 import { UserProfile, DEFAULT_AMBIENCE, AMBIENCE_THEMES } from "@/types/profile";
 import { BotOpponentProfile } from "@/data/boards";
-import { Header } from "@/components/Header";
-import { ShotClock } from "./ShotClock";
 import { XoxBoard } from "./XoxBoard";
-import { ComboBanner } from "./ComboBanner";
-import { TabletSidePanel } from "./TabletSidePanel";
 import { MovieSearchModal } from "./MovieSearchModal";
 import { ActorSearchModal } from "./ActorSearchModal";
 import { GoldenReelModal } from "./GoldenReelModal";
 import { PostGameAnalysisModal } from "./PostGameAnalysisModal";
+import { ClapperCountdown } from "./ClapperCountdown";
 
 import {
   ShieldAlert,
   Swords,
   Lightbulb,
+  X,
 } from "lucide-react";
 
 export interface GameViewProps {
@@ -87,23 +85,31 @@ export interface GameViewProps {
 }
 
 export function GameView(props: GameViewProps) {
+  const [showClapper, setShowClapper] = useState(true);
+
   const gameAmbience = { ...DEFAULT_AMBIENCE, ...(props.profile?.ambience || {}) };
   const gameTheme = (gameAmbience.theme && AMBIENCE_THEMES[gameAmbience.theme]) || AMBIENCE_THEMES.velvet_red;
   const safeGameDimness =
     typeof gameAmbience.dimness === "number" && !isNaN(gameAmbience.dimness) ? gameAmbience.dimness : 85;
-  const safeGameGlow =
-    typeof gameAmbience.glowIntensity === "number" && !isNaN(gameAmbience.glowIntensity)
-      ? gameAmbience.glowIntensity
-      : 65;
+
+  const isPlayerTurn = props.currentTurn === "X";
 
   return (
     <div
-      className="min-h-[100dvh] text-[#F1EEE7] flex flex-col font-sans select-none antialiased transition-colors duration-500 relative"
+      className="min-h-[100dvh] text-[#E8E6E1] flex flex-col justify-between font-sans select-none antialiased transition-colors duration-500 relative"
       style={{
-        backgroundColor: gameTheme?.bgColor || "#0F1115",
+        backgroundColor: gameTheme?.bgColor || "#0B0D12",
         filter: `brightness(${Math.min(1.1, Math.max(0.65, safeGameDimness / 85))})`,
       }}
     >
+      {/* Maç Başı Klaket Geri Sayımı (3-2-1-AKSİYON, Dokunarak Geçilebilir) */}
+      {showClapper && (
+        <ClapperCountdown
+          onComplete={() => setShowClapper(false)}
+          isMuted={props.muted}
+        />
+      )}
+
       {/* 35mm Analog Film Grain Overlay in Game */}
       {gameAmbience.grain && gameAmbience.grain !== "OFF" && (
         <div
@@ -115,84 +121,77 @@ export function GameView(props: GameViewProps) {
         />
       )}
 
-      {/* Top Header */}
-      <Header
-        scoreX={props.scoreX}
-        scoreO={props.scoreO}
-        currentTurn={props.currentTurn}
-        onReset={props.onHeaderReset}
-        isMuted={props.muted}
-        onToggleMute={props.onToggleMute}
-        reelsBalance={props.profile.reelsBalance}
-        userAvatarId={props.profile.avatarId}
-        onBackToHome={props.onRequestExitGame}
-        onOpenHelp={props.onOpenHelp}
-        onOpenQuests={props.onOpenQuests}
-      />
-
-      {/* Block Blast Floating Combo Pop-up */}
-      <ComboBanner comboStreak={props.comboStreak} lastPoints={props.lastEarnedPoints} />
-
-      {/* Main Container */}
-      <div className="flex-1 flex max-w-7xl w-full mx-auto relative z-10 min-w-0">
-        <main className="flex-1 flex flex-col items-center justify-start p-1.5 sm:p-4 max-w-lg sm:max-w-xl mx-auto w-full min-w-0 overflow-x-hidden">
-          {/* Özel Oda Bilgi Çubuğu */}
-          {props.mode === "ONLINE_ROOM" && props.customRoomCode && (
-            <div className="w-full max-w-md mx-auto mb-2 flex items-center justify-between px-3 py-1.5 rounded-xl bg-[#00D5E8]/15 border border-[#00D5E8]/40 text-xs">
-              <span className="font-bold text-[#00D5E8] flex items-center gap-1.5 font-mono">
-                <Swords className="w-3.5 h-3.5" /> Oda #{props.customRoomCode}
-              </span>
-              <span className="text-[10px] font-mono text-[#F1EEE7] font-bold">
-                {props.customShotClock}s Blitz
-              </span>
-            </div>
-          )}
-
-          {/* Board Title Header */}
-          <div className="w-full max-w-md px-3 mt-1.5 mb-0.5 text-center">
-            <h2 className="text-xs sm:text-sm font-serif font-bold text-[#F1EEE7] tracking-wider truncate">
-              {props.board.title}
-            </h2>
-          </div>
-
-          {/* Shot Clock */}
-          <ShotClock
-            currentTurn={props.currentTurn}
-            secondsRemaining={props.secondsRemaining}
-            totalSeconds={props.customShotClock}
-            winner={props.winner}
-            isBotThinking={props.isBotThinking}
-            botStatusMessage={props.botStatusMessage}
+      {/* ── 1. ÜST BAR: SOL REC + TIMECODE | ORTA TAHTA ADI | SAĞ ÇIKIŞ ─── */}
+      <header className="w-full max-w-lg sm:max-w-xl mx-auto px-3 sm:px-4 pt-3 pb-1 flex items-center justify-between z-30 select-none">
+        {/* Sol: REC Noktası (2sn yumuşak nabız, sadece maç aktifken) + Timecode Süre Sayacı */}
+        <div className="flex items-center gap-2 shrink-0">
+          <span
+            className={`w-2.5 h-2.5 rounded-full transition-opacity ${
+              props.winner === null
+                ? "bg-[#E5484D] animate-pulse"
+                : "bg-[#8A8F9A]/40"
+            }`}
+            style={{ animationDuration: "2s" }}
+            title="REC"
           />
+          <span className="font-mono text-xs sm:text-sm font-bold text-[#E8E6E1] tracking-wider">
+            00:00:{Math.max(0, props.secondsRemaining).toString().padStart(2, "0")}:08
+          </span>
+        </div>
 
-          {/* Visual 3x3 Poster Matrix */}
-          <XoxBoard
-            board={props.board}
-            cells={props.cells}
-            winningLine={props.winningLine}
-            currentTurn={props.currentTurn}
-            winner={props.winner}
-            onCellClick={props.onCellSelect}
-            allowSteal={props.allowSteal}
-          />
+        {/* Orta: Tahta Adı (Serif Başlık, Kapsayıcı/Hap Yok) */}
+        <div className="text-center min-w-0 px-2 flex-1">
+          <h1 className="font-serif font-bold text-sm sm:text-base text-[#E8E6E1] truncate leading-tight">
+            {props.board.title}
+          </h1>
+        </div>
 
-          {/* Joker / İpucu / Hata Bildirim Kartı */}
-          {props.hintMessage && (
-            <div className="w-full max-w-md mx-auto my-1.5 p-2.5 rounded-2xl bg-[#F5A623]/15 border border-[#F5A623]/50 text-[#F5A623] text-xs font-black text-center flex items-center justify-center gap-2 animate-in fade-in shadow-lg">
-              <Lightbulb className="w-4 h-4 text-[#F5A623] shrink-0" />
-              <span>{props.hintMessage}</span>
-            </div>
-          )}
-        </main>
+        {/* Sağ: Çıkış */}
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            type="button"
+            onClick={props.onRequestExitGame}
+            className="w-8 h-8 rounded-xl flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] tactile-btn-surface"
+            title="Gişe'ye Dön"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      </header>
 
-        {/* Tablet Side Panel */}
-        <TabletSidePanel
+      {/* ── 2. TAHTA BÜYÜK VE MERKEZDE ─── */}
+      <main className="flex-1 flex flex-col items-center justify-center p-1 sm:p-3 max-w-lg sm:max-w-xl mx-auto w-full min-w-0">
+        <XoxBoard
+          board={props.board}
           cells={props.cells}
+          winningLine={props.winningLine}
           currentTurn={props.currentTurn}
-          playerXScore={props.scoreX}
-          playerOScore={props.scoreO}
+          winner={props.winner}
+          onCellClick={props.onCellSelect}
+          allowSteal={props.allowSteal}
         />
-      </div>
+
+        {/* ── 3. ALTA TEK SATIR SIRA GÖSTERGESİ ─── */}
+        <div className="w-full text-center pt-2 pb-1 select-none">
+          {props.winner !== null ? (
+            <span className="font-serif text-base sm:text-lg font-bold text-[#D9A441] tracking-wider">
+              {props.winner === "X"
+                ? "Kesin!"
+                : props.winner === "DRAW"
+                ? "Berabere"
+                : "Kurgu masasına dönüyoruz."}
+            </span>
+          ) : (
+            <p
+              className={`text-xs font-mono font-bold tracking-widest uppercase ${
+                isPlayerTurn ? "text-[#D9A441]" : "text-[#4FA3C7]"
+              }`}
+            >
+              {isPlayerTurn ? "Sıra sende" : "Rakip çekiyor"}
+            </p>
+          )}
+        </div>
+      </main>
 
       {/* Movie Search Modal / Actor Search Modal (Ters Kadraj) */}
       {props.activeCellIndex !== null && props.board.boardMode === "REVERSE_CAST" ? (

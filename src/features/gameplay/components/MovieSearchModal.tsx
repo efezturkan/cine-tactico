@@ -148,23 +148,21 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
             vpStyle.height !== undefined
               ? `${Math.max(250, vpStyle.height - 16)}px`
               : "92dvh",
-          background: "linear-gradient(180deg, #1C2029 0%, #12151C 100%)",
-          border: "1.5px solid #2A2F3A",
-          borderBottom: "4px solid #090A0E",
-          boxShadow:
-            "0 20px 50px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08)",
+          background: "#14171D",
+          border: "1px solid rgba(255,255,255,0.1)",
+          boxShadow: "0 24px 60px rgba(0,0,0,0.9)",
         }}
       >
         {/* Selected Cell Target Intersection Header (Pinned Shrink-0) */}
-        <div className="flex items-start justify-between gap-2 pb-2.5 border-b border-white/10 shrink-0">
+        <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 shrink-0">
           <div className="min-w-0">
-            <span className="inline-block text-[9px] font-mono uppercase font-bold tracking-[0.2em] text-[#F5A623]">
-              HEDEF KESİŞİM &middot; 35MM ARAMA
+            <span className="inline-block text-[9px] font-mono uppercase font-bold tracking-[0.2em] text-[#D9A441]">
+              HEDEF KESİŞİM
             </span>
-            <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-              <span className="text-xs font-bold px-2.5 py-1 rounded-xl bg-[#0F1115] text-[#F1EEE7] border border-[#F5A623]/40 flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+              <span className="text-xs font-bold px-2 py-0.5 rounded-lg bg-[#0B0D12] text-[#E8E6E1] border border-[#D9A441]/40 flex items-center gap-1.5">
                 {rowAvatar && (
-                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-[#F5A623]/60">
+                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-[#D9A441]/60">
                     <Image
                       src={rowAvatar}
                       alt=""
@@ -176,12 +174,12 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                 )}
                 {rowCrit.label}
               </span>
-              <span className="font-mono text-[#F5A623] font-bold text-xs">
+              <span className="font-mono text-[#D9A441] font-bold text-xs">
                 ×
               </span>
-              <span className="text-xs font-bold px-2.5 py-1 rounded-xl bg-[#0F1115] text-[#F1EEE7] border border-[#00D5E8]/40 flex items-center gap-1.5">
+              <span className="text-xs font-bold px-2 py-0.5 rounded-lg bg-[#0B0D12] text-[#E8E6E1] border border-[#4FA3C7]/40 flex items-center gap-1.5">
                 {colAvatar && (
-                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-[#00D5E8]/60">
+                  <span className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 inline-block border border-[#4FA3C7]/60">
                     <Image
                       src={colAvatar}
                       alt=""
@@ -202,7 +200,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               audio.playSelect();
               onClose();
             }}
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#252932] border border-white/10 text-[#A5A8B0] transition hover:text-[#F1EEE7] shrink-0"
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#181B22] border border-white/10 text-[#8A8F9A] transition hover:text-[#E8E6E1] shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
@@ -211,18 +209,18 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
         {/* Search Input (Pinned Shrink-0) */}
         <div className="my-2.5 shrink-0">
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#F5A623] pointer-events-none" />
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#D9A441] pointer-events-none" />
             <input
               ref={inputRef}
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ortak filmin adını yaz..."
+              placeholder="Film veya dizi adı yaz..."
               enterKeyHint="search"
               autoComplete="off"
               autoCorrect="off"
               spellCheck={false}
-              className="w-full pl-10 pr-9 py-2.5 sm:py-3 bg-[#0F1115] border border-white/15 focus:border-[#F5A623] rounded-2xl text-base font-semibold text-[#F1EEE7] placeholder:text-[#A5A8B0]/50 focus:outline-none transition-colors"
+              className="w-full pl-10 pr-9 py-2.5 sm:py-3 bg-[#0B0D12] border border-white/10 focus:border-[#D9A441] rounded-2xl text-base font-semibold text-[#E8E6E1] placeholder:text-[#8A8F9A]/50 focus:outline-none transition-colors"
             />
             {query && (
               <button
@@ -239,7 +237,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               Yalnızca yapım adına göre aranır.
             </span>
             {query.trim().length >= 2 && (
-              <span className="font-mono text-[11px] text-[#F5A623] font-bold">
+              <span className="font-mono text-[11px] text-[#D9A441] font-bold">
                 {filteredMovies.length} sonuç
               </span>
             )}
@@ -248,8 +246,8 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
 
         {/* Controlled Error Notice */}
         {errorMessage && (
-          <div className="wrong-recoil mb-2.5 p-2.5 rounded-xl bg-[#FF334B]/15 border border-[#FF334B]/50 text-[#F1EEE7] text-xs font-semibold flex items-center gap-2 shrink-0">
-            <AlertTriangle className="w-4 h-4 text-[#FF334B] shrink-0" />
+          <div className="wrong-recoil mb-2.5 p-2.5 rounded-xl bg-[#E5484D]/15 border border-[#E5484D]/50 text-[#E8E6E1] text-xs font-semibold flex items-center gap-2 shrink-0">
+            <AlertTriangle className="w-4 h-4 text-[#E5484D] shrink-0" />
             <span className="leading-tight">{errorMessage}</span>
           </div>
         )}
@@ -258,13 +256,13 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
         <div className="flex-1 min-h-0 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
           {query.trim().length < 2 ? (
             <div className="py-6 sm:py-8 px-4 text-center flex flex-col items-center justify-center">
-              <div className="w-11 h-11 rounded-2xl bg-[#181B22] border border-white/10 flex items-center justify-center mb-2.5 text-[#F5A623] shadow">
+              <div className="w-11 h-11 rounded-2xl bg-[#181B22] border border-white/10 flex items-center justify-center mb-2.5 text-[#D9A441] shadow">
                 <Film className="w-5 h-5" />
               </div>
-              <p className="font-serif text-lg sm:text-xl font-bold tracking-wide text-[#F1EEE7]">
+              <p className="font-serif text-lg sm:text-xl font-bold tracking-wide text-[#E8E6E1]">
                 Film veya Dizi Adını Yazmaya Başla
               </p>
-              <p className="text-xs text-[#A5A8B0] mt-1 max-w-xs leading-relaxed">
+              <p className="text-xs text-[#8A8F9A] mt-1 max-w-xs leading-relaxed">
                 Sonuçları listelemek için en az 2 harf girilmelidir.
               </p>
               <p className="text-[10px] text-[#8EBB70] mt-2 font-medium">
@@ -272,8 +270,8 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               </p>
             </div>
           ) : visibleMovies.length === 0 ? (
-            <div className="py-8 text-center text-[#A5A8B0] text-xs">
-              <Film className="w-6 h-6 mx-auto mb-2 text-[#A5A8B0]/40" />
+            <div className="py-8 text-center text-[#8A8F9A] text-xs">
+              <Film className="w-6 h-6 mx-auto mb-2 text-[#8A8F9A]/40" />
               &quot;{query}&quot; ile eşleşen yapım bulunamadı.
             </div>
           ) : (
@@ -295,26 +293,26 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                   }}
                   className={`w-full p-2.5 rounded-2xl flex items-center justify-between text-left transition-all border ${
                     isUsed
-                      ? "opacity-40 bg-[#0F1115] border-white/5 cursor-not-allowed"
-                      : "bg-[#181B22] hover:bg-[#222631] border-white/12 hover:border-[#F5A623] active:translate-y-[1px]"
+                      ? "opacity-40 bg-[#0B0D12] border-white/5 cursor-not-allowed"
+                      : "bg-[#181B22] hover:bg-[#202530] border-white/10 hover:border-[#D9A441] active:translate-y-[1px]"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="relative w-9 h-12 rounded-lg overflow-hidden bg-[#0F1115] shrink-0 border border-white/10">
+                    <div className="relative w-9 h-12 rounded-lg overflow-hidden bg-[#0B0D12] shrink-0 border border-white/10">
                       <SearchMovieThumbnail movie={movie} />
                     </div>
 
                     <div className="min-w-0">
-                      <div className="font-sans font-bold text-sm text-[#F1EEE7] truncate flex items-center gap-2">
+                      <div className="font-sans font-bold text-sm text-[#E8E6E1] truncate flex items-center gap-2">
                         <span className="truncate">{movie.title}</span>
                         {movie.mediaType === "SERIES" && (
-                          <span className="text-[9px] font-bold font-mono text-[#00D5E8] bg-[#00D5E8]/15 px-1.5 py-0.5 rounded border border-[#00D5E8]/30 shrink-0">
+                          <span className="text-[9px] font-bold font-mono text-[#4FA3C7] bg-[#4FA3C7]/15 px-1.5 py-0.5 rounded border border-[#4FA3C7]/30 shrink-0">
                             DİZİ
                           </span>
                         )}
                       </div>
                       {hasDiffOriginal && (
-                        <div className="text-xs text-[#A5A8B0] truncate mt-0.5 italic">
+                        <div className="text-xs text-[#8A8F9A] truncate mt-0.5 italic">
                           {movie.originalTitle}
                         </div>
                       )}
@@ -323,11 +321,11 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
 
                   <div className="shrink-0 text-right pl-2">
                     {isUsed ? (
-                      <span className="font-mono text-[10px] font-bold text-[#A5A8B0] px-2.5 py-1 rounded-lg bg-[#0F1115]">
+                      <span className="font-mono text-[10px] font-bold text-[#8A8F9A] px-2.5 py-1 rounded-lg bg-[#0B0D12]">
                         Kullanıldı
                       </span>
                     ) : (
-                      <span className="tactile-btn-amber inline-block text-xs font-black uppercase tracking-wider px-3.5 py-1.5 rounded-xl text-[#0F1115]">
+                      <span className="tactile-btn-amber inline-block text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-xl text-[#0B0D12]">
                         Seç &rarr;
                       </span>
                     )}

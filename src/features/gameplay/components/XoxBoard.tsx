@@ -266,25 +266,23 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
     <div className="w-full max-w-md sm:max-w-xl mx-auto px-1 sm:px-4 py-1 min-w-0 overflow-hidden">
       {/* 4x4 Matris Grid (1 Köşe Rozeti + 3 Sütun Kriteri, 3 Satır Kriteri × 3 Hücre) */}
       <div
-        className="grid grid-cols-4 gap-1 sm:gap-2 p-1.5 sm:p-2.5 rounded-2xl relative w-full overflow-hidden"
+        className="grid grid-cols-4 gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-2xl relative w-full overflow-hidden"
         style={{
           gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-          background: "linear-gradient(180deg, #181B22 0%, #111318 100%)",
-          border: "1.5px solid #2A2F3A",
-          borderBottom: "4px solid #08090C",
+          background: "#14171D",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
         }}
       >
         {/* Sol Üst Köşe Logo Rozeti */}
         <div
           className="w-full aspect-square flex flex-col items-center justify-center rounded-xl min-w-0 overflow-hidden"
           style={{
-            background: "linear-gradient(180deg, #252932 0%, #181B22 100%)",
-            border: "1px solid rgba(245,166,35,0.35)",
-            boxShadow: "0 3px 0 #0A0B0E, inset 0 1px 0 rgba(255,255,255,0.1)",
+            background: "#181B22",
+            border: "1px solid rgba(217, 164, 65, 0.25)",
           }}
         >
-          <Clapperboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F5A623]" />
-          <span className="text-[6.5px] sm:text-[8px] font-black mt-0.5 tracking-widest text-[#F5A623] uppercase font-mono">
+          <Clapperboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]" />
+          <span className="text-[6.5px] sm:text-[8px] font-bold mt-0.5 tracking-widest text-[#D9A441] uppercase font-mono">
             CINEXOX
           </span>
         </div>
@@ -295,9 +293,8 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
             key={col.id || idx}
             className="w-full aspect-square rounded-xl flex items-center justify-center p-0.5 sm:p-1 min-w-0 overflow-hidden"
             style={{
-              background: "linear-gradient(180deg, #252932 0%, #181B22 100%)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              boxShadow: "0 3px 0 #0A0B0E, inset 0 1px 0 rgba(255,255,255,0.08)",
+              background: "#181B22",
+              border: "1px solid rgba(255, 255, 255, 0.08)",
             }}
           >
             {renderCriterionHeader(col)}
@@ -311,15 +308,14 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
             <div
               className="w-full aspect-square rounded-xl flex items-center justify-center p-0.5 sm:p-1 min-w-0 overflow-hidden"
               style={{
-                background: "linear-gradient(180deg, #252932 0%, #181B22 100%)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                boxShadow: "0 3px 0 #0A0B0E, inset 0 1px 0 rgba(255,255,255,0.08)",
+                background: "#181B22",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
               }}
             >
               {renderCriterionHeader(row)}
             </div>
 
-            {/* 3 Oyun Hücresi (Tactile 3D Beveled Tiles) */}
+            {/* 3 Oyun Hücresi (Film Karesi Estetiği, İnce Çerçeve, Köşe İşaretleri) */}
             {[0, 1, 2].map((cIdx) => {
               const cellIndex = rIdx * 3 + cIdx;
               const cellData = cells[cellIndex];
@@ -327,21 +323,16 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
               const isOccupied = cellData !== null;
               const isPlayerX = cellData?.answeredBy === "X";
 
-              let cellBg = "linear-gradient(180deg, #1E222B 0%, #14171E 100%)";
-              let cellBorder = "rgba(255,255,255,0.14)";
-              let cellShadow = "0 3px 0 #090A0E, inset 0 1px 0 rgba(255,255,255,0.08)";
-              let cellRing = "";
+              let cellBg = "#14171D";
+              let cellBorder = "rgba(255, 255, 255, 0.08)";
 
               if (isWinning) {
-                cellBorder = "#F5A623";
-                cellShadow = "0 3px 0 #9E6300";
-                cellRing = "ring-2 ring-[#F5A623]";
+                cellBorder = "#D9A441";
+                cellBg = "rgba(217, 164, 65, 0.15)";
               } else if (isOccupied && isPlayerX) {
-                cellBorder = "rgba(245,166,35,0.85)";
-                cellShadow = "0 3px 0 #7C4D00";
+                cellBorder = "rgba(217, 164, 65, 0.55)";
               } else if (isOccupied && !isPlayerX) {
-                cellBorder = "rgba(0,213,232,0.85)";
-                cellShadow = "0 3px 0 #006673";
+                cellBorder = "rgba(79, 163, 199, 0.55)";
               }
 
               const isDisabled = winner !== null || isOccupied;
@@ -354,13 +345,12 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                     audio.playSelect();
                     onCellClick(cellIndex);
                   }}
-                  className={`w-full aspect-square relative rounded-xl overflow-hidden min-w-0 transition-all transform active:translate-y-[2px] active:scale-[0.98] group ${cellRing} ${
-                    isWinning ? "scale-[1.03] z-10 winning-beam" : ""
+                  className={`w-full aspect-square relative rounded-xl overflow-hidden min-w-0 transition-all transform active:scale-[0.98] group ${
+                    isWinning ? "scale-[1.02] z-10 winning-beam ring-1 ring-[#D9A441]" : ""
                   }`}
                   style={{
                     background: cellBg,
-                    border: `1.5px solid ${cellBorder}`,
-                    boxShadow: cellShadow,
+                    border: `1px solid ${cellBorder}`,
                   }}
                 >
                   {/* Boş Kare Köşe İşaretleri (35mm Kamera Vizörü) */}
@@ -369,33 +359,33 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                       <div
                         className="absolute top-1 left-1 sm:top-1.5 sm:left-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 pointer-events-none"
                         style={{
-                          borderTop: "1.5px solid rgba(245,166,35,0.35)",
-                          borderLeft: "1.5px solid rgba(245,166,35,0.35)",
+                          borderTop: "1.5px solid rgba(217, 164, 65, 0.35)",
+                          borderLeft: "1.5px solid rgba(217, 164, 65, 0.35)",
                         }}
                       />
                       <div
                         className="absolute top-1 right-1 sm:top-1.5 sm:right-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 pointer-events-none"
                         style={{
-                          borderTop: "1.5px solid rgba(245,166,35,0.35)",
-                          borderRight: "1.5px solid rgba(245,166,35,0.35)",
+                          borderTop: "1.5px solid rgba(217, 164, 65, 0.35)",
+                          borderRight: "1.5px solid rgba(217, 164, 65, 0.35)",
                         }}
                       />
                       <div
                         className="absolute bottom-1 left-1 sm:bottom-1.5 sm:left-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 pointer-events-none"
                         style={{
-                          borderBottom: "1.5px solid rgba(245,166,35,0.35)",
-                          borderLeft: "1.5px solid rgba(245,166,35,0.35)",
+                          borderBottom: "1.5px solid rgba(217, 164, 65, 0.35)",
+                          borderLeft: "1.5px solid rgba(217, 164, 65, 0.35)",
                         }}
                       />
                       <div
                         className="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 pointer-events-none"
                         style={{
-                          borderBottom: "1.5px solid rgba(245,166,35,0.35)",
-                          borderRight: "1.5px solid rgba(245,166,35,0.35)",
+                          borderBottom: "1.5px solid rgba(217, 164, 65, 0.35)",
+                          borderRight: "1.5px solid rgba(217, 164, 65, 0.35)",
                         }}
                       />
-                      <div className="absolute inset-0 flex flex-col items-center justify-center opacity-45 group-hover:opacity-100 transition-opacity">
-                        <span className="text-[8px] sm:text-[10px] font-mono font-black text-[#F5A623] bg-[#0F1115]/80 px-1.5 py-0.5 rounded-md border border-[#F5A623]/40">
+                      <div className="absolute inset-0 flex flex-col items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
+                        <span className="text-[7.5px] sm:text-[9px] font-mono font-bold text-[#D9A441] bg-[#0B0D12]/90 px-1.5 py-0.5 rounded border border-[#D9A441]/30">
                           + SEÇ
                         </span>
                       </div>

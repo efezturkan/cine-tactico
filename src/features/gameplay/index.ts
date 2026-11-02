@@ -7,4 +7,5 @@ export * from "./components/MovieSearchModal";
 export * from "./components/ActorSearchModal";
 export * from "./components/PostGameAnalysisModal";
 export * from "./components/GoldenReelModal";
+export * from "./components/ClapperCountdown";
 export * from "./components/GameView";
