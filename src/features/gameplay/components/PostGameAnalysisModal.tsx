@@ -3,10 +3,11 @@
 import React from "react";
 import { PlayerSymbol, GameBoard, CellAnswer } from "@/core";
 import { UserProfile } from "@/types/profile";
-import { RotateCcw, Home } from "lucide-react";
+import { RotateCcw, Home, Film } from "lucide-react";
 import { audio } from "@/utils/audio";
 import { MiniKadrajPreview } from "@/components/ui/MiniKadrajPreview";
 import { Button } from "@/components/ui/Button";
+import { useTranslation } from "@/i18n";
 
 interface PostGameAnalysisModalProps {
   winner: PlayerSymbol | "DRAW" | null;
@@ -18,6 +19,7 @@ interface PostGameAnalysisModalProps {
   onNextBoard?: () => void;
   onBackToHome?: () => void;
   onDoubleReward?: () => void;
+  onReviewKadraj?: () => void;
 }
 
 // 35mm film edge perforations for modal
@@ -32,11 +34,16 @@ const ModalSprocketColumn = ({ count = 12 }: { count?: number }) => (
   </div>
 );
 
-// Tur 10B: 6. Kayıp ekranı alt satırı üç cümleden rastgele
-const LOSS_SUBTITLES = [
+const LOSS_SUBTITLES_TR = [
   "Bir çekim daha?",
   "Sahne senin, tekrar dene.",
   "Final kesimi bu değil.",
+];
+
+const LOSS_SUBTITLES_EN = [
+  "One more take?",
+  "The stage is yours, try again.",
+  "This is not the final cut.",
 ];
 
 export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
@@ -45,10 +52,18 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   cells,
   onPlayAgain,
   onBackToHome,
+  onReviewKadraj,
 }) => {
-  const [lossSubtitle] = React.useState(
-    () => LOSS_SUBTITLES[Math.floor(Math.random() * LOSS_SUBTITLES.length)]
+  const { dict, locale, tBoardTitle } = useTranslation();
+  const isEn = locale === "en";
+
+  const [lossSubtitleIndex] = React.useState(
+    () => Math.floor(Math.random() * 3)
   );
+
+  const lossSubtitle = isEn
+    ? LOSS_SUBTITLES_EN[lossSubtitleIndex]
+    : LOSS_SUBTITLES_TR[lossSubtitleIndex];
 
   if (winner === null) return null;
 
@@ -67,9 +82,10 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
         )
       : 5;
 
-  const displayTitle =
+  const rawTitle =
     board.displayTitle ||
     (board.title.includes(":") ? board.title.split(":")[0].trim() : board.title);
+  const displayTitle = tBoardTitle(rawTitle);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
@@ -108,12 +124,22 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
                 : "text-[#E8E6E1]"
             }`}
           >
-            {isVictory ? "Kesin!" : isDraw ? "Kör kadraj" : "Kurgu masasına dönüyoruz."}
+            {isVictory
+              ? isEn
+                ? "Cut!"
+                : "Kesin!"
+              : isDraw
+              ? isEn
+                ? "Blind frame"
+                : "Kör kadraj"
+              : isEn
+              ? "Back to cutting room."
+              : "Kurgu masasına dönüyoruz."}
           </h2>
 
           {isDraw && (
             <p className="text-xs text-[#8A8F9A] font-sans mt-0.5">
-              Berabere.
+              {isEn ? "Draw." : "Berabere."}
             </p>
           )}
 
@@ -137,23 +163,23 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
         <div className="w-full my-3 py-3 px-2 rounded-xl bg-[#0F1115] border border-white/5 grid grid-cols-3 gap-1 text-center">
           <div>
             <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
-              SEN (X)
+              {isEn ? "YOU (X)" : "SEN (X)"}
             </span>
             <span className="text-base font-mono font-bold text-[#D9A441] mt-0.5 block">
-              {playerAnswers.length} Kare
+              {playerAnswers.length} {isEn ? "Cells" : "Kare"}
             </span>
           </div>
           <div className="border-x border-white/5">
             <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
-              RAKİP (O)
+              {isEn ? "OPPONENT (O)" : "RAKİP (O)"}
             </span>
             <span className="text-base font-mono font-bold text-[#4FA3C7] mt-0.5 block">
-              {opponentAnswers.length} Kare
+              {opponentAnswers.length} {isEn ? "Cells" : "Kare"}
             </span>
           </div>
           <div>
             <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
-              NADİRLİK
+              {isEn ? "RARITY" : "NADİRLİK"}
             </span>
             <span className="text-base font-mono font-bold text-[#E8E6E1] mt-0.5 block">
               %{rarityScore}
@@ -173,8 +199,23 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
             className="w-full"
           >
             <RotateCcw className="w-4 h-4 stroke-[2.5]" />
-            <span>Yeni çekim</span>
+            <span>{dict.game.playAgain}</span>
           </Button>
+
+          {onReviewKadraj && (
+            <Button
+              variant="secondary"
+              data-testid="post-game-review-kadraj-btn"
+              onClick={() => {
+                audio.playSelect();
+                onReviewKadraj();
+              }}
+              className="w-full border border-[#D9A441]/40 text-[#D9A441] hover:bg-[#D9A441]/10"
+            >
+              <Film className="w-4 h-4 text-[#D9A441]" />
+              <span>{dict.game.reviewKadraj}</span>
+            </Button>
+          )}
 
           <Button
             variant="secondary"
@@ -185,7 +226,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
             className="w-full"
           >
             <Home className="w-4 h-4 text-[#8A8F9A]" />
-            <span>Gişe&apos;ye dön</span>
+            <span>{dict.game.backToHome}</span>
           </Button>
         </div>
 

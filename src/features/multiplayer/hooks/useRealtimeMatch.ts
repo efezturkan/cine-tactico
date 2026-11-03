@@ -42,6 +42,7 @@ export function useRealtimeMatch({
 
   const channelRef = useRef<RealtimeChannel | null>(null);
   const resolvedUserIdRef = useRef<string | undefined>(currentUserId);
+  const processedMoveIds = useRef<Set<string>>(new Set());
 
   // Rehydration: Fetch moves history on initial connect / reconnect
   const rehydrateMoves = useCallback(async (code: string, myUserId?: string) => {
@@ -56,6 +57,10 @@ export function useRealtimeMatch({
       if (movesErr || !moves) return;
 
       for (const m of moves as RoomMoveRecord[]) {
+        if (m.id) {
+          if (processedMoveIds.current.has(m.id)) continue;
+          processedMoveIds.current.add(m.id);
+        }
         if (!myUserId || m.player_id !== myUserId) {
           onRemoteMoveReceived(m.cell_index, m.movie_data, m.player_symbol);
         }
@@ -72,6 +77,7 @@ export function useRealtimeMatch({
     }
 
     let isMounted = true;
+    const processedMoves = processedMoveIds.current;
 
     // Resolve current user ID if not provided
     const initSession = async () => {
@@ -130,16 +136,15 @@ export function useRealtimeMatch({
         }
       });
 
-    // 2. Broadcast ile Düşük Gecikmeli Hamle İletimi
-    channel.on("broadcast", { event: "MOVE_MADE" }, ({ payload }) => {
+    // 2. Broadcast ile Düşük Gecikmeli Hamle Bildirimi (Yetkisiz/sahte hamle enjeksiyonunu engellemek için
+    //    tahta durumu doğrudan broadcast ile güncellenmez; tek otoriter kaynak DB postgres_changes'dir)
+    channel.on("broadcast", { event: "MOVE_MADE" }, () => {
       if (!isMounted) return;
-      const { cellIndex, movie, playerSymbol, senderUsername } = payload;
-      if (senderUsername !== userProfile.username) {
-        onRemoteMoveReceived(cellIndex, movie, playerSymbol);
-      }
+      // Güvenlik: İstemci tarafında sahte broadcast paketleriyle tahta manipülasyonu engellendi.
+      // Postgres Changes (INSERT on room_moves) yetkilendirilmiş ve doğrulanmış tek kaynaktır.
     });
 
-    // 3. Database Postgres Changes (Yedek Güvenilirlik & Senkronizasyon)
+    // 3. Database Postgres Changes (Otoriter Senkronizasyon & Güvenlik)
     channel
       .on(
         "postgres_changes",
@@ -152,6 +157,10 @@ export function useRealtimeMatch({
         (payload) => {
           if (!isMounted) return;
           const newMove = payload.new as RoomMoveRecord;
+          if (newMove.id) {
+            if (processedMoveIds.current.has(newMove.id)) return;
+            processedMoveIds.current.add(newMove.id);
+          }
           const myId = resolvedUserIdRef.current;
           if (!myId || newMove.player_id !== myId) {
             onRemoteMoveReceived(newMove.cell_index, newMove.movie_data, newMove.player_symbol);
@@ -210,6 +219,7 @@ export function useRealtimeMatch({
 
     return () => {
       isMounted = false;
+      processedMoves.clear();
       if (channelRef.current && supabase) {
         supabase.removeChannel(channelRef.current);
         channelRef.current = null;

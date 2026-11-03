@@ -221,18 +221,18 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
 
         {/* 2. LİG SEKMELERİ (Bronz ➔ Grandmaster) */}
         <div className="flex items-center gap-1.5 my-2.5 overflow-x-auto custom-scrollbar pb-1.5 text-[10px] font-black shrink-0">
-          {[
+          {([
             { id: "ALL", label: "Tümü" },
             { id: "GRANDMASTER", label: "Grandmaster 👑" },
             { id: "DIAMOND", label: "Elmas 💎" },
             { id: "GOLD", label: "Altın 🥇" },
             { id: "SILVER", label: "Gümüş 🥈" },
-          ].map((lig) => (
+          ] as const).map((lig) => (
             <button
               key={lig.id}
               onClick={() => {
                 audio.playSelect();
-                setActiveLeague(lig.id as any);
+                setActiveLeague(lig.id);
               }}
               className={`px-2.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
                 activeLeague === lig.id

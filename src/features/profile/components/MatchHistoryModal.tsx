@@ -9,6 +9,7 @@ import { X, Share2, Eye, Film } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { MiniKadrajPreview } from "@/components/ui/MiniKadrajPreview";
 import { FLAGS } from "@/config/flags";
+import { useTranslation } from "@/i18n";
 
 interface MatchHistoryModalProps {
   isOpen: boolean;
@@ -21,6 +22,9 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
   onClose,
   profile,
 }) => {
+  const { locale, tBoardTitle } = useTranslation();
+  const isEn = locale === "en";
+
   const [selectedMatch, setSelectedMatch] = useState<MatchRecord | null>(null);
   const [inspectCellIndex, setInspectCellIndex] = useState<number | null>(null);
 
@@ -30,7 +34,7 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
 
   const formatDateShort = (ts: number) => {
     try {
-      return new Intl.DateTimeFormat("tr-TR", {
+      return new Intl.DateTimeFormat(isEn ? "en-US" : "tr-TR", {
         day: "numeric",
         month: "short",
       }).format(new Date(ts));
@@ -42,10 +46,20 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
   const handleShare = (m: MatchRecord) => {
     audio.playSelect();
     haptic.light();
-    const dTitle = m.board.title.includes(":") ? m.board.title.split(":")[0].trim() : m.board.title;
-    const shareText = `CineXOX Düellosu: ${dTitle} · Sonuç: ${
-      m.outcome === "VICTORY" ? "Kesin!" : m.outcome === "DRAW" ? "Kör kadraj" : "Kurgu masası"
-    }`;
+    const rawTitle = m.board.title.includes(":") ? m.board.title.split(":")[0].trim() : m.board.title;
+    const dTitle = tBoardTitle(rawTitle);
+    const outcomeText = isEn
+      ? m.outcome === "VICTORY"
+        ? "Cut! Victory!"
+        : m.outcome === "DRAW"
+        ? "Blind Frame (Tie)"
+        : "Back to cutting room"
+      : m.outcome === "VICTORY"
+      ? "Kesin!"
+      : m.outcome === "DRAW"
+      ? "Kör kadraj"
+      : "Kurgu masası";
+    const shareText = `${isEn ? "CineXOX Duel" : "CineXOX Düellosu"}: ${dTitle} · ${isEn ? "Result" : "Sonuç"}: ${outcomeText}`;
     if (navigator.share) {
       navigator.share({ title: "CineXOX", text: shareText }).catch(() => {});
     } else if (navigator.clipboard) {
@@ -109,7 +123,7 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
                   }}
                   className="text-xs font-bold text-[#D9A441] hover:underline"
                 >
-                  &larr; Listeye Dön
+                  &larr; {isEn ? "Back to list" : "Listeye Dön"}
                 </button>
                 <Button
                   variant="inline"
@@ -117,13 +131,13 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
                   className="flex items-center gap-1.5"
                 >
                   <Share2 className="w-3.5 h-3.5" />
-                  <span>Paylaş</span>
+                  <span>{isEn ? "Share" : "Paylaş"}</span>
                 </Button>
               </div>
 
               <div className="p-3.5 rounded-xl bg-[#181B22] border border-white/10">
                 <span className="font-serif text-sm font-bold text-[#E8E6E1] block">
-                  {selectedMatch.board.title}
+                  {tBoardTitle(selectedMatch.board.title)}
                 </span>
                 <span className="text-xs text-[#8A8F9A] mt-0.5 block">
                   vs {selectedMatch.opponent.name} · {formatDateShort(selectedMatch.timestamp)}
@@ -140,7 +154,7 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
             <div className="py-16 text-center text-[#8A8F9A]">
               <Film className="w-8 h-8 text-[#D9A441]/40 mx-auto mb-2" />
               <p className="font-serif text-sm font-bold text-[#E8E6E1]">
-                Arşivde henüz kayıt yok.
+                {isEn ? "No records in the archive yet." : "Arşivde henüz kayıt yok."}
               </p>
             </div>
           ) : (
@@ -151,7 +165,7 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
               const dTitle = m.board.title.includes(":")
                 ? m.board.title.split(":")[0].trim()
                 : m.board.title;
-              const oppName = m.opponent?.name || "Sinefil Botu";
+              const oppName = m.opponent?.name || (isEn ? "Cinephile Bot" : "Sinefil Botu");
 
               return (
                 <div
@@ -169,7 +183,17 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
                             : "bg-white/[0.03] text-[#8A8F9A] border-white/10"
                         }`}
                       >
-                        {isWin ? "Kesin!" : isDraw ? "Kör kadraj" : "Kurgu masası"}
+                        {isWin
+                          ? isEn
+                            ? "Cut!"
+                            : "Kesin!"
+                          : isDraw
+                          ? isEn
+                            ? "Blind frame"
+                            : "Kör kadraj"
+                          : isEn
+                          ? "Cutting room"
+                          : "Kurgu masası"}
                       </span>
                       <span className="text-xs text-[#8A8F9A] font-sans">
                         {formatDateShort(m.timestamp)}
@@ -186,7 +210,7 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0 pr-2">
                       <div className="font-serif font-bold text-sm text-[#E8E6E1] truncate">
-                        {dTitle}
+                        {tBoardTitle(dTitle)}
                       </div>
                       <div className="text-xs text-[#8A8F9A] truncate mt-0.5">
                         vs {oppName}
@@ -205,7 +229,7 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
                       className="flex items-center gap-1"
                     >
                       <Share2 className="w-3 h-3" />
-                      <span>Paylaş</span>
+                      <span>{isEn ? "Share" : "Paylaş"}</span>
                     </Button>
                     <Button
                       variant="inline"
@@ -216,7 +240,7 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
                       className="flex items-center gap-1"
                     >
                       <Eye className="w-3 h-3" />
-                      <span>İncele</span>
+                      <span>{isEn ? "Inspect" : "İncele"}</span>
                     </Button>
                   </div>
                 </div>

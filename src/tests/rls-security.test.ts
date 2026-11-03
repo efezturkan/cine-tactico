@@ -36,6 +36,17 @@ async function runTests() {
 
   // 2. Policy Definitions Inspection
   assert(
+    migrationSql.includes("alter table public.profiles enable row level security") &&
+    migrationSql.includes("alter table public.game_rooms enable row level security") &&
+    migrationSql.includes("alter table public.room_moves enable row level security") &&
+    migrationSql.includes("alter table public.match_sessions enable row level security"),
+    "Explicitly enables Row Level Security on all core game tables"
+  );
+  assert(
+    migrationSql.includes("supabase_realtime"),
+    "Configures Realtime publication tables idempotently"
+  );
+  assert(
     migrationSql.includes('create policy "profiles_update_own"'),
     "Defines strict profiles_update_own policy"
   );

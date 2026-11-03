@@ -155,3 +155,37 @@ export async function linkAnonymousAccountToEmail(
     return { success: false, error: msg };
   }
 }
+
+/**
+ * Apple Guideline 5.1.1(v) uyumlu: Kullanıcının sunucudaki hesabını ve ilişkili
+ * profil/hamle kayıtlarını kalıcı olarak siler. Ardından istemcideki aktif oturumu kapatır.
+ */
+export async function deleteUserAccount(): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured || !supabase) {
+    return { success: false, error: "Supabase yapılandırılmamış." };
+  }
+
+  try {
+    const { data, error } = await supabase.rpc("delete_user_account");
+    if (error) {
+      return {
+        success: false,
+        error: "Sunucu ile bağlantı kurulamadı veya hesap silme isteği reddedildi. Lütfen tekrar deneyin.",
+      };
+    }
+
+    if (data && typeof data === "object" && !(data as { success?: boolean }).success) {
+      return { success: false, error: (data as { error?: string }).error || "Hesap silinemedi." };
+    }
+
+    // İstemcideki aktif oturumu kapat
+    await supabase.auth.signOut();
+    return { success: true };
+  } catch {
+    return {
+      success: false,
+      error: "Hesap silme işlemi sırasında beklenmeyen bir ağ hatası oluştu. Lütfen tekrar deneyin.",
+    };
+  }
+}
+

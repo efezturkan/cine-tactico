@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { audio } from "@/utils/audio";
 import { Swords, Film } from "lucide-react";
 import { UserProfile, AVATAR_OPTIONS } from "@/types/profile";
+import { useTranslation } from "@/i18n";
 
 interface MatchFoundModalProps {
   isOpen: boolean;
@@ -27,6 +28,9 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
   boardTitle = "Auteur Savaşları",
   onCountdownComplete,
 }) => {
+  const { dict, locale, tBoardTitle } = useTranslation();
+  const isEn = locale === "en";
+
   const [countdown, setCountdown] = useState<number>(3);
 
   const userAvatar =
@@ -79,12 +83,12 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
         <div className="flex items-center gap-2 mb-1.5">
           <Swords className="w-4 h-4 text-[#D9A441]" />
           <h2 className="text-xl font-bold font-serif text-[#F1EEE7] tracking-wide">
-            Seans Başlıyor
+            {isEn ? "Session Starting" : "Seans Başlıyor"}
           </h2>
         </div>
         <p className="text-[11px] font-medium text-[#A5A8B0] mb-5 flex items-center gap-1.5 bg-[#181B22] px-3 py-1 rounded-md border border-white/10 max-w-full truncate">
           <Film className="w-3.5 h-3.5 text-[#D9A441] shrink-0" />
-          <span className="truncate">{boardTitle}</span>
+          <span className="truncate">{tBoardTitle(boardTitle)}</span>
         </p>
 
         {/* 2. OYUNCULAR KARŞILAŞMASI (User X vs Opponent O) */}
@@ -105,7 +109,7 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
               {userProfile.username}
             </span>
             <span className="text-[9px] font-medium text-[#A5A8B0] mt-0.5 font-mono">
-              Seviye {userProfile.rankLevel || 1}
+              {isEn ? `Level ${userProfile.rankLevel || 1}` : `Seviye ${userProfile.rankLevel || 1}`}
             </span>
           </div>
 
@@ -134,10 +138,10 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
               {opponentName}
             </span>
             <span className="text-[9px] font-bold text-[#D9A441] mt-0.5 font-mono">
-              Sinefil Botu
+              {isEn ? "Cinephile Bot" : "Sinefil Botu"}
             </span>
             <span className="text-[9px] font-medium text-[#A5A8B0] font-mono">
-              Seviye {opponentLevel}
+              {isEn ? `Level ${opponentLevel}` : `Seviye ${opponentLevel}`}
             </span>
           </div>
         </div>
@@ -151,7 +155,7 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
         </div>
 
         <p className="text-[10px] font-medium text-[#A5A8B0] uppercase tracking-[0.2em] mt-1 font-mono">
-          35MM Perde Açılıyor...
+          {isEn ? "35MM Curtain Opening..." : "35MM Perde Açılıyor..."}
         </p>
       </div>
     </div>

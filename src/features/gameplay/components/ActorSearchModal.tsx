@@ -7,6 +7,7 @@ import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { ACTORS_DATABASE } from "@/content/adapters/gameCatalog";
 import { Button } from "@/components/ui/Button";
+import { useTranslation } from "@/i18n";
 
 interface ActorSearchModalProps {
   isOpen: boolean;
@@ -25,6 +26,8 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
   onSelectActor,
   errorMessage,
 }) => {
+  const { dict, locale, tCriterion } = useTranslation();
+  const isEn = locale === "en";
   const [query, setQuery] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
   const [vpStyle, setVpStyle] = useState<{ height?: number; top?: number }>({});
@@ -67,7 +70,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
     const trimmed = query.trim();
     if (!trimmed) {
       // 1.3 & 6E.2: Boş girişte "Bir isim yaz." uyarısı
-      setLocalError("Bir isim yaz.");
+      setLocalError(isEn ? "Type a name." : "Bir isim yaz.");
       return;
     }
     setLocalError(null);
@@ -122,15 +125,15 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
         <div className="flex items-start justify-between pb-3 border-b border-white/10 shrink-0">
           <div className="min-w-0">
             <span className="text-[10px] font-sans uppercase font-bold tracking-wider text-[#5FB3A8] block mb-1">
-              TERS KADRAJ · ORTAK OYUNCU
+              {isEn ? "REVERSE FRAME · SHARED ACTOR" : "TERS KADRAJ · ORTAK OYUNCU"}
             </span>
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#181B22] text-[#E8E6E1] border border-white/10">
-                {rowCrit.label}
+                {tCriterion(rowCrit.label)}
               </span>
               <span className="text-[#8A8F9A] font-bold text-xs">×</span>
               <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#181B22] text-[#E8E6E1] border border-white/10">
-                {colCrit.label}
+                {tCriterion(colCrit.label)}
               </span>
             </div>
           </div>
@@ -139,7 +142,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
             variant="icon"
             onClick={onClose}
             className="shrink-0"
-            title="Kapat"
+            title={dict.common.close}
           >
             <X className="w-4 h-4" />
           </Button>
@@ -168,7 +171,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
                 setQuery(e.target.value);
                 if (localError) setLocalError(null);
               }}
-              placeholder="Ortak oyuncunun adı"
+              placeholder={isEn ? "Shared actor name" : "Ortak oyuncunun adı"}
               enterKeyHint="done"
               className="w-full bg-[#0B0D12] border border-white/10 focus:border-[#5FB3A8] rounded-xl pl-10 pr-9 py-2.5 sm:py-3 text-base font-medium text-[#E8E6E1] placeholder:text-[#8A8F9A]/50 outline-none transition-colors"
               autoComplete="off"
@@ -190,10 +193,10 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
           {query.trim().length >= 2 && suggestedActors.length === 0 ? (
             <div className="flex-1 min-h-[90px] flex flex-col items-center justify-center p-4 rounded-xl bg-[#0B0D12] border border-white/10 text-center text-[#8A8F9A]">
               <p className="font-serif text-sm font-bold text-[#E8E6E1] mb-0.5">
-                Bu isim arşivde yok.
+                {isEn ? "This name is not in the archive." : "Bu isim arşivde yok."}
               </p>
               <p className="text-xs text-[#8A8F9A]">
-                Yazımı kontrol et.
+                {isEn ? "Check spelling." : "Yazımı kontrol et."}
               </p>
             </div>
           ) : suggestedActors.length > 0 ? (
@@ -227,7 +230,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
             fullWidth
             className="mt-auto shrink-0"
           >
-            ONAYLA
+            {isEn ? "CONFIRM" : "ONAYLA"}
           </Button>
         </form>
       </div>

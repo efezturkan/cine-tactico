@@ -354,7 +354,6 @@ export function useGameSession(
       board.cols,
       board.boardMode,
       comboStreak,
-      allowCellStealing,
       recordFailedAttempt,
       scoreRarityX,
       scoreRarityO,

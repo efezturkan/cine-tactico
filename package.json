@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "tsx src/tests/game-engine.test.ts && tsx src/tests/anti-cheat.test.ts && tsx src/tests/modal-render.test.tsx && tsx src/tests/auth-identity.test.ts && tsx src/tests/schema-integrity.test.ts && tsx src/tests/rls-security.test.ts && tsx src/tests/server-rpc.test.ts && tsx src/tests/match-lifecycle.test.ts && tsx src/tests/mode-separation.test.ts && tsx src/tests/asset-system.test.ts && tsx src/tests/content-foundation.test.ts && tsx src/tests/guide-flow.test.ts && tsx src/tests/daily-flow.test.ts"
+    "test": "tsx src/tests/game-engine.test.ts && tsx src/tests/anti-cheat.test.ts && tsx src/tests/modal-render.test.tsx && tsx src/tests/auth-identity.test.ts && tsx src/tests/schema-integrity.test.ts && tsx src/tests/rls-security.test.ts && tsx src/tests/server-rpc.test.ts && tsx src/tests/match-lifecycle.test.ts && tsx src/tests/mode-separation.test.ts && tsx src/tests/asset-system.test.ts && tsx src/tests/content-foundation.test.ts && tsx src/tests/guide-flow.test.ts && tsx src/tests/daily-flow.test.ts && tsx src/tests/i18n-localization.test.ts && tsx src/tests/review-mode-flow.test.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",
@@ -28,6 +28,8 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.15",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "tsx": "^4.23.15",

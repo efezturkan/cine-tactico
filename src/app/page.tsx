@@ -45,6 +45,7 @@ import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { hasSeenGuide } from "@/utils/guideStorage";
 import { getGlobalDailyDateKey } from "@/utils/dateUtils";
+import { LanguageProvider } from "@/i18n";
 
 const getDailyBoardConfig = (): { board: GameBoard; index: number } => {
   const dailyIdx = PRESET_BOARDS.findIndex(b => b.id === "board_daily_today");
@@ -317,6 +318,9 @@ function CineXoxApp() {
         setShowHelp(true);
       }
     }
+    // Bilinçli olarak yalnızca mount'ta çalışır: URL ?room daveti tek sefer işlenmeli.
+    // profile/resetGame/setBoard eklenirse profil her değiştiğinde odaya yeniden katılım tetiklenir.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Supabase Gerçek Zamanlı Çok Oyunculu Senkronizasyonu
@@ -357,7 +361,7 @@ function CineXoxApp() {
       const currentLast5 = prev.lastFiveMatches ?? [];
       const updatedLast5 = [...currentLast5, outcome].slice(-5) as ("W" | "L" | "D")[];
 
-      const matchMode = (board.boardMode || (mode === "ONLINE_ROOM" ? "ONLINE_ROOM" : "CLASSIC")) as any;
+      const matchMode: MatchRecord["mode"] = board.boardMode || (mode === "ONLINE_ROOM" ? "ONLINE_ROOM" : "CLASSIC");
       const modeLabel = board.boardMode === "REVERSE_CAST"
         ? "Ters Kadraj"
         : board.boardMode === "CINE_CONCEPT"
@@ -559,7 +563,7 @@ function CineXoxApp() {
     setAllowSteal(false);
     setCustomShotClock(12);
     if (targetMode === "VS_BOT") {
-      const { board: nextBoard, index: nextIdx } = getRandomBoard(boardIndex);
+      const { board: nextBoard, index: nextIdx } = getBoardForMode(queueMode, boardIndex);
       const opp = getRandomOpponent(botDifficulty, pendingOpponent.name);
       setBoardIndex(nextIdx);
       setPendingBoardIndex(nextIdx);
@@ -602,7 +606,7 @@ function CineXoxApp() {
       setAllowSteal(false);
       setCustomShotClock(12);
       if (targetMode === "VS_BOT") {
-        const { board: nextBoard, index: nextIdx } = getRandomBoard(boardIndex);
+        const { board: nextBoard, index: nextIdx } = getBoardForMode(queueMode, boardIndex);
         const opp = getRandomOpponent(botDifficulty, pendingOpponent.name);
         setBoardIndex(nextIdx);
         setPendingBoardIndex(nextIdx);
@@ -1126,7 +1130,9 @@ function CineXoxApp() {
 export default function CineXoxPage() {
   return (
     <ErrorBoundary>
-      <CineXoxApp />
+      <LanguageProvider>
+        <CineXoxApp />
+      </LanguageProvider>
     </ErrorBoundary>
   );
 }

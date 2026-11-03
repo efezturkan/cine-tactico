@@ -10,6 +10,7 @@ import {
   ensureAnonymousSession,
   linkAnonymousAccountToEmail,
   updateUsernameWithUniqueness,
+  deleteUserAccount,
   isSupabaseConfigured,
 } from "@/backend";
 import {
@@ -19,11 +20,15 @@ import {
   Camera,
   ChevronRight,
   ShieldCheck,
+  Trash2,
+  RotateCcw,
+  AlertTriangle,
 } from "lucide-react";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { AvatarIcon } from "@/components/ui/AvatarIcon";
 import { Button } from "@/components/ui/Button";
+import { useTranslation } from "@/i18n";
 
 const FAVORITE_DIRECTORS = [
   "Christopher Nolan",
@@ -74,6 +79,15 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [linkMessage, setLinkMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
   const [nameLoading, setNameLoading] = useState<boolean>(false);
+
+  const [showResetLocalModal, setShowResetLocalModal] = useState<boolean>(false);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState<boolean>(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState<boolean>(false);
+  const [deleteAccountError, setDeleteAccountError] = useState<string | null>(null);
+  const [isResettingLocal, setIsResettingLocal] = useState<boolean>(false);
+
+  const { dict, locale, tBot } = useTranslation();
+  const isEn = locale === "en";
 
   useEffect(() => {
     if (isOpen || isPage) {
@@ -154,6 +168,63 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     setShowAvatarPicker(false);
   };
 
+  const handleResetLocalData = () => {
+    try {
+      setIsResettingLocal(true);
+      const localKeys = [
+        "cinexox_player_profile",
+        "cinexox_match_history",
+        "cinexox_last_streak_date",
+        "cinexox_last_streak_utc",
+        "cinetactico_ambience_config",
+        "cinexox_ambience",
+        "cinexox_ipucu_ters",
+        "cinexox_ipucu_konsept",
+        "cinexox_guide_seen",
+      ];
+      localKeys.forEach((key) => localStorage.removeItem(key));
+      haptic.light();
+      window.location.reload();
+    } catch {
+      setIsResettingLocal(false);
+    }
+  };
+
+  const handleConfirmDeleteAccount = async () => {
+    setIsDeletingAccount(true);
+    setDeleteAccountError(null);
+    haptic.error();
+
+    const res = await deleteUserAccount();
+    if (!res.success) {
+      setDeleteAccountError(res.error || "Hesap silinemedi.");
+      setIsDeletingAccount(false);
+      audio.playError();
+      return;
+    }
+
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (
+          key &&
+          (key.startsWith("cinexox_") ||
+            key.startsWith("cinetactico_") ||
+            key.startsWith("sb-"))
+        ) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+      sessionStorage.clear();
+    } catch {
+      // ignore
+    }
+
+    window.location.href = "/";
+  };
+
   const handleSelectDirector = (dir: string) => {
     audio.playSelect();
     onUpdateProfile({
@@ -171,7 +242,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       {/* 7D.1 Başlık: Serif 'Sinefil Kartı', mikro etiket yok, X yok */}
       <div className="text-center pb-4 mb-4 border-b border-white/5">
         <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#E8E6E1] tracking-wide">
-          Sinefil Kartı
+          {dict.profile.title}
         </h1>
       </div>
 
@@ -215,13 +286,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           ) : (
             <div className="flex items-center gap-1.5">
               <h2 className="text-lg font-serif font-bold text-[#E8E6E1]">
-                {profile.username === "Oyuncu" ? "Sinefil #3095" : profile.username}
+                {profile.username === "Oyuncu" ? (isEn ? "Cinephile #3095" : "Sinefil #3095") : profile.username}
               </h2>
               <button
                 type="button"
                 onClick={() => setIsEditingName(true)}
                 className="text-[#8A8F9A] hover:text-[#D9A441] transition-colors p-1"
-                title="İsmi Düzenle"
+                title={dict.profile.editName}
               >
                 <Edit3 className="w-3.5 h-3.5" />
               </button>
@@ -231,7 +302,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
         {/* 7D.3 Seviye Satırı: "Seviye 1 · Bilet Kontrolörü" */}
         <div className="text-xs font-sans text-[#8A8F9A] mb-1">
-          <span>Seviye {currentRank.level} · {currentRank.title}</span>
+          <span>{isEn ? "Level" : "Seviye"} {currentRank.level} · {tBot(currentRank.title)}</span>
         </div>
 
         {/* 7D.3 Favori Yönetmen: Dokunulabilir (küçük ok, alt çizgi yok) */}
@@ -241,7 +312,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             onClick={() => setShowDirectorPicker(true)}
             className="flex items-center gap-1 text-xs text-[#8A8F9A] hover:text-[#E8E6E1] transition-colors py-0.5"
           >
-            <span>Favori yönetmen:</span>
+            <span>{isEn ? "Favorite director:" : "Favori yönetmen:"}</span>
             <span className="font-semibold text-[#E8E6E1] ml-0.5">{favoriteDirector}</span>
             <ChevronRight className="w-3 h-3 text-[#D9A441]" />
           </button>
@@ -254,15 +325,15 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         </div>
       )}
 
-      {/* 7D.4 Sinefil Sicili: Galibiyet / Mağlubiyet / Oran (Mağlubiyet soluk metin, kırmızı değil!) */}
+      {/* 7D.4 Sinefil Sicili: Galibiyet / Mağlubiyet / Oran */}
       <div className="w-full p-3.5 rounded-xl bg-[#14171D] border border-white/10 text-center mb-3">
         <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#D9A441] block mb-2 pb-1.5 border-b border-white/5">
-          Sinefil sicili
+          {isEn ? "Cinephile record" : "Sinefil sicili"}
         </span>
         <div className="grid grid-cols-3 gap-2">
           <div>
             <span className="text-[9px] font-sans font-bold text-[#8A8F9A] uppercase block">
-              GALİBİYET
+              {dict.profile.wins}
             </span>
             <span className="text-lg font-mono font-bold text-[#D9A441] mt-0.5 block">
               {profile.wins}
@@ -270,7 +341,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           </div>
           <div className="border-x border-white/5">
             <span className="text-[9px] font-sans font-bold text-[#8A8F9A] uppercase block">
-              MAĞLUBİYET
+              {dict.profile.losses}
             </span>
             <span className="text-lg font-mono font-bold text-[#8A8F9A] mt-0.5 block">
               {profile.losses}
@@ -278,7 +349,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           </div>
           <div>
             <span className="text-[9px] font-sans font-bold text-[#8A8F9A] uppercase block">
-              ORAN
+              {dict.profile.winRate}
             </span>
             <span className="text-lg font-mono font-bold text-[#E8E6E1] mt-0.5 block">
               {winRateDisplay}
@@ -300,10 +371,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       >
         <div>
           <span className="text-xs font-serif font-bold text-[#E8E6E1] block">
-            Son 5 düello
+            {isEn ? "Last 5 duels" : "Son 5 düello"}
           </span>
           <span className="text-[10px] text-[#8A8F9A]">
-            {recent.length === 0 ? "Henüz düello yok." : "Arşivi incele →"}
+            {recent.length === 0 ? (isEn ? "No duels yet." : "Henüz düello yok.") : (isEn ? "Review archive →" : "Arşivi incele →")}
           </span>
         </div>
 
@@ -340,10 +411,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <ShieldCheck className={`w-4 h-4 ${isAnonymousUser ? "text-[#8A8F9A]" : "text-[#D9A441]"}`} />
             <div>
               <div className="text-xs font-bold text-[#E8E6E1]">
-                {isAnonymousUser ? "Misafir hesabı" : "Kayıtlı hesap"}
+                {isAnonymousUser ? (isEn ? "Guest session" : "Misafir hesabı") : (isEn ? "Registered account" : "Kayıtlı hesap")}
               </div>
               <div className="text-[10px] text-[#8A8F9A]">
-                {isAnonymousUser ? "Cihazında kayıtlı." : userEmail || "Buluta bağlı"}
+                {isAnonymousUser ? (isEn ? "Saved on device." : "Cihazında kayıtlı.") : userEmail || (isEn ? "Cloud linked" : "Buluta bağlı")}
               </div>
             </div>
           </div>
@@ -353,7 +424,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               variant="inline"
               onClick={() => setShowLinkAccount(!showLinkAccount)}
             >
-              {showLinkAccount ? "Kapat" : "HESAP OLUŞTUR"}
+              {showLinkAccount ? dict.common.close : dict.profile.linkAccount}
             </Button>
           )}
         </div>
@@ -365,7 +436,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           >
             <input
               type="email"
-              placeholder="ornek@sinefil.com"
+              placeholder={isEn ? "user@cinephile.com" : "ornek@sinefil.com"}
               value={linkEmail}
               onChange={(e) => setLinkEmail(e.target.value)}
               required
@@ -373,7 +444,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             />
             <input
               type="password"
-              placeholder="Şifre (en az 6 karakter)"
+              placeholder={isEn ? "Password (min 6 characters)" : "Şifre (en az 6 karakter)"}
               value={linkPassword}
               onChange={(e) => setLinkPassword(e.target.value)}
               required
@@ -397,10 +468,65 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               fullWidth
               disabled={linkLoading}
             >
-              {linkLoading ? "Bağlanıyor..." : "ONAYLA"}
+              {linkLoading ? dict.common.loading : dict.common.confirm}
             </Button>
           </form>
         )}
+      </div>
+
+      {/* Veri ve Gizlilik Yönetimi (Apple 5.1.1(v) Uyumlu) */}
+      <div className="p-3.5 rounded-xl bg-[#14171D] border border-white/5 space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-[#8A8F9A]" />
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#8A8F9A]">
+              {dict.profile.dataPrivacy}
+            </span>
+          </div>
+          <a
+            href="/privacy"
+            className="text-[10px] font-mono text-[#D9A441] hover:underline"
+          >
+            {dict.profile.readPolicy}
+          </a>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 pt-1">
+          <button
+            type="button"
+            onClick={() => {
+              audio.playSelect();
+              setShowResetLocalModal(true);
+            }}
+            className="p-2.5 rounded-lg bg-[#0B0D12] border border-white/10 text-left hover:border-white/20 transition-colors"
+          >
+            <div className="flex items-center gap-1.5 text-xs font-bold text-[#E8E6E1]">
+              <RotateCcw className="w-3.5 h-3.5 text-[#8A8F9A]" />
+              <span>{dict.profile.resetLocal}</span>
+            </div>
+            <p className="text-[10px] text-[#8A8F9A] mt-1 line-clamp-1">
+              {dict.profile.resetLocalSub}
+            </p>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              audio.playSelect();
+              setDeleteAccountError(null);
+              setShowDeleteAccountModal(true);
+            }}
+            className="p-2.5 rounded-lg bg-[#E5484D]/10 border border-[#E5484D]/30 text-left hover:bg-[#E5484D]/20 transition-colors"
+          >
+            <div className="flex items-center gap-1.5 text-xs font-bold text-[#E5484D]">
+              <Trash2 className="w-3.5 h-3.5 text-[#E5484D]" />
+              <span>{dict.profile.deleteAccount}</span>
+            </div>
+            <p className="text-[10px] text-[#E5484D]/70 mt-1 line-clamp-1">
+              {dict.profile.deleteAccountSub}
+            </p>
+          </button>
+        </div>
       </div>
 
       {/* 7D.8 Alt Etiket */}
@@ -498,6 +624,129 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   {dir}
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Yerel Veri Sıfırlama Onay Modalı */}
+      {showResetLocalModal && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !isResettingLocal) setShowResetLocalModal(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm select-none"
+        >
+          <div className="w-full max-w-sm bg-[#14171D] border border-white/10 rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#8A8F9A]">
+                <RotateCcw className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-serif text-base font-bold text-[#E8E6E1]">
+                  {isEn ? "Reset Local Data" : "Yerel Verileri Sıfırla"}
+                </h3>
+                <span className="text-[10px] font-mono text-[#8A8F9A]">
+                  {isEn ? "Device Cache Cleanup" : "Cihaz Önbelleği Temizliği"}
+                </span>
+              </div>
+            </div>
+
+            <p className="text-xs text-[#8A8F9A] leading-relaxed">
+              {isEn
+                ? "This clears offline bot match records, auditorium ambience preferences, and UI onboarding flags stored on this device."
+                : "Bu işlem cihazınızda kayıtlı çevrimdışı bot maç geçmişini, salon ambiyans tercihlerinizi ve arayüz ipuçlarını sıfırlar."}
+            </p>
+            <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-400">
+              {isEn
+                ? "✓ Your online rating, titles, and server profile are KEPT SAFE on the server."
+                : "✓ Çevrimiçi lig dereceniz, unvanınız ve profiliniz sunucuda KORUNUR."}
+            </div>
+
+            <div className="flex items-center gap-2 pt-2">
+              <Button
+                variant="secondary"
+                fullWidth
+                disabled={isResettingLocal}
+                onClick={() => setShowResetLocalModal(false)}
+              >
+                {dict.common.cancel}
+              </Button>
+              <Button
+                variant="primary"
+                fullWidth
+                disabled={isResettingLocal}
+                onClick={handleResetLocalData}
+              >
+                {isResettingLocal ? (isEn ? "Resetting..." : "Sıfırlanıyor...") : (isEn ? "Reset" : "Sıfırla")}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Hesabı ve Tüm Verileri Silme Onay Modalı (Apple 5.1.1(v)) */}
+      {showDeleteAccountModal && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !isDeletingAccount) setShowDeleteAccountModal(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md select-none"
+        >
+          <div className="w-full max-w-sm bg-[#14171D] border border-[#E5484D]/40 rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#E5484D]/15 border border-[#E5484D]/30 flex items-center justify-center text-[#E5484D]">
+                <AlertTriangle className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-serif text-base font-bold text-white">
+                  {isEn ? "Delete Account & All Data" : "Hesabı ve Tüm Verileri Sil"}
+                </h3>
+                <span className="text-[10px] font-mono text-[#E5484D]">Apple Guideline 5.1.1(v)</span>
+              </div>
+            </div>
+
+            <p className="text-xs text-[#E8E6E1]/90 leading-relaxed">
+              {isEn ? (
+                <>
+                  This action is <strong className="text-[#E5484D]">IRREVERSIBLE</strong>. Your anonymous account, rank title, rating, reels balance, and stats on Supabase will be <strong>PERMANENTLY DESTROYED</strong>.
+                </>
+              ) : (
+                <>
+                  Bu işlem <strong className="text-[#E5484D]">GERİ ALINAMAZ</strong>. Supabase üzerindeki anonim oyuncu hesabınız, unvanınız, lig dereceniz, makara bakiyeniz ve tüm istatistikleriniz <strong>KALICI OLARAK YOK EDİLECEKTİR</strong>.
+                </>
+              )}
+            </p>
+
+            <div className="p-2.5 rounded-lg bg-[#E5484D]/10 border border-[#E5484D]/25 text-[11px] text-[#E5484D] leading-tight">
+              {isEn
+                ? "⚠ Your user references in multiplayer match records will be unlinked (set to null), while your personal profile is completely deleted."
+                : "⚠ Çok oyunculu maç kayıtlarındaki kullanıcı bağlantınız kaldırılacak (oyuncu kimliği sıfırlanacak), kişisel profiliniz tamamen silinecektir."}
+            </div>
+
+            {deleteAccountError && (
+              <div className="p-2 rounded bg-[#E5484D]/20 border border-[#E5484D]/40 text-xs text-[#E5484D] text-center">
+                {deleteAccountError}
+              </div>
+            )}
+
+            <div className="flex items-center gap-2 pt-2">
+              <Button
+                variant="secondary"
+                fullWidth
+                disabled={isDeletingAccount}
+                onClick={() => setShowDeleteAccountModal(false)}
+              >
+                {dict.common.cancel}
+              </Button>
+              <button
+                type="button"
+                disabled={isDeletingAccount}
+                onClick={handleConfirmDeleteAccount}
+                className="w-full py-2.5 px-3 rounded-lg bg-[#E5484D] hover:bg-[#E5484D]/90 text-white font-bold text-xs tracking-wider uppercase transition-colors disabled:opacity-50"
+              >
+                {isDeletingAccount ? (isEn ? "Deleting..." : "Siliniyor...") : (isEn ? "Permanently Delete Account" : "Hesabı Kalıcı Olarak Sil")}
+              </button>
             </div>
           </div>
         </div>

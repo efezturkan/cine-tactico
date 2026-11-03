@@ -4,6 +4,12 @@
 -- sıfır güven (zero-trust), yetki sızıntısız ve kimlik doğrulamalı erişim kuralları.
 -- ==============================================================================
 
+-- 0. TABLOLARDA RLS'İ AÇIK VE ZORUNLU KIL
+alter table public.profiles enable row level security;
+alter table public.game_rooms enable row level security;
+alter table public.room_moves enable row level security;
+alter table public.match_sessions enable row level security;
+
 -- 1. PROFILES POLICIES
 -- Eski gevşek politikaları temizle
 do $$
@@ -12,6 +18,8 @@ declare
 begin
   execute d || ' policy if exists "Public insert/update profiles" on public.profiles';
   execute d || ' policy if exists "Public read profiles" on public.profiles';
+  execute d || ' policy if exists "Users can upsert own profile" on public.profiles';
+  execute d || ' policy if exists "Users can update own profile only" on public.profiles';
   execute d || ' policy if exists "profiles_select_public" on public.profiles';
   execute d || ' policy if exists "profiles_insert_own" on public.profiles';
   execute d || ' policy if exists "profiles_update_own" on public.profiles';
@@ -44,6 +52,9 @@ declare
 begin
   execute d || ' policy if exists "Public insert/update game_rooms" on public.game_rooms';
   execute d || ' policy if exists "Public read game_rooms" on public.game_rooms';
+  execute d || ' policy if exists "Anyone can read active rooms" on public.game_rooms';
+  execute d || ' policy if exists "Host can create room" on public.game_rooms';
+  execute d || ' policy if exists "Players can update their room" on public.game_rooms';
   execute d || ' policy if exists "game_rooms_select_all" on public.game_rooms';
   execute d || ' policy if exists "game_rooms_insert_host" on public.game_rooms';
   execute d || ' policy if exists "game_rooms_update_participants" on public.game_rooms';
@@ -93,6 +104,8 @@ declare
 begin
   execute d || ' policy if exists "Public insert room_moves" on public.room_moves';
   execute d || ' policy if exists "Public read room_moves" on public.room_moves';
+  execute d || ' policy if exists "Room moves are readable by room participants" on public.room_moves';
+  execute d || ' policy if exists "Insert move with room validation" on public.room_moves';
   execute d || ' policy if exists "room_moves_select_participants" on public.room_moves';
   execute d || ' policy if exists "room_moves_insert_turn_player" on public.room_moves';
 end $$;
@@ -153,3 +166,24 @@ create policy "match_sessions_insert_participant"
     auth.uid() is not null
     and (auth.uid() = player_x_id or auth.uid() = player_o_id)
   );
+
+
+-- 5. REALTIME PUBLICATION AYARLARI (İdempotent)
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables 
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'game_rooms'
+  ) then
+    alter publication supabase_realtime add table public.game_rooms;
+  end if;
+  if not exists (
+    select 1 from pg_publication_tables 
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'room_moves'
+  ) then
+    alter publication supabase_realtime add table public.room_moves;
+  end if;
+exception
+  when undefined_object then
+    null; -- supabase_realtime publication yerel/mock ortamlarda tanımlı olmayabilir
+end $$;

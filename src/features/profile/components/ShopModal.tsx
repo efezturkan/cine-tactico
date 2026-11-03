@@ -96,7 +96,7 @@ export const ShopModal: React.FC<ShopModalProps> = ({
         <div className="my-3 p-3 rounded-2xl bg-amber-400/10 border border-amber-400/20 text-zinc-300 text-xs flex items-center gap-2.5">
           <span className="text-lg">🎟️</span>
           <p className="text-[11px] leading-relaxed text-zinc-300">
-            CineXOX maçları kazanarak ve Günün Kadresi'ni çözerek kazandığın{" "}
+            CineXOX maçları kazanarak ve Günün Kadresi&apos;ni çözerek kazandığın{" "}
             <strong className="text-amber-400 font-black">Makaralarla</strong> yeni sinematik avatarlar aç.
           </p>
         </div>

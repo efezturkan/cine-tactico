@@ -5,6 +5,7 @@ import { Film, X, Bot, RefreshCw } from "lucide-react";
 import { audio } from "@/utils/audio";
 import { ContentPoolType } from "@/core";
 import { UserProfile, AVATAR_OPTIONS } from "@/types/profile";
+import { useTranslation } from "@/i18n";
 
 interface MatchmakingQueueModalProps {
   isOpen: boolean;
@@ -27,8 +28,13 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
   contentPool,
   difficulty,
 }) => {
+  const { dict, locale } = useTranslation();
+  const isEn = locale === "en";
+
   const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
-  const [statusText, setStatusText] = useState<string>("Salon loş, seans hazırlanıyor...");
+  const [statusText, setStatusText] = useState<string>(
+    isEn ? "The hall is dim, preparing session..." : "Salon loş, seans hazırlanıyor..."
+  );
   const [showAiFallback, setShowAiFallback] = useState<boolean>(false);
   const matchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -39,7 +45,9 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
     if (!isOpen) {
       setSecondsElapsed(0);
       setShowAiFallback(false);
-      setStatusText("Salon loş, seans hazırlanıyor...");
+      setStatusText(
+        isEn ? "The hall is dim, preparing session..." : "Salon loş, seans hazırlanıyor..."
+      );
       if (matchTimeoutRef.current) {
         clearTimeout(matchTimeoutRef.current);
         matchTimeoutRef.current = null;
@@ -54,9 +62,15 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
         const next = prev + 1;
 
         if (next === 1) {
-          setStatusText("Salon loş, seans hazırlanıyor...");
+          setStatusText(
+            isEn ? "The hall is dim, preparing session..." : "Salon loş, seans hazırlanıyor..."
+          );
         } else if (next === 2) {
-          setStatusText("Seans hazır! Karşı koltukta: Sinefil Botu.");
+          setStatusText(
+            isEn
+              ? "Session ready! In opposite seat: Cinephile Bot."
+              : "Seans hazır! Karşı koltukta: Sinefil Botu."
+          );
           matchTimeoutRef.current = setTimeout(() => {
             onMatchFound();
           }, 600);
@@ -75,20 +89,30 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
         matchTimeoutRef.current = null;
       }
     };
-  }, [isOpen, onMatchFound]);
+  }, [isOpen, onMatchFound, isEn]);
 
   if (!isOpen) return null;
 
   const modeLabel =
     selectedMode === "CLASSIC"
-      ? "🎭 Klasik Düello"
+      ? isEn ? "🎭 Classic Duel" : "🎭 Klasik Düello"
       : selectedMode === "REVERSE_CAST"
-      ? "🎭 Ters Kadraj"
+      ? isEn ? "🎭 Reverse Frame" : "🎭 Ters Kadraj"
       : selectedMode === "CINE_CONCEPT"
-      ? "🌀 Sinefil Konsept"
-      : "🏆 Sinefil";
-  const poolLabel = contentPool === "FILM" ? "🎬 Film" : contentPool === "SERIES" ? "📺 Dizi" : "⚡ Karma";
-  const diffLabel = difficulty === "HARD" ? "🔴 Zor" : difficulty === "NORMAL" ? "🟡 Normal" : "🟢 Kolay";
+      ? isEn ? "🌀 Cinephile Concept" : "🌀 Sinefil Konsept"
+      : isEn ? "🏆 Cinephile" : "🏆 Sinefil";
+  const poolLabel =
+    contentPool === "FILM"
+      ? isEn ? "🎬 Movie" : "🎬 Film"
+      : contentPool === "SERIES"
+      ? isEn ? "📺 Series" : "📺 Dizi"
+      : isEn ? "⚡ Hybrid" : "⚡ Karma";
+  const diffLabel =
+    difficulty === "HARD"
+      ? isEn ? "🔴 Hard" : "🔴 Zor"
+      : difficulty === "NORMAL"
+      ? isEn ? "🟡 Normal" : "🟡 Normal"
+      : isEn ? "🟢 Easy" : "🟢 Kolay";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in select-none">
@@ -120,12 +144,12 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
         <div className="flex items-center gap-1.5 mb-2 px-3 py-1 rounded-md bg-[#181B22] border border-[#D9A441]/30">
           <Film className="w-3 h-3 text-[#D9A441]" />
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#D9A441] font-mono">
-            SEANS HAZIRLANIYOR
+            {isEn ? "PREPARING SESSION" : "SEANS HAZIRLANIYOR"}
           </span>
         </div>
 
         <h2 className="text-xl font-bold font-serif text-[#F1EEE7] tracking-wide mb-1">
-          Seans Hazırlanıyor...
+          {isEn ? "Preparing Session..." : "Seans Hazırlanıyor..."}
         </h2>
 
         {/* Seçilen Ayarlar Etiketleri */}
@@ -207,18 +231,20 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
               className="w-full py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 tactile-btn-amber"
             >
               <Bot className="w-4 h-4" />
-              <span>Yapay Zeka ile Başla</span>
+              <span>{isEn ? "Start with AI" : "Yapay Zeka ile Başla"}</span>
             </button>
             <button
               onClick={() => {
                 setSecondsElapsed(0);
                 setShowAiFallback(false);
-                setStatusText("Daha geniş küresel havuzda taranıyor...");
+                setStatusText(
+                  isEn ? "Scanning wider global pool..." : "Daha geniş küresel havuzda taranıyor..."
+                );
               }}
               className="w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 tactile-btn-surface text-[#F1EEE7]"
             >
               <RefreshCw className="w-3.5 h-3.5" />
-              <span>Aramaya Devam Et</span>
+              <span>{isEn ? "Continue Searching" : "Aramaya Devam Et"}</span>
             </button>
           </div>
         ) : (
@@ -230,7 +256,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
             className="w-full py-2.5 px-3 rounded-xl tactile-btn-surface text-[11px] font-bold text-[#D9A441] hover:text-[#F1EEE7] flex items-center justify-center gap-1.5 mb-2"
           >
             <Bot className="w-3.5 h-3.5" />
-            <span>Beklemek istemiyor musun? Hemen başla &rarr;</span>
+            <span>{isEn ? "Don't want to wait? Start now \u2192" : "Beklemek istemiyor musun? Hemen başla \u2192"}</span>
           </button>
         )}
 
@@ -242,7 +268,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
           }}
           className="mt-1 text-xs font-semibold text-[#A5A8B0] hover:text-[#F1EEE7] uppercase tracking-wider h-11 px-4 rounded-lg transition-colors flex items-center justify-center min-h-[44px]"
         >
-          Vazgeç (Gişe&apos;ye Dön)
+          {isEn ? "Cancel (Return to Box Office)" : "Vazgeç (Gişe'ye Dön)"}
         </button>
       </div>
     </div>

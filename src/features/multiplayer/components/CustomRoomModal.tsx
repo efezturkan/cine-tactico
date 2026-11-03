@@ -9,6 +9,7 @@ import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { Button } from "@/components/ui/Button";
 import { Copy, Share2, Check, X, ChevronRight } from "lucide-react";
+import { useTranslation } from "@/i18n";
 
 // Kriptografik Güvenli 6 Karakterli Kod Üreteci (Unambiguous: 0/O, 1/I hariç)
 function generateSecureRoomCode(): string {
@@ -46,6 +47,9 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
   onJoinRoom,
   currentUser,
 }) => {
+  const { dict, locale, tBoardTitle } = useTranslation();
+  const isEn = locale === "en";
+
   // 7C.2 İki seçenek: "Oda kur" ve "Koda katıl"
   const [subTab, setSubTab] = useState<"CREATE" | "JOIN">("CREATE");
 
@@ -63,12 +67,13 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
   if (!isOpen && !isPage) return null;
 
   const currentBoard = PRESET_BOARDS.find((b) => b.id === selectedBoardId) || PRESET_BOARDS[0];
-  const displayTitle = currentBoard.title.includes(":")
+  const rawTitle = currentBoard.title.includes(":")
     ? currentBoard.title.split(":")[0].trim()
     : currentBoard.title;
+  const displayTitle = tBoardTitle(rawTitle);
   const subTitle = currentBoard.title.includes(":")
     ? currentBoard.title.split(":")[1].trim()
-    : "3×3 Taktik Kadraj";
+    : isEn ? "3×3 Tactical Frame" : "3×3 Taktik Kadraj";
 
   const handleStartCustomRoom = () => {
     audio.playSelect();
@@ -76,7 +81,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     setIsWaitingForOpponent(true);
     const settings: CustomRoomSettings = {
       roomCode,
-      roomName: "Özel Gösterim",
+      roomName: isEn ? "Private Screening" : "Özel Gösterim",
       roomType: "1V1_ROOM",
       isPublic: false,
       matchFormat: "BO1",
@@ -125,7 +130,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     }
 
     if (!/^CX-[A-Z0-9]{6}$/.test(raw)) {
-      setJoinError("Bu kodla açık bir salon bulunamadı.");
+      setJoinError(isEn ? "No open room found with this code." : "Bu kodla açık bir salon bulunamadı.");
       audio.playError();
       return;
     }
@@ -136,7 +141,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
 
     const settings: CustomRoomSettings = {
       roomCode: raw,
-      roomName: "Özel Gösterim",
+      roomName: isEn ? "Private Screening" : "Özel Gösterim",
       roomType: "1V1_ROOM",
       isPublic: false,
       matchFormat: "BO1",
@@ -160,10 +165,10 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       {/* 7C.1 Başlık: Serif 'Özel Gösterim', altında 'İki telefon, bir düello.' */}
       <div className="text-center pb-4 mb-4 border-b border-white/10">
         <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#E8E6E1] tracking-wide">
-          Özel Gösterim
+          {isEn ? "Private Screening" : "Özel Gösterim"}
         </h1>
         <p className="text-xs text-[#8A8F9A] mt-1 font-sans">
-          İki telefon, bir düello.
+          {isEn ? "Two devices, one duel." : "İki telefon, bir düello."}
         </p>
       </div>
 
@@ -182,7 +187,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
               : "bg-transparent border-white/10 text-[#8A8F9A] hover:text-[#E8E6E1]"
           }`}
         >
-          Oda kur
+          {isEn ? "Create Room" : "Oda kur"}
         </button>
         <button
           type="button"
@@ -197,7 +202,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
               : "bg-transparent border-white/10 text-[#8A8F9A] hover:text-[#E8E6E1]"
           }`}
         >
-          Koda katıl
+          {isEn ? "Join with code" : "Koda katıl"}
         </button>
       </div>
 
@@ -223,14 +228,14 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                   onClick={() => setShowBoardPicker(true)}
                   className="shrink-0"
                 >
-                  Değiştir
+                  {isEn ? "Change" : "Değiştir"}
                 </Button>
               </div>
 
               {/* Oda Kodu & Kopyalama / Paylaşım */}
               <div className="p-4 rounded-xl bg-[#14171D] border border-white/10 flex flex-col items-center text-center">
                 <span className="text-[10px] font-sans uppercase font-medium text-[#8A8F9A] tracking-wider mb-1">
-                  Oda Kodu
+                  {isEn ? "Room Code" : "Oda Kodu"}
                 </span>
                 <span className="font-mono text-2xl sm:text-3xl font-bold tracking-widest text-[#D9A441] my-1">
                   {roomCode}
@@ -243,7 +248,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                     className="flex items-center gap-1.5"
                   >
                     {copiedLink ? <Check className="w-3.5 h-3.5 text-[#8EBB70]" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span>{copiedLink ? "Kopyalandı" : "Kopyala"}</span>
+                    <span>{copiedLink ? (isEn ? "Copied" : "Kopyalandı") : (isEn ? "Copy" : "Kopyala")}</span>
                   </Button>
                   <Button
                     variant="inline"
@@ -251,14 +256,16 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                     className="flex items-center gap-1.5"
                   >
                     <Share2 className="w-3.5 h-3.5" />
-                    <span>Davet linkini paylaş</span>
+                    <span>{isEn ? "Share invite link" : "Davet linkini paylaş"}</span>
                   </Button>
                 </div>
               </div>
 
               {/* 7C.7 Alt Açıklama */}
               <p className="text-[11px] text-[#8A8F9A] text-center leading-relaxed px-2">
-                Kodu arkadaşınla paylaş. İki telefon bağlanınca düello başlar. Süre 12 saniye.
+                {isEn
+                  ? "Share code with a friend. Duel begins once connected. 12s timer."
+                  : "Kodu arkadaşınla paylaş. İki telefon bağlanınca düello başlar. Süre 12 saniye."}
               </p>
 
               {/* 7C.3 Ana Buton: ODAYI AÇ */}
@@ -267,7 +274,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                 fullWidth
                 onClick={handleStartCustomRoom}
               >
-                ODAYI AÇ
+                {isEn ? "OPEN ROOM" : "ODAYI AÇ"}
               </Button>
             </>
           ) : (
@@ -277,17 +284,17 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                 {roomCode}
               </span>
               <p className="font-serif text-base text-[#E8E6E1]">
-                Salon loş, rakip aranıyor…
+                {isEn ? "Hall is dim, searching for opponent..." : "Salon loş, rakip aranıyor…"}
               </p>
               <p className="text-xs text-[#8A8F9A] max-w-xs">
-                Arkadaşının koda katılması bekleniyor.
+                {isEn ? "Waiting for friend to join with code." : "Arkadaşının koda katılması bekleniyor."}
               </p>
               <Button
                 variant="secondary"
                 fullWidth
                 onClick={() => setIsWaitingForOpponent(false)}
               >
-                Vazgeç
+                {isEn ? "Cancel" : "Vazgeç"}
               </Button>
             </div>
           )}
@@ -302,7 +309,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
           <div className="space-y-3">
             <div className="p-4 rounded-xl bg-[#14171D] border border-white/10">
               <label className="text-[10px] font-sans uppercase font-medium text-[#8A8F9A] tracking-wider block mb-2 text-center">
-                Salon Kodu
+                {isEn ? "Room Code" : "Salon Kodu"}
               </label>
               <div className="relative">
                 <input
@@ -330,7 +337,9 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
             </div>
 
             <p className="text-[11px] text-[#8A8F9A] text-center leading-relaxed px-2">
-              Arkadaşının paylaştığı 6 karakterli kodu gir. Süre 12 saniye.
+              {isEn
+                ? "Enter the 6-character code shared by your friend. 12s timer."
+                : "Arkadaşının paylaştığı 6 karakterli kodu gir. Süre 12 saniye."}
             </p>
           </div>
 
@@ -340,7 +349,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
             fullWidth
             disabled={!joinCodeInput.trim()}
           >
-            KATIL
+            {isEn ? "JOIN" : "KATIL"}
           </Button>
         </form>
       )}
@@ -357,12 +366,12 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
             <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
             <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
               <h2 className="font-serif text-base font-bold text-[#E8E6E1]">
-                Seans Seç
+                {isEn ? "Select Session" : "Seans Seç"}
               </h2>
               <Button
                 variant="icon"
                 onClick={() => setShowBoardPicker(false)}
-                title="Kapat"
+                title={dict.common.close}
               >
                 <X className="w-4 h-4" />
               </Button>
@@ -371,7 +380,8 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
             <div className="flex-1 overflow-y-auto space-y-1.5 py-3 pr-1 custom-scrollbar">
               {PRESET_BOARDS.map((b) => {
                 const isSelected = b.id === selectedBoardId;
-                const dTitle = b.title.includes(":") ? b.title.split(":")[0].trim() : b.title;
+                const raw = b.title.includes(":") ? b.title.split(":")[0].trim() : b.title;
+                const dTitle = tBoardTitle(raw);
                 const sTitle = b.title.includes(":") ? b.title.split(":")[1].trim() : "";
 
                 return (
@@ -430,7 +440,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
             variant="icon"
             onClick={onClose}
             className="absolute top-3 right-3 z-10"
-            title="Kapat"
+            title={dict.common.close}
           >
             <X className="w-4 h-4" />
           </Button>

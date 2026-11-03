@@ -39,6 +39,7 @@ import { SalonLightSheet } from "./SalonLightSheet";
 import { HowToPlayModal } from "./HowToPlayModal";
 import { OpeningLightLeak } from "./OpeningLightLeak";
 import { applySalonConfigToDom, getSavedSalonConfig } from "@/utils/salonConfig";
+import { useTranslation } from "@/i18n";
 
 export type ArenaModeKey = "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT";
 
@@ -160,6 +161,36 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     selectedMode || "CLASSIC"
   );
 
+  const { dict, locale } = useTranslation();
+  const isEn = locale === "en";
+
+  const dynamicModes = [
+    {
+      id: "CLASSIC" as ArenaModeKey,
+      title: dict.home.modes.classicTitle,
+      subLabel: dict.home.modes.classicSub,
+      heroSummary: dict.home.modes.classicDesc,
+      color: "#D9A441",
+      icon: Clapperboard,
+    },
+    {
+      id: "REVERSE_CAST" as ArenaModeKey,
+      title: dict.home.modes.reverseTitle,
+      subLabel: dict.home.modes.reverseSub,
+      heroSummary: dict.home.modes.reverseDesc,
+      color: "#5FB3A8",
+      icon: Users,
+    },
+    {
+      id: "CINE_CONCEPT" as ArenaModeKey,
+      title: dict.home.modes.conceptTitle,
+      subLabel: dict.home.modes.conceptSub,
+      heroSummary: dict.home.modes.conceptDesc,
+      color: "#9A8FD8",
+      icon: Compass,
+    },
+  ];
+
   useEffect(() => {
     if (selectedMode) {
       setInternalMode(selectedMode);
@@ -173,7 +204,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   const activeMode: ArenaModeKey = selectedMode || internalMode;
   const activeModeMeta =
-    MODE_DEFINITIONS.find((m) => m.id === activeMode) || MODE_DEFINITIONS[0];
+    dynamicModes.find((m) => m.id === activeMode) || dynamicModes[0];
 
   const handleSelectModeCard = (modeKey: ArenaModeKey) => {
     audio.playSelect();
@@ -378,7 +409,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             XOX
           </h1>
           <p className="text-xs text-[#A5A8B0] font-medium mt-1">
-            3×3 Sinematik Taktik Düellosu
+            {dict.home.subTagline}
           </p>
         </div>
 
@@ -411,7 +442,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 className="flex items-center justify-center gap-2"
               >
                 <Play className="w-4 h-4 fill-current shrink-0" />
-                <span>DÜELLOYA GİR</span>
+                <span>{isEn ? "ENTER DUEL" : "DÜELLOYA GİR"}</span>
               </Button>
             </div>
           </div>
@@ -421,16 +452,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <div className="w-full space-y-1.5">
           <div className="flex items-center justify-between px-1">
             <span className="text-[10px] font-sans font-semibold tracking-wider uppercase text-[#8A8F9A]">
-              VİZYONDAKİ MODLAR
+              {isEn ? "NOW SHOWING MODES" : "VİZYONDAKİ MODLAR"}
             </span>
           </div>
 
           <div
             className="flex gap-2.5 overflow-x-auto no-scrollbar py-1 px-0.5 snap-x overscroll-x-contain"
             role="radiogroup"
-            aria-label="Oyun Modu Seçimi"
+            aria-label={isEn ? "Select Game Mode" : "Oyun Modu Seçimi"}
           >
-            {MODE_DEFINITIONS.map((m) => {
+            {dynamicModes.map((m) => {
               const Icon = m.icon;
               const isSelected = activeMode === m.id;
 
@@ -524,17 +555,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
             <div className="min-w-0">
               <span className="text-xs sm:text-sm font-serif font-bold text-[#F1EEE7] block">
-                Günün Kadrası
+                {dict.home.dailyBoardTitle}
               </span>
               <p className="text-[10px] sm:text-[11px] text-[#8A8F9A] font-medium mt-0.5 leading-snug">
-                Günde bir kadraj. Sonucunu paylaş.
+                {dict.home.dailyBoardSub}
               </p>
             </div>
           </div>
 
           <div className="pr-2 shrink-0">
             <span className="text-xs font-bold text-[#D9A441] font-sans flex items-center gap-0.5">
-              Bileti Aç &rarr;
+              {isEn ? "Open Ticket →" : "Bileti Aç →"}
             </span>
           </div>
         </button>

@@ -7,6 +7,7 @@ import { movieMatchesTitleQuery } from "@/content/search/movieTitle";
 import { Search, X, AlertTriangle } from "lucide-react";
 import { haptic } from "@/utils/haptics";
 import { Button } from "@/components/ui/Button";
+import { useTranslation } from "@/i18n";
 
 interface MovieSearchModalProps {
   isOpen: boolean;
@@ -32,6 +33,8 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
   errorMessage,
   initialQuery = "",
 }) => {
+  const { dict, locale, tCriterion } = useTranslation();
+  const isEn = locale === "en";
   const [query, setQuery] = useState(initialQuery);
   const [vpStyle, setVpStyle] = useState<{ height?: number; top?: number }>({});
   const inputRef = useRef<HTMLInputElement>(null);
@@ -122,11 +125,11 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
         <div className="flex items-center justify-between gap-2 pb-3 border-b border-white/10 shrink-0">
           <div className="flex items-center gap-2 flex-wrap min-w-0">
             <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#181B22] text-[#E8E6E1] border border-white/10">
-              {rowCrit.label}
+              {tCriterion(rowCrit.label)}
             </span>
             <span className="text-[#8A8F9A] font-bold text-xs">×</span>
             <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#181B22] text-[#E8E6E1] border border-white/10">
-              {colCrit.label}
+              {tCriterion(colCrit.label)}
             </span>
           </div>
 
@@ -134,7 +137,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
             variant="icon"
             onClick={onClose}
             className="shrink-0"
-            title="Kapat"
+            title={dict.common.close}
           >
             <X className="w-4 h-4" />
           </Button>
@@ -149,7 +152,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Film veya dizi adı yaz..."
+              placeholder={dict.game.searchMoviePlaceholder}
               enterKeyHint="search"
               autoComplete="off"
               autoCorrect="off"
@@ -168,7 +171,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
           </div>
           <div className="flex items-center justify-between mt-1.5 px-1">
             <span className="text-[11px] text-[#8A8F9A]">
-              Yalnızca yapım adına göre aranır.
+              {isEn ? "Search by title only." : "Yalnızca yapım adına göre aranır."}
             </span>
           </div>
         </div>
@@ -186,22 +189,22 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
           {query.trim().length < 2 ? (
             <div className="py-8 px-4 text-center flex flex-col items-center justify-center">
               <p className="font-serif text-base font-bold text-[#E8E6E1]">
-                Film veya Dizi Adını Yaz
+                {isEn ? "Type Movie or Series Title" : "Film veya Dizi Adını Yaz"}
               </p>
               <p className="text-xs text-[#8A8F9A] mt-1 leading-relaxed">
-                Sonuçları listelemek için en az 2 harf girilmelidir.
+                {isEn ? "Enter at least 2 characters to list results." : "Sonuçları listelemek için en az 2 harf girilmelidir."}
               </p>
               <p className="text-[10px] text-[#8A8F9A]/80 mt-2 font-medium">
-                Anti-Cheat: Tür ve yıl ipuçları adil oyun için gizlenmiştir
+                {isEn ? "Anti-Cheat: Genre and year hints hidden for fair play" : "Anti-Cheat: Tür ve yıl ipuçları adil oyun için gizlenmiştir"}
               </p>
             </div>
           ) : visibleMovies.length === 0 ? (
             <div className="py-8 text-center text-[#8A8F9A]">
               <p className="font-serif text-sm font-bold text-[#E8E6E1] mb-1">
-                Bu adla bir yapım bulamadık.
+                {dict.game.noResults}
               </p>
               <p className="text-xs text-[#8A8F9A]">
-                Yazımı kontrol et.
+                {isEn ? "Check spelling." : "Yazımı kontrol et."}
               </p>
             </div>
           ) : (
@@ -231,7 +234,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                     </span>
                     {movie.mediaType === "SERIES" && (
                       <span className="text-[9px] font-sans font-semibold text-[#4FA3C7] bg-[#4FA3C7]/15 px-1.5 py-0.5 rounded border border-[#4FA3C7]/30 shrink-0">
-                        DİZİ
+                        {isEn ? "SERIES" : "DİZİ"}
                       </span>
                     )}
                   </div>
@@ -239,7 +242,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                   <div className="shrink-0 text-right">
                     {isUsed ? (
                       <span className="text-[10px] text-[#8A8F9A]">
-                        Kullanıldı
+                        {isEn ? "Used" : "Kullanıldı"}
                       </span>
                     ) : (
                       <span className="text-[#D9A441] font-bold text-sm">

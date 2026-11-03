@@ -3,6 +3,7 @@
 import React from "react";
 import { Ticket, Film, Swords, User } from "lucide-react";
 import { audio } from "@/utils/audio";
+import { useTranslation } from "@/i18n";
 
 export type NavTabId = "HOME" | "GAME_SELECT" | "CUSTOM_ROOM" | "PROFILE";
 
@@ -15,25 +16,27 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onSelectTab,
 }) => {
+  const { dict } = useTranslation();
+
   const tabs = [
     {
       id: "HOME" as NavTabId,
-      label: "Gişe",
+      label: dict.nav.home,
       icon: Ticket,
     },
     {
       id: "GAME_SELECT" as NavTabId,
-      label: "Vizyondakiler",
+      label: dict.nav.gameSelect,
       icon: Film,
     },
     {
       id: "CUSTOM_ROOM" as NavTabId,
-      label: "Özel Gösterim",
+      label: dict.nav.customRoom,
       icon: Swords,
     },
     {
       id: "PROFILE" as NavTabId,
-      label: "Sinefil Kartı",
+      label: dict.nav.profile,
       icon: User,
     },
   ];

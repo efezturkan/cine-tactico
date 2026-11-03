@@ -7,6 +7,7 @@ import { Clapperboard, Award, Calendar, Film, Shield, Lock, User, Compass, Plus 
 import { assetResolver } from "@/utils/assetResolver";
 import { FLAGS } from "@/config/flags";
 import { LocalFace } from "./LocalFace";
+import { useTranslation } from "@/i18n";
 
 interface XoxBoardProps {
   board: GameBoard;
@@ -19,11 +20,13 @@ interface XoxBoardProps {
   isIntro?: boolean;
   introPhase?: "3" | "2" | "1" | "ACTION" | null;
   shakingCellIndex?: number | null;
+  isReviewMode?: boolean;
+  selectedReviewCellIndex?: number | null;
 }
 
 /**
  * Hücre içi film plakası bileşeni.
- * Tur 10B: Film adı serif küçük (2 satıra kadar), köşede X altın veya O soluk mavi işareti.
+ * Sahiplik hücre çerçevesi ve parıltısıyla gösterilir; köşedeki gereksiz X/O yazısı kaldırılmıştır.
  */
 const CellMoviePoster: React.FC<{
   cellData: CellAnswer;
@@ -31,7 +34,6 @@ const CellMoviePoster: React.FC<{
 }> = ({ cellData }) => {
   const { movie, answeredBy, actorName, rarityScore, isLockedNeutral } = cellData;
   const isNeutral = answeredBy === "NEUTRAL" || isLockedNeutral;
-  const isPlayerX = answeredBy === "X";
 
   if (isNeutral) {
     return (
@@ -46,7 +48,7 @@ const CellMoviePoster: React.FC<{
 
   return (
     <div className="relative w-full h-full flex flex-col justify-between p-1.5 sm:p-2 overflow-hidden rounded-xl select-none min-w-0 bg-[#14171D] the-slam-stamp">
-      {/* Köşede X altın veya O soluk mavi işareti */}
+      {/* Üst Bilgi: Rarity Puanı (Varsa) */}
       <div className="flex items-center justify-between w-full min-w-0 z-10">
         {FLAGS.SHOW_POINTS_SYSTEM && rarityScore ? (
           <span className="text-[7px] sm:text-[8px] font-mono font-bold text-[#D9A441]/75">
@@ -55,16 +57,9 @@ const CellMoviePoster: React.FC<{
         ) : (
           <span />
         )}
-        <span
-          className={`font-mono font-black text-xs sm:text-sm leading-none ${
-            isPlayerX ? "text-[#D9A441]" : "text-[#4FA3C7]"
-          }`}
-        >
-          {answeredBy}
-        </span>
       </div>
 
-      {/* Film adı serif küçük (2 satıra kadar, kesme yok) - Okunur */}
+      {/* Film / Aktör adı serif (2 satıra kadar) - Temiz ve okunur */}
       <div className="flex-1 flex flex-col items-center justify-center text-center my-auto min-w-0 z-10 px-0.5">
         <span className="font-serif text-[11px] sm:text-xs md:text-sm font-semibold text-[#F1EEE7] line-clamp-2 leading-tight">
           {actorName || movie.title}
@@ -88,7 +83,11 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
   isIntro = false,
   introPhase = null,
   shakingCellIndex = null,
+  isReviewMode = false,
+  selectedReviewCellIndex = null,
 }) => {
+  const { tCriterion, locale } = useTranslation();
+
   const getInitials = (name: string) => {
     const parts = name.trim().split(" ");
     if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
@@ -104,41 +103,42 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
     let iconElement: React.ReactNode;
     let badgeLabel = "";
 
+    const isEn = locale === "en";
     if (crit.type === "DIRECTOR") {
-      badgeLabel = "YÖNETMEN";
+      badgeLabel = isEn ? "DIRECTOR" : "YÖNETMEN";
       iconElement = (
         <span className="font-serif text-[#D9A441]/70 font-bold text-xs sm:text-sm select-none">
           {getInitials(crit.label)}
         </span>
       );
     } else if (crit.type === "ACTOR") {
-      badgeLabel = "OYUNCU";
+      badgeLabel = isEn ? "ACTOR" : "OYUNCU";
       iconElement = (
         <span className="font-serif text-[#D9A441]/70 font-bold text-xs sm:text-sm select-none">
           {getInitials(crit.label)}
         </span>
       );
     } else if (crit.type === "AWARD") {
-      badgeLabel = "ÖDÜL";
+      badgeLabel = isEn ? "AWARD" : "ÖDÜL";
       iconElement = <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]/70" />;
     } else if (crit.type === "DECADE") {
-      badgeLabel = "DÖNEM";
+      badgeLabel = isEn ? "DECADE" : "DÖNEM";
       iconElement = <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]/70" />;
     } else if (crit.type === "MOVIE_INTERSECTION") {
-      badgeLabel = "FİLM";
+      badgeLabel = isEn ? "FILM" : "FİLM";
       iconElement = (
         <span className="font-serif text-[#D9A441]/70 font-bold text-xs sm:text-sm select-none">
           {getInitials(crit.label)}
         </span>
       );
     } else if (crit.type === "THEME") {
-      badgeLabel = "TEMA";
+      badgeLabel = isEn ? "THEME" : "TEMA";
       iconElement = <Compass className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]/70" />;
     } else if (crit.type === "FRANCHISE") {
-      badgeLabel = "EVREN";
+      badgeLabel = isEn ? "UNIVERSE" : "EVREN";
       iconElement = <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]/70" />;
     } else {
-      badgeLabel = "TÜR";
+      badgeLabel = isEn ? "GENRE" : "TÜR";
       iconElement = <Clapperboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9A441]/70" />;
     }
 
@@ -154,7 +154,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
           </span>
         )}
         <span className="text-[7.5px] sm:text-[10px] md:text-xs font-bold text-[#E8E6E1] line-clamp-2 leading-tight px-0.5 max-w-full break-words">
-          {crit.label}
+          {tCriterion(crit.label)}
         </span>
       </div>
     );
@@ -229,6 +229,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                   const isOccupied = cellData !== null;
                   const isPlayerX = cellData?.answeredBy === "X";
                   const isShaking = shakingCellIndex === cellIndex;
+                  const isSelectedInReview = isReviewMode && selectedReviewCellIndex === cellIndex;
 
                   let cellBg = "#14171D";
                   let cellBorder = "rgba(255, 255, 255, 0.08)";
@@ -236,25 +237,33 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                   if (isWinning) {
                     cellBorder = "#D9A441";
                     cellBg = "rgba(217, 164, 65, 0.15)";
+                  } else if (isSelectedInReview) {
+                    cellBorder = "#D9A441";
+                    cellBg = "rgba(217, 164, 65, 0.12)";
                   } else if (isOccupied && isPlayerX) {
                     cellBorder = "rgba(217, 164, 65, 0.55)";
                   } else if (isOccupied && !isPlayerX) {
                     cellBorder = "rgba(79, 163, 199, 0.55)";
                   }
 
-                  const isDisabled = winner !== null || isOccupied;
+                  const isDisabled = isReviewMode ? isOccupied : (winner !== null || isOccupied);
+                  const col = board.cols[cIdx];
+                  const cellAriaLabel = isOccupied
+                    ? `${row.label} × ${col.label}: ${cellData.actorName || cellData.movie?.title || ""} (${cellData.answeredBy})`
+                    : `${row.label} × ${col.label}: ${locale === "tr" ? "Boş kare" : "Empty cell"}`;
 
                   return (
                     <button
                       key={cellIndex}
                       disabled={isDisabled}
+                      aria-label={cellAriaLabel}
                       onClick={() => {
                         audio.playSelect();
                         onCellClick(cellIndex);
                       }}
                       className={`w-full aspect-square relative rounded-xl overflow-hidden min-w-0 transition-all transform active:scale-[0.98] group ${
                         isWinning ? "scale-[1.02] z-10 winning-beam ring-1 ring-[#D9A441]" : ""
-                      } ${isShaking ? "animate-shake-120" : ""}`}
+                      } ${isSelectedInReview ? "ring-2 ring-[#D9A441] shadow-[0_0_16px_rgba(217,164,65,0.35)]" : ""} ${isShaking ? "animate-shake-120" : ""}`}
                       style={{
                         background: cellBg,
                         border: `1px solid ${cellBorder}`,
@@ -264,31 +273,47 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                       {!isOccupied && (
                         <>
                           <div
-                            className="absolute top-1 left-1 sm:top-1.5 sm:left-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 pointer-events-none"
+                            className="absolute top-1 left-1 sm:top-1.5 sm:left-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 pointer-events-none transition-colors"
                             style={{
-                              borderTop: "1.5px solid rgba(217, 164, 65, 0.35)",
-                              borderLeft: "1.5px solid rgba(217, 164, 65, 0.35)",
+                              borderTop: isSelectedInReview
+                                ? "2px solid #D9A441"
+                                : "1.5px solid rgba(217, 164, 65, 0.35)",
+                              borderLeft: isSelectedInReview
+                                ? "2px solid #D9A441"
+                                : "1.5px solid rgba(217, 164, 65, 0.35)",
                             }}
                           />
                           <div
-                            className="absolute top-1 right-1 sm:top-1.5 sm:right-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 pointer-events-none"
+                            className="absolute top-1 right-1 sm:top-1.5 sm:right-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 pointer-events-none transition-colors"
                             style={{
-                              borderTop: "1.5px solid rgba(217, 164, 65, 0.35)",
-                              borderRight: "1.5px solid rgba(217, 164, 65, 0.35)",
+                              borderTop: isSelectedInReview
+                                ? "2px solid #D9A441"
+                                : "1.5px solid rgba(217, 164, 65, 0.35)",
+                              borderRight: isSelectedInReview
+                                ? "2px solid #D9A441"
+                                : "1.5px solid rgba(217, 164, 65, 0.35)",
                             }}
                           />
                           <div
-                            className="absolute bottom-1 left-1 sm:bottom-1.5 sm:left-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 pointer-events-none"
+                            className="absolute bottom-1 left-1 sm:bottom-1.5 sm:left-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 pointer-events-none transition-colors"
                             style={{
-                              borderBottom: "1.5px solid rgba(217, 164, 65, 0.35)",
-                              borderLeft: "1.5px solid rgba(217, 164, 65, 0.35)",
+                              borderBottom: isSelectedInReview
+                                ? "2px solid #D9A441"
+                                : "1.5px solid rgba(217, 164, 65, 0.35)",
+                              borderLeft: isSelectedInReview
+                                ? "2px solid #D9A441"
+                                : "1.5px solid rgba(217, 164, 65, 0.35)",
                             }}
                           />
                           <div
-                            className="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 pointer-events-none"
+                            className="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 pointer-events-none transition-colors"
                             style={{
-                              borderBottom: "1.5px solid rgba(217, 164, 65, 0.35)",
-                              borderRight: "1.5px solid rgba(217, 164, 65, 0.35)",
+                              borderBottom: isSelectedInReview
+                                ? "2px solid #D9A441"
+                                : "1.5px solid rgba(217, 164, 65, 0.35)",
+                              borderRight: isSelectedInReview
+                                ? "2px solid #D9A441"
+                                : "1.5px solid rgba(217, 164, 65, 0.35)",
                             }}
                           />
                           <div

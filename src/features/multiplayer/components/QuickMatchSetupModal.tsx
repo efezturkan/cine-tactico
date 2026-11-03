@@ -195,18 +195,18 @@ export const QuickMatchSetupModal: React.FC<QuickMatchSetupModalProps> = ({
             className="grid grid-cols-3 p-1 rounded-2xl gap-1"
             style={{ background: "#0a0b10", border: "1px solid #1a1c24" }}
           >
-            {[
+            {([
               { id: "EASY", label: "🟢 Kolay", sub: "Acemi" },
               { id: "NORMAL", label: "🟡 Normal", sub: "Dengeli (Varsayılan)" },
               { id: "HARD", label: "🔴 Zor", sub: "Usta" },
-            ].map((d) => {
+            ] as const).map((d) => {
               const isSelected = difficulty === d.id;
               return (
                 <button
                   key={d.id}
                   onClick={() => {
                     audio.playSelect();
-                    setDifficulty(d.id as any);
+                    setDifficulty(d.id);
                   }}
                   className="py-2 px-1 rounded-xl text-center flex flex-col items-center justify-center transition-all active:scale-95"
                   style={{

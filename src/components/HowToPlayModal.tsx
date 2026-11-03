@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/Button";
 import { audio } from "@/utils/audio";
 import { markGuideAsSeen } from "@/utils/guideStorage";
+import { useTranslation } from "@/i18n";
 
 interface HowToPlayModalProps {
   isOpen: boolean;
@@ -14,6 +15,9 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { dict, locale } = useTranslation();
+  const isEn = locale === "en";
+
   if (!isOpen) return null;
 
   const handleDismiss = () => {
@@ -46,7 +50,7 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
         {/* Title (Serif, Alt başlık kaldırıldı) */}
         <div className="text-center my-1.5">
           <h2 className="font-serif text-2xl font-bold text-[#E8E6E1]">
-            Nasıl oynanır?
+            {isEn ? "How to play?" : "Nasıl oynanır?"}
           </h2>
         </div>
 
@@ -79,7 +83,7 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
               </div>
             </div>
             <p className="text-xs text-[#8A8F9A] text-center mt-2.5">
-              Satır ve sütunun ortak filmini bul.
+              {isEn ? "Find the film shared by row and column." : "Satır ve sütunun ortak filmini bul."}
             </p>
           </div>
 
@@ -92,7 +96,7 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
               />
             </div>
             <p className="text-xs text-[#8A8F9A] text-center mt-2">
-              12 saniyen var.
+              {isEn ? "You have 12 seconds." : "12 saniyen var."}
             </p>
           </div>
 
@@ -139,14 +143,14 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
               </div>
             </div>
             <p className="text-xs text-[#8A8F9A] text-center mt-2.5">
-              Yatay, dikey ya da çapraz üç kare: Kesin!
+              {isEn ? "Three cells in a row, column, or diagonal: Cut!" : "Yatay, dikey ya da çapraz üç kare: Kesin!"}
             </p>
           </div>
         </div>
 
         {/* Ana Buton (Tek buton: ANLADIM) */}
         <Button variant="primary" onClick={handleDismiss} className="w-full mt-2">
-          ANLADIM
+          {isEn ? "GOT IT" : "ANLADIM"}
         </Button>
       </div>
     </div>

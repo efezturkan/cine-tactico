@@ -8,8 +8,10 @@ export interface AssetManifestItem {
   entityId: string;
   assetType: AssetType;
   localPath?: string;
+  title?: string;
   source: string;
   license: string;
+  licenseUrl?: string;
   author: string;
   attribution: string;
   sourcePageUrl?: string;

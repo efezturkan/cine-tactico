@@ -326,6 +326,8 @@ export function useNotifications(onOpenDaily?: () => void) {
       const t = setTimeout(() => setActiveToast(firstUnread), 2000);
       return () => clearTimeout(t);
     }
+    // Bilinçli olarak yalnızca mount'ta: toast her bildirim değişiminde tekrar açılmamalı.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const dismissToast = useCallback(() => setActiveToast(null), []);

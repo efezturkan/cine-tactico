@@ -45,6 +45,10 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
+      const isEn =
+        typeof window !== "undefined" &&
+        window.localStorage?.getItem("cinexox_locale") === "en";
+
       return (
         <div className="min-h-screen bg-[#0B0D12] text-[#E8E6E1] flex flex-col items-center justify-center p-6 text-center select-none font-sans">
           {/* Tek Renk Film/Makara İkonu */}
@@ -52,10 +56,12 @@ export class ErrorBoundary extends Component<Props, State> {
             <Film className="w-7 h-7 text-[#D9A441]" />
           </div>
           <h1 className="text-xl sm:text-2xl font-serif font-bold tracking-wide text-[#E8E6E1] mb-2">
-            Makara koptu.
+            {isEn ? "The reel snapped." : "Makara koptu."}
           </h1>
           <p className="text-xs text-[#8A8F9A] max-w-xs mb-6 leading-relaxed font-sans">
-            Beklenmedik bir şey oldu. Seansı yeniden başlat.
+            {isEn
+              ? "Something unexpected happened. Restart the session."
+              : "Beklenmedik bir şey oldu. Seansı yeniden başlat."}
           </p>
           <Button
             variant="primary"
@@ -63,7 +69,7 @@ export class ErrorBoundary extends Component<Props, State> {
             className="flex items-center gap-2"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>SEANSI YENİDEN BAŞLAT</span>
+            <span>{isEn ? "RESTART SESSION" : "SEANSI YENİDEN BAŞLAT"}</span>
           </Button>
         </div>
       );

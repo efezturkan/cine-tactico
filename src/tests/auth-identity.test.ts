@@ -5,6 +5,7 @@ import {
   fetchProfileByUserId,
   updateUsernameWithUniqueness,
   linkAnonymousAccountToEmail,
+  deleteUserAccount,
 } from "../backend/supabase/auth";
 
 console.log("=================================================");
@@ -102,6 +103,55 @@ async function runTests() {
   assert(
     downSql.includes("drop constraint if exists profiles_id_fkey"),
     "Rollback script cleanly drops foreign key constraint"
+  );
+
+  // Test 7: deleteUserAccount safe execution contract
+  const deleteResult = await deleteUserAccount();
+  assert(
+    typeof deleteResult === "object" && typeof deleteResult.success === "boolean",
+    "deleteUserAccount returns structured boolean success result"
+  );
+
+  // Test 8: Verify FAZ 5 Account Deletion Migration file integrity (Apple 5.1.1(v))
+  const deletionMigrationPath = path.resolve(__dirname, "../../supabase/migrations/20261103_faz5_account_deletion_rpc.sql");
+  assert(fs.existsSync(deletionMigrationPath), "Migration file 20261103_faz5_account_deletion_rpc.sql exists");
+  const deletionSql = fs.readFileSync(deletionMigrationPath, "utf8");
+  assert(
+    deletionSql.includes("create or replace function public.delete_user_account()"),
+    "Migration defines delete_user_account RPC function"
+  );
+  assert(
+    deletionSql.includes("delete from auth.users where id = v_user_id"),
+    "Migration deletes user from auth.users cascading to dependent tables"
+  );
+  assert(
+    deletionSql.includes("grant execute on function public.delete_user_account() to authenticated"),
+    "Migration restricts execution of delete_user_account to authenticated users"
+  );
+  assert(
+    deletionSql.includes("revoke execute on function public.delete_user_account() from anon, public"),
+    "Migration revokes anonymous/public access to delete_user_account"
+  );
+  assert(
+    deletionSql.includes("set search_path = public, auth, pg_temp"),
+    "Migration sets strict search_path including pg_temp to prevent object shadowing"
+  );
+  assert(
+    !deletionSql.includes("'error', SQLERRM"),
+    "Migration does not leak internal SQLERRM to client response payload"
+  );
+  assert(
+    deletionSql.includes("raise warning"),
+    "Migration logs internal failure details safely via server warning"
+  );
+
+  // Test 9: Verify FAZ 5 Down Migration file integrity
+  const deletionDownPath = path.resolve(__dirname, "../../supabase/migrations/20261103_faz5_account_deletion_rpc.down.sql");
+  assert(fs.existsSync(deletionDownPath), "Rollback migration file 20261103_faz5_account_deletion_rpc.down.sql exists");
+  const deletionDownSql = fs.readFileSync(deletionDownPath, "utf8");
+  assert(
+    deletionDownSql.includes("drop function if exists public.delete_user_account()"),
+    "Rollback script drops delete_user_account function"
   );
 
   console.log("\n=================================================");
