@@ -170,10 +170,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     // 8A. Salon ışığı yapılandırmasını DOM'a uygula
     applySalonConfigToDom(getSavedSalonConfig());
 
-    // 9A. İlk açılış rehber kontrolü
+    // 9A. İlk açılış rehber kontrolü: Sadece 1 kere otomatik çıksın
     try {
       const hasSeen = localStorage.getItem("cinexox_seen_guide");
       if (!hasSeen) {
+        localStorage.setItem("cinexox_seen_guide", "1");
         setShowHowToPlay(true);
       }
     } catch {}
@@ -604,7 +605,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* ── 9A. İlk Açılış Rehberi ─── */}
       <HowToPlayModal
         isOpen={showHowToPlay}
-        onClose={() => setShowHowToPlay(false)}
+        onClose={() => {
+          try {
+            localStorage.setItem("cinexox_seen_guide", "1");
+          } catch {}
+          setShowHowToPlay(false);
+        }}
       />
     </div>
   );

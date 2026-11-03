@@ -20,7 +20,6 @@ import {
 
 import {
   GameModesHubModal,
-  HowToPlayModal,
   DailyShareModal,
   LiveAmbienceConsole,
 } from "@/components";
@@ -165,11 +164,6 @@ export function GlobalModals(props: GlobalModalsProps) {
         isMuted={props.muted}
         onToggleMute={props.onToggleMute}
         initialTab={props.profileInitialTab}
-      />
-
-      <HowToPlayModal
-        isOpen={props.showHelp}
-        onClose={props.onCloseHelp}
       />
 
       {FLAGS.SHOW_LEAGUE_BAR && (
