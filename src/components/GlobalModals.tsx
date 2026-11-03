@@ -23,6 +23,7 @@ import {
   DailyShareModal,
   LiveAmbienceConsole,
 } from "@/components";
+import { HowToPlayModal } from "./HowToPlayModal";
 
 import NotificationPanel, { NotifToast, useNotifications } from "@/components/NotificationPanel";
 import { FLAGS } from "@/config/flags";
@@ -198,6 +199,12 @@ export function GlobalModals(props: GlobalModalsProps) {
           onDismiss={dismissToast}
         />
       )}
+
+      {/* Tur 10C: 4. İsteğe bağlı erişim tekil Nasıl Oynanır Modalı */}
+      <HowToPlayModal
+        isOpen={props.showHelp}
+        onClose={props.onCloseHelp}
+      />
     </>
   );
 }

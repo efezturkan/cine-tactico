@@ -20,6 +20,7 @@ import {
   Flame,
   Radio,
   Clock,
+  HelpCircle,
 } from "lucide-react";
 import { PRESET_BOARDS } from "@/data/boards";
 import { audio } from "@/utils/audio";
@@ -32,6 +33,7 @@ interface GameSelectScreenProps {
   onSelectBoard: (boardIndex: number, mode: "VS_BOT" | "PASS_AND_PLAY" | "ONLINE_ROOM") => void;
   onOpenCustomLobby: () => void;
   onOpenProfileModal?: () => void;
+  onOpenHowToPlay?: () => void;
 }
 
 interface BoardPosterMeta {
@@ -226,6 +228,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
   onSelectBoard,
   onOpenCustomLobby,
   onOpenProfileModal,
+  onOpenHowToPlay,
 }) => {
   const [activeCategory, setActiveCategory] = useState<BoardCategory>("Hepsi");
 
@@ -268,11 +271,25 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
         }}
       />
 
-      {/* 7B.1 Top Bar: Serif Başlık Ortada, Geri Oku ve Rozetler Yok */}
+      {/* 7B.1 Top Bar: Serif Başlık Ortada, Sağda "?" Butonu (44x44 dokunma alanı, 20px soluk çizgi ikon) */}
       <header className="relative z-20 flex items-center justify-center px-4 py-3 border-b border-white/5 bg-[#0B0D12]/95 backdrop-blur-sm min-h-[52px]">
         <h1 className="text-lg sm:text-xl font-serif font-bold text-[#E8E6E1] tracking-wider text-center">
           Vizyondakiler
         </h1>
+        {onOpenHowToPlay && (
+          <button
+            type="button"
+            onClick={() => {
+              audio.playSelect();
+              onOpenHowToPlay();
+            }}
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-[#8A8F9A] hover:text-[#E8E6E1] transition-colors"
+            title="Nasıl oynanır?"
+            aria-label="Nasıl oynanır rehberi"
+          >
+            <HelpCircle className="w-5 h-5 stroke-[1.5]" />
+          </button>
+        )}
       </header>
 
       {/* 7B.2 Filter Strip: Sans, Normal Harf */}

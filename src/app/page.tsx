@@ -43,6 +43,7 @@ import {
 } from "@/types/profile";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
+import { hasSeenGuide } from "@/utils/guideStorage";
 
 function CineXoxApp() {
   const [currentView, setCurrentView] = useState<"HOME" | "GAME_SELECT" | "CUSTOM_ROOM" | "PROFILE" | "GAME">("HOME");
@@ -279,7 +280,7 @@ function CineXoxApp() {
 
   const isMatchInProgress = winner === null && cells.some(c => c !== null);
 
-  // URL Davet Linki ile Odaya Katılım (?room=TRNY-XXXX)
+  // URL Davet Linki ile Odaya Katılım (?room=TRNY-XXXX) & İlk Gişe Açılış Rehberi
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -299,6 +300,11 @@ function CineXoxApp() {
           setCurrentView("GAME");
         }
       });
+    } else {
+      // Tur 10C: 1 & 3. Davet linkiyle gelmeyenlerde, ilk Gişe açılışında tek seferlik rehber kartı
+      if (!hasSeenGuide()) {
+        setShowHelp(true);
+      }
     }
   }, []);
 
@@ -902,6 +908,10 @@ function CineXoxApp() {
             audio.playSelect();
             setShowHelp(true);
           }}
+          onOpenHowToPlay={() => {
+            audio.playSelect();
+            setShowHelp(true);
+          }}
           onOpenGameSelect={() => {
             audio.playSelect();
             setCurrentView("GAME_SELECT");
@@ -940,6 +950,10 @@ function CineXoxApp() {
             audio.playSelect();
             setProfileInitialTab("CAREER");
             setCurrentView("PROFILE");
+          }}
+          onOpenHowToPlay={() => {
+            audio.playSelect();
+            setShowHelp(true);
           }}
         />
         <GlobalModals {...globalModalsProps} />

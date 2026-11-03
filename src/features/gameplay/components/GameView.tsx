@@ -82,6 +82,9 @@ export interface GameViewProps {
   onConfirmSurrender: () => void;
 }
 
+// Tur 10C: Mod ipuçları oturum içi bellek koruması
+const modeHintSeenMemory = { ters: false, konsept: false };
+
 export function GameView(props: GameViewProps) {
   const [showClapper, setShowClapper] = useState(props.isIntroActive ?? true);
   const [introPhase, setIntroPhase] = useState<IntroPhase>("3");
@@ -100,22 +103,32 @@ export function GameView(props: GameViewProps) {
     }
   }, [props.winner]);
 
-  // Tur 10B: 7. İlk Ters Kadraj ve Sinefil Konsept düellosunda tek seferlik tek satır ipucu
+  // Tur 10C: 5. Mod ipuçları (Ters Kadraj: cinexox_ipucu_ters, Sinefil Konsept: cinexox_ipucu_konsept)
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
       if (props.board.boardMode === "REVERSE_CAST") {
-        if (!localStorage.getItem("cinexox_hint_reverse_cast")) {
+        if (!modeHintSeenMemory.ters && localStorage.getItem("cinexox_ipucu_ters") !== "görüldü") {
+          modeHintSeenMemory.ters = true;
           setModeHint("Bu seansta iki filmin ortak oyuncusunu yaz.");
-          localStorage.setItem("cinexox_hint_reverse_cast", "1");
+          localStorage.setItem("cinexox_ipucu_ters", "görüldü");
         }
       } else if (props.board.boardMode === "CINE_CONCEPT") {
-        if (!localStorage.getItem("cinexox_hint_cine_concept")) {
+        if (!modeHintSeenMemory.konsept && localStorage.getItem("cinexox_ipucu_konsept") !== "görüldü") {
+          modeHintSeenMemory.konsept = true;
           setModeHint("Bu seansta temaya uyan filmi bul.");
-          localStorage.setItem("cinexox_hint_cine_concept", "1");
+          localStorage.setItem("cinexox_ipucu_konsept", "görüldü");
         }
       }
-    } catch {}
+    } catch {
+      if (props.board.boardMode === "REVERSE_CAST" && !modeHintSeenMemory.ters) {
+        modeHintSeenMemory.ters = true;
+        setModeHint("Bu seansta iki filmin ortak oyuncusunu yaz.");
+      } else if (props.board.boardMode === "CINE_CONCEPT" && !modeHintSeenMemory.konsept) {
+        modeHintSeenMemory.konsept = true;
+        setModeHint("Bu seansta temaya uyan filmi bul.");
+      }
+    }
   }, [props.board.boardMode]);
 
   useEffect(() => {

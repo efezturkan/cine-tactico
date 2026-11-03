@@ -3,6 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/Button";
 import { audio } from "@/utils/audio";
+import { markGuideAsSeen } from "@/utils/guideStorage";
 
 interface HowToPlayModalProps {
   isOpen: boolean;
@@ -17,9 +18,7 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
 
   const handleDismiss = () => {
     audio.playSelect();
-    try {
-      localStorage.setItem("cinexox_seen_guide", "1");
-    } catch {}
+    markGuideAsSeen();
     onClose();
   };
 

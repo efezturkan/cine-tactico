@@ -69,6 +69,7 @@ interface HomeScreenProps {
   notifUnreadCount?: number;
   onOpenLiveAmbience?: () => void;
   onOpenHelp?: () => void;
+  onOpenHowToPlay?: () => void;
   muted?: boolean;
   onToggleMute?: () => void;
 }
@@ -149,6 +150,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onOpenGameSelect,
   onOpenLiveAmbience,
   onOpenHelp,
+  onOpenHowToPlay,
   muted = false,
   onToggleMute,
 }) => {
@@ -169,15 +171,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   useEffect(() => {
     // 8A. Salon ışığı yapılandırmasını DOM'a uygula
     applySalonConfigToDom(getSavedSalonConfig());
-
-    // 9A. İlk açılış rehber kontrolü: Sadece 1 kere otomatik çıksın
-    try {
-      const hasSeen = localStorage.getItem("cinexox_seen_guide");
-      if (!hasSeen) {
-        localStorage.setItem("cinexox_seen_guide", "1");
-        setShowHowToPlay(true);
-      }
-    } catch {}
   }, []);
 
   const activeMode: ArenaModeKey = selectedMode || internalMode;
@@ -593,7 +586,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         muted={muted}
         onToggleMute={onToggleMute}
         onOpenSalonLight={() => setShowSalonLight(true)}
-        onOpenHowToPlay={() => setShowHowToPlay(true)}
+        onOpenHowToPlay={onOpenHowToPlay || (() => setShowHowToPlay(true))}
       />
 
       {/* ── 8A. Salon Işığı Alt Sheet ─── */}
@@ -602,15 +595,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         onClose={() => setShowSalonLight(false)}
       />
 
-      {/* ── 9A. İlk Açılış Rehberi ─── */}
+      {/* ── 9A. İsteğe Bağlı Rehber Modalı ─── */}
       <HowToPlayModal
         isOpen={showHowToPlay}
-        onClose={() => {
-          try {
-            localStorage.setItem("cinexox_seen_guide", "1");
-          } catch {}
-          setShowHowToPlay(false);
-        }}
+        onClose={() => setShowHowToPlay(false)}
       />
     </div>
   );
