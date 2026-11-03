@@ -44,6 +44,15 @@ import {
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { hasSeenGuide } from "@/utils/guideStorage";
+import { getGlobalDailyDateKey } from "@/utils/dateUtils";
+
+const getDailyBoardConfig = (): { board: GameBoard; index: number } => {
+  const dailyIdx = PRESET_BOARDS.findIndex(b => b.id === "board_daily_today");
+  if (dailyIdx !== -1) {
+    return { board: PRESET_BOARDS[dailyIdx], index: dailyIdx };
+  }
+  throw new Error("[CineXOX] Kritik Hata: 'board_daily_today' hazır kadraj havuzunda bulunamadı!");
+};
 
 function CineXoxApp() {
   const [currentView, setCurrentView] = useState<"HOME" | "GAME_SELECT" | "CUSTOM_ROOM" | "PROFILE" | "GAME">("HOME");
@@ -94,7 +103,6 @@ function CineXoxApp() {
   const [profileInitialTab, setProfileInitialTab] = useState<"CAREER" | "DNA" | "AMBIENCE">("CAREER");
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [showShop, setShowShop] = useState<boolean>(false);
-  const [showGameModesHub, setShowGameModesHub] = useState<boolean>(false);
   const [showMatchFound, setShowMatchFound] = useState<boolean>(false);
   const [showMatchmakingQueue, setShowMatchmakingQueue] = useState<boolean>(false);
   const [queueMode, setQueueMode] = useState<"CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL">("CLASSIC");
@@ -152,8 +160,11 @@ function CineXoxApp() {
   const [claimedDaily, setClaimedDaily] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     try {
-      const todayUtc = new Date().toISOString().slice(0, 10);
-      return localStorage.getItem("cinexox_last_streak_utc") === todayUtc;
+      const todayDate = getGlobalDailyDateKey();
+      return (
+        localStorage.getItem("cinexox_last_streak_date") === todayDate ||
+        localStorage.getItem("cinexox_last_streak_utc") === todayDate
+      );
     } catch {
       return false;
     }
@@ -556,8 +567,9 @@ function CineXoxApp() {
       setBoard(nextBoard);
       resetGame(nextBoard);
     } else if (targetMode === "DAILY_SOLO") {
-      setBoardIndex(2);
-      resetGame(PRESET_BOARDS[2]);
+      const { board: dailyBoard, index: dailyIdx } = getDailyBoardConfig();
+      setBoardIndex(dailyIdx);
+      resetGame(dailyBoard);
     } else if (targetMode === "ONLINE_ROOM") {
       setShowCustomLobby(true);
     } else {
@@ -598,8 +610,9 @@ function CineXoxApp() {
         setBoard(nextBoard);
         resetGame(nextBoard);
       } else if (targetMode === "DAILY_SOLO") {
-        setBoardIndex(2);
-        resetGame(PRESET_BOARDS[2]);
+        const { board: dailyBoard, index: dailyIdx } = getDailyBoardConfig();
+        setBoardIndex(dailyIdx);
+        resetGame(dailyBoard);
       } else if (targetMode === "ONLINE_ROOM") {
         setShowCustomLobby(true);
       }
@@ -640,16 +653,17 @@ function CineXoxApp() {
   };
 
   const handleClaimDailyReward = (amount: number) => {
-    const todayUtc = new Date().toISOString().slice(0, 10);
+    const todayDate = getGlobalDailyDateKey();
     try {
-      localStorage.setItem("cinexox_last_streak_utc", todayUtc);
+      localStorage.setItem("cinexox_last_streak_date", todayDate);
+      localStorage.setItem("cinexox_last_streak_utc", todayDate);
     } catch {
       // ignore
     }
     setProfile(p => ({
       ...p,
       reelsBalance: p.reelsBalance + amount,
-      lastStreakDateUtc: todayUtc,
+      lastStreakDateUtc: todayDate,
     }));
     setClaimedDaily(true);
   };
@@ -717,9 +731,10 @@ function CineXoxApp() {
   const handleOpenDailyFromHome = () => {
     audio.playSelect();
     setMode("DAILY_SOLO");
-    setBoardIndex(2);
-    setBoard(PRESET_BOARDS[2]);
-    resetGame(PRESET_BOARDS[2]);
+    const { board: dailyBoard, index: dailyIdx } = getDailyBoardConfig();
+    setBoardIndex(dailyIdx);
+    setBoard(dailyBoard);
+    resetGame(dailyBoard);
     setIsGameIntroActive(true);
     setCurrentView("GAME");
   };
@@ -775,7 +790,6 @@ function CineXoxApp() {
     showCustomLobby,
     showQuests,
     showShop,
-    showGameModesHub,
     showProfile,
     profileInitialTab,
     showHelp,
@@ -809,14 +823,6 @@ function CineXoxApp() {
     onCloseShop: () => setShowShop(false),
     onSelectAvatar: (avatarId: string) => handleUpdateProfile({ avatarId }),
     onBuyAvatar: handleBuyAvatar,
-    onCloseGameModesHub: () => setShowGameModesHub(false),
-    onSelectPlayableBoard: (idx: number) => {
-      setBoardIndex(idx);
-      setBoard(PRESET_BOARDS[idx]);
-      resetGame(PRESET_BOARDS[idx]);
-      setShowGameModesHub(false);
-      setCurrentView("GAME");
-    },
     onCloseProfile: () => setShowProfile(false),
     onUpdateProfile: handleUpdateProfile,
     onToggleMute: handleToggleMute,

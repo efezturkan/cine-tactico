@@ -19,7 +19,6 @@ import {
 } from "@/features/profile";
 
 import {
-  GameModesHubModal,
   DailyShareModal,
   LiveAmbienceConsole,
 } from "@/components";
@@ -35,7 +34,6 @@ export interface GlobalModalsProps {
   showCustomLobby: boolean;
   showQuests: boolean;
   showShop: boolean;
-  showGameModesHub: boolean;
   showProfile: boolean;
   profileInitialTab?: "CAREER" | "DNA" | "AMBIENCE";
   showHelp: boolean;
@@ -71,8 +69,6 @@ export interface GlobalModalsProps {
   onCloseShop: () => void;
   onSelectAvatar: (avatarId: string) => void;
   onBuyAvatar: (avatarId: string, price: number) => void;
-  onCloseGameModesHub: () => void;
-  onSelectPlayableBoard: (idx: number, title: string) => void;
   onCloseProfile: () => void;
   onUpdateProfile: (updates: Partial<UserProfile>) => void;
   onToggleMute: () => void;
@@ -150,12 +146,6 @@ export function GlobalModals(props: GlobalModalsProps) {
           onBuyAvatar={props.onBuyAvatar}
         />
       )}
-
-      <GameModesHubModal
-        isOpen={props.showGameModesHub}
-        onClose={props.onCloseGameModesHub}
-        onSelectPlayableBoard={props.onSelectPlayableBoard}
-      />
 
       <ProfileModal
         isOpen={props.showProfile}

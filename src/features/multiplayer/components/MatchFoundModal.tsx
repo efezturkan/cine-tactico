@@ -79,7 +79,7 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
         <div className="flex items-center gap-2 mb-1.5">
           <Swords className="w-4 h-4 text-[#D9A441]" />
           <h2 className="text-xl font-bold font-serif text-[#F1EEE7] tracking-wide">
-            Eşleşme Sağlandı
+            Seans Başlıyor
           </h2>
         </div>
         <p className="text-[11px] font-medium text-[#A5A8B0] mb-5 flex items-center gap-1.5 bg-[#181B22] px-3 py-1 rounded-md border border-white/10 max-w-full truncate">
@@ -133,7 +133,10 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
             <span className="text-xs font-bold text-[#F1EEE7] mt-2.5 truncate max-w-[100px]">
               {opponentName}
             </span>
-            <span className="text-[9px] font-medium text-[#A5A8B0] mt-0.5 font-mono">
+            <span className="text-[9px] font-bold text-[#D9A441] mt-0.5 font-mono">
+              Sinefil Botu
+            </span>
+            <span className="text-[9px] font-medium text-[#A5A8B0] font-mono">
               Seviye {opponentLevel}
             </span>
           </div>

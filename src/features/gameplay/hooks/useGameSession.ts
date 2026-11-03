@@ -153,7 +153,7 @@ export function useGameSession(
                 }
               }
             } else {
-              const evalResult = evaluateBoardState(nextCells);
+              const evalResult = evaluateBoardState(nextCells, true);
               if (evalResult.winner !== null) {
                 if (evalResult.winner === "DRAW" || evalResult.winner === "GOLDEN_REEL") {
                   setIsGoldenReelActive(true);
@@ -321,7 +321,7 @@ export function useGameSession(
           switchTurn();
         }
       } else {
-        const boardEvaluation = evaluateBoardState(newCells);
+        const boardEvaluation = evaluateBoardState(newCells, true);
         if (boardEvaluation.winner !== null) {
           if (boardEvaluation.winner === "DRAW" || boardEvaluation.winner === "GOLDEN_REEL") {
             // ALTIN MAKARA (Sudden Death) TETİKLENİR!

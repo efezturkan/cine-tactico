@@ -28,7 +28,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
   difficulty,
 }) => {
   const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
-  const [statusText, setStatusText] = useState<string>("Salon loş, rakip aranıyor...");
+  const [statusText, setStatusText] = useState<string>("Salon loş, seans hazırlanıyor...");
   const [showAiFallback, setShowAiFallback] = useState<boolean>(false);
   const matchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -39,7 +39,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
     if (!isOpen) {
       setSecondsElapsed(0);
       setShowAiFallback(false);
-      setStatusText("Salon loş, rakip aranıyor...");
+      setStatusText("Salon loş, seans hazırlanıyor...");
       if (matchTimeoutRef.current) {
         clearTimeout(matchTimeoutRef.current);
         matchTimeoutRef.current = null;
@@ -54,9 +54,9 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
         const next = prev + 1;
 
         if (next === 1) {
-          setStatusText("Salon loş, rakip aranıyor...");
+          setStatusText("Salon loş, seans hazırlanıyor...");
         } else if (next === 2) {
-          setStatusText("Rakip bulundu! 35mm Perde hazırlanıyor...");
+          setStatusText("Seans hazır! Karşı koltukta: Sinefil Botu.");
           matchTimeoutRef.current = setTimeout(() => {
             onMatchFound();
           }, 600);
@@ -120,12 +120,12 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
         <div className="flex items-center gap-1.5 mb-2 px-3 py-1 rounded-md bg-[#181B22] border border-[#D9A441]/30">
           <Film className="w-3 h-3 text-[#D9A441]" />
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#D9A441] font-mono">
-            35MM SIRA
+            SEANS HAZIRLANIYOR
           </span>
         </div>
 
         <h2 className="text-xl font-bold font-serif text-[#F1EEE7] tracking-wide mb-1">
-          Rakip Aranıyor...
+          Seans Hazırlanıyor...
         </h2>
 
         {/* Seçilen Ayarlar Etiketleri */}
@@ -230,7 +230,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
             className="w-full py-2.5 px-3 rounded-xl tactile-btn-surface text-[11px] font-bold text-[#D9A441] hover:text-[#F1EEE7] flex items-center justify-center gap-1.5 mb-2"
           >
             <Bot className="w-3.5 h-3.5" />
-            <span>Beklemek istemiyor musun? AI ile hemen başla &rarr;</span>
+            <span>Beklemek istemiyor musun? Hemen başla &rarr;</span>
           </button>
         )}
 

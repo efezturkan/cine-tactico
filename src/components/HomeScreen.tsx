@@ -31,7 +31,6 @@ import { ContentPoolType } from "@/core";
 import { FLAGS } from "@/config/flags";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
-import { QuickMatchSetupModal } from "@/features/multiplayer";
 import { AvatarIcon } from "./ui/AvatarIcon";
 import { Button } from "./ui/Button";
 import { BottomNav } from "./ui/BottomNav";
@@ -154,7 +153,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   muted = false,
   onToggleMute,
 }) => {
-  const [showQuickSetup, setShowQuickSetup] = useState<boolean>(false);
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [showSalonLight, setShowSalonLight] = useState<boolean>(false);
   const [showHowToPlay, setShowHowToPlay] = useState<boolean>(false);
@@ -562,17 +560,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           } else if (tabId === "PROFILE") {
             onOpenProfileModal();
           }
-        }}
-      />
-
-      {/* ── Quick Match Setup Modal ─── */}
-      <QuickMatchSetupModal
-        isOpen={showQuickSetup}
-        onClose={() => setShowQuickSetup(false)}
-        userProfile={profile}
-        onStartMatchmaking={(mode, pool, diff) => {
-          setShowQuickSetup(false);
-          onStartGame(mode, diff, pool);
         }}
       />
 
