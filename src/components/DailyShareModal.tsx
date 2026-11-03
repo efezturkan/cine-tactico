@@ -100,7 +100,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
             {isPerfect ? "Kesin!" : `${filledCount}/9 Kare`}
           </h2>
           <p className="text-xs text-[#8A8F9A] font-sans mt-0.5">
-            {isPerfect ? "Kusursuz çekim tamamlandı." : "Bugünün kadrajı çekildi."}
+            {isPerfect ? "Kusursuz çekim tamamlandı. Yarın yeni bir tane var." : "Bugünün kadrajı çekildi. Yarın yeni bir tane var."}
           </p>
         </div>
 

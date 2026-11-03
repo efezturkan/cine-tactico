@@ -58,6 +58,7 @@ export interface GameViewProps {
   pendingBoardIndex: number;
   isIntroActive?: boolean;
   onCompleteIntro?: () => void;
+  shakingCellIndex?: number | null;
 
   onToggleMute: () => void;
   onHeaderReset: () => void;
@@ -84,6 +85,38 @@ export interface GameViewProps {
 export function GameView(props: GameViewProps) {
   const [showClapper, setShowClapper] = useState(props.isIntroActive ?? true);
   const [introPhase, setIntroPhase] = useState<IntroPhase>("3");
+  const [delayedWinner, setDelayedWinner] = useState<PlayerSymbol | "DRAW" | null>(null);
+  const [modeHint, setModeHint] = useState<string | null>(null);
+
+  // Tur 10B: 3. Kazanan hat 350ms çizildikten sonra sonuç kartı 400ms nefes payıyla gelir
+  useEffect(() => {
+    if (props.winner !== null) {
+      const timer = setTimeout(() => {
+        setDelayedWinner(props.winner);
+      }, 400);
+      return () => clearTimeout(timer);
+    } else {
+      setDelayedWinner(null);
+    }
+  }, [props.winner]);
+
+  // Tur 10B: 7. İlk Ters Kadraj ve Sinefil Konsept düellosunda tek seferlik tek satır ipucu
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      if (props.board.boardMode === "REVERSE_CAST") {
+        if (!localStorage.getItem("cinexox_hint_reverse_cast")) {
+          setModeHint("Bu seansta iki filmin ortak oyuncusunu yaz.");
+          localStorage.setItem("cinexox_hint_reverse_cast", "1");
+        }
+      } else if (props.board.boardMode === "CINE_CONCEPT") {
+        if (!localStorage.getItem("cinexox_hint_cine_concept")) {
+          setModeHint("Bu seansta temaya uyan filmi bul.");
+          localStorage.setItem("cinexox_hint_cine_concept", "1");
+        }
+      }
+    } catch {}
+  }, [props.board.boardMode]);
 
   useEffect(() => {
     if (props.isIntroActive) {
@@ -233,6 +266,11 @@ export function GameView(props: GameViewProps) {
 
         {/* ── 3. KADRAJ (ESNEK ALAN, DİKEY MERKEZ) ─── */}
         <main className="w-full flex-1 flex flex-col items-center justify-center min-w-0 min-h-0 my-auto">
+          {isIntro && modeHint && (
+            <p className="text-xs text-[#D9A441] font-mono tracking-wide mb-1.5 text-center animate-in fade-in duration-150">
+              {modeHint}
+            </p>
+          )}
           <XoxBoard
             board={props.board}
             cells={props.cells}
@@ -243,6 +281,7 @@ export function GameView(props: GameViewProps) {
             allowSteal={props.allowSteal}
             isIntro={isIntro}
             introPhase={isIntro ? introPhase : null}
+            shakingCellIndex={props.shakingCellIndex}
           />
         </main>
 
@@ -328,7 +367,7 @@ export function GameView(props: GameViewProps) {
 
       {/* Post Game Analysis (Sonuç Ekranı) */}
       <PostGameAnalysisModal
-        winner={props.winner}
+        winner={delayedWinner}
         board={props.board}
         cells={props.cells}
         profile={props.profile}

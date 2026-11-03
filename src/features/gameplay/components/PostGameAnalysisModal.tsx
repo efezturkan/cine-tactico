@@ -32,6 +32,13 @@ const ModalSprocketColumn = ({ count = 12 }: { count?: number }) => (
   </div>
 );
 
+// Tur 10B: 6. Kayıp ekranı alt satırı üç cümleden rastgele
+const LOSS_SUBTITLES = [
+  "Bir çekim daha?",
+  "Sahne senin, tekrar dene.",
+  "Final kesimi bu değil.",
+];
+
 export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   winner,
   board,
@@ -39,6 +46,10 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   onPlayAgain,
   onBackToHome,
 }) => {
+  const [lossSubtitle] = React.useState(
+    () => LOSS_SUBTITLES[Math.floor(Math.random() * LOSS_SUBTITLES.length)]
+  );
+
   if (winner === null) return null;
 
   const isVictory = winner === "X";
@@ -103,6 +114,12 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
           {isDraw && (
             <p className="text-xs text-[#8A8F9A] font-sans mt-0.5">
               Berabere.
+            </p>
+          )}
+
+          {!isVictory && !isDraw && (
+            <p className="text-xs text-[#8A8F9A] font-sans mt-0.5">
+              {lossSubtitle}
             </p>
           )}
 

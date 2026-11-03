@@ -42,6 +42,7 @@ import {
   MatchRecord,
 } from "@/types/profile";
 import { audio } from "@/utils/audio";
+import { haptic } from "@/utils/haptics";
 
 function CineXoxApp() {
   const [currentView, setCurrentView] = useState<"HOME" | "GAME_SELECT" | "CUSTOM_ROOM" | "PROFILE" | "GAME">("HOME");
@@ -56,8 +57,33 @@ function CineXoxApp() {
   const [movieSearchError, setMovieSearchError] = useState<string | null>(null);
   const [botDifficulty, setBotDifficulty] = useState<BotDifficulty>("MEDIUM");
   const [activeCellIndex, setActiveCellIndex] = useState<number | null>(null);
+  const [shakingCellIndex, setShakingCellIndex] = useState<number | null>(null);
   const [muted, setMuted] = useState<boolean>(false);
   const [hintMessage, setHintMessage] = useState<string | null>(null);
+
+  // Tur 10B: 8. Açılış logo tek seferlik 300 ms fade-in
+  const [showSplash, setShowSplash] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReduced) return false;
+      return !sessionStorage.getItem("cinexox_splash_seen");
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    if (showSplash) {
+      const timer = setTimeout(() => {
+        try {
+          sessionStorage.setItem("cinexox_splash_seen", "1");
+        } catch {}
+        setShowSplash(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [showSplash]);
 
   // Modallar
   const [showDailyShare, setShowDailyShare] = useState<boolean>(false);
@@ -420,10 +446,12 @@ function CineXoxApp() {
       }
     } else {
       audio.playError();
-      const failMsg = result.message || "Hatalı tahmin! Sıra rakibe geçti.";
+      haptic.wrong();
+      setShakingCellIndex(targetIdx);
+      setTimeout(() => setShakingCellIndex(null), 120);
       setMovieSearchError(null);
-      setHintMessage(`❌ ${failMsg}`);
-      setTimeout(() => setHintMessage(null), 3500);
+      setHintMessage("Yanlış çekim. Hamle rakipte.");
+      setTimeout(() => setHintMessage(null), 2500);
     }
   };
 
@@ -441,10 +469,12 @@ function CineXoxApp() {
       setMovieSearchError(null);
     } else {
       audio.playError();
-      const failMsg = result.message || "Hatalı aktör! Sıra rakibe geçti.";
+      haptic.wrong();
+      setShakingCellIndex(targetIdx);
+      setTimeout(() => setShakingCellIndex(null), 120);
       setMovieSearchError(null);
-      setHintMessage(`❌ ${failMsg}`);
-      setTimeout(() => setHintMessage(null), 3500);
+      setHintMessage("Yanlış çekim. Hamle rakipte.");
+      setTimeout(() => setHintMessage(null), 2500);
     }
   };
 
@@ -805,10 +835,24 @@ function CineXoxApp() {
     onCloseNotifications: () => setShowNotifications(false),
   };
 
+  // Tur 10B: 8. Açılış logo tek seferlik 300 ms fade-in, sonra Gişe
+  if (showSplash) {
+    return (
+      <div className="fixed inset-0 z-50 bg-[#0B0D12] flex flex-col items-center justify-center select-none animate-in fade-in duration-300">
+        <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-[#D9A441] uppercase mb-1">
+          35MM · 24 FPS
+        </span>
+        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#E8E6E1] tracking-wider">
+          CineXOX
+        </h1>
+      </div>
+    );
+  }
+
   // 1. HOME SCREEN VIEW
   if (currentView === "HOME") {
     return (
-      <main className="w-full min-h-[100dvh] bg-night flex flex-col items-center overflow-x-hidden">
+      <main className="w-full min-h-[100dvh] bg-night flex flex-col items-center overflow-x-hidden tab-fade-in">
         <HomeScreen
           profile={profile}
           selectedMode={queueMode === "SINEFIL" ? "CINE_CONCEPT" : queueMode}
@@ -873,7 +917,7 @@ function CineXoxApp() {
   // 2. GAME SELECT SCREEN VIEW
   if (currentView === "GAME_SELECT") {
     return (
-      <main className="min-h-[100dvh] bg-night flex flex-col items-center">
+      <main className="min-h-[100dvh] bg-night flex flex-col items-center tab-fade-in">
         <GameSelectScreen
           onBack={() => setCurrentView("HOME")}
           onSelectBoard={(boardIdx, selectedMode) => {
@@ -906,7 +950,7 @@ function CineXoxApp() {
   // 3. CUSTOM ROOM (ÖZEL GÖSTERİM) SCREEN VIEW
   if (currentView === "CUSTOM_ROOM") {
     return (
-      <main className="min-h-[100dvh] bg-[#0B0D12] flex flex-col items-center">
+      <main className="min-h-[100dvh] bg-[#0B0D12] flex flex-col items-center tab-fade-in">
         <CustomRoomModal
           isPage={true}
           currentUser={profile}
@@ -932,7 +976,7 @@ function CineXoxApp() {
   // 4. PROFILE (SİNEFİL KARTI) SCREEN VIEW
   if (currentView === "PROFILE") {
     return (
-      <main className="min-h-[100dvh] bg-[#0B0D12] flex flex-col items-center">
+      <main className="min-h-[100dvh] bg-[#0B0D12] flex flex-col items-center tab-fade-in">
         <ProfileModal
           isPage={true}
           profile={profile}
@@ -1000,6 +1044,7 @@ function CineXoxApp() {
         pendingBoardIndex={pendingBoardIndex}
         isIntroActive={isGameIntroActive}
         onCompleteIntro={() => setIsGameIntroActive(false)}
+        shakingCellIndex={shakingCellIndex}
         onToggleMute={handleToggleMute}
         onHeaderReset={handleHeaderReset}
         onRequestExitGame={handleRequestExitGame}

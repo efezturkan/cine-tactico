@@ -105,4 +105,60 @@ export const haptic = {
       // Safe fallback
     }
   },
+
+  // ── Tur 10B: Standart Haptic Haritası ──
+  // Hücre seç = hafif
+  cellSelect: async () => {
+    return haptic.light();
+  },
+
+  // Yanlış = çift kısa
+  wrong: async () => {
+    if (!hapticAllowed()) return;
+    try {
+      if (isNative()) {
+        await Haptics.impact({ style: ImpactStyle.Light });
+        setTimeout(() => {
+          Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+        }, 60);
+        return;
+      }
+      if (typeof window !== "undefined" && "vibrate" in navigator) {
+        navigator.vibrate([20, 30, 20]);
+      }
+    } catch {}
+  },
+
+  // Kesin! = orta
+  kesin: async () => {
+    return haptic.medium();
+  },
+
+  // Kayıp = tek uzun hafif
+  loss: async () => {
+    if (!hapticAllowed()) return;
+    try {
+      if (isNative()) {
+        await Haptics.impact({ style: ImpactStyle.Light });
+        return;
+      }
+      if (typeof window !== "undefined" && "vibrate" in navigator) {
+        navigator.vibrate(70);
+      }
+    } catch {}
+  },
+
+  // Geri sayım tık = çok hafif
+  tick: async () => {
+    if (!hapticAllowed()) return;
+    try {
+      if (isNative()) {
+        await Haptics.impact({ style: ImpactStyle.Light });
+        return;
+      }
+      if (typeof window !== "undefined" && "vibrate" in navigator) {
+        navigator.vibrate(5);
+      }
+    } catch {}
+  },
 };

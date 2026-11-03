@@ -18,11 +18,12 @@ interface XoxBoardProps {
   allowSteal?: boolean;
   isIntro?: boolean;
   introPhase?: "3" | "2" | "1" | "ACTION" | null;
+  shakingCellIndex?: number | null;
 }
 
 /**
  * Hücre içi film plakası bileşeni.
- * 35mm tipografik şerit tasarımıyla sinematik kart görünümü sunar.
+ * Tur 10B: Film adı serif küçük (2 satıra kadar), köşede X altın veya O soluk mavi işareti.
  */
 const CellMoviePoster: React.FC<{
   cellData: CellAnswer;
@@ -31,25 +32,6 @@ const CellMoviePoster: React.FC<{
   const { movie, answeredBy, actorName, rarityScore, isLockedNeutral } = cellData;
   const isNeutral = answeredBy === "NEUTRAL" || isLockedNeutral;
   const isPlayerX = answeredBy === "X";
-
-  const cellAsset = actorName
-    ? assetResolver.resolveForActor(actorName)
-    : assetResolver.resolveForMovie(movie);
-
-  const getGenreGradient = () => {
-    if (actorName) return "from-[#0d2220] via-[#181B22] to-[#0F1115]";
-    const g = (movie.genres?.[0] || "").toLowerCase();
-    if (g.includes("sci-fi") || g.includes("bilim")) {
-      return "from-[#1a162b] via-[#181B22] to-[#0F1115]";
-    }
-    if (g.includes("crime") || g.includes("suç")) {
-      return "from-amber-950 via-[#181B22] to-[#0F1115]";
-    }
-    if (g.includes("action") || g.includes("aksiyon")) {
-      return "from-amber-900/80 via-[#181B22] to-[#0F1115]";
-    }
-    return "from-[#252932] via-[#181B22] to-[#0F1115]";
-  };
 
   if (isNeutral) {
     return (
@@ -63,78 +45,34 @@ const CellMoviePoster: React.FC<{
   }
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-between p-1 sm:p-1.5 md:p-2 overflow-hidden rounded-xl select-none min-w-0 the-slam-stamp">
-      {/* Ters Kadraj: Aktör Gösterimi vs Normal: Film Gösterimi */}
-      {actorName ? (
-        <div
-          className={`absolute inset-0 bg-gradient-to-b ${getGenreGradient()} flex flex-col items-center justify-center p-1 sm:p-1.5 text-center min-w-0`}
-        >
-          <User className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[#4FA3C7] mb-0.5" />
-          <span className="text-[8px] sm:text-xs md:text-sm font-black text-[#F1EEE7] line-clamp-2 uppercase leading-tight tracking-wide max-w-full">
-            {actorName}
-          </span>
-          <span className="text-[6.5px] sm:text-[7.5px] md:text-[9px] text-[#4FA3C7] font-sans mt-0.5 font-bold">
-            ORTAK OYUNCU
-          </span>
-        </div>
-      ) : (
-        <div
-          className={`absolute inset-0 bg-gradient-to-b ${getGenreGradient()} flex flex-col items-center justify-center p-1 sm:p-1.5 text-center min-w-0`}
-        >
-          <Film className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[#D9A441]/60 mb-0.5" />
-          <span className="text-[8px] sm:text-xs md:text-sm font-black text-[#F1EEE7] line-clamp-2 uppercase leading-tight tracking-wide max-w-full">
-            {movie.title}
-          </span>
-          <span className="text-[7px] sm:text-[8px] md:text-[9.5px] text-[#D9A441] font-mono mt-0.5 font-bold">
-            {movie.year || ""}
-          </span>
-        </div>
-      )}
-
-      {/* Varlık Görsel Katmanı (FLAGS.PLAYER_PHOTOS ile korunur) */}
-      {FLAGS.PLAYER_PHOTOS && cellAsset.isAvailable && cellAsset.src && (
-        <img
-          src={cellAsset.src}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-luminosity pointer-events-none"
-        />
-      )}
-
-      {/* Karartma Gradyanı */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0F1115]/95 via-[#0F1115]/35 to-[#0F1115]/30 pointer-events-none" />
-
-      {/* Üst Bar: Rarity Rozeti ve Oyuncu Rozeti */}
-      <div className="relative z-10 flex items-center justify-between w-full min-w-0">
+    <div className="relative w-full h-full flex flex-col justify-between p-1.5 sm:p-2 overflow-hidden rounded-xl select-none min-w-0 bg-[#14171D] the-slam-stamp">
+      {/* Köşede X altın veya O soluk mavi işareti */}
+      <div className="flex items-center justify-between w-full min-w-0 z-10">
         {FLAGS.SHOW_POINTS_SYSTEM && rarityScore ? (
-          <div className="text-[6.5px] sm:text-[7.5px] md:text-[9px] font-black px-1 py-0.2 rounded bg-[#0F1115]/90 border border-[#D9A441]/50 text-[#D9A441] font-mono">
+          <span className="text-[7px] sm:text-[8px] font-mono font-bold text-[#D9A441]/75">
             +{rarityScore}
-          </div>
+          </span>
         ) : (
-          <div />
+          <span />
         )}
-        <div
-          className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-md flex items-center justify-center font-black font-mono text-[8.5px] sm:text-[9.5px] md:text-[11px]"
-          style={{
-            background: isPlayerX ? "#D9A441" : "#4FA3C7",
-            color: "#0B0D12",
-            border: "1px solid #0B0D12",
-          }}
+        <span
+          className={`font-mono font-black text-xs sm:text-sm leading-none ${
+            isPlayerX ? "text-[#D9A441]" : "text-[#4FA3C7]"
+          }`}
         >
           {answeredBy}
-        </div>
+        </span>
       </div>
 
-      {/* Alt Bar: Film Adı veya Aktör Adı */}
-      <div className="relative z-10 text-left min-w-0">
-        <div className="font-black text-[7.5px] sm:text-[10px] md:text-xs text-[#F1EEE7] truncate leading-tight">
+      {/* Film adı serif küçük (2 satıra kadar, kesme yok) - Okunur */}
+      <div className="flex-1 flex flex-col items-center justify-center text-center my-auto min-w-0 z-10 px-0.5">
+        <span className="font-serif text-[11px] sm:text-xs md:text-sm font-semibold text-[#F1EEE7] line-clamp-2 leading-tight">
           {actorName || movie.title}
-        </div>
+        </span>
         {!actorName && movie.year > 0 && (
-          <div className="text-[6.5px] sm:text-[7.5px] md:text-[9px] font-bold text-[#A5A8B0] truncate flex items-center gap-1 font-mono">
-            <span>{movie.year}</span>
-            <span>·</span>
-            <span className="text-[#D9A441]">{movie.director.split(" ").pop()}</span>
-          </div>
+          <span className="text-[8px] sm:text-[9px] text-[#8A8F9A] font-mono mt-0.5 block">
+            {movie.year}
+          </span>
         )}
       </div>
     </div>
@@ -149,6 +87,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
   onCellClick,
   isIntro = false,
   introPhase = null,
+  shakingCellIndex = null,
 }) => {
   const getInitials = (name: string) => {
     const parts = name.trim().split(" ");
@@ -289,6 +228,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                   const isWinning = winningLine?.includes(cellIndex);
                   const isOccupied = cellData !== null;
                   const isPlayerX = cellData?.answeredBy === "X";
+                  const isShaking = shakingCellIndex === cellIndex;
 
                   let cellBg = "#14171D";
                   let cellBorder = "rgba(255, 255, 255, 0.08)";
@@ -314,7 +254,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                       }}
                       className={`w-full aspect-square relative rounded-xl overflow-hidden min-w-0 transition-all transform active:scale-[0.98] group ${
                         isWinning ? "scale-[1.02] z-10 winning-beam ring-1 ring-[#D9A441]" : ""
-                      }`}
+                      } ${isShaking ? "animate-shake-120" : ""}`}
                       style={{
                         background: cellBg,
                         border: `1px solid ${cellBorder}`,
@@ -432,6 +372,29 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Tur 10B: Kazanan Hat (350ms stroke-dashoffset altın çizgi) */}
+          {winningLine && (
+            <div className="absolute inset-0 pointer-events-none z-20 grid grid-cols-4 grid-rows-4 gap-1 sm:gap-2">
+              <div className="col-start-2 col-end-5 row-start-2 row-end-5 relative pointer-events-none">
+                <svg
+                  viewBox="0 0 300 300"
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                >
+                  <line
+                    x1={(winningLine[0] % 3) * 100 + 50}
+                    y1={Math.floor(winningLine[0] / 3) * 100 + 50}
+                    x2={(winningLine[2] % 3) * 100 + 50}
+                    y2={Math.floor(winningLine[2] / 3) * 100 + 50}
+                    stroke="#D9A441"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    className="winning-line-animate"
+                  />
+                </svg>
+              </div>
             </div>
           )}
         </div>
