@@ -22,6 +22,7 @@ import {
 } from "@/core";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
+import { useTranslation } from "@/i18n";
 import confetti from "canvas-confetti";
 
 export interface MoveResult {
@@ -40,6 +41,7 @@ export function useGameSession(
   allowCellStealing: boolean = false,
   isActive: boolean = true
 ) {
+  const { dict } = useTranslation();
   const [board, setBoard] = useState<GameBoard>(initialBoard);
   const [cells, setCells] = useState<(CellAnswer | null)[]>(Array(9).fill(null));
   const [currentTurn, setCurrentTurn] = useState<PlayerSymbol>("X");
@@ -60,13 +62,11 @@ export function useGameSession(
 
   // Altın Makara (Sudden Death) Durumu
   const [isGoldenReelActive, setIsGoldenReelActive] = useState<boolean>(false);
-  const [goldenReelQuestion] = useState<string>(
-    "Oscar kazanmış bir başyapıt veya 8.5+ IMDb puanlı bir kült film yaz!"
-  );
+  const goldenReelQuestion = dict.game.goldenReelPrompt;
 
   // Bot Düşünme Durumu & İnsan Benzeri Düşünce Akışı
   const [isBotThinking, setIsBotThinking] = useState<boolean>(false);
-  const [botStatusMessage, setBotStatusMessage] = useState<string>("Düşünüyor...");
+  const [botStatusMessage, setBotStatusMessage] = useState<string>(dict.game.botThinking);
 
   // Arcade Puan & Kombo
   const [totalArcadeScore, setTotalArcadeScore] = useState<number>(0);
@@ -82,6 +82,15 @@ export function useGameSession(
   }, [secondsRemaining]);
 
   const turnStartTimeRef = useRef<number>(0);
+
+  // Süre aşımı kuralı (Spec v3): açık hücre varsa zaman aşımı o hücrede 1 yanlış deneme sayılır
+  const clockCellRef = useRef<number | null>(null);
+  const currentTurnRef = useRef<PlayerSymbol>("X");
+  const cellsRef = useRef<(CellAnswer | null)[]>(Array(9).fill(null));
+  const recordFailedAttemptRef = useRef<(cellIndex: number, player: PlayerSymbol) => void>(() => {});
+  const setClockCell = useCallback((cellIndex: number | null) => {
+    clockCellRef.current = cellIndex;
+  }, []);
 
   const switchTurn = useCallback(() => {
     setCurrentTurn(prev => (prev === "X" ? "O" : "X"));
@@ -177,6 +186,12 @@ export function useGameSession(
     [board.boardMode, scoreRarityX, scoreRarityO, handleVictoryEffects]
   );
 
+  useEffect(() => {
+    currentTurnRef.current = currentTurn;
+    cellsRef.current = cells;
+    recordFailedAttemptRef.current = recordFailedAttempt;
+  }, [currentTurn, cells, recordFailedAttempt]);
+
   // Timer Tick Cycle (performance.now() tabanlı drift-free sayaç)
   useEffect(() => {
     if (!isActive || !isTimerActive || winner !== null || isGoldenReelActive) {
@@ -204,6 +219,11 @@ export function useGameSession(
           // Fail-silent
         }
         setComboStreak(0);
+        const openCell = clockCellRef.current;
+        clockCellRef.current = null;
+        if (openCell !== null && cellsRef.current[openCell] === null) {
+          recordFailedAttemptRef.current(openCell, currentTurnRef.current);
+        }
         switchTurn();
         return;
       }
@@ -231,14 +251,14 @@ export function useGameSession(
   // Execute Film Move (Klasik Düello ve Sinefil Konsept)
   const submitMove = useCallback(
     (cellIndex: number, movie: Movie, playerSymbol?: PlayerSymbol, isDouble?: boolean): MoveResult => {
-      if (winner !== null) return { success: false, message: "Oyun tamamlandı." };
+      if (winner !== null) return { success: false, message: dict.game.msgGameOver };
 
       const activePlayer = playerSymbol || currentTurn;
       const currentOccupant = cells[cellIndex];
 
       // Hücre doluysa: Kare mühürlüdür, hamle yapılamaz
       if (currentOccupant !== null) {
-        return { success: false, message: "Seçilen kare dolu ve mühürlü." };
+        return { success: false, message: dict.game.msgCellTaken };
       }
 
       if (usedMovieIds.includes(movie.id)) {
@@ -249,7 +269,7 @@ export function useGameSession(
         switchTurn();
         return {
           success: false,
-          message: "Bu film maçta daha önce kullanıldı! Hatalı hamle, sıra rakibe geçti.",
+          message: dict.game.msgMovieUsed,
         };
       }
 
@@ -264,7 +284,7 @@ export function useGameSession(
         switchTurn();
         return {
           success: false,
-          message: "Hatalı Tahmin! Film seçilen kriterlere uymuyor, sıra rakibe geçti.",
+          message: dict.game.msgWrongMovie,
         };
       }
 
@@ -359,18 +379,19 @@ export function useGameSession(
       scoreRarityO,
       switchTurn,
       handleVictoryEffects,
+      dict,
     ]
   );
 
   // Execute Actor Move (Ters Kadraj Modu)
   const submitActorMove = useCallback(
     (cellIndex: number, actorNameInput: string, playerSymbol?: PlayerSymbol): MoveResult => {
-      if (winner !== null) return { success: false, message: "Oyun tamamlandı." };
+      if (winner !== null) return { success: false, message: dict.game.msgGameOver };
 
       const activePlayer = playerSymbol || currentTurn;
       const currentOccupant = cells[cellIndex];
       if (currentOccupant !== null) {
-        return { success: false, message: "Seçilen kare dolu." };
+        return { success: false, message: dict.game.msgCellTaken };
       }
 
       const rowCrit = board.rows[Math.floor(cellIndex / 3)];
@@ -385,7 +406,7 @@ export function useGameSession(
         switchTurn();
         return {
           success: false,
-          message: "Yanlış Aktör! İki filmde birden oynamadı, sıra rakibe geçti.",
+          message: dict.game.msgWrongActor,
         };
       }
 
@@ -462,21 +483,25 @@ export function useGameSession(
       scoreRarityO,
       switchTurn,
       handleVictoryEffects,
+      dict,
     ]
   );
 
   // Altın Makara (Sudden Death) Cevap Çözümleme
   const resolveGoldenReelAnswer = useCallback(
     (movie: Movie, playerSymbol: PlayerSymbol) => {
+      if (usedMovieIds.includes(movie.id)) {
+        return { success: false, message: dict.game.goldenReelUsed };
+      }
       if (movie.hasOscar || movie.boxOfficeCategory === "BLOCKBUSTER") {
         setWinner(playerSymbol);
         setIsGoldenReelActive(false);
         handleVictoryEffects(playerSymbol);
         return { success: true };
       }
-      return { success: false, message: "Film Altın Makara kriterlerine uymuyor!" };
+      return { success: false, message: dict.game.goldenReelRejected };
     },
-    [handleVictoryEffects]
+    [handleVictoryEffects, usedMovieIds, dict]
   );
 
   // Altın Makara Süre Bitimi: Foto-finiş (Foto-finish) kararı!
@@ -506,7 +531,7 @@ export function useGameSession(
     const subTimeout =
       thinkingDelay > 3400
         ? setTimeout(() => {
-            setBotStatusMessage("Afiş seçiyor...");
+            setBotStatusMessage(dict.game.botPickingPoster);
           }, thinkingDelay * 0.6)
         : null;
 
@@ -601,6 +626,7 @@ export function useGameSession(
     botStatusMessage,
     submitMove,
     submitActorMove,
+    setClockCell,
     resolveGoldenReelAnswer,
     resolveGoldenReelTimeout,
     switchTurn,
@@ -610,22 +636,6 @@ export function useGameSession(
       const r = Math.floor(cellIndex / 3);
       const c = cellIndex % 3;
       return findMatchingMovies(board.rows[r], board.cols[c]);
-    },
-    addSeconds: (extra: number) => {
-      setSecondsRemaining(prev => prev + extra);
-    },
-    bombCell: (cellIndex: number) => {
-      setCells(prev => {
-        const next = [...prev];
-        const removed = next[cellIndex];
-        if (removed && removed.movie.id) {
-          setUsedMovieIds(u => u.filter(id => id !== removed.movie.id));
-        }
-        next[cellIndex] = null;
-        return next;
-      });
-      audio.playPowerup();
-      haptic.medium();
     },
   };
 }

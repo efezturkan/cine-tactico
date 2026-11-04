@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "tsx src/tests/game-engine.test.ts && tsx src/tests/anti-cheat.test.ts && tsx src/tests/modal-render.test.tsx && tsx src/tests/auth-identity.test.ts && tsx src/tests/schema-integrity.test.ts && tsx src/tests/rls-security.test.ts && tsx src/tests/server-rpc.test.ts && tsx src/tests/match-lifecycle.test.ts && tsx src/tests/mode-separation.test.ts && tsx src/tests/asset-system.test.ts && tsx src/tests/content-foundation.test.ts && tsx src/tests/guide-flow.test.ts && tsx src/tests/daily-flow.test.ts && tsx src/tests/i18n-localization.test.ts && tsx src/tests/review-mode-flow.test.ts"
+    "test": "tsx src/tests/game-engine.test.ts && tsx src/tests/anti-cheat.test.ts && tsx src/tests/modal-render.test.tsx && tsx src/tests/auth-identity.test.ts && tsx src/tests/schema-integrity.test.ts && tsx src/tests/rls-security.test.ts && tsx src/tests/server-rpc.test.ts && tsx src/tests/match-lifecycle.test.ts && tsx src/tests/mode-separation.test.ts && tsx src/tests/asset-system.test.ts && tsx src/tests/content-foundation.test.ts && tsx src/tests/guide-flow.test.ts && tsx src/tests/daily-flow.test.ts && tsx src/tests/i18n-localization.test.ts && tsx src/tests/review-mode-flow.test.ts && tsx src/tests/v1-release.test.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",

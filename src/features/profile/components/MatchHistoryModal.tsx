@@ -50,15 +50,15 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
     const dTitle = tBoardTitle(rawTitle);
     const outcomeText = isEn
       ? m.outcome === "VICTORY"
-        ? "Cut! Victory!"
+        ? "Scene's yours!"
         : m.outcome === "DRAW"
         ? "Blind Frame (Tie)"
-        : "Back to cutting room"
+        : "Not this take"
       : m.outcome === "VICTORY"
-      ? "Kesin!"
+      ? "Sahne senin!"
       : m.outcome === "DRAW"
       ? "Kör kadraj"
-      : "Kurgu masası";
+      : "Bu çekim olmadı";
     const shareText = `${isEn ? "CineXOX Duel" : "CineXOX Düellosu"}: ${dTitle} · ${isEn ? "Result" : "Sonuç"}: ${outcomeText}`;
     if (navigator.share) {
       navigator.share({ title: "CineXOX", text: shareText }).catch(() => {});
@@ -185,15 +185,15 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
                       >
                         {isWin
                           ? isEn
-                            ? "Cut!"
-                            : "Kesin!"
+                            ? "Scene's yours!"
+                            : "Sahne senin!"
                           : isDraw
                           ? isEn
                             ? "Blind frame"
                             : "Kör kadraj"
                           : isEn
-                          ? "Cutting room"
-                          : "Kurgu masası"}
+                          ? "Not this take"
+                          : "Bu çekim olmadı"}
                       </span>
                       <span className="text-xs text-[#8A8F9A] font-sans">
                         {formatDateShort(m.timestamp)}

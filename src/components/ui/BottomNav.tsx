@@ -4,6 +4,7 @@ import React from "react";
 import { Ticket, Film, Swords, User } from "lucide-react";
 import { audio } from "@/utils/audio";
 import { useTranslation } from "@/i18n";
+import { FLAGS } from "@/config/flags";
 
 export type NavTabId = "HOME" | "GAME_SELECT" | "CUSTOM_ROOM" | "PROFILE";
 
@@ -39,7 +40,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       label: dict.nav.profile,
       icon: User,
     },
-  ];
+  ].filter((tab) => tab.id !== "CUSTOM_ROOM" || FLAGS.SHOW_ONLINE_ROOM);
 
   return (
     <nav

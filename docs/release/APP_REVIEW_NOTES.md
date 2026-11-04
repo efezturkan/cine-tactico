@@ -54,15 +54,8 @@ To help you experience the core game value in the shortest possible time, this g
 2. The daily 3×3 board is deterministically selected for the current UTC date.
 3. Complete the match to record your daily streak locally and generate a shareable scorecard.
 
-### Flow 3: Guideline 5.1.1(v) Account & Data Deletion
-1. From the home screen, tap the bottom navigation tab: **"Profil" / "Profile"** (or tap your profile badge in the top bar).
-2. Scroll down to the **"Veri ve Gizlilik" / "Data & Privacy"** section near the bottom of the Profile view.
-3. Two distinct controls are provided:
-   - **"Yerel Sıfırla" / "Reset Local":** Clears local device storage (`localStorage` match history, ambience settings, and UI hints) while keeping any server profile intact.
-   - **"Hesabı Sil" / "Delete Account":** Opens the destructive confirmation modal. Tap **"Hesabı Kalıcı Olarak Sil" / "Permanently Delete Account"**.
-4. **Behavior of Account Deletion:**
-   - Executes the server-side `public.delete_user_account()` RPC (`SECURITY DEFINER`), which permanently deletes the caller's `auth.users` record, `public.profiles` row (`ON DELETE CASCADE`), waiting/abandoned `public.game_rooms`, and `public.room_moves` (`ON DELETE CASCADE`), while unlinking (`ON DELETE SET NULL`) the user's UUID from completed `public.match_sessions` records so opponents' match histories are not broken.
-   - Signs out the active Supabase session, purges all local `cinexox_*`, `cinetactico_*`, and `sb-*` storage keys, and reloads the app into a clean initial state.
+### Flow 3: Data & Account (Guideline 5.1.1)
+Version 1.0 has **no accounts, no sign-in, and no server communication**. All data (nickname, avatar, bot match history) stays on the device. Profile > "Reset Local Data" erases it; uninstalling removes everything.
 
 ### Flow 4: In-App Creative Commons Licenses & Attributions (Guideline 5.2)
 1. On the home lobby, tap the **Settings (Gear icon)** at the top right.
@@ -74,14 +67,8 @@ To help you experience the core game value in the shortest possible time, this g
 2. Next to **"Dil / Language"**, tap **TR** or **EN**.
 3. **Behavior:** All UI menus, board titles, criteria labels, bot rank titles, Settings panels, and Account Deletion dialogs switch immediately between Turkish and English.
 
-### Flow 6: Real-Time Multiplayer Room (Network-Dependent — Requires 2 Devices)
-> **Note for Reviewers:** Custom Room multiplayer synchronization requires an active internet connection and two concurrent sessions (e.g., two devices, or one iOS device and `https://cine-tactico.vercel.app/`).
-1. On **Device A**:
-   - Tap **"Özel Oda" / "Custom Room"** on the lobby (or **"Gösterim"** in the bottom bar).
-   - Tap **"Oda Oluştur" / "Create Room"** to generate a room code (e.g., `TRNY-4821`).
-2. On **Device B**:
-   - Open **"Özel Oda" / "Custom Room"**, enter the room code, and join.
-3. **Behavior:** Both players synchronize turns and board state over Supabase Realtime and the server-authoritative `public.submit_move()` RPC.
+### Flow 6: Online Multiplayer
+Not included in version 1.0. It is disabled behind a feature flag and will be announced in a future update.
 
 ---
 

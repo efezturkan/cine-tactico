@@ -12,6 +12,6 @@ Visual mix: Letterboxd calm + Block Blast one-touch clarity + Wordle daily ritua
 Do not rebuild these without an explicit request:
 - `MatchmakingQueueModal.tsx` (gold reel animation timings)
 - `ShotClock.tsx` (neon core + ping radar)
-- `XoxBoard.tsx` 4x4 matrix (corner clapper, axis badges, 35mm plates)
+- `XoxBoard.tsx` matrix (3x3 cells + criteria header row/column) (corner clapper, axis badges, 35mm plates)
 
 Keyboard-open: board and shot-clock stay visible (`100dvh`). Search cards must not leak genre/year/Oscar hints into the DOM.

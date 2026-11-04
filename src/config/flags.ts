@@ -49,6 +49,8 @@ export interface CineFeatureFlags {
   SHOW_TIMER_PICKER: boolean;
   /** Puan sistemi (+ Puan) */
   SHOW_POINTS_SYSTEM: boolean;
+  /** Çevrimiçi Özel Gösterim + Supabase (v1.0: kapalı, tamamen çevrimdışı) */
+  SHOW_ONLINE_ROOM: boolean;
 }
 
 export const FLAGS: CineFeatureFlags = {
@@ -74,4 +76,5 @@ export const FLAGS: CineFeatureFlags = {
   SHOW_BLITZ: false,
   SHOW_TIMER_PICKER: false,
   SHOW_POINTS_SYSTEM: false,
+  SHOW_ONLINE_ROOM: false,
 };

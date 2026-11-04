@@ -26,8 +26,8 @@ Kısa, insan gibi, buyruk kipi. Robotik ve resmi cümle yok.
 | Sıra sende | Hamle sende |
 | Rakip çekiyor, Rakip düşünüyor | Rakip hamlede |
 | Beraberlik | Kör kadraj (alt satır: "Berabere.") |
-| Zafer | Kesin! |
-| Mağlubiyet | Kurgu masasına dönüyoruz. |
+| Zafer | Sahne senin! |
+| Mağlubiyet | Bu çekim olmadı. |
 | Profil | Sinefil Kartı |
 | İstatistikler | Sinefil sicili |
 | Özel Oda | Özel Gösterim (ekran), "Oda kur" / "Koda katıl" (seçenekler) |
@@ -68,7 +68,7 @@ Sabit inline renk yok, tek kaynak tokenlardır:
 - Mod köşe vurguları: Klasik Düello (`#D9A441`), Ters Kadraj (`#5FB3A8`), Sinefil Konsept (`#9A8FD8`), Günün Kadrası (`#C9A27A`).
 
 ### 2.2 Tipografi
-- Serif (Newsreader): Ekran başlıkları, afiş başlıkları, büyük anlar (Kesin!, AKSİYON!).
+- Serif (Newsreader): Ekran başlıkları, afiş başlıkları, büyük anlar (Sahne senin!, AKSİYON!).
 - Sans (Inter): Gövde metinleri, butonlar, sekmeler, filtre çipleri.
 - Mono (JetBrains Mono): Sayaç, timecode, oda kodları, mikro etiketler ("35MM · 24 FPS").
 
@@ -88,7 +88,7 @@ Sabit inline renk yok, tek kaynak tokenlardır:
 - Viewfinder vizör köşe işaretleri
 - REC + timecode sayacı
 - Klaket açılışı
-- "Kesin!" anı
+- "Sahne senin!" anı
 
 ---
 
@@ -99,5 +99,5 @@ Sabit inline renk yok, tek kaynak tokenlardır:
 - **Özel Gösterim**: Tam ekran sayfa, "Oda kur" ve "Koda katıl" sekmeleri, 6 haneli kod kopyalama/paylaşma.
 - **Sinefil Kartı**: Tam ekran sayfa, avatar seçici alt sheet, tek satır favori yönetmen, galibiyet/mağlubiyet/oran dökümü, Arşiv açılış satırı.
 - **Kadraj (Oyun)**: REC + timecode, tek satır serif başlık, 44px 'X' butonu, SEN (X) vs RAKİP (O) şeridi, ortalanmış kadraj, 12s sayaç çubuğu (son 3s kırmızı), durum metni.
-- **Sonuç**: "Kesin!" veya "Kurgu masasına dönüyoruz.", ortalanmış 3x3 `MiniKadrajPreview`, SEN / RAKİP / NADİRLİK özeti, "Yeni çekim" ve "Gişe'ye dön".
+- **Sonuç**: "Sahne senin!" veya "Bu çekim olmadı.", ortalanmış 3x3 `MiniKadrajPreview`, SEN / RAKİP / NADİRLİK özeti, "Yeni çekim" ve "Gişe'ye dön".
 - **Ayarlar & Salon Işığı**: Ses, titreşim, Salon ışığı (Kadife, Analog, Gümüş, Gece mavisi), Nasıl oynanır, Gizlilik politikası, Kullanım koşulları.

@@ -2,7 +2,7 @@
 
 > **DİKKAT — TEK GEÇERLİ KAYNAK:**  
 > Bu belge tarihsel referans için arşivlenmiştir. Tüm tasarım sistemi, semantik renkler, tipografi ve yüzey kurallarında bağlayıcı tek anayasa:  
-> - **Tasarım Anayasası:** [DESIGN.md](file:///Users/efe/Desktop/untitled%20folder/FI%CC%87LMSEL/docs/product/DESIGN.md)  
+> - **Tasarım Anayasası:** [DESIGN.md](file:///Users/efe/Desktop/untitled%20folder/FI%CC%87LMSEL/docs/design/DESIGN.md)  
 > - **MVP Kapsamı:** [MVP_SCOPE.md](file:///Users/efe/Desktop/untitled%20folder/FI%CC%87LMSEL/docs/product/MVP_SCOPE.md)
 
 ---

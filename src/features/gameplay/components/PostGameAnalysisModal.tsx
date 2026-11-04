@@ -126,15 +126,15 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
           >
             {isVictory
               ? isEn
-                ? "Cut!"
-                : "Kesin!"
+                ? "Scene's yours!"
+                : "Sahne senin!"
               : isDraw
               ? isEn
                 ? "Blind frame"
                 : "Kör kadraj"
               : isEn
-              ? "Back to cutting room."
-              : "Kurgu masasına dönüyoruz."}
+              ? "Not this take."
+              : "Bu çekim olmadı."}
           </h2>
 
           {isDraw && (

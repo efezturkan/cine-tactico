@@ -143,7 +143,7 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
               </div>
             </div>
             <p className="text-xs text-[#8A8F9A] text-center mt-2.5">
-              {isEn ? "Three cells in a row, column, or diagonal: Cut!" : "Yatay, dikey ya da çapraz üç kare: Kesin!"}
+              {isEn ? "Three cells in a row, column, or diagonal: Scene's yours!" : "Yatay, dikey ya da çapraz üç kare: Sahne senin!"}
             </p>
           </div>
         </div>

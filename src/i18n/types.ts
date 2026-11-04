@@ -68,6 +68,17 @@ export interface TranslationDictionary {
     reviewModeHeader: string;
     backToResult: string;
     reviewTapBlankCellHint: string;
+    msgGameOver: string;
+    msgCellTaken: string;
+    msgMovieUsed: string;
+    msgWrongMovie: string;
+    msgWrongActor: string;
+    msgWrongShot: string;
+    goldenReelPrompt: string;
+    goldenReelRejected: string;
+    goldenReelUsed: string;
+    botThinking: string;
+    botPickingPoster: string;
     moreTitlesAvailable: string;
     moreActorsAvailable: string;
     validAlternativesTitle: string;

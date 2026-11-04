@@ -23,6 +23,7 @@ import {
   BotOpponentProfile,
   BOT_OPPONENTS,
   getBoardForMode,
+  getDailyBoardForDate,
 } from "@/data/boards";
 import {
   GameMode,
@@ -45,17 +46,13 @@ import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { hasSeenGuide } from "@/utils/guideStorage";
 import { getGlobalDailyDateKey } from "@/utils/dateUtils";
-import { LanguageProvider } from "@/i18n";
+import { LanguageProvider, useTranslation } from "@/i18n";
 
-const getDailyBoardConfig = (): { board: GameBoard; index: number } => {
-  const dailyIdx = PRESET_BOARDS.findIndex(b => b.id === "board_daily_today");
-  if (dailyIdx !== -1) {
-    return { board: PRESET_BOARDS[dailyIdx], index: dailyIdx };
-  }
-  throw new Error("[CineXOX] Kritik Hata: 'board_daily_today' hazır kadraj havuzunda bulunamadı!");
-};
+const getDailyBoardConfig = (): { board: GameBoard; index: number } =>
+  getDailyBoardForDate(getGlobalDailyDateKey());
 
 function CineXoxApp() {
+  const { dict, locale } = useTranslation();
   const [currentView, setCurrentView] = useState<"HOME" | "GAME_SELECT" | "CUSTOM_ROOM" | "PROFILE" | "GAME">("HOME");
   const [showMatchHistory, setShowMatchHistory] = useState<boolean>(false);
   const [boardIndex, setBoardIndex] = useState<number>(0);
@@ -128,7 +125,7 @@ function CineXoxApp() {
     losses: 0,
     draws: 0,
     highestCombo: 0,
-    dailyStreak: 3,
+    dailyStreak: 0,
     streakProtected: false,
     favoriteGenre: "Sci-Fi",
     favoriteDirector: "Christopher Nolan",
@@ -281,6 +278,7 @@ function CineXoxApp() {
     botStatusMessage,
     resetGame,
     setBoard,
+    setClockCell,
   } = useGameSession(
     PRESET_BOARDS[boardIndex],
     mode,
@@ -289,6 +287,10 @@ function CineXoxApp() {
     allowSteal,
     currentView === "GAME" && !showMatchFound && !isGameIntroActive
   );
+
+  useEffect(() => {
+    setClockCell(activeCellIndex);
+  }, [activeCellIndex, setClockCell]);
 
   const isMatchInProgress = winner === null && cells.some(c => c !== null);
 
@@ -471,7 +473,7 @@ function CineXoxApp() {
       setShakingCellIndex(targetIdx);
       setTimeout(() => setShakingCellIndex(null), 120);
       setMovieSearchError(null);
-      setHintMessage("Yanlış çekim. Hamle rakipte.");
+      setHintMessage(dict.game.msgWrongShot);
       setTimeout(() => setHintMessage(null), 2500);
     }
   };
@@ -494,7 +496,7 @@ function CineXoxApp() {
       setShakingCellIndex(targetIdx);
       setTimeout(() => setShakingCellIndex(null), 120);
       setMovieSearchError(null);
-      setHintMessage("Yanlış çekim. Hamle rakipte.");
+      setHintMessage(dict.game.msgWrongShot);
       setTimeout(() => setHintMessage(null), 2500);
     }
   };
@@ -541,7 +543,7 @@ function CineXoxApp() {
     if (botDifficulty === diff) return;
     if (isMatchInProgress) {
       audio.playError();
-      setHintMessage("🔒 Maç devam ederken bot zorluğu değiştirilemez! Önce maçı tamamlayın veya 'Terk Et' yapın.");
+      setHintMessage(locale === "en" ? "Bot difficulty can't change mid-match. Finish or forfeit first." : "Maç sürerken bot zorluğu değişmez. Önce maçı bitir ya da terk et.");
       setTimeout(() => setHintMessage(null), 3500);
       return;
     }
@@ -595,7 +597,7 @@ function CineXoxApp() {
         lastFiveMatches: updatedLast5,
       };
     });
-    setHintMessage("🏳️ Maçı terk ettin! Hükmen mağlubiyet kariyerine işlendi.");
+    setHintMessage(locale === "en" ? "You forfeited. A loss was recorded." : "Maçı terk ettin. Mağlubiyet kaydedildi.");
     setTimeout(() => setHintMessage(null), 4000);
     resetGame();
 

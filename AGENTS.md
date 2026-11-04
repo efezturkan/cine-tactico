@@ -14,7 +14,7 @@ You are the studio. Stay small: one mechanic at a time, spec before code, tests 
 4. Multiplayer uses the same `src/core` engine as single player.
 5. Cosmetics never grant competitive advantage.
 6. No IMDb/TMDb licensed fields or poster CDNs. Provenance lives on movie data.
-7. Do not rebuild the reel modal, shot clock, or 4x4 board structure.
+7. Do not rebuild the reel modal, shot clock, or board structure (3x3 cells + criteria header row/column).
 
 ## Where to work
 
@@ -32,7 +32,7 @@ You are the studio. Stay small: one mechanic at a time, spec before code, tests 
 
 ## Session start
 
-Read `project.yaml`, then `docs/product/MVP.md`. Skills: `cine-core`, `cine-content`. Feel and store rules live in `.cursor/rules/mvp-ship.mdc`.
+Read `project.yaml`, then `docs/product/MVP_SCOPE.md`. Skills: `cine-core`, `cine-content`. Feel and store rules live in `.cursor/rules/mvp-ship.mdc`.
 
 ## Done means
 

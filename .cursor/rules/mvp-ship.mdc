@@ -5,7 +5,7 @@ alwaysApply: true
 
 # MVP ship
 
-Read `docs/product/MVP.md` before any feature work. `docs/product/GAME_FEEL.md` decides screens. `docs/design/DESIGN_SYSTEM.md` decides color. `MASTER_SPECIFICATION_v3.md` decides rules.
+Read `docs/product/MVP_SCOPE.md` before any feature work. `docs/product/GAME_FEEL.md` decides screens. `docs/design/DESIGN_SYSTEM.md` decides color. `MASTER_SPECIFICATION_v3.md` decides rules.
 
 ## Authority
 
@@ -13,7 +13,7 @@ Read `docs/product/MVP.md` before any feature work. `docs/product/GAME_FEEL.md` 
 - Do not add shop, quests, leagues, fake feeds, DNA, ambience, notifications, or daily calendar.
 - Do not put those existing screens back on the home path.
 - Do not rebuild the data graph. Curated boards stay until after TestFlight.
-- Do not restyle the reel modal, shot clock, or 4x4 board structure.
+- Do not restyle the reel modal, shot clock, or board structure (3x3 cells + criteria header row/column).
 - Cell stealing stays forbidden. No IMDb/TMDb ratings or poster CDNs.
 - User asked to keep `main` updated. Before a risky edit, branch `backup/YYYY-MM-DD-short`. Never force-push.
 

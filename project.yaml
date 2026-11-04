@@ -9,7 +9,7 @@ orientation: portrait
 
 paths:
   spec: MASTER_SPECIFICATION_v3.md
-  product: docs/product/MVP.md
+  product: docs/product/MVP_SCOPE.md
   core: src/core
   data: src/data
   tests: src/tests
@@ -27,10 +27,10 @@ untouchable:
 
 mvp:
   clock_seconds: 12
-  modes: [VS_BOT, ONLINE_ROOM]
+  modes: [VS_BOT, DAILY_SOLO]  # ONLINE_ROOM: FLAGS.SHOW_ONLINE_ROOM ile v1.0'da kapalı
   next_slice: testflight
   docs:
-    - docs/product/MVP.md
+    - docs/product/MVP_SCOPE.md
     - docs/product/GAME_FEEL.md
     - docs/product/DATA_MODEL.md
     - docs/design/DESIGN_SYSTEM.md

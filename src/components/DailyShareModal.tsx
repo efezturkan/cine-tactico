@@ -44,7 +44,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
   };
 
   const shareText = `CineXOX · Günün Kadrası NO.${dayStr}\n\n${generateEmojiGrid()}\nSonuç: ${filledCount}/9 Kare ${
-    isPerfect ? "· Kesin!" : ""
+    isPerfect ? "· Tam kadraj!" : ""
   }\n${typeof window !== "undefined" ? window.location.origin : "cinexox.app"}`;
 
   const handleCopyScore = () => {
@@ -97,7 +97,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
             GÜNÜN KADRASI · NO.{dayStr}
           </span>
           <h2 className="font-serif text-2xl font-bold text-[#E8E6E1]">
-            {isPerfect ? "Kesin!" : `${filledCount}/9 Kare`}
+            {isPerfect ? "Tam kadraj!" : `${filledCount}/9 Kare`}
           </h2>
           <p className="text-xs text-[#8A8F9A] font-sans mt-0.5">
             {isPerfect ? "Kusursuz çekim tamamlandı. Yarın yeni bir tane var." : "Bugünün kadrajı çekildi. Yarın yeni bir tane var."}

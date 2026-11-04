@@ -429,11 +429,11 @@ export function GameView(props: GameViewProps) {
                   <span className="font-serif text-base sm:text-lg font-bold text-[#D9A441] tracking-wider">
                     {props.winner === "X"
                       ? isEn
-                        ? "Cut! Victory!"
-                        : "Kesin!"
+                        ? "Scene's yours!"
+                        : "Sahne senin!"
                       : isEn
-                      ? "Back to the cutting room."
-                      : "Kurgu masasına dönüyoruz."}
+                      ? "Not this take."
+                      : "Bu çekim olmadı."}
                   </span>
                 )
               ) : (

@@ -50,7 +50,7 @@ export default function PrivacyPage() {
             {lang === "TR" ? "Gizlilik Politikası" : "Privacy Policy"}
           </h1>
           <p className="text-xs text-zinc-400 font-mono">
-            {lang === "TR" ? "Son Güncelleme: 3 Kasım 2026" : "Last Updated: November 3, 2026"} · Cine-XOX
+            {lang === "TR" ? "Son Güncelleme: 4 Kasım 2026" : "Last Updated: November 4, 2026"} · Cine-XOX
           </p>
         </div>
       </div>
@@ -61,34 +61,23 @@ export default function PrivacyPage() {
           <>
             <section>
               <h2 className="text-base font-bold text-white mb-2 flex items-center gap-2">
-                <Lock className="w-4 h-4 text-emerald-400" /> 1. Toplanan Veriler ve Kullanım Amaçları
+                <Lock className="w-4 h-4 text-emerald-400" /> 1. Toplanan Veriler
               </h2>
               <p>
-                <strong>Cine-XOX</strong>, varsayılan olarak kayıt zorunluluğu olmadan (misafir oturumuyla) çalışır ve ad, soyad, telefon numarası, coğrafi konum veya cihaz donanım kimliği toplamaz.
+                <strong>Cine-XOX</strong> hesap, kayıt ya da giriş gerektirmez. Ad, e-posta, telefon, konum veya cihaz kimliği toplamaz; verilerinizi sunucuya göndermez.
               </p>
               <p className="mt-2 text-xs text-zinc-400">
-                Oyun deneyimini sağlamak için yalnızca şu veriler işlenir:
+                Yalnızca cihazınızın yerel belleğinde (localStorage) şunlar saklanır: takma adınız, avatarınız, bot maç geçmişi ve istatistikleriniz, günlük seri bilgisi, ses/titreşim ve salon ambiyans tercihleriniz.
               </p>
-              <ul className="list-disc list-inside mt-1 space-y-1 text-xs text-zinc-400">
-                <li><strong>Anonim Oyuncu Kimliği:</strong> Uygulama ilk açıldığında sunucu tarafında rastgele bir kullanıcı kimliği (UUID) oluşturulur. Bu kimlik doğrudan gerçek kimliğinizle ilişkilendirilmez.</li>
-                <li><strong>Oyun İlerlemesi ve İstatistikler:</strong> Lig dereceniz (rating), kazandığınız unvanlar, galibiyet/mağlubiyet sayılarınız ve makara bakiyeniz.</li>
-                <li><strong>Çok Oyunculu Maç Kayıtları:</strong> Çevrimiçi Özel Gösterim odalarında yapılan hamleler (`room_moves`) ve maç sonuçları (`match_sessions`).</li>
-                <li><strong>İsteğe Bağlı Bilgiler ve Hesap Bağlama:</strong> Kendi seçtiğiniz takma ad (username), avatar, isteğe bağlı Letterboxd kullanıcı adı ve yalnızca misafir hesabınızı yedeklemek için kendi isteğinizle &quot;Hesap Oluştur&quot; özelliğini kullanırsanız kimlik doğrulama amaçlı e-posta adresiniz.</li>
-              </ul>
             </section>
-
             <section>
               <h2 className="text-base font-bold text-white mb-2 flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-cyan-400" /> 2. Çevrimdışı ve Çevrimiçi Ağ Erişimi
+                <Smartphone className="w-4 h-4 text-cyan-400" /> 2. Ağ Erişimi
               </h2>
               <p>
-                <strong>Tek Kişilik Oyun (Bot Karşılaşmaları):</strong> İnternet bağlantısı gerektirmez. Maç geçmişiniz ve görsel tercihleriniz yalnızca cihazınızın yerel belleğinde (localStorage) saklanır.
-              </p>
-              <p className="mt-2">
-                <strong>Çok Oyunculu Mod ve Sıralama:</strong> Canlı maç senkronizasyonu ve genel lig tablosu için güvenli bulut sağlayıcımız Supabase altyapısına şifreli (HTTPS/WSS) ağ istekleri yapılır. Kamera, mikrofon veya rehber erişimi kesinlikle istenmez.
+                Bu sürümdeki tüm oyun modları (Botla Düello, Günün Kadrası) internet bağlantısı olmadan çalışır. Uygulama oyun sırasında hiçbir sunucuya veri göndermez. Çevrimiçi özellikler eklenirse bu politika önceden güncellenir.
               </p>
             </section>
-
             <section>
               <h2 className="text-base font-bold text-white mb-2 flex items-center gap-2">
                 <Globe className="w-4 h-4 text-amber-400" /> 3. Reklam ve Üçüncü Taraflar
@@ -100,21 +89,12 @@ export default function PrivacyPage() {
 
             <section>
               <h2 className="text-base font-bold text-white mb-2 flex items-center gap-2">
-                <Database className="w-4 h-4 text-purple-400" /> 4. Yerel Veri Sıfırlama ve Hesap Silme Hakları
+                <Database className="w-4 h-4 text-purple-400" /> 4. Verileriniz Üzerindeki Haklarınız
               </h2>
               <p>
-                Kullanıcılarımız verileri üzerinde Apple Guideline 5.1.1(v) ve KVKK/GDPR kapsamında tam kontrole sahiptir:
+                Tüm verileriniz yalnızca cihazınızdadır. Profil menüsündeki &quot;Yerel Verileri Sıfırla&quot; seçeneğiyle bot maç geçmişinizi, tercihlerinizi ve istatistiklerinizi silebilir, uygulamayı kaldırarak her şeyi kalıcı olarak yok edebilirsiniz. Sunucuda saklanan bir hesabınız bulunmadığı için silinecek çevrimiçi bir kaydınız yoktur.
               </p>
-              <ul className="list-disc list-inside mt-2 space-y-2 text-xs text-zinc-300">
-                <li>
-                  <strong>Yerel Verileri Sıfırla:</strong> Profil menüsünden cihazınızdaki çevrimdışı bot maç geçmişini, salon ambiyans tercihlerinizi ve yerel önbelleği temizleyebilirsiniz. Çevrimiçi profiliniz korunur.
-                </li>
-                <li>
-                  <strong>Hesabı ve Tüm Verileri Sil:</strong> Profil menüsündeki &quot;Hesabı Sil&quot; seçeneğini kullanarak sunucudaki anonim veya bağlı hesabınızı (`auth.users`), profilinizi (`profiles`), bekleyen odalarınızı ve hamle kayıtlarınızı (`room_moves`) kalıcı olarak yok edebilirsiniz. Tamamlanmış çok oyunculu maç arşivlerinde (`match_sessions`) rakibin geçmişi bozulmaması için oyuncu kimliğiniz anonimleştirilir (`NULL` yapılır). Bu işlem geri alınamaz.
-                </li>
-              </ul>
             </section>
-
             <section>
               <h2 className="text-base font-bold text-white mb-2 flex items-center gap-2">
                 <FileText className="w-4 h-4 text-blue-400" /> 5. Fikri Mülkiyet, Açık Lisanslar ve Görsel Atıfları
@@ -131,34 +111,23 @@ export default function PrivacyPage() {
           <>
             <section>
               <h2 className="text-base font-bold text-white mb-2 flex items-center gap-2">
-                <Lock className="w-4 h-4 text-emerald-400" /> 1. Data Collection and Purpose
+                <Lock className="w-4 h-4 text-emerald-400" /> 1. Data Collection
               </h2>
               <p>
-                <strong>Cine-XOX</strong> operates by default with an anonymous guest session and does NOT require your real name, phone number, GPS coordinates, or hardware identifiers.
+                <strong>Cine-XOX</strong> needs no account, sign-up, or login. It does not collect your name, email, phone number, location, or device identifiers, and it does not send your data to any server.
               </p>
               <p className="mt-2 text-xs text-zinc-400">
-                To provide core game functionality, the following data is processed:
+                Only your device&apos;s local storage holds: your nickname, avatar, bot match history and stats, daily streak, and sound, haptic and ambience preferences.
               </p>
-              <ul className="list-disc list-inside mt-1 space-y-1 text-xs text-zinc-400">
-                <li><strong>Anonymous Player ID:</strong> A randomized pseudonymous identifier (UUID) generated on first launch. Not linked to your real identity.</li>
-                <li><strong>Gameplay Progress & Stats:</strong> Tier ratings, rank titles, wins, losses, draws, and reels balance.</li>
-                <li><strong>Multiplayer Match Data:</strong> Cell moves (`room_moves`) and outcomes (`match_sessions`) in Custom Room multiplayer duels.</li>
-                <li><strong>Optional Profile & Account Linking:</strong> Public nickname, avatar selection, optional Letterboxd handle, and—only if you voluntarily choose to link your guest session via &quot;Create Account&quot;—your email address solely for authentication.</li>
-              </ul>
             </section>
-
             <section>
               <h2 className="text-base font-bold text-white mb-2 flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-cyan-400" /> 2. Offline vs. Online Modes
+                <Smartphone className="w-4 h-4 text-cyan-400" /> 2. Network Access
               </h2>
               <p>
-                <strong>Single-Player (Bot Matches):</strong> Fully playable offline. Game history and display preferences remain strictly in your device local storage.
-              </p>
-              <p className="mt-2">
-                <strong>Online Multiplayer & Leaderboard:</strong> Secure encrypted network connections (HTTPS/WSS) to our cloud service provider, Supabase, are utilized for realtime gameplay and rankings. We never request access to camera, microphone, or contacts.
+                Every mode in this version (Bot Duel, Daily Frame) works fully offline. The app sends no data to any server during play. If online features are added later, this policy will be updated first.
               </p>
             </section>
-
             <section>
               <h2 className="text-base font-bold text-white mb-2 flex items-center gap-2">
                 <Globe className="w-4 h-4 text-amber-400" /> 3. Advertising and Third Parties
@@ -170,21 +139,12 @@ export default function PrivacyPage() {
 
             <section>
               <h2 className="text-base font-bold text-white mb-2 flex items-center gap-2">
-                <Trash2 className="w-4 h-4 text-red-400" /> 4. Data Deletion Rights (Apple 5.1.1(v) & GDPR)
+                <Trash2 className="w-4 h-4 text-red-400" /> 4. Your Rights Over Your Data
               </h2>
               <p>
-                You maintain complete authority over your data:
+                All your data lives only on your device. Use &quot;Reset Local Data&quot; in the Profile menu to erase bot match history, preferences and stats, or uninstall the app to remove everything permanently. There is no server-side account, so there is no online record to delete.
               </p>
-              <ul className="list-disc list-inside mt-2 space-y-2 text-xs text-zinc-300">
-                <li>
-                  <strong>Reset Local Data:</strong> Clears local device cache, offline bot matches, and visual theme preferences without altering your online standing.
-                </li>
-                <li>
-                  <strong>Delete Account & All Data:</strong> Located in the Profile menu, &quot;Delete Account&quot; permanently purges your server-side authentication record (`auth.users`), profile (`profiles`), waiting rooms, and move history (`room_moves`), while unlinking (`SET NULL`) your user reference in completed multiplayer match records (`match_sessions`) so your opponent&apos;s match archive remains intact. This action is irreversible.
-                </li>
-              </ul>
             </section>
-
             <section>
               <h2 className="text-base font-bold text-white mb-2 flex items-center gap-2">
                 <FileText className="w-4 h-4 text-blue-400" /> 5. Intellectual Property & Creative Commons Licensing

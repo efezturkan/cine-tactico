@@ -9,7 +9,7 @@ Bu doküman, CineXOX projesinin MVP kapsamını, kilitlenen sınırlarını ve n
 - **Günün Kadrası**: Takvim gününe göre bilet formatında tekil günlük seans (NO.03).
 - **Tek ve Ortak Oyun Motoru**: Bot (`VS_BOT`) ve Özel Gösterim (`ONLINE_ROOM`) aynı `src/core/` motorunu çalıştırır.
 - **4 Tam Ekran Sayfa**: Gişe, Vizyondakiler, Özel Gösterim, Sinefil Kartı (`BottomNav` ile).
-- **Sinematik Geri Bildirim**: Klaket geri sayımı, 12 saniye süre çubuğu, deklanşör tıkı, "Kesin!" zafer anı, "Kurgu masasına dönüyoruz." kayıp anı, "Kör kadraj" berabere anı.
+- **Sinematik Geri Bildirim**: Klaket geri sayımı, 12 saniye süre çubuğu, deklanşör tıkı, "Sahne senin!" zafer anı, "Bu çekim olmadı." kayıp anı, "Kör kadraj" berabere anı.
 - **Salon Işığı**: 4 hazır ayar (Kadife, Analog, Gümüş, Gece mavisi), Loşluk, Projeksiyon (Işık huzmesi), Gren.
 - **Moda Göre Otomatik Atmosfer**: Klasik (`#D9A441`), Ters Kadraj (`#5FB3A8`), Sinefil Konsept (`#9A8FD8`), Günün Kadrası (`#C9A27A`).
 - **İlk Açılış Rehberi**: "Nasıl Oynanır?" (3 adımlı sinematik kart).
@@ -54,3 +54,11 @@ Bu doküman, CineXOX projesinin MVP kapsamını, kilitlenen sınırlarını ve n
 - [X] Günün Kadrası açılıyor, bitiyor, oynanmış durumu var, paylaşılıyor
 - [X] 360/390/430 px'te taşma yok, 4x CPU throttle'da takılma yok, sürekli animasyon yok
 - [X] `tsc` 0 hata, `npm test` yeşil, `npm run build` hatasız
+
+
+## v1.0 (TestFlight) Kararları — 4 Kasım 2026
+- **Çevrimiçi Özel Gösterim v1.0'da KAPALI** (`FLAGS.SHOW_ONLINE_ROOM = false`). Bayrak kapalıyken Supabase hiç bağlanmaz, hesap/ağ/veri toplama yoktur; uygulama tamamen çevrimdışıdır ve gizlilik politikası buna göre yazılmıştır.
+- Alt bar 3 sekme: Gişe, Vizyondakiler, Sinefil Kartı. Online geri açılırken 4. sekme (Özel Gösterim) otomatik gelir.
+- Moda göre kural: 12 sn shot-clock, 3×3 klasik XOX.
+- Günün Kadrası UTC gününe göre döner; havuz yalnızca her hücresi ≥3 cevaplı tahtalardan oluşur.
+- Online'ı açmanın önkoşulu: `submit_move` içinde sunucu tarafı cevap doğrulaması, yanlış cevap/süre aşımı olaylarının sunucuya yazılması, Ters Kadraj ve Altın Makara senkronu.

@@ -1069,3 +1069,35 @@ export function getRandomBoard(excludeIndex?: number): { board: GameBoard; index
   const randomizedBoard = createRandomizedBoard(PRESET_BOARDS[chosenIndex]);
   return { board: randomizedBoard, index: chosenIndex };
 }
+
+/**
+ * GÜNÜN KADRASI (UTC günü başına tek tahta):
+ * Havuz yalnızca her hücresinde en az 3 geçerli cevabı olan Klasik/Konsept tahtalardır
+ * (project.yaml min_valid_answers_per_cell). Sıra deterministiktir: aynı UTC gününde
+ * dünyanın her yerinde aynı tahta gelir.
+ */
+const DAILY_MIN_ANSWERS = 3;
+let dailyPoolCache: number[] | null = null;
+
+function getDailyPoolIndices(): number[] {
+  if (dailyPoolCache) return dailyPoolCache;
+  const pool: number[] = [];
+  PRESET_BOARDS.forEach((b, idx) => {
+    if (b.boardMode === "REVERSE_CAST") return;
+    const solvable = b.rows.every(r =>
+      b.cols.every(c => findMatchingMovies(r, c).length >= DAILY_MIN_ANSWERS)
+    );
+    if (solvable) pool.push(idx);
+  });
+  dailyPoolCache = pool.length > 0
+    ? pool
+    : [PRESET_BOARDS.findIndex(b => b.id === "board_daily_today")];
+  return dailyPoolCache;
+}
+
+export function getDailyBoardForDate(dateKey: string): { board: GameBoard; index: number } {
+  const pool = getDailyPoolIndices();
+  const dayNumber = Math.floor(Date.parse(`${dateKey}T00:00:00Z`) / 86_400_000);
+  const index = pool[((dayNumber % pool.length) + pool.length) % pool.length];
+  return { board: PRESET_BOARDS[index], index };
+}

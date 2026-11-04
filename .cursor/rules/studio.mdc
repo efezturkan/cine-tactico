@@ -14,4 +14,4 @@ This is Cine-XOX: 3x3 cinephile XOX on Next.js + Capacitor + Supabase. Not Unity
 - No IMDb/TMDb ratings or poster CDNs.
 - Leave MatchmakingQueueModal, ShotClock, and XoxBoard structure intact unless the user explicitly asks.
 - After engine or data edits: `npm test`. After TS edits: `npx tsc --noEmit`.
-- Scope lock: `docs/product/MVP.md`. One slice. No new meta systems.
+- Scope lock: `docs/product/MVP_SCOPE.md`. One slice. No new meta systems.

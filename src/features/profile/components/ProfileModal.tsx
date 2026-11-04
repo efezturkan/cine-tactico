@@ -509,6 +509,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </p>
           </button>
 
+          {isSupabaseConfigured && (
           <button
             type="button"
             onClick={() => {
@@ -526,6 +527,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               {dict.profile.deleteAccountSub}
             </p>
           </button>
+          )}
         </div>
       </div>
 
