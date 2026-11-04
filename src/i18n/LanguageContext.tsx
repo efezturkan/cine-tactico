@@ -11,11 +11,12 @@ import {
   translateBotRankTitle,
 } from "./criteria";
 
-const LOCALE_STORAGE_KEY = "cinexox_locale";
+export const LOCALE_STORAGE_KEY = "cinexox_locale";
 
-interface LanguageContextType {
+export interface LanguageContextType {
   locale: Locale;
   setLocale: (locale: Locale) => void;
+  isInitialized: boolean;
   dict: TranslationDictionary;
   t: (keyPath: string) => string;
   tBoardTitle: (title: string) => string;
@@ -25,6 +26,52 @@ interface LanguageContextType {
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+/**
+ * Cihazın tercih ettiği dilden desteklenen Locale'i çözümler:
+ * - Türkçe (`tr`, `tr-TR`, vb.) -> "tr"
+ * - İngilizce (`en`, `en-US`, vb.) ve diğer tüm diller (`de-DE`, vb.) -> "en" fallback
+ */
+export function resolveDeviceLocale(
+  browserLanguages?: readonly string[] | string | null
+): Locale {
+  if (!browserLanguages) return "en";
+
+  const primary = Array.isArray(browserLanguages)
+    ? browserLanguages[0]
+    : typeof browserLanguages === "string"
+    ? browserLanguages
+    : undefined;
+
+  if (typeof primary === "string") {
+    const clean = primary.trim().toLowerCase();
+    if (clean.startsWith("tr")) {
+      return "tr";
+    }
+  }
+
+  // Desteklenmeyen dillerde (de-DE, fr-FR vb.) ve İngilizce'de 'en' fallback
+  return "en";
+}
+
+/**
+ * Dil belirleme önceliği:
+ * 1. Kullanıcının daha önce uygulama içinden seçtiği ve kalıcı olarak saklanan dil.
+ * 2. Cihazın tercih ettiği dil (navigator.languages / navigator.language).
+ * 3. Desteklenmeyen dillerde English ('en') fallback.
+ */
+export function resolveInitialLocale(
+  savedPreference?: string | null,
+  browserLanguages?: readonly string[] | string | null
+): Locale {
+  // 1. Kullanıcı tercihi mevcutsa cihaz diline bakılmaksızın doğrudan kullanılır
+  if (savedPreference === "tr" || savedPreference === "en") {
+    return savedPreference;
+  }
+
+  // 2 & 3. Cihaz dili (TR -> tr, diğer tüm durumlar -> en)
+  return resolveDeviceLocale(browserLanguages);
+}
 
 /** Noktalı anahtar yolunu ("settings.title") sözlükte çözer; bulunamazsa anahtarı döndürür. */
 function lookupKey(dict: TranslationDictionary, keyPath: string): string {
@@ -39,25 +86,27 @@ function lookupKey(dict: TranslationDictionary, keyPath: string): string {
   return typeof current === "string" ? current : keyPath;
 }
 
+// SSR ve static export uyumu için güvenli LayoutEffect
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [locale, setLocaleState] = useState<Locale>("tr");
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     try {
-      const saved = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
-      if (saved === "tr" || saved === "en") {
-        setLocaleState(saved);
-        if (typeof document !== "undefined") {
-          document.documentElement.lang = saved;
-        }
-      } else if (typeof navigator !== "undefined") {
-        const browserLang = navigator.language.toLowerCase();
-        const detected: Locale = browserLang.startsWith("tr") ? "tr" : "en";
-        setLocaleState(detected);
-        if (typeof document !== "undefined") {
-          document.documentElement.lang = detected;
-        }
+      const saved = typeof window !== "undefined" ? localStorage.getItem(LOCALE_STORAGE_KEY) : null;
+      const langs =
+        typeof navigator !== "undefined"
+          ? navigator.languages && navigator.languages.length > 0
+            ? navigator.languages
+            : navigator.language
+          : null;
+      const resolved = resolveInitialLocale(saved, langs);
+      setLocaleState(resolved);
+      if (typeof document !== "undefined") {
+        document.documentElement.lang = resolved;
       }
     } catch {
       // Storage unavailable fallback
@@ -69,7 +118,9 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
     try {
-      localStorage.setItem(LOCALE_STORAGE_KEY, newLocale);
+      if (typeof window !== "undefined") {
+        localStorage.setItem(LOCALE_STORAGE_KEY, newLocale);
+      }
       if (typeof document !== "undefined") {
         document.documentElement.lang = newLocale;
       }
@@ -91,6 +142,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     () => ({
       locale,
       setLocale,
+      isInitialized,
       dict,
       t,
       tBoardTitle: tBoardTitleFn,
@@ -98,7 +150,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
       tSubLabel: tSubLabelFn,
       tBot: tBotFn,
     }),
-    [locale, setLocale, dict, t, tBoardTitleFn, tCriterionFn, tSubLabelFn, tBotFn]
+    [locale, setLocale, isInitialized, dict, t, tBoardTitleFn, tCriterionFn, tSubLabelFn, tBotFn]
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
@@ -111,6 +163,7 @@ export function useTranslation(): LanguageContextType {
     return {
       locale: "tr",
       setLocale: () => {},
+      isInitialized: true,
       dict: tr,
       t: (keyPath: string) => lookupKey(tr, keyPath),
       tBoardTitle: (title: string) => title,

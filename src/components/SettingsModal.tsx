@@ -161,28 +161,32 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  audio.playSelect();
-                  haptic.light();
-                  setLocale("tr");
+                  if (locale !== "tr") {
+                    audio.playSelect();
+                    haptic.light();
+                    setLocale("tr");
+                  }
                 }}
-                className={`px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors ${
-                  locale === "tr" ? "bg-[#D9A441] text-[#0B0D12]" : "text-[#8A8F9A] hover:text-[#E8E6E1]"
+                className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
+                  locale === "tr" ? "bg-[#D9A441] text-[#0B0D12] font-semibold shadow-sm" : "text-[#8A8F9A] hover:text-[#E8E6E1]"
                 }`}
               >
-                TR
+                Türkçe
               </button>
               <button
                 type="button"
                 onClick={() => {
-                  audio.playSelect();
-                  haptic.light();
-                  setLocale("en");
+                  if (locale !== "en") {
+                    audio.playSelect();
+                    haptic.light();
+                    setLocale("en");
+                  }
                 }}
-                className={`px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors ${
-                  locale === "en" ? "bg-[#D9A441] text-[#0B0D12]" : "text-[#8A8F9A] hover:text-[#E8E6E1]"
+                className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
+                  locale === "en" ? "bg-[#D9A441] text-[#0B0D12] font-semibold shadow-sm" : "text-[#8A8F9A] hover:text-[#E8E6E1]"
                 }`}
               >
-                EN
+                English
               </button>
             </div>
           </div>
