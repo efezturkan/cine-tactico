@@ -112,7 +112,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       : "—";
 
   const recent = (profile.lastFiveMatches ?? []).slice(-5);
-  const favoriteDirector = profile.favoriteDirector || "Christopher Nolan";
+  const favoriteDirector = profile.favoriteDirector || (isEn ? "Choose" : "Seç");
 
   const handleSaveName = async () => {
     const cleaned = tempName.trim();
@@ -238,10 +238,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   };
 
   const content = (
-    <div className="w-full max-w-sm mx-auto flex flex-col select-none text-[#E8E6E1] p-4 sm:p-5">
+    <div className="w-full max-w-[430px] mx-auto flex flex-col select-none text-[#E8E6E1] p-4 sm:p-5">
       {/* 7D.1 Başlık: Serif 'Sinefil Kartı', mikro etiket yok, X yok */}
       <div className="text-center pb-4 mb-4 border-b border-white/5">
-        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#E8E6E1] tracking-wide">
+        <h1 className="text-3xl font-serif font-bold text-[#F1EEE7] tracking-wide">
           {dict.profile.title}
         </h1>
       </div>
@@ -286,7 +286,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           ) : (
             <div className="flex items-center gap-1.5">
               <h2 className="text-lg font-serif font-bold text-[#E8E6E1]">
-                {profile.username === "Oyuncu" ? (isEn ? "Cinephile #3095" : "Sinefil #3095") : profile.username}
+                {profile.username}
               </h2>
               <button
                 type="button"
@@ -405,6 +405,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       </button>
 
       {/* 7D.7 Hesap Satırı: "Misafir hesabı. Cihazında kayıtlı." + [HESAP OLUŞTUR] */}
+      {isSupabaseConfigured && (
       <div className="w-full p-3.5 rounded-xl bg-[#14171D] border border-white/10 mb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -473,6 +474,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           </form>
         )}
       </div>
+      )}
 
       {/* Veri ve Gizlilik Yönetimi (Apple 5.1.1(v) Uyumlu) */}
       <div className="p-3.5 rounded-xl bg-[#14171D] border border-white/5 space-y-2.5">
@@ -758,7 +760,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   if (isPage) {
     return (
-      <div className="min-h-screen bg-[#0B0D12] flex flex-col pt-4 pb-28">
+      <div className="w-full max-w-[430px] min-h-[100dvh] bg-[#0B0D12] flex flex-col pt-4 pb-28">
         {content}
       </div>
     );

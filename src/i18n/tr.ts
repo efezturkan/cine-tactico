@@ -79,6 +79,8 @@ export const tr: TranslationDictionary = {
     goldenReelUsed: "Bu film maçta zaten kullanıldı.",
     botThinking: "Düşünüyor...",
     botPickingPoster: "Afiş seçiyor...",
+    hintReverse: "Bu seansta iki filmin ortak oyuncusunu yaz.",
+    hintConcept: "Bu seansta temaya uyan filmi bul.",
     moreTitlesAvailable: "+{count} yapım daha mevcut",
     moreActorsAvailable: "+{count} oyuncu daha mevcut",
     validAlternativesTitle: "GEÇERLİ ALTERNATİFLER",

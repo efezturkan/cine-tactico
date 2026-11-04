@@ -33,6 +33,7 @@ import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { AvatarIcon } from "./ui/AvatarIcon";
 import { Button } from "./ui/Button";
+import { getDailyEditionNumber } from "@/utils/dateUtils";
 import { BottomNav } from "./ui/BottomNav";
 import { SettingsModal } from "./SettingsModal";
 import { SalonLightSheet } from "./SalonLightSheet";
@@ -308,7 +309,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               onOpenProfileModal();
             }}
             className="flex items-center gap-2.5 p-1 rounded-2xl hover:bg-white/5 active:translate-y-[1px] transition-all text-left min-w-0 group"
-            title="Sinefil Kartı"
+            title={dict.nav.profile}
           >
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"
@@ -322,12 +323,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
             <div className="min-w-0 flex flex-col">
               <span className="text-xs sm:text-sm font-bold text-[#E8E6E1] truncate max-w-[120px] leading-tight">
-                {profile.username === "Oyuncu"
-                  ? "Sinefil #3095"
-                  : profile.username}
+                {profile.username}
               </span>
               <span className="text-[10px] text-[#8A8F9A] truncate leading-tight mt-0.5">
-                Sinefil Kartı &rarr;
+                {dict.nav.profile} &rarr;
               </span>
             </div>
           </button>
@@ -498,7 +497,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
                   <div className="min-w-0">
                     <span
-                      className="text-xs font-serif font-bold leading-tight block truncate"
+                      className="text-[11px] font-serif font-bold leading-tight block"
                       style={{
                         color: isSelected ? "#F1EEE7" : "#8A8F9A",
                       }}
@@ -546,7 +545,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <div className="w-9 h-9 rounded-xl bg-[#181B22] border border-[#D9A441]/40 flex flex-col items-center justify-center shrink-0">
               <Ticket className="w-4 h-4 text-[#D9A441]" />
               <span className="text-[7px] font-mono text-[#D9A441] font-bold">
-                NO.{Math.max(1, Math.floor((Date.now() - new Date("2025-01-01").getTime()) / (1000 * 60 * 60 * 24))).toString().padStart(2, "0")}
+                NO.{getDailyEditionNumber()}
               </span>
             </div>
 

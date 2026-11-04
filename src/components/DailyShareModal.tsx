@@ -1,5 +1,6 @@
 "use client";
 
+import { getDailyEditionNumber } from "@/utils/dateUtils";
 import React, { useState } from "react";
 import { GameBoard, CellAnswer } from "@/core";
 import { X, Share2, Copy, Check, Trophy } from "lucide-react";
@@ -28,7 +29,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
 
   const filledCount = cells.filter((c) => c !== null).length;
   const isPerfect = filledCount === 9;
-  const dayStr = String(new Date().getDate()).padStart(2, "0");
+  const dayStr = getDailyEditionNumber();
 
   const generateEmojiGrid = () => {
     let grid = "";

@@ -16,3 +16,11 @@ export function getGlobalDailyDateKey(date: Date = new Date()): string {
   const day = String(date.getUTCDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+/** Günün Kadrası sayı numarası: lansman günü (UTC 2026-11-05) = NO.01. Ana ekran ve paylaşım kartı aynı sayıyı kullanır. */
+export function getDailyEditionNumber(date: Date = new Date()): string {
+  const launch = Date.UTC(2026, 10, 5);
+  const today = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  const n = Math.max(1, Math.floor((today - launch) / 86_400_000) + 1);
+  return String(n).padStart(2, "0");
+}

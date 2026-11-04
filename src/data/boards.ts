@@ -1101,3 +1101,6 @@ export function getDailyBoardForDate(dateKey: string): { board: GameBoard; index
   const index = pool[((dayNumber % pool.length) + pool.length) % pool.length];
   return { board: PRESET_BOARDS[index], index };
 }
+
+/** Vizyondakiler ekranında "Bu hafta vizyonda" olarak öne çıkan, elle seçilmiş tahtalar (her hücre ≥3 cevaplı olmalı). */
+export const FEATURED_BOARD_IDS = ["board_thriller_masters", "board_dune_scifi"] as const;

@@ -79,6 +79,8 @@ export interface TranslationDictionary {
     goldenReelUsed: string;
     botThinking: string;
     botPickingPoster: string;
+    hintReverse: string;
+    hintConcept: string;
     moreTitlesAvailable: string;
     moreActorsAvailable: string;
     validAlternativesTitle: string;

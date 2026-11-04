@@ -132,23 +132,23 @@ export function GameView(props: GameViewProps) {
       if (props.board.boardMode === "REVERSE_CAST") {
         if (!modeHintSeenMemory.ters && localStorage.getItem("cinexox_ipucu_ters") !== "görüldü") {
           modeHintSeenMemory.ters = true;
-          setModeHint("Bu seansta iki filmin ortak oyuncusunu yaz.");
+          setModeHint(dict.game.hintReverse);
           localStorage.setItem("cinexox_ipucu_ters", "görüldü");
         }
       } else if (props.board.boardMode === "CINE_CONCEPT") {
         if (!modeHintSeenMemory.konsept && localStorage.getItem("cinexox_ipucu_konsept") !== "görüldü") {
           modeHintSeenMemory.konsept = true;
-          setModeHint("Bu seansta temaya uyan filmi bul.");
+          setModeHint(dict.game.hintConcept);
           localStorage.setItem("cinexox_ipucu_konsept", "görüldü");
         }
       }
     } catch {
       if (props.board.boardMode === "REVERSE_CAST" && !modeHintSeenMemory.ters) {
         modeHintSeenMemory.ters = true;
-        setModeHint("Bu seansta iki filmin ortak oyuncusunu yaz.");
+        setModeHint(dict.game.hintReverse);
       } else if (props.board.boardMode === "CINE_CONCEPT" && !modeHintSeenMemory.konsept) {
         modeHintSeenMemory.konsept = true;
-        setModeHint("Bu seansta temaya uyan filmi bul.");
+        setModeHint(dict.game.hintConcept);
       }
     }
   }, [props.board.boardMode]);
@@ -178,7 +178,7 @@ export function GameView(props: GameViewProps) {
   const safeGameDimness =
     typeof gameAmbience.dimness === "number" && !isNaN(gameAmbience.dimness) ? gameAmbience.dimness : 85;
 
-  const { t, tBoardTitle, locale } = useTranslation();
+  const { t, tBoardTitle, locale, dict } = useTranslation();
   const isEn = locale === "en";
 
   const isPlayerTurn = props.currentTurn === "X";

@@ -96,6 +96,10 @@ export const CRITERIA_SUBLABELS_EN: Record<string, string> = {
 
 export const BOT_TITLES_EN: Record<string, string> = {
   "Bilet Kontrolörü 🍿": "Ticket Inspector 🍿",
+  "Bilet Kontrolörü": "Ticket Inspector",
+  "Bağımsız Sinemacı": "Indie Filmmaker",
+  "Festival Jürisi": "Festival Juror",
+  "Usta Yönetmen": "Master Director",
   "Hafta Sonu Seyircisi 🎟️": "Weekend Moviegoer 🎟️",
   "Gişe Çırağı 🥤": "Box Office Apprentice 🥤",
   "Zaman Büken Sinefil ⏳": "Mind-Bending Cinephile ⏳",

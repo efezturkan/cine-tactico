@@ -1,4 +1,4 @@
-import { PRESET_BOARDS, getDailyBoardForDate } from "../data/boards";
+import { PRESET_BOARDS, getDailyBoardForDate, FEATURED_BOARD_IDS } from "../data/boards";
 import { findMatchingMovies } from "../core";
 import { FLAGS } from "../config/flags";
 import { isSupabaseConfigured } from "../backend/supabase/client";
@@ -31,6 +31,14 @@ for (let i = 0; i < 16; i++) {
   assert(board.boardMode !== "REVERSE_CAST", `Günün kadrası ${day} Ters Kadraj değil`);
 }
 assert(seen.size > 1, `Günün kadrası günler arasında değişir (${seen.size} farklı tahta)`);
+for (const id of FEATURED_BOARD_IDS) {
+  const b = PRESET_BOARDS.find(x => x.id === id);
+  assert(!!b, `Öne çıkan tahta mevcut: ${id}`);
+  if (b) {
+    const min = Math.min(...b.rows.flatMap(r => b.cols.map(c => findMatchingMovies(r, c).length)));
+    assert(min >= 3, `Öne çıkan tahta ${id} her hücrede ≥3 cevaplı`);
+  }
+}
 assert(PRESET_BOARDS.length > 0, "Hazır tahta havuzu boş değil");
 
 console.log(`\nV1 RELEASE RESULT: ${passed}/${passed + failed} PASSED`);

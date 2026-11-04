@@ -79,6 +79,8 @@ export const en: TranslationDictionary = {
     goldenReelUsed: "That film was already used this match.",
     botThinking: "Thinking...",
     botPickingPoster: "Picking a poster...",
+    hintReverse: "In this session, name the actor shared by both films.",
+    hintConcept: "In this session, find the film that fits the theme.",
     moreTitlesAvailable: "+{count} more titles",
     moreActorsAvailable: "+{count} more actors",
     validAlternativesTitle: "VALID ALTERNATIVES",

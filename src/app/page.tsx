@@ -128,7 +128,7 @@ function CineXoxApp() {
     dailyStreak: 0,
     streakProtected: false,
     favoriteGenre: "Sci-Fi",
-    favoriteDirector: "Christopher Nolan",
+    favoriteDirector: "",
     favoriteMode: "Klasik 3x3",
     lastFiveMatches: [],
     reelsBalance: 350,
@@ -181,6 +181,10 @@ function CineXoxApp() {
             ...parsedProfile,
           }));
         }
+      } else {
+        // İlk açılış: herkes aynı "#3095" adıyla başlamasın
+        const suffix = 1000 + Math.floor(Math.random() * 9000);
+        setProfile(prev => ({ ...prev, username: `Sinefil #${suffix}` }));
       }
 
       const saved = localStorage.getItem("cinexox_ambience") || localStorage.getItem("cinetactico_ambience");
@@ -942,13 +946,14 @@ function CineXoxApp() {
       <main className="min-h-[100dvh] bg-night flex flex-col items-center tab-fade-in">
         <GameSelectScreen
           onBack={() => setCurrentView("HOME")}
+          onStartMode={handleDirectStartMode}
+          onOpenDaily={handleOpenDailyFromHome}
           onSelectBoard={(boardIdx, selectedMode) => {
             const opp = getRandomOpponent(pendingOpponent.name);
             const randomized = createRandomizedBoard(PRESET_BOARDS[boardIdx]);
             setBoardIndex(boardIdx);
             setBoard(randomized);
             resetGame(randomized);
-            if (selectedMode === "PASS_AND_PLAY") return;
             setMode(selectedMode);
             setPendingBoardIndex(boardIdx);
             setPendingOpponent(opp);
