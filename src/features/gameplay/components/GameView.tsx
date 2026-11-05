@@ -194,7 +194,6 @@ export function GameView(props: GameViewProps) {
       className="h-[100dvh] min-h-[100dvh] text-[#E8E6E1] flex flex-col justify-between font-sans select-none antialiased transition-colors duration-500 relative overflow-hidden"
       style={{
         backgroundColor: "var(--salon-bg, #0B0D12)",
-        filter: `brightness(${Math.min(1.1, Math.max(0.65, safeGameDimness / 85))})`,
         ["--game-arena-size" as string]: "min(94vw, calc(100dvh - 120px), 640px)",
       }}
     >
@@ -205,26 +204,6 @@ export function GameView(props: GameViewProps) {
           onComplete={handleIntroComplete}
           onPhaseChange={setIntroPhase}
           isMuted={props.muted}
-        />
-      )}
-
-      {/* ── Layer 1: Ambient Projector Beam ─── */}
-      <div
-        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
-        style={{
-          background:
-            "radial-gradient(ellipse 75% 65% at 50% 12%, rgba(217, 164, 65, 0.08) 0%, rgba(217, 164, 65, 0.02) 48%, transparent 75%)",
-        }}
-      />
-
-      {/* ── Layer 2: 35mm Analog Film Grain Overlay ─── */}
-      {gameAmbience.grain && gameAmbience.grain !== "OFF" && (
-        <div
-          className="absolute inset-0 pointer-events-none z-10 mix-blend-screen transition-opacity duration-300"
-          style={{
-            opacity: gameAmbience.grain === "VINTAGE" ? 0.16 : 0.08,
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-          }}
         />
       )}
 

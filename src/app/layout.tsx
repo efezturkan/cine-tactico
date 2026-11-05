@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { SalonAtmosphere } from "@/components/SalonAtmosphere";
 
 export const metadata: Metadata = {
   title: "CINE-XOX | Kareyi Seç. Rakibini Oku.",
@@ -46,6 +47,7 @@ export default function RootLayout({
         style={{ backgroundColor: "#0B0D12", colorScheme: "dark" }}
       >
         {children}
+        <SalonAtmosphere />
       </body>
     </html>
   );

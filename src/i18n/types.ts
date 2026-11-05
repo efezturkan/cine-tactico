@@ -95,6 +95,23 @@ export interface TranslationDictionary {
     selectActor: string;
     noResults: string;
   };
+  salon: {
+    title: string;
+    sub: string;
+    preset: string;
+    dim: string;
+    dimHint: string;
+    projection: string;
+    projectionHint: string;
+    grain: string;
+    grainHint: string;
+    grainOff: string;
+    grainLight: string;
+    grainFilm: string;
+    reset: string;
+    cancel: string;
+    done: string;
+  };
   settings: {
     title: string;
     subtitle: string;

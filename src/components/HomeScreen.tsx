@@ -39,7 +39,6 @@ import { SettingsModal } from "./SettingsModal";
 import { SalonLightSheet } from "./SalonLightSheet";
 import { HowToPlayModal } from "./HowToPlayModal";
 import { OpeningLightLeak } from "./OpeningLightLeak";
-import { applySalonConfigToDom, getSavedSalonConfig } from "@/utils/salonConfig";
 import { useTranslation } from "@/i18n";
 
 export type ArenaModeKey = "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT";
@@ -198,11 +197,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     }
   }, [selectedMode]);
 
-  useEffect(() => {
-    // 8A. Salon ışığı yapılandırmasını DOM'a uygula
-    applySalonConfigToDom(getSavedSalonConfig());
-  }, []);
-
   const activeMode: ArenaModeKey = selectedMode || internalMode;
   const activeModeMeta =
     dynamicModes.find((m) => m.id === activeMode) || dynamicModes[0];
@@ -261,32 +255,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       >
         <SprocketStrip />
       </div>
-
-      {/* ── 35mm Film Grain Layer (Salon Işığı CSS Değişkeni ile) ─── */}
-      <div
-        className="absolute inset-0 pointer-events-none z-20 mix-blend-screen transition-opacity duration-300"
-        style={{
-          opacity: "var(--salon-grain-opacity, 0.028)",
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-        }}
-      />
-
-      {/* ── 8C. Statik Işık Huzmesi (Projeksiyon penceresinden Gişe'ye) ─── */}
-      {FLAGS.LIGHT_BEAM && (
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
-        >
-          <div
-            className="w-full h-full"
-            style={{
-              clipPath: "polygon(40% 0%, 60% 0%, 95% 100%, 5% 100%)",
-              background: "linear-gradient(to bottom, var(--salon-beam, #F2D9A0) 0%, transparent 80%)",
-              opacity: "var(--salon-beam-opacity, 0.09)",
-            }}
-          />
-        </div>
-      )}
 
       {/* ── Top Ambient Accent Line ─── */}
       <div
@@ -602,7 +570,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         onClose={() => setShowSettings(false)}
         muted={muted}
         onToggleMute={onToggleMute}
-        onOpenSalonLight={() => setShowSalonLight(true)}
+        onOpenSalonLight={() => {
+          // Ayar sürerken Gişe görünsün: Ayarlar kapanır, önizleme canlı kalır
+          setShowSettings(false);
+          setShowSalonLight(true);
+        }}
         onOpenHowToPlay={onOpenHowToPlay || (() => setShowHowToPlay(true))}
       />
 
