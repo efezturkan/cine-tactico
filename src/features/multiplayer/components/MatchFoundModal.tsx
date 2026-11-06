@@ -5,6 +5,9 @@ import { audio } from "@/utils/audio";
 import { Swords, Film } from "lucide-react";
 import { UserProfile, AVATAR_OPTIONS } from "@/types/profile";
 import { useTranslation } from "@/i18n";
+import { AvatarIcon } from "@/components/ui/AvatarIcon";
+import { BotOpponentProfile } from "@/data/boards";
+import { BotRecord } from "@/utils/botRecord";
 
 interface MatchFoundModalProps {
   isOpen: boolean;
@@ -12,7 +15,8 @@ interface MatchFoundModalProps {
   opponentName?: string;
   opponentAvatarId?: string;
   opponentLevel?: number;
-  opponentWinRate?: number;
+  opponent?: BotOpponentProfile;
+  record?: BotRecord;
   boardTitle?: string;
   onCountdownComplete: () => void;
 }
@@ -24,9 +28,11 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
   opponentAvatarId = "avatar_noir",
   opponentLevel = 7,
   boardTitle = "Auteur Savaşları",
+  opponent,
+  record,
   onCountdownComplete,
 }) => {
-  const { locale, tBoardTitle } = useTranslation();
+  const { dict, locale, tBoardTitle } = useTranslation();
   const isEn = locale === "en";
 
   const [countdown, setCountdown] = useState<number>(3);
@@ -97,7 +103,7 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
               <div
                 className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr ${userAvatar.iconBg} flex items-center justify-center text-3xl sm:text-4xl border border-[#D9A441]`}
               >
-                {userAvatar.emoji}
+                <AvatarIcon id={userAvatar.id} className="w-8 h-8 text-white/90" />
               </div>
               <span className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-lg bg-[#D9A441] text-[#0F1115] font-mono font-bold text-xs flex items-center justify-center border border-[#0F1115]">
                 X
@@ -126,7 +132,7 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
               <div
                 className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr ${opponentAvatar.iconBg} flex items-center justify-center text-3xl sm:text-4xl border border-white/20`}
               >
-                {opponentAvatar.emoji}
+                <AvatarIcon id={opponentAvatarId} className="w-8 h-8 text-white/90" />
               </div>
               <span className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-lg bg-white/20 text-[#F1EEE7] font-mono font-bold text-xs flex items-center justify-center border border-[#0F1115]">
                 O
@@ -139,10 +145,20 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
               {isEn ? "Cinephile Bot" : "Sinefil Botu"}
             </span>
             <span className="text-[9px] font-medium text-[#A5A8B0] font-mono">
-              {isEn ? `Level ${opponentLevel}` : `Seviye ${opponentLevel}`}
+              {opponent ? `${dict.opponent.rating} ${opponent.rating}` : isEn ? `Level ${opponentLevel}` : `Seviye ${opponentLevel}`}
             </span>
+            {record && record.w + record.l + record.d > 0 && (
+              <span className="text-[9px] font-medium text-[#8A8F9A] font-mono">
+                {dict.opponent.record} {record.w}{dict.opponent.wins} {record.l}{dict.opponent.losses}
+              </span>
+            )}
           </div>
         </div>
+        {opponent && (
+          <p className="text-[11px] italic text-[#A5A8B0] text-center mb-3 px-2 leading-snug">
+            “{isEn ? opponent.quote.en : opponent.quote.tr}”
+          </p>
+        )}
 
         {/* 3. GERİ SAYIM ÇEMBERİ (3... 2... 1...) */}
         <div className="relative w-16 h-16 rounded-full border-2 border-[#D9A441]/30 bg-[#181B22] flex items-center justify-center mb-2">

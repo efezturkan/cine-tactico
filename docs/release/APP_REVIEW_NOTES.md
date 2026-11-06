@@ -3,7 +3,7 @@
 **App Name:** Cine-XOX  
 **Bundle ID:** `com.cinetactico.game`  
 **Version:** 1.0.0 (Build 1)  
-**Platform:** iOS / iPadOS (Universal)  
+**Platform:** iPhone (iOS 15.0+), portrait  
 **Primary Category:** Games (Subcategories: Trivia / Strategy)  
 **Recommended Age Rating:** 4+ (All Questionnaire Items: "No" / "None" — factual film trivia only, no violence, no profanity, no gambling, no unrestricted web browser, no free-form user chat)
 
@@ -27,8 +27,8 @@ To help you experience the core game value in the shortest possible time, this g
 ### Instant Play vs Autonomous AI Bot (No Sign-Up Required)
 1. Launch **Cine-XOX**.
 2. The app operates immediately with a local/anonymous guest session. **No registration, email address, phone number, or password is required to play.**
-3. On the home lobby (**"Gişe"**), tap the primary gold button: **"DÜELLOYA GİR" / "ENTER DUEL"** (or select any mode card such as **"Klasik Düello" / "Classic Duel"**, **"Ters Köşe"**, or **"Konsept"**).
-4. You are immediately placed into a 3×3 match against the offline AI Cinephile Bot.
+3. On the home lobby (**"Gişe"**), tap the primary gold button: **"DÜELLOYA GİR" / "ENTER DUEL"** (or open the **"Vizyondakiler" / "Now Showing"** tab and pick a mode).
+4. A **"Rakibini Seç" / "Choose Your Opponent"** sheet lists three offline AI opponents (Easy, Medium, Hard) with rating and play style. Tap any one; the match starts after a short countdown. These are on-device bots, not other users.
 5. **How to play a move:**
    - Tap any unoccupied cell on the 3×3 board.
    - Each cell represents the intersection of a **Row criterion** (e.g., *Christopher Nolan*) and a **Column criterion** (e.g., *Sci-Fi* or *Leonardo DiCaprio*).

@@ -1,6 +1,25 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, Newsreader, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import { SalonAtmosphere } from "@/components/SalonAtmosphere";
+
+// Yazı tipleri derleme sırasında indirilip uygulamaya gömülür (çevrimdışı çalışır, çalışma anında ağ isteği yok).
+// latin-ext: Türkçe karakterler (ğ, ş, İ, ı) için gerekli.
+const fontSans = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-sans", display: "swap" });
+const fontSerif = Newsreader({
+  subsets: ["latin", "latin-ext"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+  display: "swap",
+  adjustFontFallback: false,
+});
+const fontDisplay = Barlow_Condensed({
+  subsets: ["latin", "latin-ext"],
+  weight: ["700", "800"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "CINE-XOX | Kareyi Seç. Rakibini Oku.",
@@ -33,15 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" style={{ backgroundColor: "#0B0D12", colorScheme: "dark" }}>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="tr" className={`${fontSans.variable} ${fontSerif.variable} ${fontDisplay.variable}`} style={{ backgroundColor: "#0B0D12", colorScheme: "dark" }}>
       <body
         className="bg-[#0B0D12] text-[#E8E6E1] antialiased min-h-screen"
         style={{ backgroundColor: "#0B0D12", colorScheme: "dark" }}

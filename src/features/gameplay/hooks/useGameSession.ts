@@ -12,12 +12,16 @@ import {
   findMatchingMovies,
   calculateCellRarity,
   validateActorIntersection,
-  evaluateBoardState,
-  evaluateReverseBoardState,
+  calculateActorRarity,
+  evaluateOutcome,
+  registerFailedAttempt,
+  hasPlayerTriedCell,
+  BoardOutcome,
+  AttemptsPerCell,
   resolveFotoFinish,
   calculateBotMove,
   getBotThinkingDelay,
-  getRandomThinkingPhrase,
+  BotSkill,
 } from "@/core";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
@@ -36,7 +40,8 @@ export function useGameSession(
   mode: GameMode = "VS_BOT",
   botDifficulty: BotDifficulty = "MEDIUM",
   shotClockLimit: number = 12, // 12s Blitz (Hile ve dış kaynak aramasını önleme standardı)
-  isActive: boolean = true
+  isActive: boolean = true,
+  botSkill?: Partial<BotSkill>
 ) {
   const { dict } = useTranslation();
   const [board, setBoard] = useState<GameBoard>(initialBoard);
@@ -51,7 +56,7 @@ export function useGameSession(
   const [scoreO, setScoreO] = useState<number>(0);
 
   // Deadlock Önleme: Her hücre için oyuncu deneme takibi
-  const [attemptsPerCell, setAttemptsPerCell] = useState<Record<number, { X: boolean; O: boolean }>>({});
+  const [attemptsPerCell, setAttemptsPerCell] = useState<AttemptsPerCell>({});
 
   // Rarity Puanları (Tie-break & Foto-finiş)
   const [scoreRarityX, setScoreRarityX] = useState<number>(0);
@@ -84,7 +89,10 @@ export function useGameSession(
   const clockCellRef = useRef<number | null>(null);
   const currentTurnRef = useRef<PlayerSymbol>("X");
   const cellsRef = useRef<(CellAnswer | null)[]>(Array(9).fill(null));
-  const recordFailedAttemptRef = useRef<(cellIndex: number, player: PlayerSymbol) => void>(() => {});
+  const attemptsRef = useRef<AttemptsPerCell>({});
+  const rarityRef = useRef<{ x: number; o: number }>({ x: 0, o: 0 });
+  const usedMovieIdsRef = useRef<string[]>([]);
+  const recordFailedAttemptRef = useRef<(cellIndex: number, player: PlayerSymbol) => boolean>(() => false);
   const setClockCell = useCallback((cellIndex: number | null) => {
     clockCellRef.current = cellIndex;
   }, []);
@@ -119,75 +127,53 @@ export function useGameSession(
     }
   }, []);
 
-  // Deadlock Kuralı: İki taraf da yanlış yaparsa hücre NEUTRAL olarak kilitlenir
-  const recordFailedAttempt = useCallback(
-    (cellIndex: number, player: PlayerSymbol) => {
-      setAttemptsPerCell(prev => {
-        const current = prev[cellIndex] || { X: false, O: false };
-        const updated = { ...current, [player]: true };
-
-        if (updated.X && updated.O) {
-          setCells(prevCells => {
-            if (prevCells[cellIndex] !== null) return prevCells;
-            const nextCells = [...prevCells];
-            nextCells[cellIndex] = {
-              movie: {
-                id: `neutral_locked_${cellIndex}`,
-                title: "Sahipsiz Hücre",
-                year: 0,
-                director: "Kilitli",
-                cast: [],
-                genres: [],
-                hasOscar: false,
-              },
-              answeredBy: "NEUTRAL",
-              isLockedNeutral: true,
-              timestamp: Date.now(),
-            };
-
-            // Hücre kilitlendiğinde tahta durumunu kontrol et
-            if (board.boardMode === "REVERSE_CAST") {
-              const revEval = evaluateReverseBoardState(nextCells, scoreRarityX, scoreRarityO);
-              if (revEval.winner !== null) {
-                if (revEval.winner === "DRAW" || revEval.winner === "GOLDEN_REEL") {
-                  setIsGoldenReelActive(true);
-                  setIsTimerActive(false);
-                } else {
-                  setWinner(revEval.winner);
-                  setIsTimerActive(false);
-                  handleVictoryEffects(revEval.winner);
-                }
-              }
-            } else {
-              const evalResult = evaluateBoardState(nextCells, true);
-              if (evalResult.winner !== null) {
-                if (evalResult.winner === "DRAW" || evalResult.winner === "GOLDEN_REEL") {
-                  setIsGoldenReelActive(true);
-                  setIsTimerActive(false);
-                } else {
-                  setWinner(evalResult.winner);
-                  setWinningLine(evalResult.line);
-                  setIsTimerActive(false);
-                  handleVictoryEffects(evalResult.winner);
-                }
-              }
-            }
-
-            return nextCells;
-          });
-        }
-
-        return { ...prev, [cellIndex]: updated };
-      });
+  // Tahta durumu değişince (hamle veya kilit) sonucu uygular. Maç bittiyse true döner.
+  const applyOutcome = useCallback(
+    (outcome: BoardOutcome): boolean => {
+      if (outcome.kind === "WIN") {
+        setWinner(outcome.winner);
+        setWinningLine(outcome.line);
+        setIsTimerActive(false);
+        handleVictoryEffects(outcome.winner);
+        return true;
+      }
+      if (outcome.kind === "GOLDEN_REEL") {
+        // ALTIN MAKARA (Sudden Death) tetiklenir
+        setIsGoldenReelActive(true);
+        setIsTimerActive(false);
+        audio.playPowerup();
+        return true;
+      }
+      return false;
     },
-    [board.boardMode, scoreRarityX, scoreRarityO, handleVictoryEffects]
+    [handleVictoryEffects]
+  );
+
+  const commitCells = useCallback((next: (CellAnswer | null)[]) => {
+    cellsRef.current = next;
+    setCells(next);
+  }, []);
+
+  // Deadlock Kuralı: yanlış cevap / süre aşımı hakkı yakar; iki taraf da yakarsa kare kilitlenir.
+  // Referanslar üzerinden saf çalışır (state güncelleyici içinde yan etki yok). Maç bittiyse true döner.
+  const recordFailedAttempt = useCallback(
+    (cellIndex: number, player: PlayerSymbol): boolean => {
+      const result = registerFailedAttempt(attemptsRef.current, cellsRef.current, cellIndex, player);
+      attemptsRef.current = result.attempts;
+      setAttemptsPerCell(result.attempts);
+      if (!result.locked) return false;
+      commitCells(result.cells);
+      return applyOutcome(
+        evaluateOutcome(board.boardMode, result.cells, rarityRef.current.x, rarityRef.current.o)
+      );
+    },
+    [board.boardMode, applyOutcome, commitCells]
   );
 
   useEffect(() => {
     currentTurnRef.current = currentTurn;
-    cellsRef.current = cells;
     recordFailedAttemptRef.current = recordFailedAttempt;
-  }, [currentTurn, cells, recordFailedAttempt]);
+  }, [currentTurn, recordFailedAttempt]);
 
   // Timer Tick Cycle (performance.now() tabanlı drift-free sayaç)
   useEffect(() => {
@@ -218,10 +204,18 @@ export function useGameSession(
         setComboStreak(0);
         const openCell = clockCellRef.current;
         clockCellRef.current = null;
-        if (openCell !== null && cellsRef.current[openCell] === null) {
-          recordFailedAttemptRef.current(openCell, currentTurnRef.current);
+        // Spec: süre aşımı 1 yanlış denemedir. Kare açık değilse hakkı kalan rastgele bir kare yanar;
+        // böylece AFK bir oyuncu maçı sonsuza uzatamaz (her süre aşımı bir hak tüketir).
+        const player = currentTurnRef.current;
+        let burn = openCell !== null && cellsRef.current[openCell] === null ? openCell : null;
+        if (burn === null) {
+          const candidates = cellsRef.current
+            .map((c, i) => (c === null && !hasPlayerTriedCell(attemptsRef.current, i, player) ? i : -1))
+            .filter(i => i >= 0);
+          if (candidates.length > 0) burn = candidates[Math.floor(Math.random() * candidates.length)];
         }
-        switchTurn();
+        const ended = burn !== null ? recordFailedAttemptRef.current(burn, player) : false;
+        if (!ended) switchTurn();
         return;
       }
 
@@ -245,243 +239,161 @@ export function useGameSession(
     };
   }, [isActive, isTimerActive, winner, isGoldenReelActive, shotClockLimit, switchTurn]);
 
-  // Execute Film Move (Klasik Düello ve Sinefil Konsept)
-  const submitMove = useCallback(
-    (cellIndex: number, movie: Movie, playerSymbol?: PlayerSymbol): MoveResult => {
-      if (winner !== null) return { success: false, message: dict.game.msgGameOver };
-
-      const activePlayer = playerSymbol || currentTurn;
-      const currentOccupant = cells[cellIndex];
-
-      // Hücre doluysa: Kare mühürlüdür, hamle yapılamaz
-      if (currentOccupant !== null) {
+  // Her iki hamle türünün ortak ön kontrolü: maç, hücre doluluğu ve tek-hak kuralı
+  const guardMove = useCallback(
+    (cellIndex: number, player: PlayerSymbol): MoveResult | null => {
+      if (winner !== null || isGoldenReelActive) return { success: false, message: dict.game.msgGameOver };
+      if (!Number.isInteger(cellIndex) || cellIndex < 0 || cellIndex > 8) {
         return { success: false, message: dict.game.msgCellTaken };
       }
-
-      if (usedMovieIds.includes(movie.id)) {
-        audio.playError();
-        haptic.error();
-        setComboStreak(0);
-        recordFailedAttempt(cellIndex, activePlayer);
-        switchTurn();
-        return {
-          success: false,
-          message: dict.game.msgMovieUsed,
-        };
+      if (cellsRef.current[cellIndex] !== null) return { success: false, message: dict.game.msgCellTaken };
+      if (hasPlayerTriedCell(attemptsRef.current, cellIndex, player)) {
+        return { success: false, message: dict.game.msgCellBurned };
       }
+      return null;
+    },
+    [winner, isGoldenReelActive, dict]
+  );
 
-      const rowCrit = board.rows[Math.floor(cellIndex / 3)];
-      const colCrit = board.cols[cellIndex % 3];
+  // Ortak: yanlış cevap sonrası sırayı rakibe geçir (maç bittiyse geçirme)
+  const failMove = useCallback(
+    (cellIndex: number, player: PlayerSymbol, message: string): MoveResult => {
+      audio.playError();
+      haptic.error();
+      setComboStreak(0);
+      const ended = recordFailedAttempt(cellIndex, player);
+      if (!ended) switchTurn();
+      return { success: false, message };
+    },
+    [recordFailedAttempt, switchTurn]
+  );
 
-      if (!validateMove(movie, rowCrit, colCrit)) {
-        audio.playError();
-        haptic.error();
-        setComboStreak(0);
-        recordFailedAttempt(cellIndex, activePlayer);
-        switchTurn();
-        return {
-          success: false,
-          message: dict.game.msgWrongMovie,
-        };
-      }
-
-      // Hamle geçerli: Hücre içi havuz üzerinden Rarity & Puan Hesaplaması
-      const newCombo = comboStreak + 1;
+  // Ortak: doğru cevap sonrası puan, hücre ve sonuç
+  const commitCorrectMove = useCallback(
+    (
+      cellIndex: number,
+      player: PlayerSymbol,
+      answer: CellAnswer,
+      rarityPoints: number,
+      points: number,
+      newCombo: number
+    ) => {
       setComboStreak(newCombo);
-
-      const rIdx = Math.floor(cellIndex / 3);
-      const cIdx = cellIndex % 3;
-      const validPool = findMatchingMovies(board.rows[rIdx], board.cols[cIdx]);
-      const rarity = calculateCellRarity(movie, validPool);
-
-      // Spec v3: Temel Puan (10) + Nadirlik Bonusu (0/2/5/8/12)
-      const points = rarity.totalPoints;
-      const updatedRarityX = activePlayer === "X" ? scoreRarityX + rarity.totalPoints : scoreRarityX;
-      const updatedRarityO = activePlayer === "O" ? scoreRarityO + rarity.totalPoints : scoreRarityO;
-
-      if (activePlayer === "X") {
-        setScoreRarityX(updatedRarityX);
-      } else {
-        setScoreRarityO(updatedRarityO);
-      }
-
+      rarityRef.current = {
+        x: player === "X" ? rarityRef.current.x + rarityPoints : rarityRef.current.x,
+        o: player === "O" ? rarityRef.current.o + rarityPoints : rarityRef.current.o,
+      };
+      setScoreRarityX(rarityRef.current.x);
+      setScoreRarityO(rarityRef.current.o);
       setLastEarnedPoints(points);
       setTotalArcadeScore(prev => prev + points);
 
       audio.playChessMove();
-      if (newCombo > 1) {
-        audio.playCombo(newCombo);
-      }
+      if (newCombo > 1) audio.playCombo(newCombo);
       haptic.medium();
 
-      const newCells = [...cells];
-      newCells[cellIndex] = {
-        movie,
-        answeredBy: activePlayer,
-        timestamp: Date.now(),
-        rarityTier: rarity.tier,
-        rarityScore: rarity.totalPoints,
-        pointsEarned: points,
-      };
-      setCells(newCells);
+      const next = [...cellsRef.current];
+      next[cellIndex] = answer;
+      commitCells(next);
 
-      setUsedMovieIds(prev => [...prev, movie.id]);
+      const ended = applyOutcome(evaluateOutcome(board.boardMode, next, rarityRef.current.x, rarityRef.current.o));
+      if (!ended) switchTurn();
+    },
+    [board.boardMode, applyOutcome, commitCells, switchTurn]
+  );
 
-      // Kazanan Analizi
-      if (board.boardMode === "REVERSE_CAST") {
-        const revEval = evaluateReverseBoardState(newCells, updatedRarityX, updatedRarityO);
-        if (revEval.winner !== null) {
-          setWinner(revEval.winner as PlayerSymbol);
-          setIsTimerActive(false);
-          handleVictoryEffects(revEval.winner as PlayerSymbol);
-        } else {
-          switchTurn();
-        }
-      } else {
-        const boardEvaluation = evaluateBoardState(newCells, true);
-        if (boardEvaluation.winner !== null) {
-          if (boardEvaluation.winner === "DRAW" || boardEvaluation.winner === "GOLDEN_REEL") {
-            // ALTIN MAKARA (Sudden Death) TETİKLENİR!
-            setIsGoldenReelActive(true);
-            setIsTimerActive(false);
-            audio.playPowerup();
-          } else {
-            setWinner(boardEvaluation.winner);
-            setWinningLine(boardEvaluation.line);
-            setIsTimerActive(false);
-            handleVictoryEffects(boardEvaluation.winner);
-          }
-        } else {
-          switchTurn();
-        }
+  // Execute Film Move (Klasik Düello ve Sinefil Konsept)
+  const submitMove = useCallback(
+    (cellIndex: number, movie: Movie, playerSymbol?: PlayerSymbol): MoveResult => {
+      const player = playerSymbol || currentTurnRef.current;
+      const blocked = guardMove(cellIndex, player);
+      if (blocked) return blocked;
+
+      if (usedMovieIdsRef.current.includes(movie.id)) {
+        return failMove(cellIndex, player, dict.game.msgMovieUsed);
       }
 
-      return {
-        success: true,
-        points,
-        combo: newCombo,
-      };
+      const rowCrit = board.rows[Math.floor(cellIndex / 3)];
+      const colCrit = board.cols[cellIndex % 3];
+      if (!validateMove(movie, rowCrit, colCrit)) {
+        return failMove(cellIndex, player, dict.game.msgWrongMovie);
+      }
+
+      // Hücre içi havuz üzerinden Rarity: Temel 10 + nadirlik bonusu (0/2/5/8/12)
+      const validPool = findMatchingMovies(rowCrit, colCrit);
+      const rarity = calculateCellRarity(movie, validPool);
+      const newCombo = comboStreak + 1;
+
+      usedMovieIdsRef.current = [...usedMovieIdsRef.current, movie.id];
+      setUsedMovieIds(usedMovieIdsRef.current);
+      commitCorrectMove(
+        cellIndex,
+        player,
+        {
+          movie,
+          answeredBy: player,
+          timestamp: Date.now(),
+          rarityTier: rarity.tier,
+          rarityScore: rarity.totalPoints,
+          pointsEarned: rarity.totalPoints,
+        },
+        rarity.totalPoints,
+        rarity.totalPoints,
+        newCombo
+      );
+      return { success: true, points: rarity.totalPoints, combo: newCombo };
     },
-    [
-      winner,
-      currentTurn,
-      cells,
-      usedMovieIds,
-      board.rows,
-      board.cols,
-      board.boardMode,
-      comboStreak,
-      recordFailedAttempt,
-      scoreRarityX,
-      scoreRarityO,
-      switchTurn,
-      handleVictoryEffects,
-      dict,
-    ]
+    [guardMove, failMove, commitCorrectMove, board.rows, board.cols, comboStreak, dict]
   );
 
   // Execute Actor Move (Ters Kadraj Modu)
   const submitActorMove = useCallback(
     (cellIndex: number, actorNameInput: string, playerSymbol?: PlayerSymbol): MoveResult => {
-      if (winner !== null) return { success: false, message: dict.game.msgGameOver };
-
-      const activePlayer = playerSymbol || currentTurn;
-      const currentOccupant = cells[cellIndex];
-      if (currentOccupant !== null) {
-        return { success: false, message: dict.game.msgCellTaken };
-      }
+      const player = playerSymbol || currentTurnRef.current;
+      const blocked = guardMove(cellIndex, player);
+      if (blocked) return blocked;
 
       const rowCrit = board.rows[Math.floor(cellIndex / 3)];
       const colCrit = board.cols[cellIndex % 3];
-
       const validation = validateActorIntersection(actorNameInput, rowCrit.value, colCrit.value);
       if (!validation.isValid || !validation.matchedActor) {
-        audio.playError();
-        haptic.error();
-        setComboStreak(0);
-        recordFailedAttempt(cellIndex, activePlayer);
-        switchTurn();
-        return {
-          success: false,
-          message: dict.game.msgWrongActor,
-        };
+        return failMove(cellIndex, player, dict.game.msgWrongActor);
       }
 
-      // Geçerli aktör!
       const matchedActor = validation.matchedActor;
+      const rarity = calculateActorRarity(matchedActor, rowCrit.value, colCrit.value);
       const newCombo = comboStreak + 1;
-      setComboStreak(newCombo);
-
-      const baseScore = 250;
+      // Arcade puanı: hız ve kombo ödüllendirilir (galibiyeti belirlemez, yalnızca skor)
       const timeBonus = Math.floor(secondsRemainingRef.current * 15);
-      const points = Math.round((baseScore + timeBonus) * (1 + (newCombo - 1) * 0.4));
-      const rarityBonus = 15;
+      const points = Math.round((250 + timeBonus) * (1 + (newCombo - 1) * 0.4));
 
-      const updatedRarityX = activePlayer === "X" ? scoreRarityX + rarityBonus : scoreRarityX;
-      const updatedRarityO = activePlayer === "O" ? scoreRarityO + rarityBonus : scoreRarityO;
-
-      if (activePlayer === "X") {
-        setScoreRarityX(updatedRarityX);
-      } else {
-        setScoreRarityO(updatedRarityO);
-      }
-
-      setLastEarnedPoints(points);
-      setTotalArcadeScore(prev => prev + points);
-
-      audio.playChessMove();
-      haptic.medium();
-
-      const newCells = [...cells];
-      newCells[cellIndex] = {
-        movie: {
-          id: `actor_${encodeURIComponent(matchedActor)}_${cellIndex}`,
-          title: matchedActor,
-          year: 0,
-          director: "Ortak Aktör",
-          cast: [matchedActor],
-          genres: [],
-          hasOscar: false,
+      commitCorrectMove(
+        cellIndex,
+        player,
+        {
+          movie: {
+            id: `actor_${encodeURIComponent(matchedActor)}_${cellIndex}`,
+            title: matchedActor,
+            year: 0,
+            director: "Ortak Aktör",
+            cast: [matchedActor],
+            genres: [],
+            hasOscar: false,
+          },
+          actorName: matchedActor,
+          answeredBy: player,
+          timestamp: Date.now(),
+          rarityTier: rarity.tier,
+          rarityScore: rarity.totalPoints,
+          pointsEarned: points,
         },
-        actorName: matchedActor,
-        answeredBy: activePlayer,
-        timestamp: Date.now(),
-        rarityTier: "RARE",
-        rarityScore: rarityBonus,
-        pointsEarned: points,
-      };
-      setCells(newCells);
-
-      // Ters Kadraj: En çok hücreyi kapatan kazanır (Altın Makara kullanılmaz)
-      const revEval = evaluateReverseBoardState(newCells, updatedRarityX, updatedRarityO);
-      if (revEval.winner !== null) {
-        setWinner(revEval.winner as PlayerSymbol);
-        setIsTimerActive(false);
-        handleVictoryEffects(revEval.winner as PlayerSymbol);
-      } else {
-        switchTurn();
-      }
-
-      return {
-        success: true,
+        rarity.totalPoints,
         points,
-        combo: newCombo,
-      };
+        newCombo
+      );
+      return { success: true, points, combo: newCombo };
     },
-    [
-      winner,
-      currentTurn,
-      cells,
-      board.rows,
-      board.cols,
-      comboStreak,
-      recordFailedAttempt,
-      scoreRarityX,
-      scoreRarityO,
-      switchTurn,
-      handleVictoryEffects,
-      dict,
-    ]
+    [guardMove, failMove, commitCorrectMove, board.rows, board.cols, comboStreak, dict]
   );
 
   // Altın Makara (Sudden Death) Cevap Çözümleme
@@ -509,6 +421,13 @@ export function useGameSession(
     handleVictoryEffects(finalWinner);
   }, [scoreRarityX, scoreRarityO, handleVictoryEffects]);
 
+  // Bot kararı verirken en güncel fonksiyonlara ihtiyaç duyar; efektin yeniden kurulup
+  // düşünme süresini sıfırlamaması için referanslardan okunur.
+  const moveActionsRef = useRef({ submitMove, submitActorMove, failMove });
+  useEffect(() => {
+    moveActionsRef.current = { submitMove, submitActorMove, failMove };
+  }, [submitMove, submitActorMove, failMove]);
+
   // BOT AI TURN AUTOMATION
   useEffect(() => {
     if (!isActive || mode !== "VS_BOT" || currentTurn !== "O" || winner !== null || isGoldenReelActive) {
@@ -521,7 +440,8 @@ export function useGameSession(
     }
 
     setIsBotThinking(true);
-    setBotStatusMessage(getRandomThinkingPhrase());
+    const phrases = dict.game.botPhrases;
+    setBotStatusMessage(phrases[Math.floor(Math.random() * phrases.length)] ?? dict.game.botThinking);
 
     const thinkingDelay = getBotThinkingDelay(botDifficulty);
 
@@ -536,17 +456,29 @@ export function useGameSession(
       botTimeoutRef.current = null;
       setIsBotThinking(false);
 
-      const decision = calculateBotMove(board, cells, usedMovieIds, botDifficulty, "O");
+      const decision = calculateBotMove(
+        board,
+        cellsRef.current,
+        usedMovieIdsRef.current,
+        botDifficulty,
+        "O",
+        attemptsRef.current,
+        botSkill
+      );
+      const actions = moveActionsRef.current;
 
-      if (decision) {
-        if (decision.actorName) {
-          submitActorMove(decision.cellIndex, decision.actorName, "O");
-        } else if (decision.movie) {
-          submitMove(decision.cellIndex, decision.movie, "O");
-        } else {
-          audio.playError();
-          switchTurn();
-        }
+      if (!decision) {
+        // Oynayabileceği kare kalmadı: sıra rakibe geçer
+        audio.playError();
+        switchTurn();
+      } else if (decision.miss) {
+        // Bot doğru cevabı hatırlayamadı: hakkı yanar (insan oyuncuyla aynı kural)
+        setBotStatusMessage(dict.game.botMissed);
+        actions.failMove(decision.cellIndex, "O", dict.game.botMissed);
+      } else if (decision.actorName) {
+        actions.submitActorMove(decision.cellIndex, decision.actorName, "O");
+      } else if (decision.movie) {
+        actions.submitMove(decision.cellIndex, decision.movie, "O");
       } else {
         audio.playError();
         switchTurn();
@@ -560,20 +492,18 @@ export function useGameSession(
         botTimeoutRef.current = null;
       }
     };
-  }, [
-    isActive,
-    mode,
-    currentTurn,
-    winner,
-    isGoldenReelActive,
-    board,
-    cells,
-    usedMovieIds,
-    botDifficulty,
-    submitMove,
-    submitActorMove,
-    switchTurn,
-  ]);
+  }, [isActive, mode, currentTurn, winner, isGoldenReelActive, board, botDifficulty, botSkill, dict, switchTurn]);
+
+  // Sıradaki oyuncunun açık karelerin hepsinde hakkı bittiyse 12 sn boşuna beklenmez, sıra geçer.
+  useEffect(() => {
+    if (!isActive || winner !== null || isGoldenReelActive) return;
+    if (mode === "VS_BOT" && currentTurn === "O") return; // bot kendi akışında karar verir
+    const open = cells.map((c, i) => (c === null ? i : -1)).filter(i => i >= 0);
+    if (open.length > 0 && open.every(i => hasPlayerTriedCell(attemptsPerCell, i, currentTurn))) {
+      const t = setTimeout(() => switchTurn(), 700);
+      return () => clearTimeout(t);
+    }
+  }, [isActive, winner, isGoldenReelActive, mode, currentTurn, cells, attemptsPerCell, switchTurn]);
 
   const resetGame = useCallback(
     (newBoard?: GameBoard) => {
@@ -582,6 +512,10 @@ export function useGameSession(
         botTimeoutRef.current = null;
       }
       if (newBoard) setBoard(newBoard);
+      cellsRef.current = Array(9).fill(null);
+      attemptsRef.current = {};
+      rarityRef.current = { x: 0, o: 0 };
+      usedMovieIdsRef.current = [];
       setCells(Array(9).fill(null));
       setCurrentTurn("X");
       setWinner(null);

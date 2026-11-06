@@ -63,6 +63,7 @@ const config: Config = {
       },
       fontFamily: {
         display: [
+          "var(--font-display)",
           "'Barlow Condensed'",
           "ui-sans-serif",
           "system-ui",
@@ -72,6 +73,7 @@ const config: Config = {
           "sans-serif",
         ],
         sans: [
+          "var(--font-sans)",
           "'Inter'",
           "system-ui",
           "-apple-system",
@@ -81,6 +83,7 @@ const config: Config = {
           "sans-serif",
         ],
         serif: [
+          "var(--font-serif)",
           "'Newsreader'",
           "Georgia",
           "Cambria",

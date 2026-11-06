@@ -146,7 +146,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
           {iconElement}
         </div>
         {areRowColDifferent && (
-          <span className="text-[5.5px] sm:text-[7px] md:text-[8px] uppercase tracking-wider text-[#8A8F9A] font-sans font-medium mb-0.5 truncate max-w-full leading-none">
+          <span className="text-[8px] sm:text-[9px] uppercase tracking-wide text-[#8A8F9A] font-sans font-medium mb-0.5 truncate max-w-full leading-none">
             {badgeLabel}
           </span>
         )}

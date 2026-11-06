@@ -245,12 +245,12 @@ export function validateActorIntersection(
     return { isValid: true, matchedActor: exactMatch };
   }
 
-  // 2. AŞAMA: Parça / İsim içeren eşleşme (örn: "DiCaprio" veya "Leonardo")
-  const containsMatches = shared.filter(actor => {
-    const norm = normalizeCinemaString(actor);
-    const tokens = norm.split(" ");
-    return tokens.includes(normalizedInput) || norm.includes(normalizedInput);
-  });
+  // 2. AŞAMA: Tam bir ad parçası (örn: "DiCaprio" veya "Leonardo"), en az 3 harf.
+  // Rastgele harf dizileri ("an", "ci") KABUL EDİLMEZ; yalnızca ismin bütün bir sözcüğü.
+  const containsMatches =
+    normalizedInput.length >= 3
+      ? shared.filter(actor => normalizeCinemaString(actor).split(" ").includes(normalizedInput))
+      : [];
 
   if (containsMatches.length === 1) {
     return { isValid: true, matchedActor: containsMatches[0] };
@@ -289,6 +289,66 @@ export function getSharedActors(
   if (!mA || !mB || !mA.cast || !mB.cast) return [];
   const castBSet = new Set(mB.cast.map(a => normalizeName(a)));
   return mA.cast.filter(actor => castBSet.has(normalizeName(actor)));
+}
+
+function resolveMovie(m: Movie | string, database: Movie[]): Movie | undefined {
+  return typeof m === "string"
+    ? database.find(x => x.title.toLowerCase() === m.toLowerCase() || x.id === m)
+    : m;
+}
+
+/**
+ * İki filmin ortak oyuncuları, "ne kadar tanınır" sırasıyla (başta oynayan = daha tanınır).
+ * avgIndex: oyuncunun iki filmdeki ortalama kadro sırası (0 = baş rol).
+ */
+export function getSharedActorsRanked(
+  movieA: Movie | string,
+  movieB: Movie | string,
+  database: Movie[] = MOVIES_DATABASE
+): { actor: string; avgIndex: number }[] {
+  const mA = resolveMovie(movieA, database);
+  const mB = resolveMovie(movieB, database);
+  if (!mA || !mB || !mA.cast || !mB.cast) return [];
+  const idxB = new Map(mB.cast.map((a, i) => [normalizeName(a), i] as const));
+  return mA.cast
+    .map((actor, i) => {
+      const j = idxB.get(normalizeName(actor));
+      return j === undefined ? null : { actor, avgIndex: (i + j) / 2 };
+    })
+    .filter((x): x is { actor: string; avgIndex: number } => x !== null)
+    .sort((a, b) => a.avgIndex - b.avgIndex);
+}
+
+/** Ters Kadraj cevabı için tanınırlık (0-1): baş rol ≈ 1, kadronun ucundaki oyuncu düşük. */
+export function actorFame(avgIndex: number): number {
+  return 1 / (1 + 0.3 * avgIndex);
+}
+
+/**
+ * TERS KADRAJ RARITY: hücre havuzundaki (ortak oyuncular) tanınırlık sırasına göre,
+ * film modundaki aynı tablo ve aynı anti-inflation kuralıyla (N<3 ise tavan Rare).
+ */
+export function calculateActorRarity(
+  actor: string,
+  movieA: Movie | string,
+  movieB: Movie | string,
+  database: Movie[] = MOVIES_DATABASE
+): { tier: RarityTier; bonus: number; totalPoints: number } {
+  const ranked = getSharedActorsRanked(movieA, movieB, database);
+  const total = ranked.length;
+  const rank = ranked.findIndex(r => normalizeName(r.actor) === normalizeName(actor));
+  let tier: RarityTier = "COMMON";
+  if (total < 3) {
+    tier = "RARE";
+  } else {
+    const percentile = ((rank >= 0 ? rank : Math.floor(total / 2)) / total) * 100;
+    if (percentile >= 90) tier = "LEGENDARY";
+    else if (percentile >= 75) tier = "EPIC";
+    else if (percentile >= 50) tier = "RARE";
+    else if (percentile >= 25) tier = "UNCOMMON";
+  }
+  const meta = RARITY_TIERS[tier];
+  return { tier, bonus: meta.bonus, totalPoints: BASE_CELL_POINTS + meta.bonus };
 }
 
 export function findMatchingMovies(

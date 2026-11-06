@@ -21,6 +21,16 @@ export const BOARD_TITLES_EN: Record<string, string> = {
 };
 
 export const CRITERIA_LABELS_EN: Record<string, string> = {
+  "2000'ler": "2000s",
+  "80'ler ve Öncesi": "1980s & Earlier",
+  "90'lar": "1990s",
+  "Fantastik": "Fantasy",
+  "Gerilim": "Thriller",
+  "Gizem": "Mystery",
+  "Komedi": "Comedy",
+  "Korku": "Horror",
+  "Macera": "Adventure",
+  "Romantik": "Romance",
   "2010 Sonrası": "Post-2010",
   "90'lar Başyapıtı": "90s Masterpiece",
   "Aksiyon": "Action",

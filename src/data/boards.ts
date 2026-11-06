@@ -1,112 +1,75 @@
-import { GameBoard, BotDifficulty } from "@/core";
+import { GameBoard, BotDifficulty, BotSkill, BOT_SKILLS } from "@/core";
 import { findMatchingMovies } from "@/core";
 import { calculateBoardValidCounts, ensureBoardValidCounts } from "@/core/engine/board-generator";
+import { generateSolvableBoard } from "./generatedBoards";
 
 export { ensureBoardValidCounts };
+
+export type BotStyle = "CAUTIOUS" | "BALANCED" | "AGGRESSIVE" | "CULT";
 
 export interface BotOpponentProfile {
   name: string;
   rankTitle: string;
   level: number;
   avatarId: string;
-  winRate: number;
   difficulty: BotDifficulty;
+  /** Ekranda gösterilen rating (Elo benzeri). bot-calibration testi ölçülen güç farklarına kilitler. */
+  rating: number;
+  /** Oyun stili: botun taktik karakteri */
+  style: BotStyle;
+  /** Rakibin repliği (eşleşme ekranında gösterilir) */
+  quote: { tr: string; en: string };
+}
+
+/** Stil, zorluk seviyesinin becerisini küçük ve hissedilir şekilde kaydırır. */
+export const BOT_STYLE_SKILL: Record<BotStyle, Partial<BotSkill>> = {
+  BALANCED: {},
+  CAUTIOUS: { defend: 0.1, attack: -0.05 },
+  AGGRESSIVE: { attack: 0.1, defend: -0.1 },
+  CULT: { cult: 0.15, recall: -0.05 },
+};
+
+export function getBotSkillForProfile(bot: BotOpponentProfile): BotSkill {
+  const base = BOT_SKILLS[bot.difficulty];
+  const m = BOT_STYLE_SKILL[bot.style];
+  const clamp = (n: number) => Math.max(0, Math.min(1, n));
+  return {
+    recall: clamp(base.recall + (m.recall ?? 0)),
+    cult: clamp(base.cult + (m.cult ?? 0)),
+    attack: clamp(base.attack + (m.attack ?? 0)),
+    defend: clamp(base.defend + (m.defend ?? 0)),
+    informed: base.informed,
+  };
 }
 
 export const BOT_OPPONENTS: BotOpponentProfile[] = [
-  // ACEMİ BOTLAR (EASY - Level 1-3)
-  {
-    name: "PatlamisMisirci",
-    rankTitle: "Bilet Kontrolörü 🍿",
-    level: 2,
-    avatarId: "avatar_actor",
-    winRate: 42,
-    difficulty: "EASY",
-  },
-  {
-    name: "SeansGezgini",
-    rankTitle: "Hafta Sonu Seyircisi 🎟️",
-    level: 3,
-    avatarId: "avatar_noir",
-    winRate: 46,
-    difficulty: "EASY",
-  },
-  {
-    name: "PopcornCanavari",
-    rankTitle: "Gişe Çırağı 🥤",
-    level: 1,
-    avatarId: "avatar_scifi",
-    winRate: 38,
-    difficulty: "EASY",
-  },
+  // KOLAY: gişede biletçi seviyesi, popüler filmleri bilir, hata yapar
+  { name: "PatlamisMisirci", rankTitle: "Bilet Kontrolörü 🍿", level: 2, avatarId: "avatar_actor", difficulty: "EASY", rating: 850, style: "BALANCED",
+    quote: { tr: "Mısırım hazır, filmi sen söyle.", en: "Popcorn's ready. You name the film." } },
+  { name: "SeansGezgini", rankTitle: "Hafta Sonu Seyircisi 🎟️", level: 3, avatarId: "avatar_noir", difficulty: "EASY", rating: 920, style: "CAUTIOUS",
+    quote: { tr: "Her seansa giderim ama hepsini hatırlamam.", en: "I catch every screening, remember few." } },
+  { name: "PopcornCanavari", rankTitle: "Gişe Çırağı 🥤", level: 1, avatarId: "avatar_scifi", difficulty: "EASY", rating: 760, style: "AGGRESSIVE",
+    quote: { tr: "Önce hamle, sonra düşünürüm!", en: "Move first, think later!" } },
 
-  // MERAKLI SİNEFİLLER (MEDIUM - Level 4-7)
-  {
-    name: "NolanZihni",
-    rankTitle: "Zaman Büken Sinefil ⏳",
-    level: 6,
-    avatarId: "avatar_director",
-    winRate: 65,
-    difficulty: "MEDIUM",
-  },
-  {
-    name: "OscarAvcisi",
-    rankTitle: "Akademi Tahmincisi 🏆",
-    level: 5,
-    avatarId: "avatar_critics",
-    winRate: 58,
-    difficulty: "MEDIUM",
-  },
-  {
-    name: "DuneSeyyahi",
-    rankTitle: "Arrakis Bilgesi 🌌",
-    level: 7,
-    avatarId: "avatar_scifi",
-    winRate: 69,
-    difficulty: "MEDIUM",
-  },
-  {
-    name: "FincherDedektif",
-    rankTitle: "Karanlık Zihinler Dedektifi 🕵️",
-    level: 6,
-    avatarId: "avatar_noir",
-    winRate: 63,
-    difficulty: "MEDIUM",
-  },
+  // ORTA: meraklı sinefil, hattı kurar ve kapatır
+  { name: "NolanZihni", rankTitle: "Zaman Büken Sinefil ⏳", level: 6, avatarId: "avatar_director", difficulty: "MEDIUM", rating: 1110, style: "BALANCED",
+    quote: { tr: "Zaman bende, sıra sende.", en: "I have the time. Your move." } },
+  { name: "OscarAvcisi", rankTitle: "Akademi Tahmincisi 🏆", level: 5, avatarId: "avatar_critics", difficulty: "MEDIUM", rating: 1080, style: "AGGRESSIVE",
+    quote: { tr: "Heykelcikler peşimde, ben hattın.", en: "Statuettes chase me. I chase lines." } },
+  { name: "DuneSeyyahi", rankTitle: "Arrakis Bilgesi 🌌", level: 7, avatarId: "avatar_scifi", difficulty: "MEDIUM", rating: 1150, style: "CULT",
+    quote: { tr: "Bilmediğin filmleri bilirim.", en: "I know the films you don't." } },
+  { name: "FincherDedektif", rankTitle: "Karanlık Zihinler Dedektifi 🕵️", level: 6, avatarId: "avatar_noir", difficulty: "MEDIUM", rating: 1090, style: "CAUTIOUS",
+    quote: { tr: "Her kareyi iki kez kontrol ederim.", en: "I check every frame twice." } },
 
-  // USTA SİNEFİLLER (HARD - Level 8-10)
-  {
-    name: "TarantinoKult",
-    rankTitle: "Altın Palmiye Gurusu 🎬",
-    level: 9,
-    avatarId: "avatar_director",
-    winRate: 85,
-    difficulty: "HARD",
-  },
-  {
-    name: "LetterboxdEfsanesi",
-    rankTitle: "5 Yıldız Koleksiyoneri ⭐",
-    level: 10,
-    avatarId: "avatar_critics",
-    winRate: 92,
-    difficulty: "HARD",
-  },
-  {
-    name: "ScorseseAilesi",
-    rankTitle: "Sinema Tarihçisi 🍷",
-    level: 8,
-    avatarId: "avatar_noir",
-    winRate: 78,
-    difficulty: "HARD",
-  },
-  {
-    name: "KubrickBakisli",
-    rankTitle: "Auteur Başyapıt Uykusuzu 👁️",
-    level: 10,
-    avatarId: "avatar_director",
-    winRate: 90,
-    difficulty: "HARD",
-  },
+  // ZOR: sinema tarihçisi, kült cevaplara hâkim, hata affetmez
+  { name: "TarantinoKult", rankTitle: "Altın Palmiye Gurusu 🎬", level: 9, avatarId: "avatar_director", difficulty: "HARD", rating: 1340, style: "CULT",
+    quote: { tr: "Video kasetçide çalıştım, hepsini izledim.", en: "I worked a video store. I've seen them all." } },
+  { name: "LetterboxdEfsanesi", rankTitle: "5 Yıldız Koleksiyoneri ⭐", level: 10, avatarId: "avatar_critics", difficulty: "HARD", rating: 1390, style: "BALANCED",
+    quote: { tr: "Günlüğümde senin cevabın zaten var.", en: "Your answer is already in my diary." } },
+  { name: "ScorseseAilesi", rankTitle: "Sinema Tarihçisi 🍷", level: 8, avatarId: "avatar_noir", difficulty: "HARD", rating: 1290, style: "AGGRESSIVE",
+    quote: { tr: "Hattı kurduğunda iş işten geçmiş olur.", en: "By the time you line up, it's over." } },
+  { name: "KubrickBakisli", rankTitle: "Auteur Başyapıt Uykusuzu 👁️", level: 10, avatarId: "avatar_director", difficulty: "HARD", rating: 1360, style: "CAUTIOUS",
+    quote: { tr: "Mükemmel kadraj için kırk çekim yaparım.", en: "Forty takes for the perfect frame." } },
 ];
 
 export function getRandomOpponent(
@@ -1037,10 +1000,15 @@ export function getBoardForMode(
       .filter(item => sinefilIds.includes(item.b.id) || item.b.boardMode === "CINE_CONCEPT")
       .map(item => item.idx);
   } else {
-    // CLASSIC
-    matchingIndices = PRESET_BOARDS.map((b, idx) => ({ b, idx }))
-      .filter(item => item.b.boardMode === "CLASSIC" || !item.b.boardMode)
-      .map(item => item.idx);
+    // CLASSIC: çoğunlukla katalogdan üretilen, her hücresi ≥3 cevaplı taze tahta; ara sıra elle seçilmiş tahta
+    if (Math.random() < 0.75) {
+      const generated = generateSolvableBoard(Math.floor(Math.random() * 1_000_000_000));
+      if (generated) {
+        const anchor = PRESET_BOARDS.findIndex(b => b.id === "board_daily_today");
+        return { board: generated, index: anchor === -1 ? 0 : anchor };
+      }
+    }
+    matchingIndices = getSolvableClassicIndices();
   }
 
   if (matchingIndices.length === 0) {
@@ -1078,6 +1046,20 @@ export function getRandomBoard(excludeIndex?: number): { board: GameBoard; index
  */
 const DAILY_MIN_ANSWERS = 3;
 let dailyPoolCache: number[] | null = null;
+let solvableClassicCache: number[] | null = null;
+
+/** Elle seçilmiş Klasik/Sinefil tahtalardan her hücresi ≥3 cevaplı olanlar (zayıf tahtalar rastgele havuza girmez). */
+function getSolvableClassicIndices(): number[] {
+  if (solvableClassicCache) return solvableClassicCache;
+  const idx: number[] = [];
+  PRESET_BOARDS.forEach((b, i) => {
+    if (b.boardMode === "REVERSE_CAST" || b.boardMode === "CINE_CONCEPT") return;
+    const ok = b.rows.every(r => b.cols.every(c => findMatchingMovies(r, c).length >= DAILY_MIN_ANSWERS));
+    if (ok) idx.push(i);
+  });
+  solvableClassicCache = idx.length > 0 ? idx : PRESET_BOARDS.map((_, i) => i);
+  return solvableClassicCache;
+}
 
 function getDailyPoolIndices(): number[] {
   if (dailyPoolCache) return dailyPoolCache;
@@ -1096,8 +1078,17 @@ function getDailyPoolIndices(): number[] {
 }
 
 export function getDailyBoardForDate(dateKey: string): { board: GameBoard; index: number } {
+  const parsed = Date.parse(`${dateKey}T00:00:00Z`);
+  // Bozuk tarih anahtarı çökertmez: ilk güne düşer
+  const dayNumber = Number.isFinite(parsed) ? Math.floor(parsed / 86_400_000) : 0;
+  const anchor = PRESET_BOARDS.findIndex(b => b.id === "board_daily_today");
+
+  // Her UTC günü için dünya genelinde aynı, katalogdan üretilmiş ve doğrulanmış tahta
+  const generated = generateSolvableBoard(dayNumber, { minAnswers: DAILY_MIN_ANSWERS, difficulty: "MEDIUM" });
+  if (generated) return { board: { ...generated, id: `daily_${dateKey}` }, index: anchor === -1 ? 0 : anchor };
+
+  // Üretim başarısız olursa (beklenmez): elle seçilmiş güvenli havuzdan döndür
   const pool = getDailyPoolIndices();
-  const dayNumber = Math.floor(Date.parse(`${dateKey}T00:00:00Z`) / 86_400_000);
   const index = pool[((dayNumber % pool.length) + pool.length) % pool.length];
   return { board: PRESET_BOARDS[index], index };
 }

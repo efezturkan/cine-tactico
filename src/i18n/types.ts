@@ -81,6 +81,9 @@ export interface TranslationDictionary {
     botPickingPoster: string;
     hintReverse: string;
     hintConcept: string;
+    msgCellBurned: string;
+    botMissed: string;
+    botPhrases: string[];
     moreTitlesAvailable: string;
     moreActorsAvailable: string;
     validAlternativesTitle: string;
@@ -94,6 +97,25 @@ export interface TranslationDictionary {
     selectMovie: string;
     selectActor: string;
     noResults: string;
+  };
+  opponent: {
+    title: string;
+    sub: string;
+    easy: string;
+    medium: string;
+    hard: string;
+    rating: string;
+    styleCautious: string;
+    styleBalanced: string;
+    styleAggressive: string;
+    styleCult: string;
+    firstMeeting: string;
+    record: string;
+    wins: string;
+    losses: string;
+    draws: string;
+    play: string;
+    cancel: string;
   };
   salon: {
     title: string;

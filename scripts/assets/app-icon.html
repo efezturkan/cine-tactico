@@ -1,0 +1,54 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>html,body{margin:0;padding:0;background:#0B0D12;width:1024px;height:1024px;overflow:hidden}</style></head>
+<body>
+<!-- CINE·XOX uygulama ikonu: tam kenarlı kare, alfa yok (App Store şartı). iOS köşeleri kendisi yuvarlar. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="38%" r="70%">
+      <stop offset="0%" stop-color="#D9A441" stop-opacity="0.22"/>
+      <stop offset="60%" stop-color="#D9A441" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#0B0D12" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F2D9A0" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#F2D9A0" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="#0B0D12"/>
+  <rect width="1024" height="1024" fill="url(#glow)"/>
+  <!-- projeksiyon huzması -->
+  <polygon points="400,0 624,0 900,1024 124,1024" fill="url(#beam)"/>
+  <!-- 35mm delikleri -->
+  <g fill="#0B0D12" stroke="#2A2F3A" stroke-width="3" opacity="0.9">
+    <rect x="34" y="60" width="26" height="40" rx="7"/><rect x="34" y="190" width="26" height="40" rx="7"/>
+    <rect x="34" y="320" width="26" height="40" rx="7"/><rect x="34" y="450" width="26" height="40" rx="7"/>
+    <rect x="34" y="580" width="26" height="40" rx="7"/><rect x="34" y="710" width="26" height="40" rx="7"/>
+    <rect x="34" y="840" width="26" height="40" rx="7"/><rect x="34" y="970" width="26" height="40" rx="7"/>
+    <rect x="964" y="60" width="26" height="40" rx="7"/><rect x="964" y="190" width="26" height="40" rx="7"/>
+    <rect x="964" y="320" width="26" height="40" rx="7"/><rect x="964" y="450" width="26" height="40" rx="7"/>
+    <rect x="964" y="580" width="26" height="40" rx="7"/><rect x="964" y="710" width="26" height="40" rx="7"/>
+    <rect x="964" y="840" width="26" height="40" rx="7"/><rect x="964" y="970" width="26" height="40" rx="7"/>
+  </g>
+  <!-- 3x3 tahta: hücre 212, boşluk 28, başlangıç 142 -->
+  <g>
+    <g fill="#14171D" stroke="#2A2F3A" stroke-width="4">
+      <rect x="142" y="142" width="212" height="212" rx="34"/><rect x="406" y="142" width="212" height="212" rx="34"/><rect x="670" y="142" width="212" height="212" rx="34"/>
+      <rect x="142" y="406" width="212" height="212" rx="34"/><rect x="406" y="406" width="212" height="212" rx="34"/><rect x="670" y="406" width="212" height="212" rx="34"/>
+      <rect x="142" y="670" width="212" height="212" rx="34"/><rect x="406" y="670" width="212" height="212" rx="34"/><rect x="670" y="670" width="212" height="212" rx="34"/>
+    </g>
+    <!-- kazanan çapraz hat: üç altın X -->
+    <g stroke="#D9A441" stroke-width="30" stroke-linecap="round" fill="none">
+      <path d="M200 200 L296 296 M296 200 L200 296"/>
+      <path d="M464 464 L560 560 M560 464 L464 560"/>
+      <path d="M728 728 L824 824 M824 728 L728 824"/>
+    </g>
+    <!-- rakip: iki fildişi O -->
+    <g stroke="#F1EEE7" stroke-width="26" fill="none" opacity="0.92">
+      <circle cx="776" cy="248" r="52"/>
+      <circle cx="248" cy="776" r="52"/>
+    </g>
+    <!-- kazanan hat çizgisi -->
+    <line x1="170" y1="170" x2="854" y2="854" stroke="#F2D9A0" stroke-width="10" stroke-linecap="round" opacity="0.55"/>
+  </g>
+</svg>
+</body></html>

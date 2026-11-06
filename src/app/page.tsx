@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { HomeScreen, GameSelectScreen, ErrorBoundary, GlobalModals } from "@/components";
 import { BottomNav } from "@/components/ui/BottomNav";
 import { GameView, useGameSession } from "@/features/gameplay";
@@ -23,6 +23,7 @@ import {
   BOT_OPPONENTS,
   getBoardForMode,
   getDailyBoardForDate,
+  getBotSkillForProfile,
 } from "@/data/boards";
 import {
   GameMode,
@@ -40,6 +41,7 @@ import {
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { hasSeenGuide } from "@/utils/guideStorage";
+import { readBotRecords, recordBotResult, BotRecordBook } from "@/utils/botRecord";
 import { getGlobalDailyDateKey } from "@/utils/dateUtils";
 import { LanguageProvider, useTranslation } from "@/i18n";
 
@@ -108,6 +110,18 @@ function CineXoxApp() {
   const [pendingBoardIndex, setPendingBoardIndex] = useState<number>(0);
   const [pendingOpponent, setPendingOpponent] = useState<BotOpponentProfile>(() => BOT_OPPONENTS[0]);
   const hasRecordedMatchRef = useRef<boolean>(false);
+
+  // Rakip seçimi: seçilen bot, maç kurulana kadar referansta tutulur
+  type PickerTarget =
+    | { kind: "MODE"; mode: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL" }
+    | { kind: "BOARD"; boardIndex: number };
+  const [pickerTarget, setPickerTarget] = useState<PickerTarget | null>(null);
+  const chosenBotRef = useRef<BotOpponentProfile | null>(null);
+  const [botRecords, setBotRecords] = useState<BotRecordBook>({});
+  useEffect(() => {
+    setBotRecords(readBotRecords());
+  }, []);
+  const botSkill = useMemo(() => getBotSkillForProfile(pendingOpponent), [pendingOpponent]);
 
   // Kullanıcı Profili
   const [profile, setProfile] = useState<UserProfile>({
@@ -258,7 +272,8 @@ function CineXoxApp() {
     mode,
     botDifficulty,
     customShotClock,
-    currentView === "GAME" && !showMatchFound && !isGameIntroActive
+    currentView === "GAME" && !showMatchFound && !isGameIntroActive,
+    botSkill
   );
 
   useEffect(() => {
@@ -333,6 +348,10 @@ function CineXoxApp() {
 
     if (hasRecordedMatchRef.current) return;
     hasRecordedMatchRef.current = true;
+
+    if (mode === "VS_BOT") {
+      setBotRecords(recordBotResult(pendingOpponent.name, winner === "X" ? "W" : winner === "O" ? "L" : "D"));
+    }
 
     setProfile(prev => {
       const isWin = winner === "X";
@@ -485,7 +504,7 @@ function CineXoxApp() {
       return;
     }
     const { board: nextBoard, index: nextIdx } = getBoardForMode(queueMode, boardIndex);
-    const opp = getRandomOpponent(botDifficulty, pendingOpponent.name);
+    const opp = pendingOpponent; // rövanş: aynı rakip, aranızdaki skor sürer
     setBoardIndex(nextIdx);
     setPendingBoardIndex(nextIdx);
     setPendingOpponent(opp);
@@ -674,37 +693,56 @@ function CineXoxApp() {
     setMuted(isMuted);
   };
 
+  const resolvePickerMode = (categoryOrMode: string): "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL" =>
+    categoryOrMode === "REVERSE_CAST" || categoryOrMode === "CINE_CONCEPT" || categoryOrMode === "SINEFIL"
+      ? categoryOrMode
+      : "CLASSIC";
+
+  // Ana ekrandan düello: önce rakip seçilir (zorluk burada belirlenir)
   const handleStartFromHome = (
     categoryOrMode: string,
-    diff: "EASY" | "NORMAL" | "HARD",
+    _diff: "EASY" | "NORMAL" | "HARD",
     pool: ContentPoolType = "HYBRID"
   ) => {
     audio.playSelect();
     setContentPool(pool);
-    setQueueDifficulty(diff);
-    let resolvedMode: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL" = "CLASSIC";
-    if (categoryOrMode === "REVERSE_CAST") resolvedMode = "REVERSE_CAST";
-    else if (categoryOrMode === "CINE_CONCEPT") resolvedMode = "CINE_CONCEPT";
-    else if (categoryOrMode === "SINEFIL") resolvedMode = "SINEFIL";
-    setQueueMode(resolvedMode);
-
-    const difficultyMap: Record<"EASY" | "NORMAL" | "HARD", BotDifficulty> = {
-      EASY: "EASY",
-      NORMAL: "MEDIUM",
-      HARD: "HARD",
-    };
-    setBotDifficulty(difficultyMap[diff]);
-    setShowMatchmakingQueue(true);
+    setPickerTarget({ kind: "MODE", mode: resolvePickerMode(categoryOrMode) });
   };
 
   const handleDirectStartMode = (
     modeType: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL"
   ) => {
     audio.playSelect();
-    setQueueMode(modeType);
-    setQueueDifficulty("NORMAL");
-    setBotDifficulty("MEDIUM");
-    setShowMatchmakingQueue(true);
+    setPickerTarget({ kind: "MODE", mode: modeType });
+  };
+
+  const handlePickOpponent = (bot: BotOpponentProfile) => {
+    const target = pickerTarget;
+    setPickerTarget(null);
+    if (!target) return;
+    chosenBotRef.current = bot;
+    const uiDiff: "EASY" | "NORMAL" | "HARD" =
+      bot.difficulty === "MEDIUM" ? "NORMAL" : bot.difficulty;
+    setBotDifficulty(bot.difficulty);
+
+    if (target.kind === "MODE") {
+      setQueueMode(target.mode);
+      setQueueDifficulty(uiDiff);
+      setShowMatchmakingQueue(true);
+      return;
+    }
+
+    // Öne çıkan tahta: eşleşme kuyruğu atlanır, doğrudan "Rakip bulundu"
+    const randomized = createRandomizedBoard(PRESET_BOARDS[target.boardIndex]);
+    setBoardIndex(target.boardIndex);
+    setBoard(randomized);
+    resetGame(randomized);
+    setMode("VS_BOT");
+    setCustomShotClock(12);
+    setPendingBoardIndex(target.boardIndex);
+    setPendingOpponent(bot);
+    chosenBotRef.current = null;
+    setShowMatchFound(true);
   };
 
   const handleOpenDailyFromHome = () => {
@@ -733,7 +771,8 @@ function CineXoxApp() {
     const result = getBoardForMode(modeType, boardIndex);
     const targetIdx = result.index;
     const nextBoard = result.board;
-    const opp = getRandomOpponent(targetDiff, pendingOpponent.name);
+    const opp = chosenBotRef.current ?? getRandomOpponent(targetDiff, pendingOpponent.name);
+    chosenBotRef.current = null;
 
     setPendingBoardIndex(targetIdx);
     setPendingOpponent(opp);
@@ -777,6 +816,10 @@ function CineXoxApp() {
     profile,
     queueMode,
     queueDifficulty,
+    botRecords,
+    showOpponentPicker: pickerTarget !== null,
+    onPickOpponent: handlePickOpponent,
+    onCloseOpponentPicker: () => setPickerTarget(null),
     contentPool,
     pendingOpponent,
     board,
@@ -896,16 +939,9 @@ function CineXoxApp() {
           onBack={() => setCurrentView("HOME")}
           onStartMode={handleDirectStartMode}
           onOpenDaily={handleOpenDailyFromHome}
-          onSelectBoard={(boardIdx, selectedMode) => {
-            const opp = getRandomOpponent(pendingOpponent.name);
-            const randomized = createRandomizedBoard(PRESET_BOARDS[boardIdx]);
-            setBoardIndex(boardIdx);
-            setBoard(randomized);
-            resetGame(randomized);
-            setMode(selectedMode);
-            setPendingBoardIndex(boardIdx);
-            setPendingOpponent(opp);
-            setShowMatchFound(true);
+          onSelectBoard={(boardIdx) => {
+            audio.playSelect();
+            setPickerTarget({ kind: "BOARD", boardIndex: boardIdx });
           }}
           onOpenCustomLobby={() => {
             audio.playSelect();
@@ -1055,7 +1091,7 @@ function CineXoxApp() {
         onResolveGoldenReelTimeout={resolveGoldenReelTimeout}
         onPlayAgain={() => {
           const { board: nextBoard, index: nextIdx } = getBoardForMode(queueMode, boardIndex);
-          const opp = getRandomOpponent(botDifficulty, pendingOpponent.name);
+          const opp = pendingOpponent; // rövanş: aynı rakip, aranızdaki skor sürer
           setPendingBoardIndex(nextIdx);
           setPendingOpponent(opp);
           setBoardIndex(nextIdx);

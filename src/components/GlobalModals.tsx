@@ -20,8 +20,10 @@ import {
 
 import {
   DailyShareModal,
+  OpponentPickerSheet,
 } from "@/components";
 import { HowToPlayModal } from "./HowToPlayModal";
+import { BotRecordBook } from "@/utils/botRecord";
 
 import NotificationPanel, { NotifToast, useNotifications } from "@/components/NotificationPanel";
 import { FLAGS } from "@/config/flags";
@@ -38,10 +40,12 @@ export interface GlobalModalsProps {
   showHelp: boolean;
   showLeaderboard: boolean;
   showNotifications: boolean;
+  showOpponentPicker: boolean;
 
   profile: UserProfile;
   queueMode: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL";
   queueDifficulty: "EASY" | "NORMAL" | "HARD";
+  botRecords: BotRecordBook;
   contentPool: ContentPoolType;
   pendingOpponent: BotOpponentProfile;
   board: GameBoard;
@@ -53,6 +57,8 @@ export interface GlobalModalsProps {
   claimedDaily: boolean;
   claimedQuestIds: string[];
 
+  onPickOpponent: (bot: BotOpponentProfile) => void;
+  onCloseOpponentPicker: () => void;
   onCloseMatchmakingQueue: () => void;
   onQueueMatchFound: () => void;
   onQueuePlayWithAiImmediately: () => void;
@@ -91,13 +97,21 @@ export function GlobalModals(props: GlobalModalsProps) {
         onPlayWithAiImmediately={props.onQueuePlayWithAiImmediately}
       />
 
+      <OpponentPickerSheet
+        isOpen={props.showOpponentPicker}
+        records={props.botRecords}
+        onPick={props.onPickOpponent}
+        onClose={props.onCloseOpponentPicker}
+      />
+
       <MatchFoundModal
         isOpen={props.showMatchFound}
         userProfile={props.profile}
         opponentName={props.pendingOpponent.name}
         opponentAvatarId={props.pendingOpponent.avatarId}
         opponentLevel={props.pendingOpponent.level}
-        opponentWinRate={props.pendingOpponent.winRate}
+        opponent={props.pendingOpponent}
+        record={props.botRecords[props.pendingOpponent.name]}
         boardTitle={props.board.title}
         onCountdownComplete={props.onMatchFoundCountdownComplete}
       />

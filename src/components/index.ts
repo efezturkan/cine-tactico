@@ -7,6 +7,7 @@ export * from "./ErrorBoundary";
 export * from "./GlobalModals";
 export * from "./SettingsModal";
 export * from "./SalonLightSheet";
+export * from "./OpponentPickerSheet";
 export * from "./OpeningLightLeak";
 export * from "./ui/Button";
 export * from "./ui/AvatarIcon";
