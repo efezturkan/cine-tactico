@@ -29,9 +29,14 @@ if [ -z "$UDID" ]; then
   echo "   Simülatör açılıyor ($SIM_NAME)…"
   xcrun simctl boot "$UDID"
 fi
-# Simulator.app Xcode'un içinde durur (sürüme göre yol değişebilir); açılamazsa derleme yine sürer.
+# Eski Xcode sürümlerinde Simulator.app ayrı bir pencere açar. Xcode 27'de ayrı uygulama yoktur:
+# cihaz arka planda çalışır ve Claude'un simülatör panelinden izlenir. Pencere açılamaması hata değildir.
 SIM_APP="$(xcode-select -p)/Applications/Simulator.app"
-open "$SIM_APP" 2>/dev/null || open -a Simulator 2>/dev/null || echo "   (Simulator penceresi açılamadı, cihaz arka planda açık)"
+if [ -d "$SIM_APP" ]; then
+  open "$SIM_APP"
+else
+  echo "   Cihaz arka planda açık (ayrı Simulator penceresi yok; Claude simülatör panelinden izle)."
+fi
 
 echo "3/5 Xcode derleme (Debug, simülatör)…"
 xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
