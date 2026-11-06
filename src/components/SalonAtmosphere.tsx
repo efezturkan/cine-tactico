@@ -10,6 +10,8 @@ const GRAIN_SVG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='h
  * Salon Işığı'nın tek uygulama noktası. Uygulamanın en üstünde bir kez monte edilir;
  * Gişe, Vizyondakiler, Sinefil Kartı ve oyun ekranı aynı ışığı paylaşır.
  * Katmanlar modal'ların (z-50) altında, içerik ve alt barın (z-40) üstündedir.
+ * Maç sırasında (html[data-view="GAME"]) loşluk ve gren kısılır: süre baskısı altında okunabilirlik
+ * hiçbir ayarla bozulamaz. Blend modu kullanılmaz (iOS WebView'da pahalı).
  */
 export const SalonAtmosphere: React.FC = () => {
   useEffect(() => {
@@ -34,12 +36,12 @@ export const SalonAtmosphere: React.FC = () => {
       )}
 
       {/* 3. Loşluk: düz kısma + kenar vinyeti */}
-      <div className="absolute inset-0 bg-black" style={{ opacity: "var(--salon-dim-flat, 0.11)" }} />
+      <div className="absolute inset-0 bg-black" style={{ opacity: "calc(var(--salon-dim-flat, 0.0675) * var(--salon-ctx-dim, 1))" }} />
       <div
         className="absolute inset-0"
         style={{
           background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 35%, #000 130%)",
-          opacity: "var(--salon-dim-vignette, 0.31)",
+          opacity: "calc(var(--salon-dim-vignette, 0.1875) * var(--salon-ctx-dim, 1))",
         }}
       />
 
@@ -49,8 +51,7 @@ export const SalonAtmosphere: React.FC = () => {
         style={{
           backgroundImage: GRAIN_SVG,
           backgroundSize: "160px 160px",
-          mixBlendMode: "screen",
-          opacity: "var(--salon-grain-opacity, 0.028)",
+          opacity: "calc(var(--salon-grain-opacity, 0.028) * var(--salon-ctx-grain, 1))",
         }}
       />
     </div>

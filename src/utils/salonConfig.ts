@@ -46,14 +46,14 @@ export const SALON_PRESETS: Record<SalonPresetId, SalonPreset> = {
 
 export interface SalonConfig {
   preset: SalonPresetId;
-  dimness: number;    // 0 - 60, default 25
+  dimness: number;    // 0 - 60, default 15
   projection: number; // 0 - 100, default 65 (beam opacity 0 - 0.14)
   grain: SalonGrainOption; // "off" | "light" | "film", default "light"
 }
 
 export const DEFAULT_SALON_CONFIG: SalonConfig = {
   preset: "kadife",
-  dimness: 25,
+  dimness: 15,
   projection: 65,
   grain: "light",
 };

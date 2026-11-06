@@ -295,6 +295,10 @@ function CineXoxApp() {
   );
 
   useEffect(() => {
+    document.documentElement.dataset.view = currentView;
+  }, [currentView]);
+
+  useEffect(() => {
     setClockCell(activeCellIndex);
   }, [activeCellIndex, setClockCell]);
 

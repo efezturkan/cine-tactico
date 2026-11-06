@@ -22,7 +22,7 @@ assert(sanitizeSalonConfig({ preset: "x", dimness: 999, projection: -5, grain: "
 assert(sanitizeSalonConfig({ projection: -5 }).projection === 0, "Projeksiyon alt sınırı 0");
 assert(sanitizeSalonConfig({ preset: "x" }).preset === "kadife", "Bilinmeyen hazır ayar kadife olur");
 assert(sanitizeSalonConfig({ grain: "film" }).grain === "film", "Film gren seçeneği korunur");
-assert(sanitizeSalonConfig({ dimness: NaN }).dimness === 25, "NaN loşluk varsayılana döner");
+assert(sanitizeSalonConfig({ dimness: NaN }).dimness === DEFAULT_SALON_CONFIG.dimness, "NaN loşluk varsayılana döner");
 
 const none = computeSalonVars({ ...DEFAULT_SALON_CONFIG, dimness: 0 });
 const max = computeSalonVars({ ...DEFAULT_SALON_CONFIG, dimness: 60 });
@@ -38,6 +38,9 @@ assert(presets.every(p => p.label.tr && p.label.en), "Hazır ayar adları TR ve 
 
 const keys = Object.keys(tr.salon) as (keyof typeof tr.salon)[];
 assert(keys.every(k => tr.salon[k] && en.salon[k]), `Salon sözlüğü TR/EN eksiksiz (${keys.length} anahtar)`);
+
+assert(DEFAULT_SALON_CONFIG.dimness <= 20, "Varsayılan loşluk tasarımın orijinal parlaklığını korur (≤%20)");
+assert(Number(computeSalonVars(DEFAULT_SALON_CONFIG).dimFlat) <= 0.1, "Varsayılan düz karartma ≤0.10");
 
 console.log(`\nSALON RESULT: ${passed}/${passed + failed} PASSED`);
 if (failed > 0) process.exit(1);

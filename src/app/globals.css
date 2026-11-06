@@ -30,6 +30,12 @@
   --rec-red: #E5484D;
 }
 
+/* Salon Işığı: maç sırasında okunabilirlik için etkisi kısılır */
+html[data-view="GAME"] {
+  --salon-ctx-dim: 0.55;
+  --salon-ctx-grain: 0.5;
+}
+
 html {
   height: 100%;
   overscroll-behavior: none;

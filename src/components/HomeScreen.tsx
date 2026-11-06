@@ -440,7 +440,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   aria-checked={isSelected}
                   data-testid={`mode-card-${m.id}`}
                   onClick={() => handleSelectModeCard(m.id)}
-                  className={`flex-1 min-w-[105px] sm:min-w-[115px] p-3 rounded-2xl flex flex-col items-center justify-between text-center gap-2 transition-all active:scale-[0.98] relative cursor-pointer snap-start shrink-0 select-none ${
+                  className={`flex-1 min-w-[94px] sm:min-w-[115px] p-3 rounded-2xl flex flex-col items-center justify-between text-center gap-2 transition-all active:scale-[0.98] relative cursor-pointer snap-start shrink-0 select-none ${
                     isSelected
                       ? "border-[1.5px] border-[#D9A441]"
                       : "border border-white/10 hover:border-white/20"
@@ -581,7 +581,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* ── 8A. Salon Işığı Alt Sheet ─── */}
       <SalonLightSheet
         isOpen={showSalonLight}
-        onClose={() => setShowSalonLight(false)}
+        onClose={() => {
+          // Çıkış, girişle aynı yere döner: Ayarlar menüsü
+          setShowSalonLight(false);
+          setShowSettings(true);
+        }}
       />
 
       {/* ── 9A. İsteğe Bağlı Rehber Modalı ─── */}
