@@ -28,7 +28,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
   contentPool,
   difficulty,
 }) => {
-  const { dict, locale } = useTranslation();
+  const { locale } = useTranslation();
   const isEn = locale === "en";
 
   const [secondsElapsed, setSecondsElapsed] = useState<number>(0);

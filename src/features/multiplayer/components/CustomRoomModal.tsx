@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { CustomRoomSettings, GameBoard } from "@/core";
-import { UserProfile } from "@/types/profile";
 import { PRESET_BOARDS } from "@/data/boards";
-import { isSupabaseConfigured } from "@/backend";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { Button } from "@/components/ui/Button";
-import { Copy, Share2, Check, X, ChevronRight } from "lucide-react";
+import { Copy, Share2, Check, X } from "lucide-react";
 import { useTranslation } from "@/i18n";
 
 // Kriptografik Güvenli 6 Karakterli Kod Üreteci (Unambiguous: 0/O, 1/I hariç)
@@ -36,7 +34,6 @@ interface CustomRoomModalProps {
   onClose?: () => void;
   onCreateRoom: (settings: CustomRoomSettings, selectedBoard: GameBoard) => void;
   onJoinRoom?: (roomCode: string, settings: CustomRoomSettings, selectedBoard: GameBoard) => void;
-  currentUser?: UserProfile;
 }
 
 export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
@@ -45,7 +42,6 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
   onClose,
   onCreateRoom,
   onJoinRoom,
-  currentUser,
 }) => {
   const { dict, locale, tBoardTitle } = useTranslation();
   const isEn = locale === "en";
@@ -88,7 +84,6 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       shotClockSeconds: 12,
       themeId: selectedBoardId,
       category: currentBoard.title,
-      allowCellStealing: false,
       allowPowerups: false,
     };
     onCreateRoom(settings, currentBoard);
@@ -148,7 +143,6 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
       shotClockSeconds: 12,
       themeId: PRESET_BOARDS[0].id,
       category: PRESET_BOARDS[0].title,
-      allowCellStealing: false,
       allowPowerups: false,
     };
 

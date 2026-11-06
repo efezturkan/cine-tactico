@@ -15,7 +15,7 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { dict, locale } = useTranslation();
+  const { locale } = useTranslation();
   const isEn = locale === "en";
 
   if (!isOpen) return null;

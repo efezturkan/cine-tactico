@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Trophy, Gift, CheckCircle2, Star, Flame, X, Film, Sparkles, Gem, Shield, Check } from "lucide-react";
+import { Trophy, Gift, Flame, X } from "lucide-react";
 import { audio } from "@/utils/audio";
 
 interface QuestsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  reelsBalance: number;
   dailyStreak?: number;
   onClaimDaily: (amount: number) => void;
   claimedDaily: boolean;
@@ -18,7 +17,6 @@ interface QuestsModalProps {
 export const QuestsModal: React.FC<QuestsModalProps> = ({
   isOpen,
   onClose,
-  reelsBalance,
   dailyStreak = 3,
   onClaimDaily,
   claimedDaily,

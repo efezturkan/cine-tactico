@@ -10,7 +10,7 @@ import {
   ContentPoolType,
   Movie,
 } from "@/core";
-import { UserProfile, DEFAULT_AMBIENCE, AMBIENCE_THEMES } from "@/types/profile";
+import { UserProfile } from "@/types/profile";
 import { BotOpponentProfile } from "@/data/boards";
 import { XoxBoard } from "./XoxBoard";
 import { MovieSearchModal } from "./MovieSearchModal";
@@ -43,7 +43,6 @@ export interface GameViewProps {
   totalArcadeScore: number;
   mode: GameMode;
   botDifficulty: BotDifficulty;
-  allowSteal: boolean;
   customRoomCode: string | null;
   profile: UserProfile;
   muted: boolean;
@@ -172,11 +171,6 @@ export function GameView(props: GameViewProps) {
   };
 
   const isIntro = showClapper;
-
-  const gameAmbience = { ...DEFAULT_AMBIENCE, ...(props.profile?.ambience || {}) };
-  const gameTheme = (gameAmbience.theme && AMBIENCE_THEMES[gameAmbience.theme]) || AMBIENCE_THEMES.velvet_red;
-  const safeGameDimness =
-    typeof gameAmbience.dimness === "number" && !isNaN(gameAmbience.dimness) ? gameAmbience.dimness : 85;
 
   const { t, tBoardTitle, locale, dict } = useTranslation();
   const isEn = locale === "en";
@@ -337,7 +331,6 @@ export function GameView(props: GameViewProps) {
                   }
                 : props.onCellSelect
             }
-            allowSteal={props.allowSteal}
             isIntro={isIntro}
             introPhase={isIntro ? introPhase : null}
             shakingCellIndex={props.shakingCellIndex}

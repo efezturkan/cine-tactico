@@ -52,8 +52,7 @@ interface ProfileModalProps {
   onOpenArchive?: () => void;
   isMuted?: boolean;
   onToggleMute?: () => void;
-  onOpenLiveAmbience?: () => void;
-  initialTab?: "CAREER" | "DNA" | "AMBIENCE";
+  initialTab?: "CAREER" | "DNA";
 }
 
 export const ProfileModal: React.FC<ProfileModalProps> = ({
@@ -176,11 +175,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         "cinexox_match_history",
         "cinexox_last_streak_date",
         "cinexox_last_streak_utc",
-        "cinetactico_ambience_config",
-        "cinexox_ambience",
+        "cinexox_salon_config",
         "cinexox_ipucu_ters",
         "cinexox_ipucu_konsept",
-        "cinexox_guide_seen",
+        "cinexox_rehber_v1",
       ];
       localKeys.forEach((key) => localStorage.removeItem(key));
       haptic.light();

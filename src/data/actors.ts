@@ -1,5 +1,4 @@
 import { Actor } from "@/core";
-import { normalizeCinemaString } from "@/core";
 
 /**
  * CINE-XOX AKTÖR VE TAKMA AD (ALIAS) VERİTABANI

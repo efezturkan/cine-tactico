@@ -11,7 +11,6 @@ import {
   validateMove,
   findMatchingMovies,
   calculateCellRarity,
-  calculateMovieRarity,
   validateActorIntersection,
   evaluateBoardState,
   evaluateReverseBoardState,
@@ -30,7 +29,6 @@ export interface MoveResult {
   message?: string;
   points?: number;
   combo?: number;
-  stolen?: boolean;
 }
 
 export function useGameSession(
@@ -38,7 +36,6 @@ export function useGameSession(
   mode: GameMode = "VS_BOT",
   botDifficulty: BotDifficulty = "MEDIUM",
   shotClockLimit: number = 12, // 12s Blitz (Hile ve dış kaynak aramasını önleme standardı)
-  allowCellStealing: boolean = false,
   isActive: boolean = true
 ) {
   const { dict } = useTranslation();
@@ -250,7 +247,7 @@ export function useGameSession(
 
   // Execute Film Move (Klasik Düello ve Sinefil Konsept)
   const submitMove = useCallback(
-    (cellIndex: number, movie: Movie, playerSymbol?: PlayerSymbol, isDouble?: boolean): MoveResult => {
+    (cellIndex: number, movie: Movie, playerSymbol?: PlayerSymbol): MoveResult => {
       if (winner !== null) return { success: false, message: dict.game.msgGameOver };
 
       const activePlayer = playerSymbol || currentTurn;

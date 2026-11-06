@@ -3,10 +3,8 @@
 import React from "react";
 import { GameBoard, CellAnswer, PlayerSymbol, Criterion } from "@/core";
 import { audio } from "@/utils/audio";
-import { Clapperboard, Award, Calendar, Film, Shield, Lock, User, Compass, Plus } from "lucide-react";
-import { assetResolver } from "@/utils/assetResolver";
+import { Clapperboard, Award, Calendar, Shield, Lock, Compass, Plus } from "lucide-react";
 import { FLAGS } from "@/config/flags";
-import { LocalFace } from "./LocalFace";
 import { useTranslation } from "@/i18n";
 
 interface XoxBoardProps {
@@ -16,7 +14,6 @@ interface XoxBoardProps {
   currentTurn: PlayerSymbol;
   winner: PlayerSymbol | "DRAW" | null;
   onCellClick: (index: number) => void;
-  allowSteal?: boolean;
   isIntro?: boolean;
   introPhase?: "3" | "2" | "1" | "ACTION" | null;
   shakingCellIndex?: number | null;

@@ -26,7 +26,6 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
   const isEn = locale === "en";
 
   const [selectedMatch, setSelectedMatch] = useState<MatchRecord | null>(null);
-  const [inspectCellIndex, setInspectCellIndex] = useState<number | null>(null);
 
   if (!isOpen) return null;
 
@@ -67,21 +66,6 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
     }
   };
 
-  const getInspectSolutions = (board: GameBoard, cellIdx: number) => {
-    const r = Math.floor(cellIdx / 3);
-    const c = cellIdx % 3;
-    if (board.boardMode === "REVERSE_CAST") {
-      return {
-        type: "ACTOR",
-        items: getSharedActors(board.rows[r].value, board.cols[c].value),
-      };
-    }
-    return {
-      type: "MOVIE",
-      items: findMatchingMovies(board.rows[r], board.cols[c]),
-    };
-  };
-
   return (
     <div
       onClick={(e) => {
@@ -119,7 +103,6 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
                   onClick={() => {
                     audio.playSelect();
                     setSelectedMatch(null);
-                    setInspectCellIndex(null);
                   }}
                   className="text-xs font-bold text-[#D9A441] hover:underline"
                 >

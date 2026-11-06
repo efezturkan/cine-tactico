@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { UserProfile, CinemaAmbience, DEFAULT_AMBIENCE } from "@/types/profile";
+import { UserProfile } from "@/types/profile";
 import { GameBoard, CellAnswer, CustomRoomSettings, ContentPoolType, GameMode, PlayerSymbol } from "@/core";
 import { BotOpponentProfile } from "@/data/boards";
 
@@ -20,7 +20,6 @@ import {
 
 import {
   DailyShareModal,
-  LiveAmbienceConsole,
 } from "@/components";
 import { HowToPlayModal } from "./HowToPlayModal";
 
@@ -35,10 +34,9 @@ export interface GlobalModalsProps {
   showQuests: boolean;
   showShop: boolean;
   showProfile: boolean;
-  profileInitialTab?: "CAREER" | "DNA" | "AMBIENCE";
+  profileInitialTab?: "CAREER" | "DNA";
   showHelp: boolean;
   showLeaderboard: boolean;
-  showAmbienceConsole: boolean;
   showNotifications: boolean;
 
   profile: UserProfile;
@@ -74,9 +72,6 @@ export interface GlobalModalsProps {
   onToggleMute: () => void;
   onCloseHelp: () => void;
   onCloseLeaderboard: () => void;
-  onCloseAmbienceConsole: () => void;
-  onUpdateAmbience: (updated: Partial<CinemaAmbience>) => void;
-  onResetAmbience: () => void;
   onCloseNotifications: () => void;
 }
 
@@ -102,7 +97,6 @@ export function GlobalModals(props: GlobalModalsProps) {
         opponentName={props.pendingOpponent.name}
         opponentAvatarId={props.pendingOpponent.avatarId}
         opponentLevel={props.pendingOpponent.level}
-        opponentRankTitle={props.pendingOpponent.rankTitle}
         opponentWinRate={props.pendingOpponent.winRate}
         boardTitle={props.board.title}
         onCountdownComplete={props.onMatchFoundCountdownComplete}
@@ -111,15 +105,12 @@ export function GlobalModals(props: GlobalModalsProps) {
       <DailyShareModal
         isOpen={props.showDailyShare || (props.mode === "DAILY_SOLO" && props.winner !== null)}
         onClose={props.onCloseDailyShare}
-        board={props.board}
         cells={props.cells}
-        score={props.totalArcadeScore}
       />
 
       <CustomRoomModal
         isOpen={props.showCustomLobby}
         onClose={props.onCloseCustomLobby}
-        currentUser={props.profile}
         onCreateRoom={props.onCreateCustomRoom}
         onJoinRoom={props.onJoinCustomRoom}
       />
@@ -128,7 +119,6 @@ export function GlobalModals(props: GlobalModalsProps) {
         <QuestsModal
           isOpen={props.showQuests}
           onClose={props.onCloseQuests}
-          reelsBalance={props.profile.reelsBalance}
           dailyStreak={props.profile.dailyStreak}
           onClaimDaily={props.onClaimDailyReward}
           claimedDaily={props.claimedDaily}
@@ -162,16 +152,6 @@ export function GlobalModals(props: GlobalModalsProps) {
           isOpen={props.showLeaderboard}
           onClose={props.onCloseLeaderboard}
           currentUser={props.profile}
-        />
-      )}
-
-      {FLAGS.SHOW_HEADER_AMBIENCE_BUTTON && (
-        <LiveAmbienceConsole
-          isOpen={props.showAmbienceConsole}
-          onClose={props.onCloseAmbienceConsole}
-          ambience={props.profile.ambience || DEFAULT_AMBIENCE}
-          onUpdateAmbience={props.onUpdateAmbience}
-          onResetAmbience={props.onResetAmbience}
         />
       )}
 

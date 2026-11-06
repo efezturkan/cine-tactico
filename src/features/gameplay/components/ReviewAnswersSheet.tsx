@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import { GameBoard, ContentPoolType, Movie } from "@/core";
 import { findMatchingMovies, getSharedActors } from "@/core/engine/validator";
 import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
-import { X, Film, Award, User } from "lucide-react";
+import { X, Award, User } from "lucide-react";
 import { useTranslation } from "@/i18n";
 
 export interface ReviewAnswersSheetProps {

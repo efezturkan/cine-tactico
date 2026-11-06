@@ -179,7 +179,6 @@ export interface CustomRoomSettings {
   shotClockSeconds: 10 | 12 | 20 | 30;
   themeId: string;
   category: string;
-  allowCellStealing: boolean;
   allowPowerups?: boolean;
   bannedDirectors?: string[];
   entryFee?: { type: "FREE" | "REELS"; amount: number };

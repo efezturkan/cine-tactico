@@ -312,8 +312,8 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
 };
 
 // ─── Hook: manages notification state ──────────────────────────────
-export function useNotifications(onOpenDaily?: () => void) {
-  const [notifications, setNotifications] = useState<CineNotification[]>(DEFAULT_NOTIFS);
+export function useNotifications() {
+  const [notifications] = useState<CineNotification[]>(DEFAULT_NOTIFS);
   const [showPanel, setShowPanel] = useState(false);
   const [activeToast, setActiveToast] = useState<CineNotification | null>(null);
 

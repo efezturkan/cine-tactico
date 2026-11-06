@@ -39,3 +39,4 @@ Read `project.yaml`, then `docs/product/MVP_SCOPE.md`. Skills: `cine-core`, `cin
 - `npx tsc --noEmit` clean for TS edits
 - `npm test` green after engine, data, or anti-cheat edits
 - Do not expand scope into ads/IAP unless asked
+- iOS simulator is a bundled build, not live: after UI changes run `npm run ios:sim` (web build → `cap sync` → Xcode build → install → launch). Never run `next build` while `next dev` runs (shared `.next`).

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Film } from "lucide-react";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 

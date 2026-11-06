@@ -2,8 +2,8 @@
 
 import { getDailyEditionNumber } from "@/utils/dateUtils";
 import React, { useState } from "react";
-import { GameBoard, CellAnswer } from "@/core";
-import { X, Share2, Copy, Check, Trophy } from "lucide-react";
+import { CellAnswer } from "@/core";
+import { X, Share2, Copy, Check } from "lucide-react";
 import { audio } from "@/utils/audio";
 import { Button } from "@/components/ui/Button";
 import { MiniKadrajPreview } from "@/components/ui/MiniKadrajPreview";
@@ -11,17 +11,13 @@ import { MiniKadrajPreview } from "@/components/ui/MiniKadrajPreview";
 interface DailyShareModalProps {
   isOpen: boolean;
   onClose: () => void;
-  board: GameBoard;
   cells: (CellAnswer | null)[];
-  score: number;
 }
 
 export const DailyShareModal: React.FC<DailyShareModalProps> = ({
   isOpen,
   onClose,
-  board,
   cells,
-  score,
 }) => {
   const [copiedText, setCopiedText] = useState(false);
 

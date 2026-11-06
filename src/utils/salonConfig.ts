@@ -118,8 +118,6 @@ export function computeSalonVars(cfg: SalonConfig) {
   };
 }
 
-export const SALON_EVENT = "cinexox:salon-change";
-
 export function applySalonConfigToDom(cfg: SalonConfig) {
   if (typeof window === "undefined" || !document?.documentElement) return;
   const v = computeSalonVars(cfg);

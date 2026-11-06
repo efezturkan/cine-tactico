@@ -6,7 +6,6 @@ import {
   RarityTier,
   RARITY_TIERS,
   BASE_CELL_POINTS,
-  CultThemeKey,
 } from "../types";
 import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
 
@@ -290,19 +289,6 @@ export function getSharedActors(
   if (!mA || !mB || !mA.cast || !mB.cast) return [];
   const castBSet = new Set(mB.cast.map(a => normalizeName(a)));
   return mA.cast.filter(actor => castBSet.has(normalizeName(actor)));
-}
-
-export function getAllUniqueActors(database: Movie[] = MOVIES_DATABASE): string[] {
-  const actorMap = new Map<string, string>();
-  for (const m of database) {
-    for (const actor of m.cast) {
-      const norm = normalizeName(actor);
-      if (!actorMap.has(norm)) {
-        actorMap.set(norm, actor.trim());
-      }
-    }
-  }
-  return Array.from(actorMap.values()).sort((a, b) => a.localeCompare(b));
 }
 
 export function findMatchingMovies(

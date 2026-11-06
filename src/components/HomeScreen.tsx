@@ -2,31 +2,18 @@
 
 import React, { useState, useEffect } from "react";
 import {
-  Sliders,
   Play,
-  Film,
-  Clock,
-  Sparkles,
-  Home,
-  Swords,
   Clapperboard,
   HelpCircle,
   Users,
   Compass,
   Volume2,
   VolumeX,
-  User,
   Flame,
   Settings,
   Ticket,
 } from "lucide-react";
-import {
-  UserProfile,
-  AVATAR_OPTIONS,
-  AMBIENCE_THEMES,
-  DEFAULT_AMBIENCE,
-  CORNER_ACCENT_COLORS,
-} from "@/types/profile";
+import { UserProfile } from "@/types/profile";
 import { ContentPoolType } from "@/core";
 import { FLAGS } from "@/config/flags";
 import { audio } from "@/utils/audio";
@@ -67,7 +54,6 @@ interface HomeScreenProps {
   onOpenLeaderboard?: () => void;
   onOpenNotifications?: () => void;
   notifUnreadCount?: number;
-  onOpenLiveAmbience?: () => void;
   onOpenHelp?: () => void;
   onOpenHowToPlay?: () => void;
   muted?: boolean;
@@ -103,40 +89,6 @@ const SprocketStrip = () => (
   </div>
 );
 
-const MODE_DEFINITIONS: {
-  id: ArenaModeKey;
-  title: string;
-  subLabel: string;
-  heroSummary: string;
-  color: string;
-  icon: React.ComponentType<{ className?: string }>;
-}[] = [
-  {
-    id: "CLASSIC",
-    title: "Klasik Düello",
-    subLabel: "Yönetmen × Oyuncu",
-    heroSummary: "Yönetmen veya tür ile oyuncunun ortak filmini bul.",
-    color: "#D9A441",
-    icon: Clapperboard,
-  },
-  {
-    id: "REVERSE_CAST",
-    title: "Ters Kadraj",
-    subLabel: "Film × Film",
-    heroSummary: "İki farklı yapımın ortak oyuncusunu bul.",
-    color: "#5FB3A8",
-    icon: Users,
-  },
-  {
-    id: "CINE_CONCEPT",
-    title: "Sinefil Konsept",
-    subLabel: "Tema",
-    heroSummary: "Kült temalar ve anlatı kriterlerinde filmi bul.",
-    color: "#9A8FD8",
-    icon: Compass,
-  },
-];
-
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   profile,
   selectedMode,
@@ -148,7 +100,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onOpenDaily,
   onOpenGameModesHub,
   onOpenGameSelect,
-  onOpenLiveAmbience,
   onOpenHelp,
   onOpenHowToPlay,
   muted = false,
@@ -220,12 +171,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     }
   };
 
-  const currentAvatar =
-    AVATAR_OPTIONS.find((a) => a.id === profile.avatarId) || AVATAR_OPTIONS[0];
-
   // 8B. Moda göre otomatik atmosfer: köşe işareti ve mod vurgusu moddan gelir
   const effectiveCornerColor = activeModeMeta.color;
-  const heroAccentHex = activeModeMeta.color;
 
   return (
     <div
@@ -341,16 +288,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <Settings className="w-4 h-4 text-[#8A8F9A]" />
             </Button>
 
-            {/* FLAGS arkasındaki Ambiyans ve Yardım (UI'da gizli) */}
-            {FLAGS.SHOW_HEADER_AMBIENCE_BUTTON && onOpenLiveAmbience && (
-              <button
-                type="button"
-                onClick={onOpenLiveAmbience}
-                className="w-9 h-9 rounded-xl flex items-center justify-center tactile-btn-surface"
-              >
-                <Sliders className="w-4 h-4 text-[#D9A441]" />
-              </button>
-            )}
+            {/* FLAGS arkasındaki Yardım (UI'da gizli) */}
             {FLAGS.SHOW_HEADER_HELP_BUTTON && onOpenHelp && (
               <button
                 type="button"

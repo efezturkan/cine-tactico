@@ -69,8 +69,7 @@ export function calculateBotMove(
   cells: readonly (CellAnswer | null)[],
   usedMovieIds: string[],
   difficulty: BotDifficulty = "MEDIUM",
-  botSymbol: PlayerSymbol = "O",
-  allowCellStealing: boolean = false
+  botSymbol: PlayerSymbol = "O"
 ): BotMoveDecision | null {
   const opponentSymbol: PlayerSymbol = botSymbol === "X" ? "O" : "X";
 

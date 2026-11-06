@@ -1,109 +1,5 @@
 import { GameBoard, CellAnswer } from "@/core";
 
-export type AmbienceTheme = "velvet_red" | "darkroom_red" | "kodak_amber" | "noir_silver" | "scifi_cyan";
-export type GrainLevel = "OFF" | "SUBTLE" | "VINTAGE";
-export type CornerAccentOption = "AUTO" | "GOLD" | "SILVER" | "CYAN" | "RUBY";
-
-export interface CinemaAmbience {
-  theme: AmbienceTheme;
-  dimness: number;         // 50 - 96 (% arka plan karartması)
-  glowIntensity: number;   // 15 - 90 (% projeksiyon parıltısı)
-  grain: GrainLevel;       // 35mm film greni
-  showWatermark: boolean;  // Vizör / lens filigranı
-  cornerAccent?: CornerAccentOption; // Kamera vizör köşeleri & vurgu rengi
-}
-
-export const CORNER_ACCENT_COLORS: Record<
-  CornerAccentOption,
-  { label: string; color: string; border: string; emoji: string }
-> = {
-  AUTO: { label: "Temaya Uygun", color: "auto", border: "auto", emoji: "✨" },
-  GOLD: { label: "Kraliyet Altını", color: "#f59e0b", border: "rgba(245, 158, 11, 0.6)", emoji: "🟡" },
-  SILVER: { label: "Gümüş Platin", color: "#f8fafc", border: "rgba(248, 250, 252, 0.6)", emoji: "⚪" },
-  CYAN: { label: "Holo Neon", color: "#38bdf8", border: "rgba(56, 189, 248, 0.6)", emoji: "🔵" },
-  RUBY: { label: "Koyu Yakut", color: "#ef4444", border: "rgba(239, 68, 68, 0.6)", emoji: "🔴" },
-};
-
-export const AMBIENCE_THEMES: Record<
-  AmbienceTheme,
-  {
-    id: AmbienceTheme;
-    label: string;
-    sub: string;
-    accentColor: string;
-    secondaryAccent: string;
-    hudBorder: string;
-    glowRgba: string;
-    bgColor: string;
-    emoji: string;
-  }
-> = {
-  velvet_red: {
-    id: "velvet_red",
-    label: "Kadife Gece Yarısı",
-    sub: "Klasik sinema perdesi bordosu",
-    accentColor: "#8b151b",
-    secondaryAccent: "#f59e0b",
-    hudBorder: "rgba(139, 21, 27, 0.45)",
-    glowRgba: "rgba(139, 21, 27, 0.45)",
-    bgColor: "#07080b",
-    emoji: "🍷",
-  },
-  darkroom_red: {
-    id: "darkroom_red",
-    label: "Analog Karanlık Oda",
-    sub: "35mm banyo emniyet lambası",
-    accentColor: "#dc2626",
-    secondaryAccent: "#ef4444",
-    hudBorder: "rgba(220, 38, 38, 0.45)",
-    glowRgba: "rgba(220, 38, 38, 0.5)",
-    bgColor: "#050505",
-    emoji: "🔴",
-  },
-  kodak_amber: {
-    id: "kodak_amber",
-    label: "Kodak 1970 Kehribar",
-    sub: "Sıcak altın saat projeksiyonu",
-    accentColor: "#d97706",
-    secondaryAccent: "#fbbf24",
-    hudBorder: "rgba(217, 119, 6, 0.45)",
-    glowRgba: "rgba(217, 119, 6, 0.45)",
-    bgColor: "#090704",
-    emoji: "🎞️",
-  },
-  noir_silver: {
-    id: "noir_silver",
-    label: "Criterion Noir",
-    sub: "Siyah-beyaz bağımsız sinema",
-    accentColor: "#94a3b8",
-    secondaryAccent: "#f8fafc",
-    hudBorder: "rgba(148, 163, 184, 0.35)",
-    glowRgba: "rgba(203, 213, 225, 0.35)",
-    bgColor: "#060709",
-    emoji: "🎬",
-  },
-  scifi_cyan: {
-    id: "scifi_cyan",
-    label: "Sci-Fi Cyberpunk",
-    sub: "Blade Runner & Dune neonu",
-    accentColor: "#06b6d4",
-    secondaryAccent: "#38bdf8",
-    hudBorder: "rgba(6, 182, 212, 0.45)",
-    glowRgba: "rgba(6, 182, 212, 0.45)",
-    bgColor: "#040810",
-    emoji: "🌌",
-  },
-};
-
-export const DEFAULT_AMBIENCE: CinemaAmbience = {
-  theme: "velvet_red",
-  dimness: 85,
-  glowIntensity: 65,
-  grain: "SUBTLE",
-  showWatermark: true,
-  cornerAccent: "AUTO",
-};
-
 export interface CinephilePersona {
   topDirector: string;
   topGenre: string;
@@ -167,7 +63,6 @@ export interface UserProfile {
   isPro?: boolean;            // Sinefil Pro VIP
   letterboxdUsername?: string;// Letterboxd kullanıcı adı (Simbiyotik Profil)
   tasteDna: CinephilePersona; // Sinefil Kimliği (Letterboxd / Persona)
-  ambience?: CinemaAmbience;  // Sinema Salonu Işık ve Loşluk Ayarları
 }
 
 export interface AvatarOption {

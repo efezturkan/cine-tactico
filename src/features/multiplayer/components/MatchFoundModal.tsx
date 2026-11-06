@@ -12,7 +12,6 @@ interface MatchFoundModalProps {
   opponentName?: string;
   opponentAvatarId?: string;
   opponentLevel?: number;
-  opponentRankTitle?: string;
   opponentWinRate?: number;
   boardTitle?: string;
   onCountdownComplete: () => void;
@@ -24,11 +23,10 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
   opponentName = "TarantinoKult",
   opponentAvatarId = "avatar_noir",
   opponentLevel = 7,
-  opponentRankTitle = "Kült Film Koleksiyoneri 🎬",
   boardTitle = "Auteur Savaşları",
   onCountdownComplete,
 }) => {
-  const { dict, locale, tBoardTitle } = useTranslation();
+  const { locale, tBoardTitle } = useTranslation();
   const isEn = locale === "en";
 
   const [countdown, setCountdown] = useState<number>(3);

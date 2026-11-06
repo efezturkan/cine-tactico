@@ -17,7 +17,6 @@ import {
 } from "@/backend";
 import {
   PRESET_BOARDS,
-  getRandomBoard,
   createRandomizedBoard,
   getRandomOpponent,
   BotOpponentProfile,
@@ -36,10 +35,6 @@ import {
 } from "@/core";
 import {
   UserProfile,
-  DEFAULT_AMBIENCE,
-  AMBIENCE_THEMES,
-  AmbienceTheme,
-  CinemaAmbience,
   MatchRecord,
 } from "@/types/profile";
 import { audio } from "@/utils/audio";
@@ -58,7 +53,6 @@ function CineXoxApp() {
   const [boardIndex, setBoardIndex] = useState<number>(0);
   const [mode, setMode] = useState<GameMode>("VS_BOT");
   const [contentPool, setContentPool] = useState<ContentPoolType>("HYBRID");
-  const [allowSteal, setAllowSteal] = useState<boolean>(false);
   const [customRoomCode, setCustomRoomCode] = useState<string | null>(null);
   const [isHost, setIsHost] = useState<boolean>(false);
   const [customShotClock, setCustomShotClock] = useState<number>(12);
@@ -100,7 +94,7 @@ function CineXoxApp() {
   const [showCustomLobby, setShowCustomLobby] = useState<boolean>(false);
   const [showQuests, setShowQuests] = useState<boolean>(false);
   const [showProfile, setShowProfile] = useState<boolean>(false);
-  const [profileInitialTab, setProfileInitialTab] = useState<"CAREER" | "DNA" | "AMBIENCE">("CAREER");
+  const [profileInitialTab, setProfileInitialTab] = useState<"CAREER" | "DNA">("CAREER");
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [showShop, setShowShop] = useState<boolean>(false);
   const [showMatchFound, setShowMatchFound] = useState<boolean>(false);
@@ -109,7 +103,6 @@ function CineXoxApp() {
   const [queueDifficulty, setQueueDifficulty] = useState<"EASY" | "NORMAL" | "HARD">("NORMAL");
   const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
-  const [showAmbienceConsole, setShowAmbienceConsole] = useState<boolean>(false);
   const [showSurrenderConfirm, setShowSurrenderConfirm] = useState<boolean>(false);
   const [pendingSwitchMode, setPendingSwitchMode] = useState<GameMode | null>(null);
   const [pendingBoardIndex, setPendingBoardIndex] = useState<number>(0);
@@ -154,7 +147,6 @@ function CineXoxApp() {
         { genre: "Dram", percentage: 20 },
       ],
     },
-    ambience: DEFAULT_AMBIENCE,
   });
 
   const [claimedDaily, setClaimedDaily] = useState<boolean>(false);
@@ -189,20 +181,6 @@ function CineXoxApp() {
         setProfile(prev => ({ ...prev, username: `Sinefil #${suffix}` }));
       }
 
-      const saved = localStorage.getItem("cinexox_ambience") || localStorage.getItem("cinetactico_ambience");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed === "object") {
-          setProfile(prev => ({
-            ...prev,
-            ambience: {
-              ...DEFAULT_AMBIENCE,
-              ...parsed,
-              theme: parsed.theme && parsed.theme in AMBIENCE_THEMES ? (parsed.theme as AmbienceTheme) : DEFAULT_AMBIENCE.theme,
-            },
-          }));
-        }
-      }
 
       const savedHistory = localStorage.getItem("cinexox_match_history");
       if (savedHistory) {
@@ -226,16 +204,6 @@ function CineXoxApp() {
       // ignore
     }
   }, [profile]);
-
-  useEffect(() => {
-    if (profile.ambience) {
-      try {
-        localStorage.setItem("cinexox_ambience", JSON.stringify(profile.ambience));
-      } catch {
-        // ignore
-      }
-    }
-  }, [profile.ambience]);
 
   // Otomatik anonim oyuncu kimliği başlatma / mevcut oturumu yükleme
   useEffect(() => {
@@ -290,7 +258,6 @@ function CineXoxApp() {
     mode,
     botDifficulty,
     customShotClock,
-    allowSteal,
     currentView === "GAME" && !showMatchFound && !isGameIntroActive
   );
 
@@ -475,7 +442,7 @@ function CineXoxApp() {
     if (result.success) {
       setMovieSearchError(null);
       if (mode === "ONLINE_ROOM" && customRoomCode) {
-        broadcastMove(targetIdx, movie, currentTurn, result.stolen);
+        broadcastMove(targetIdx, movie, currentTurn);
       }
     } else {
       audio.playError();
@@ -572,7 +539,6 @@ function CineXoxApp() {
     }
     audio.playSelect();
     setMode(targetMode);
-    setAllowSteal(false);
     setCustomShotClock(12);
     if (targetMode === "VS_BOT") {
       const { board: nextBoard, index: nextIdx } = getBoardForMode(queueMode, boardIndex);
@@ -615,7 +581,6 @@ function CineXoxApp() {
       const targetMode = pendingSwitchMode;
       setPendingSwitchMode(null);
       setMode(targetMode);
-      setAllowSteal(false);
       setCustomShotClock(12);
       if (targetMode === "VS_BOT") {
         const { board: nextBoard, index: nextIdx } = getBoardForMode(queueMode, boardIndex);
@@ -643,7 +608,6 @@ function CineXoxApp() {
     setIsHost(true);
     setCustomRoomCode(settings.roomCode);
     setCustomShotClock(settings.shotClockSeconds);
-    setAllowSteal(false);
     setMode("ONLINE_ROOM");
     const activeBoard = optionalBoard || PRESET_BOARDS[boardIndex];
     setBoard(activeBoard);
@@ -660,7 +624,6 @@ function CineXoxApp() {
     setIsHost(false);
     setCustomRoomCode(roomCode);
     setCustomShotClock(settings.shotClockSeconds);
-    setAllowSteal(false);
     setMode("ONLINE_ROOM");
     setBoard(boardData);
     resetGame(boardData);
@@ -810,7 +773,6 @@ function CineXoxApp() {
     profileInitialTab,
     showHelp,
     showLeaderboard,
-    showAmbienceConsole,
     showNotifications,
     profile,
     queueMode,
@@ -844,22 +806,6 @@ function CineXoxApp() {
     onToggleMute: handleToggleMute,
     onCloseHelp: () => setShowHelp(false),
     onCloseLeaderboard: () => setShowLeaderboard(false),
-    onCloseAmbienceConsole: () => setShowAmbienceConsole(false),
-    onUpdateAmbience: (updated: Partial<CinemaAmbience>) => {
-      setProfile(prev => ({
-        ...prev,
-        ambience: {
-          ...(prev.ambience || DEFAULT_AMBIENCE),
-          ...updated,
-        },
-      }));
-    },
-    onResetAmbience: () => {
-      setProfile(prev => ({
-        ...prev,
-        ambience: DEFAULT_AMBIENCE,
-      }));
-    },
     onCloseNotifications: () => setShowNotifications(false),
   };
 
@@ -917,10 +863,6 @@ function CineXoxApp() {
             audio.playSelect();
             setProfileInitialTab("DNA");
             setCurrentView("PROFILE");
-          }}
-          onOpenLiveAmbience={() => {
-            audio.playSelect();
-            setShowAmbienceConsole(true);
           }}
           onOpenNotifications={() => {
             audio.playSelect();
@@ -990,7 +932,6 @@ function CineXoxApp() {
       <main className="min-h-[100dvh] bg-[#0B0D12] flex flex-col items-center tab-fade-in">
         <CustomRoomModal
           isPage={true}
-          currentUser={profile}
           onCreateRoom={handleCreateCustomRoom}
           onJoinRoom={handleJoinCustomRoom}
         />
@@ -1064,7 +1005,6 @@ function CineXoxApp() {
         totalArcadeScore={totalArcadeScore}
         mode={mode}
         botDifficulty={botDifficulty}
-        allowSteal={allowSteal}
         customRoomCode={customRoomCode}
         profile={profile}
         muted={muted}
