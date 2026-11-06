@@ -97,7 +97,7 @@ export const en: TranslationDictionary = {
   },
   salon: {
     title: "Auditorium Ambience",
-    sub: "Set the room's light yourself. The screen behind is a live preview.",
+    sub: "Set the room's light.",
     preset: "PRESET",
     dim: "Dimness",
     dimHint: "Darken the room",
@@ -111,6 +111,10 @@ export const en: TranslationDictionary = {
     reset: "Reset",
     cancel: "Cancel",
     done: "Done",
+    tapHint: "Tap the screen: hide / show controls",
+    compare: "Compare",
+    compareHint: "Hold to see the original",
+    backToControls: "Back to controls",
   },
   settings: {
     title: "Settings",

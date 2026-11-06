@@ -70,16 +70,18 @@ function CineXoxApp() {
   const [hintMessage, setHintMessage] = useState<string | null>(null);
 
   // Tur 10B: 8. Açılış logo tek seferlik 300 ms fade-in
-  const [showSplash, setShowSplash] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
+  // Hidrasyon uyumu: sunucu ve ilk istemci çıktısı aynı olmalı, depolama mount'ta okunur.
+  const [showSplash, setShowSplash] = useState<boolean>(false);
+  useEffect(() => {
     try {
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (prefersReduced) return false;
-      return !sessionStorage.getItem("cinexox_splash_seen");
+      if (!prefersReduced && !sessionStorage.getItem("cinexox_splash_seen")) {
+        setShowSplash(true);
+      }
     } catch {
-      return false;
+      // Depolama erişilemezse açılış logosu atlanır
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (showSplash) {
@@ -155,18 +157,18 @@ function CineXoxApp() {
     ambience: DEFAULT_AMBIENCE,
   });
 
-  const [claimedDaily, setClaimedDaily] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
+  const [claimedDaily, setClaimedDaily] = useState<boolean>(false);
+  useEffect(() => {
     try {
       const todayDate = getGlobalDailyDateKey();
-      return (
+      setClaimedDaily(
         localStorage.getItem("cinexox_last_streak_date") === todayDate ||
-        localStorage.getItem("cinexox_last_streak_utc") === todayDate
+          localStorage.getItem("cinexox_last_streak_utc") === todayDate
       );
     } catch {
-      return false;
+      // Depolama yoksa bugünün serisi alınmamış sayılır
     }
-  });
+  }, []);
   const [claimedQuestIds, setClaimedQuestIds] = useState<string[]>([]);
 
   // LocalStorage senkronizasyonu (Çevrimdışı ve Misafir Oyuncu Koruması)

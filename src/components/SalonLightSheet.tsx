@@ -11,25 +11,31 @@ import {
   saveSalonConfig,
   applySalonConfigToDom,
 } from "@/utils/salonConfig";
-import { Button } from "@/components/ui/Button";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { useTranslation } from "@/i18n";
-import { X } from "lucide-react";
+import { Eye, SplitSquareHorizontal } from "lucide-react";
 
 interface SalonLightSheetProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+type SalonTab = "dimness" | "projection" | "grain";
+
 /**
- * Salon Işığı ayar sayfası. Arka plan karartılmaz ve sayfa kısa tutulur:
- * ayar değiştikçe Gişe ekranı canlı olarak değişir. Vazgeç / X ilk hâle döner,
- * Tamam kaydeder.
+ * Salon Işığı canlı önizleme (customizer) modu.
+ * Tüm ekran önizlemedir; ayarlar altta ince bir dock'ta durur.
+ *  - Ekrana dokun: ayarları gizle / göster (tam görüntüyü gör)
+ *  - Karşılaştır'a basılı tut: ilk hâli gör, bırakınca ayarlarına dön
+ *  - Vazgeç ilk hâle döner, Tamam kaydeder
  */
 export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClose }) => {
   const { dict, locale } = useTranslation();
   const [config, setConfig] = useState<SalonConfig>(DEFAULT_SALON_CONFIG);
+  const [tab, setTab] = useState<SalonTab>("dimness");
+  const [hidden, setHidden] = useState<boolean>(false);
+  const [comparing, setComparing] = useState<boolean>(false);
   const initialConfigRef = useRef<SalonConfig>(DEFAULT_SALON_CONFIG);
   const configRef = useRef<SalonConfig>(DEFAULT_SALON_CONFIG);
 
@@ -39,6 +45,9 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
       setConfig(saved);
       configRef.current = saved;
       initialConfigRef.current = saved;
+      setTab("dimness");
+      setHidden(false);
+      setComparing(false);
     }
   }, [isOpen]);
 
@@ -71,108 +80,142 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
     applySalonConfigToDom(DEFAULT_SALON_CONFIG);
   };
 
+  const startCompare = () => {
+    haptic.light();
+    setComparing(true);
+    applySalonConfigToDom(initialConfigRef.current);
+  };
+  const stopCompare = () => {
+    if (!comparing) return;
+    setComparing(false);
+    applySalonConfigToDom(configRef.current);
+  };
+
+  const tabs: { id: SalonTab; label: string }[] = [
+    { id: "dimness", label: dict.salon.dim },
+    { id: "projection", label: dict.salon.projection },
+    { id: "grain", label: dict.salon.grain },
+  ];
+
   const grainOptions: { id: SalonGrainOption; label: string }[] = [
     { id: "off", label: dict.salon.grainOff },
     { id: "light", label: dict.salon.grainLight },
     { id: "film", label: dict.salon.grainFilm },
   ];
 
-  const sliders = [
-    { key: "dimness" as const, label: dict.salon.dim, hint: dict.salon.dimHint, max: 60 },
-    { key: "projection" as const, label: dict.salon.projection, hint: dict.salon.projectionHint, max: 100 },
-  ];
+  const compareButton = (
+    <button
+      type="button"
+      onPointerDown={startCompare}
+      onPointerUp={stopCompare}
+      onPointerLeave={stopCompare}
+      onPointerCancel={stopCompare}
+      onContextMenu={(e) => e.preventDefault()}
+      aria-label={dict.salon.compareHint}
+      title={dict.salon.compareHint}
+      className={`min-h-[40px] px-3 rounded-full border flex items-center gap-1.5 text-[11px] font-bold touch-none transition-colors ${
+        comparing
+          ? "bg-[#D9A441] text-[#0B0D12] border-[#D9A441]"
+          : "bg-[#181B22]/90 text-[#E8E6E1] border-white/15"
+      }`}
+    >
+      <SplitSquareHorizontal className="w-3.5 h-3.5" />
+      {dict.salon.compare}
+    </button>
+  );
 
   return (
-    // Sayfa dışına dokunmak ayarı kaydeder; ekran karartılmadığı için önizleme açık kalır.
-    <div
-      onClick={(e) => {
-        if (e.target === e.currentTarget) handleConfirm();
-      }}
-      className="fixed inset-0 z-50 flex flex-col justify-end select-none"
-    >
-      <div className="w-full max-w-lg mx-auto bg-[#14171D]/95 backdrop-blur-md border-t border-x border-white/10 rounded-t-[24px] px-4 pt-2.5 pb-4 flex flex-col shadow-2xl animate-in slide-in-from-bottom-5 duration-200">
-        <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-2 shrink-0" />
+    <div className="fixed inset-0 z-50 select-none">
+      {/* Önizleme yüzeyi: dokununca ayarlar gizlenir / gelir. Altındaki ekrana tıklama geçmez. */}
+      <div
+        className="absolute inset-0"
+        onClick={() => {
+          haptic.light();
+          setHidden((h) => !h);
+        }}
+        aria-hidden="true"
+      />
 
-        <div className="flex items-start justify-between pb-2 border-b border-white/10">
-          <div className="min-w-0">
-            <h2 className="font-serif text-lg font-bold text-[#E8E6E1]">{dict.salon.title}</h2>
-            <p className="text-[11px] text-[#8A8F9A] mt-0.5 leading-snug">{dict.salon.sub}</p>
-          </div>
-          <Button variant="icon" onClick={handleCancel} title={dict.salon.cancel}>
-            <X className="w-4 h-4" />
-          </Button>
+      {hidden ? (
+        <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 pb-[calc(5rem+env(safe-area-inset-bottom))]">
+          <button
+            type="button"
+            onClick={() => setHidden(false)}
+            className="min-h-[40px] px-4 rounded-full bg-[#181B22]/90 border border-[#D9A441]/50 text-[#D9A441] text-[11px] font-bold flex items-center gap-1.5"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            {dict.salon.backToControls}
+          </button>
+          {compareButton}
         </div>
-
-        <div className="flex flex-col gap-2 pt-2.5">
-          {/* Hazır ayarlar */}
-          <div>
-            <span className="text-[10px] font-bold text-[#8A8F9A] tracking-wider block mb-1.5">
-              {dict.salon.preset}
-            </span>
-            <div className="grid grid-cols-4 gap-2" role="radiogroup" aria-label={dict.salon.preset}>
-              {(Object.keys(SALON_PRESETS) as SalonPresetId[]).map((pid) => {
-                const preset = SALON_PRESETS[pid];
-                const isSelected = config.preset === pid;
-                return (
-                  <button
-                    key={pid}
-                    type="button"
-                    role="radio"
-                    aria-checked={isSelected}
-                    onClick={() => {
-                      audio.playSelect();
-                      haptic.light();
-                      update({ preset: pid });
-                    }}
-                    className={`min-h-[46px] px-1.5 py-1.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 ${
-                      isSelected
-                        ? "bg-[#181B22] border-[#D9A441] text-[#D9A441]"
-                        : "bg-[#0B0D12] border-white/10 text-[#8A8F9A] hover:text-[#E8E6E1]"
-                    }`}
-                  >
-                    <span
-                      className="w-5 h-5 rounded-full border border-white/25"
-                      style={{ background: `radial-gradient(circle at 35% 30%, ${preset.beam}, ${preset.bg} 85%)` }}
-                    />
-                    <span className="text-[10px] font-bold tracking-tight leading-none">
-                      {preset.label[locale === "en" ? "en" : "tr"]}
-                    </span>
-                  </button>
-                );
-              })}
+      ) : (
+        <div className="absolute inset-x-0 bottom-0 w-full max-w-lg mx-auto bg-[#10131A]/92 backdrop-blur-md border-t border-x border-white/10 rounded-t-[20px] px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col gap-2.5 shadow-2xl animate-in slide-in-from-bottom-3 duration-150">
+          {/* Başlık + karşılaştır */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <h2 className="font-serif text-base font-bold text-[#E8E6E1] leading-tight">{dict.salon.title}</h2>
+              <p className="text-[10px] text-[#8A8F9A] leading-tight truncate">{dict.salon.tapHint}</p>
             </div>
+            {compareButton}
           </div>
 
-          {/* Kaydırıcılar */}
-          {sliders.map((s) => (
-            <div key={s.key} className="px-3 py-2 rounded-xl bg-[#0B0D12] border border-white/5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-baseline gap-2 min-w-0">
-                  <span className="text-xs font-medium text-[#E8E6E1]">{s.label}</span>
-                  <span className="text-[10px] text-[#8A8F9A] truncate">{s.hint}</span>
-                </div>
-                <span className="text-xs font-mono font-bold text-[#D9A441]">%{config[s.key]}</span>
-              </div>
-              <input
-                type="range"
-                min={0}
-                max={s.max}
-                step={1}
-                value={config[s.key]}
-                aria-label={s.label}
-                onChange={(e) => update({ [s.key]: Number(e.target.value) } as Partial<SalonConfig>)}
-                className="w-full h-7 accent-[#D9A441] cursor-pointer"
-              />
-            </div>
-          ))}
+          {/* Hazır ayarlar */}
+          <div className="grid grid-cols-4 gap-2" role="radiogroup" aria-label={dict.salon.preset}>
+            {(Object.keys(SALON_PRESETS) as SalonPresetId[]).map((pid) => {
+              const preset = SALON_PRESETS[pid];
+              const isSelected = config.preset === pid;
+              return (
+                <button
+                  key={pid}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  onClick={() => {
+                    audio.playSelect();
+                    haptic.light();
+                    update({ preset: pid });
+                  }}
+                  className={`min-h-[44px] rounded-xl border flex items-center justify-center gap-1.5 px-1 transition-all active:scale-95 ${
+                    isSelected
+                      ? "bg-[#181B22] border-[#D9A441] text-[#D9A441]"
+                      : "bg-[#0B0D12]/80 border-white/10 text-[#8A8F9A]"
+                  }`}
+                >
+                  <span
+                    className="w-4 h-4 rounded-full border border-white/25 shrink-0"
+                    style={{ background: `radial-gradient(circle at 35% 30%, ${preset.beam}, ${preset.bg} 85%)` }}
+                  />
+                  <span className="text-[10px] font-bold leading-none truncate">
+                    {preset.label[locale === "en" ? "en" : "tr"]}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
 
-          {/* Gren */}
-          <div className="px-3 py-2 rounded-xl bg-[#0B0D12] border border-white/5 flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <span className="text-xs font-medium text-[#E8E6E1] block">{dict.salon.grain}</span>
-              <span className="text-[10px] text-[#8A8F9A]">{dict.salon.grainHint}</span>
-            </div>
-            <div className="flex rounded-lg bg-[#181B22] p-0.5 border border-white/10 shrink-0">
+          {/* Tek seferde tek ayar: sekme + geniş kaydırıcı */}
+          <div className="flex rounded-lg bg-[#0B0D12]/80 p-0.5 border border-white/10" role="tablist">
+            {tabs.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={tab === t.id}
+                onClick={() => {
+                  audio.playSelect();
+                  setTab(t.id);
+                }}
+                className={`flex-1 min-h-[34px] rounded-md text-[11px] font-bold transition-all ${
+                  tab === t.id ? "bg-[#D9A441] text-[#0B0D12]" : "text-[#8A8F9A]"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {tab === "grain" ? (
+            <div className="flex rounded-lg bg-[#181B22] p-0.5 border border-white/10">
               {grainOptions.map((g) => (
                 <button
                   key={g.id}
@@ -181,29 +224,56 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
                     audio.playSelect();
                     update({ grain: g.id });
                   }}
-                  className={`min-h-[36px] px-3 rounded-md text-xs font-bold transition-all ${
-                    config.grain === g.id ? "bg-[#D9A441] text-[#0B0D12]" : "text-[#8A8F9A] hover:text-[#E8E6E1]"
+                  className={`flex-1 min-h-[40px] rounded-md text-xs font-bold transition-all ${
+                    config.grain === g.id ? "bg-[#D9A441] text-[#0B0D12]" : "text-[#8A8F9A]"
                   }`}
                 >
                   {g.label}
                 </button>
               ))}
             </div>
+          ) : (
+            <div className="flex items-center gap-3 min-h-[40px]">
+              <input
+                type="range"
+                min={0}
+                max={tab === "dimness" ? 60 : 100}
+                step={1}
+                value={config[tab]}
+                aria-label={tab === "dimness" ? dict.salon.dim : dict.salon.projection}
+                onChange={(e) => update({ [tab]: Number(e.target.value) } as Partial<SalonConfig>)}
+                className="flex-1 h-8 accent-[#D9A441] cursor-pointer"
+              />
+              <span className="w-12 text-right text-sm font-mono font-bold text-[#D9A441]">%{config[tab]}</span>
+            </div>
+          )}
+
+          {/* Aksiyonlar */}
+          <div className="grid grid-cols-3 gap-2 pt-0.5">
+            <button
+              type="button"
+              onClick={handleReset}
+              className="min-h-[44px] rounded-xl bg-[#181B22] border border-white/10 text-[#8A8F9A] text-xs font-bold uppercase tracking-wide active:scale-95"
+            >
+              {dict.salon.reset}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="min-h-[44px] rounded-xl bg-[#181B22] border border-white/10 text-[#E8E6E1] text-xs font-bold uppercase tracking-wide active:scale-95"
+            >
+              {dict.salon.cancel}
+            </button>
+            <button
+              type="button"
+              onClick={handleConfirm}
+              className="min-h-[44px] rounded-xl bg-[#D9A441] text-[#0B0D12] text-xs font-bold uppercase tracking-wide active:scale-95"
+            >
+              {dict.salon.done}
+            </button>
           </div>
         </div>
-
-        <div className="flex items-center gap-2 pt-2.5 mt-2.5 border-t border-white/10">
-          <Button variant="secondary" onClick={handleReset} className="flex-1">
-            {dict.salon.reset}
-          </Button>
-          <Button variant="secondary" onClick={handleCancel} className="flex-1">
-            {dict.salon.cancel}
-          </Button>
-          <Button variant="primary" onClick={handleConfirm} className="flex-1">
-            {dict.salon.done}
-          </Button>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -97,7 +97,7 @@ export const tr: TranslationDictionary = {
   },
   salon: {
     title: "Salon Işığı",
-    sub: "Salonun ışığını kendin kur. Arkadaki ekran canlı önizleme.",
+    sub: "Salonun ışığını kur.",
     preset: "HAZIR AYAR",
     dim: "Loşluk",
     dimHint: "Salonu karart",
@@ -111,6 +111,10 @@ export const tr: TranslationDictionary = {
     reset: "Sıfırla",
     cancel: "Vazgeç",
     done: "Tamam",
+    tapHint: "Ekrana dokun: ayarları gizle / göster",
+    compare: "Karşılaştır",
+    compareHint: "Basılı tut: ilk hâli gör",
+    backToControls: "Ayarlara dön",
   },
   settings: {
     title: "Ayarlar",

@@ -111,6 +111,10 @@ export interface TranslationDictionary {
     reset: string;
     cancel: string;
     done: string;
+    tapHint: string;
+    compare: string;
+    compareHint: string;
+    backToControls: string;
   };
   settings: {
     title: string;
