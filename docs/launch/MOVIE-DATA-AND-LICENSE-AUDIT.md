@@ -1,3 +1,5 @@
+> **[ARŞİV — BAYAT]** Bu rapor 31 Ekim 2026 durumunu anlatır (100 kayıt, TMDB görselleri). Katalog artık Wikidata tabanlı 722 kayıttır ve `src/` içinde tmdb/imdb referansı yoktur. Güncel durum için `docs/qa/AUDIT_PHASE1_2026-11-08.md` ve `docs/architecture/DATA_GOVERNANCE.md`.
+
 # CINE-TACTICO — MEVCUT PROJE, VERİ KAYNAKLARI VE LİSANS DENETİM RAPORU
 
 **Belge Kodu:** CT-AUDIT-DATA-01  

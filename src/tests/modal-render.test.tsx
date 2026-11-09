@@ -43,8 +43,8 @@ const emptyHtml = renderToString(
 );
 
 assert(
-  emptyHtml.includes("Anti-Cheat: Tür ve yıl ipuçları adil oyun için gizlenmiştir"),
-  "Empty search modal displays Anti-Cheat notice"
+  emptyHtml.includes("Adil oyun için tür ve yıl ipucu gösterilmez"),
+  "Empty search modal displays fair-play notice"
 );
 assert(
   emptyHtml.includes("en az 2 harf girilmelidir"),

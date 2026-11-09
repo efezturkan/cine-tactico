@@ -195,7 +195,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                 {isEn ? "Enter at least 2 characters to list results." : "Sonuçları listelemek için en az 2 harf girilmelidir."}
               </p>
               <p className="text-[10px] text-[#8A8F9A]/80 mt-2 font-medium">
-                {isEn ? "Anti-Cheat: Genre and year hints hidden for fair play" : "Anti-Cheat: Tür ve yıl ipuçları adil oyun için gizlenmiştir"}
+                {isEn ? "No genre or year hints, to keep it fair" : "Adil oyun için tür ve yıl ipucu gösterilmez"}
               </p>
             </div>
           ) : visibleMovies.length === 0 ? (

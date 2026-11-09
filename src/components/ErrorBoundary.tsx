@@ -45,9 +45,15 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
-      const isEn =
-        typeof window !== "undefined" &&
-        window.localStorage?.getItem("cinexox_locale") === "en";
+      let isEn = false;
+      try {
+        // Safari gizli mod / engelli depolamada erişim SecurityError fırlatabilir
+        isEn =
+          typeof window !== "undefined" &&
+          window.localStorage?.getItem("cinexox_locale") === "en";
+      } catch {
+        isEn = false;
+      }
 
       return (
         <div className="min-h-screen bg-[#0B0D12] text-[#E8E6E1] flex flex-col items-center justify-center p-6 text-center select-none font-sans">
