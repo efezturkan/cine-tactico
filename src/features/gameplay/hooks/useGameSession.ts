@@ -21,6 +21,8 @@ import {
   resolveFotoFinish,
   calculateBotMove,
   getBotThinkingDelay,
+  getBotGoldenReelPlan,
+  goldenReelAnswerer,
   BotSkill,
 } from "@/core";
 import { audio } from "@/utils/audio";
@@ -399,27 +401,46 @@ export function useGameSession(
   // Altın Makara (Sudden Death) Cevap Çözümleme
   const resolveGoldenReelAnswer = useCallback(
     (movie: Movie, playerSymbol: PlayerSymbol) => {
+      if (winner !== null) return { success: false, message: dict.game.msgGameOver };
       if (usedMovieIds.includes(movie.id)) {
         return { success: false, message: dict.game.goldenReelUsed };
       }
       if (movie.hasOscar || movie.boxOfficeCategory === "BLOCKBUSTER") {
-        setWinner(playerSymbol);
+        // Tek oyunculu modlarda cevabı yazan her zaman insandır (X). `currentTurn` son hamleyi
+        // yapana bağlı olduğundan botun adına yazılmasın.
+        const answerer = goldenReelAnswerer(mode, playerSymbol);
+        setWinner(answerer);
         setIsGoldenReelActive(false);
-        handleVictoryEffects(playerSymbol);
+        handleVictoryEffects(answerer);
         return { success: true };
       }
       return { success: false, message: dict.game.goldenReelRejected };
     },
-    [handleVictoryEffects, usedMovieIds, dict]
+    [handleVictoryEffects, usedMovieIds, dict, mode, winner]
   );
 
   // Altın Makara Süre Bitimi: Foto-finiş (Foto-finish) kararı!
   const resolveGoldenReelTimeout = useCallback(() => {
-    const finalWinner = resolveFotoFinish(scoreRarityX, scoreRarityO);
+    if (winner !== null) return;
+    const cellCount = (s: PlayerSymbol) => cellsRef.current.filter(c => c?.answeredBy === s).length;
+    const finalWinner = resolveFotoFinish(scoreRarityX, scoreRarityO, cellCount("X"), cellCount("O"));
     setWinner(finalWinner);
     setIsGoldenReelActive(false);
     handleVictoryEffects(finalWinner);
-  }, [scoreRarityX, scoreRarityO, handleVictoryEffects]);
+  }, [scoreRarityX, scoreRarityO, handleVictoryEffects, winner]);
+
+  // Altın Makara yarışı: VS_BOT'ta bot da aynı soruyu yanıtlayabilir; önce cevaplayan kazanır.
+  useEffect(() => {
+    if (!isGoldenReelActive || mode !== "VS_BOT" || winner !== null) return;
+    const plan = getBotGoldenReelPlan(botDifficulty);
+    if (!plan.answers) return;
+    const t = setTimeout(() => {
+      setWinner("O");
+      setIsGoldenReelActive(false);
+      handleVictoryEffects("O");
+    }, plan.delayMs);
+    return () => clearTimeout(t);
+  }, [isGoldenReelActive, mode, winner, botDifficulty, handleVictoryEffects]);
 
   // Bot kararı verirken en güncel fonksiyonlara ihtiyaç duyar; efektin yeniden kurulup
   // düşünme süresini sıfırlamaması için referanslardan okunur.

@@ -20,6 +20,7 @@ import {
   hasPlayerTriedCell,
   AttemptsPerCell,
   resolveFotoFinish,
+  getBotGoldenReelPlan,
   getSharedActorsRanked,
 } from "../core";
 import { MOVIES_DATABASE } from "../content/adapters/gameCatalog";
@@ -84,9 +85,15 @@ export function simulateMatch(board: GameBoard, x: Agent, o: Agent, rng: Rng, st
   let rejected = 0;
 
   const finishGoldenReel = (): SimResult => {
-    // Altın Makara: tek soru, iki taraf da %50 bilir; bilemezlerse foto-finiş (rarity)
-    const winnerByAnswer = rng() < 0.6 ? (rng() < 0.5 ? "X" : "O") : null;
-    const winner = winnerByAnswer ?? resolveFotoFinish(rarity.X, rarity.O);
+    // Altın Makara yarışı: her bot oyuncu, oyundaki aynı planla (getBotGoldenReelPlan) cevap verir;
+    // önce cevaplayan kazanır. Kimse cevaplayamazsa foto-finiş (hücre başına ortalama rarity).
+    const planFor = (a: Agent) => getBotGoldenReelPlan(a.kind === "BOT" ? a.difficulty : "MEDIUM", rng);
+    const px = planFor(x), po = planFor(o);
+    let winnerByAnswer: PlayerSymbol | null = null;
+    if (px.answers && (!po.answers || px.delayMs <= po.delayMs)) winnerByAnswer = "X";
+    else if (po.answers) winnerByAnswer = "O";
+    const n = (s: PlayerSymbol) => cells.filter(c => c?.answeredBy === s).length;
+    const winner = winnerByAnswer ?? resolveFotoFinish(rarity.X, rarity.O, n("X"), n("O"));
     return { winner, decidedBy: winnerByAnswer ? "GOLDEN_REEL" : "FOTO_FINISH", cells, attempts, rarityX: rarity.X, rarityO: rarity.O, steps, rejected };
   };
 
@@ -221,7 +228,9 @@ export function checkInvariants(board: GameBoard, r: SimResult): string[] {
   }
   if (r.decidedBy === "FOTO_FINISH") {
     if (r.cells.some(c => c === null)) errs.push("Altın Makara tahta dolmadan açıldı");
-    const expect = r.rarityX >= r.rarityO ? "X" : "O";
+    const nx = r.cells.filter(c => c?.answeredBy === "X").length;
+    const no = r.cells.filter(c => c?.answeredBy === "O").length;
+    const expect = resolveFotoFinish(r.rarityX, r.rarityO, nx, no);
     if (expect !== r.winner) errs.push("foto-finiş yanlış kazanan");
   }
   if (r.decidedBy === "GOLDEN_REEL" && r.cells.some(c => c === null)) errs.push("Altın Makara tahta dolmadan açıldı");

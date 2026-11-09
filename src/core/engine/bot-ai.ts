@@ -76,6 +76,26 @@ export function getBotThinkingDelay(difficulty: BotDifficulty = "MEDIUM"): numbe
   return 6300 + Math.random() * 2500;
 }
 
+/**
+ * ALTIN MAKARA YARIŞI: bot, 12 sn'lik tek soruda cevap verebilir mi ve ne zaman?
+ * Bu bir kalibrasyon varsayımıdır (ölçülmüş insan verisi değil): seviye arttıkça
+ * hem cevap verme olasılığı hem hız artar. Cevabı "Oscar'lı/gişe" kriterine uyan
+ * herhangi bir film olduğundan bilgi derinliği değil, hız belirleyicidir.
+ */
+export const GOLDEN_REEL_BOT: Record<BotDifficulty, { chance: number; minMs: number; maxMs: number }> = {
+  EASY: { chance: 0.35, minMs: 5000, maxMs: 10000 },
+  MEDIUM: { chance: 0.6, minMs: 3500, maxMs: 9000 },
+  HARD: { chance: 0.85, minMs: 2500, maxMs: 8000 },
+};
+
+export function getBotGoldenReelPlan(
+  difficulty: BotDifficulty,
+  rand: () => number = Math.random
+): { answers: boolean; delayMs: number } {
+  const p = GOLDEN_REEL_BOT[difficulty];
+  return { answers: rand() < p.chance, delayMs: p.minMs + rand() * (p.maxMs - p.minMs) };
+}
+
 export function getAvailableMoviesForCell(
   board: GameBoard,
   cellIndex: number,

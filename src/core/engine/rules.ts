@@ -62,11 +62,23 @@ export function evaluateBoardState(
  */
 export function resolveFotoFinish(
   scoreRarityX: number,
-  scoreRarityO: number
+  scoreRarityO: number,
+  cellsX?: number,
+  cellsO?: number
 ): PlayerSymbol {
+  // Hücre sayıları verildiyse HÜCRE BAŞINA ortalama kıyaslanır: X 5, O 4 hücre doldurduğu için
+  // toplam puan yapısal olarak X'i öne geçirir (ölçüm: foto-finişte X ~%90).
+  if (cellsX && cellsO && cellsX > 0 && cellsO > 0) {
+    const avgX = scoreRarityX / cellsX;
+    const avgO = scoreRarityO / cellsO;
+    if (avgX > avgO) return "X";
+    if (avgO > avgX) return "O";
+    // Tam eşitlikte ikinci oyuncu kazanır: ilk hamle avantajını dengeler
+    return "O";
+  }
   if (scoreRarityX > scoreRarityO) return "X";
   if (scoreRarityO > scoreRarityX) return "O";
-  // Eşitlik durumunda varsayılan olarak ilk hamle sahibi (X) kazanır
+  // Hücre sayısı bilinmiyorsa (eski çağrı): ilk hamle sahibi (X) kazanır
   return "X";
 }
 

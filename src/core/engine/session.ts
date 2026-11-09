@@ -64,3 +64,11 @@ export function registerFailedAttempt(
 export function hasPlayerTriedCell(attempts: AttemptsPerCell, cellIndex: number, player: PlayerSymbol): boolean {
   return Boolean(attempts[cellIndex]?.[player]);
 }
+
+/**
+ * Altın Makara cevabı kimin adına yazılır? Tek oyunculu modlarda cevabı yazan her zaman insandır (X);
+ * `currentTurn` son hamleyi yapana bağlı olduğundan botun adına yazılmamalı. Çevrimiçide gönderen taraf.
+ */
+export function goldenReelAnswerer(mode: string, submitted: PlayerSymbol): PlayerSymbol {
+  return mode === "ONLINE_ROOM" ? submitted : "X";
+}
