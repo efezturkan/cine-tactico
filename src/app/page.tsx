@@ -771,8 +771,9 @@ function CineXoxApp() {
     const result = getBoardForMode(modeType, boardIndex);
     const targetIdx = result.index;
     const nextBoard = result.board;
+    // Seçilen bot burada sıfırlanmaz: kuyruk modalı dev (StrictMode) ortamında onMatchFound'u iki kez
+    // çağırabilir ve ikinci çağrı rastgele bota düşerdi. Bir sonraki seçim ref'i zaten üzerine yazar.
     const opp = chosenBotRef.current ?? getRandomOpponent(targetDiff, pendingOpponent.name);
-    chosenBotRef.current = null;
 
     setPendingBoardIndex(targetIdx);
     setPendingOpponent(opp);
