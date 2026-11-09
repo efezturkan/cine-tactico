@@ -1,4 +1,5 @@
 import { GameBoard, BotDifficulty, BotSkill, BOT_SKILLS } from "@/core";
+import { shuffled } from "@/utils/shuffle";
 import { findMatchingMovies } from "@/core";
 import { calculateBoardValidCounts, ensureBoardValidCounts } from "@/core/engine/board-generator";
 import { generateSolvableBoard } from "./generatedBoards";
@@ -962,8 +963,8 @@ PRESET_BOARDS.forEach(board => {
  * her yeni maç bulmada yepyeni ve dinamik bir 3x3 grid düzeni üretir.
  */
 export function createRandomizedBoard(baseBoard: GameBoard): GameBoard {
-  const shuffledRows = [...baseBoard.rows].sort(() => Math.random() - 0.5);
-  const shuffledCols = [...baseBoard.cols].sort(() => Math.random() - 0.5);
+  const shuffledRows = shuffled(baseBoard.rows);
+  const shuffledCols = shuffled(baseBoard.cols);
 
   const randomizedBoard: GameBoard = {
     ...baseBoard,

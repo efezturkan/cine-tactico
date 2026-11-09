@@ -1,4 +1,5 @@
 import { GameBoard } from "../types";
+import { shuffled } from "@/utils/shuffle";
 import { findMatchingMovies, getSharedActors } from "./validator";
 import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
 
@@ -47,8 +48,8 @@ export function createRandomizedBoard(
   baseBoard: GameBoard,
   moviesPool = MOVIES_DATABASE
 ): GameBoard {
-  const shuffledRows = [...baseBoard.rows].sort(() => Math.random() - 0.5);
-  const shuffledCols = [...baseBoard.cols].sort(() => Math.random() - 0.5);
+  const shuffledRows = shuffled(baseBoard.rows);
+  const shuffledCols = shuffled(baseBoard.cols);
 
   const newBoard: GameBoard = {
     ...baseBoard,

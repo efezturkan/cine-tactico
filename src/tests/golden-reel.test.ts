@@ -1,5 +1,6 @@
 import { resolveFotoFinish, getBotGoldenReelPlan, GOLDEN_REEL_BOT, goldenReelAnswerer } from "../core";
 import { generateSolvableBoard } from "../data/generatedBoards";
+import { shuffled } from "../utils/shuffle";
 import { simulateMatch, makeRng, checkInvariants, Agent } from "./sim-helpers";
 
 let passed = 0;
@@ -55,6 +56,13 @@ console.log(`  foto-finiş: ${ff} maç, X ${(ffX / Math.max(1, ff) * 100).toFixe
 assert(ff >= 30, "örneklem yeterli (en az 30 foto-finiş)");
 assert(ffX / ff > 0.35 && ffX / ff < 0.65, "foto-finişte X oranı %35-65 bandında");
 assert(bad === 0, "1500 simüle maçta kural ihlali yok");
+
+// Karıştırma: elemanları korur, girdiyi bozmaz, ilk eleman yaklaşık eşit dağılır
+const src = [1, 2, 3, 4];
+const first: Record<number, number> = {};
+for (let i = 0; i < 8000; i++) { const f = shuffled(src, rng)[0]; first[f] = (first[f] || 0) + 1; }
+assert(shuffled(src).sort().join() === "1,2,3,4" && src.join() === "1,2,3,4", "shuffled elemanları korur, girdiyi değiştirmez");
+assert(Object.values(first).every(c => c > 1700 && c < 2300), "shuffled ilk eleman dağılımı düzgün (~%25)");
 
 console.log(`\nGOLDEN REEL RESULT: ${passed}/${passed + failed} PASSED`);
 if (failed > 0) process.exit(1);
