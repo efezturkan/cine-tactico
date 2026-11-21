@@ -125,7 +125,9 @@ export function translateBoardTitle(title: string, locale: Locale): string {
 }
 
 export function translateCriterionLabel(label: string, locale: Locale): string {
-  if (locale === "tr") return label;
+  // TR: parantezli İngilizce eklemeler yasak (tasarım anayasası 1.2): "Suç (Crime)" -> "Suç".
+  // Yalnızca ASCII parantez eki silinir; Türkçe karakterli ekler ("Batman Begins (Batman Başlıyor)") korunur.
+  if (locale === "tr") return label.replace(/\s*\([A-Za-z0-9 .'&-]+\)\s*$/, "");
   return CRITERIA_LABELS_EN[label] || label;
 }
 
