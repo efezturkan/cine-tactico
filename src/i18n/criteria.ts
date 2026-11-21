@@ -105,19 +105,18 @@ export const CRITERIA_SUBLABELS_EN: Record<string, string> = {
 };
 
 export const BOT_TITLES_EN: Record<string, string> = {
-  "Bilet Kontrolörü 🍿": "Ticket Inspector 🍿",
   "Bilet Kontrolörü": "Ticket Inspector",
   "Bağımsız Sinemacı": "Indie Filmmaker",
   "Festival Jürisi": "Festival Juror",
   "Usta Yönetmen": "Master Director",
-  "Hafta Sonu Seyircisi 🎟️": "Weekend Moviegoer 🎟️",
-  "Gişe Çırağı 🥤": "Box Office Apprentice 🥤",
+  "Hafta Sonu Seyircisi": "Weekend Moviegoer",
+  "Gişe Çırağı": "Box Office Apprentice",
   "Zaman Büken Sinefil ⏳": "Mind-Bending Cinephile ⏳",
-  "Arthouse Takipçisi 🎬": "Arthouse Devotee 🎬",
-  "Kült Bağımlısı 📼": "Cult Film Junkie 📼",
-  "Altın Palmiye Avcısı 🌿": "Palme d'Or Hunter 🌿",
-  "Akademi Seçmeni 🏆": "Academy Voter 🏆",
-  "35mm Ustası 🎞️": "35mm Master 🎞️",
+  "Arthouse Takipçisi": "Arthouse Devotee",
+  "Kült Bağımlısı": "Cult Film Junkie",
+  "Altın Palmiye Avcısı": "Palme d'Or Hunter",
+  "Akademi Seçmeni": "Academy Voter",
+  "35mm Ustası": "35mm Master",
 };
 
 export function translateBoardTitle(title: string, locale: Locale): string {

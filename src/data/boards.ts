@@ -45,31 +45,31 @@ export function getBotSkillForProfile(bot: BotOpponentProfile): BotSkill {
 
 export const BOT_OPPONENTS: BotOpponentProfile[] = [
   // KOLAY: gişede biletçi seviyesi, popüler filmleri bilir, hata yapar
-  { name: "PatlamisMisirci", rankTitle: "Bilet Kontrolörü 🍿", level: 2, avatarId: "avatar_actor", difficulty: "EASY", rating: 850, style: "BALANCED",
+  { name: "PatlamisMisirci", rankTitle: "Bilet Kontrolörü", level: 2, avatarId: "avatar_actor", difficulty: "EASY", rating: 850, style: "BALANCED",
     quote: { tr: "Mısırım hazır, filmi sen söyle.", en: "Popcorn's ready. You name the film." } },
-  { name: "SeansGezgini", rankTitle: "Hafta Sonu Seyircisi 🎟️", level: 3, avatarId: "avatar_noir", difficulty: "EASY", rating: 920, style: "CAUTIOUS",
+  { name: "SeansGezgini", rankTitle: "Hafta Sonu Seyircisi", level: 3, avatarId: "avatar_noir", difficulty: "EASY", rating: 920, style: "CAUTIOUS",
     quote: { tr: "Her seansa giderim ama hepsini hatırlamam.", en: "I catch every screening, remember few." } },
-  { name: "PopcornCanavari", rankTitle: "Gişe Çırağı 🥤", level: 1, avatarId: "avatar_scifi", difficulty: "EASY", rating: 760, style: "AGGRESSIVE",
+  { name: "PopcornCanavari", rankTitle: "Gişe Çırağı", level: 1, avatarId: "avatar_scifi", difficulty: "EASY", rating: 760, style: "AGGRESSIVE",
     quote: { tr: "Önce hamle, sonra düşünürüm!", en: "Move first, think later!" } },
 
   // ORTA: meraklı sinefil, hattı kurar ve kapatır
   { name: "NolanZihni", rankTitle: "Zaman Büken Sinefil ⏳", level: 6, avatarId: "avatar_director", difficulty: "MEDIUM", rating: 1110, style: "BALANCED",
     quote: { tr: "Zaman bende, sıra sende.", en: "I have the time. Your move." } },
-  { name: "OscarAvcisi", rankTitle: "Akademi Tahmincisi 🏆", level: 5, avatarId: "avatar_critics", difficulty: "MEDIUM", rating: 1080, style: "AGGRESSIVE",
+  { name: "OscarAvcisi", rankTitle: "Akademi Tahmincisi", level: 5, avatarId: "avatar_critics", difficulty: "MEDIUM", rating: 1080, style: "AGGRESSIVE",
     quote: { tr: "Heykelcikler peşimde, ben hattın.", en: "Statuettes chase me. I chase lines." } },
-  { name: "DuneSeyyahi", rankTitle: "Arrakis Bilgesi 🌌", level: 7, avatarId: "avatar_scifi", difficulty: "MEDIUM", rating: 1150, style: "CULT",
+  { name: "DuneSeyyahi", rankTitle: "Arrakis Bilgesi", level: 7, avatarId: "avatar_scifi", difficulty: "MEDIUM", rating: 1150, style: "CULT",
     quote: { tr: "Bilmediğin filmleri bilirim.", en: "I know the films you don't." } },
-  { name: "FincherDedektif", rankTitle: "Karanlık Zihinler Dedektifi 🕵️", level: 6, avatarId: "avatar_noir", difficulty: "MEDIUM", rating: 1090, style: "CAUTIOUS",
+  { name: "FincherDedektif", rankTitle: "Karanlık Zihinler Dedektifi", level: 6, avatarId: "avatar_noir", difficulty: "MEDIUM", rating: 1090, style: "CAUTIOUS",
     quote: { tr: "Her kareyi iki kez kontrol ederim.", en: "I check every frame twice." } },
 
   // ZOR: sinema tarihçisi, kült cevaplara hâkim, hata affetmez
-  { name: "TarantinoKult", rankTitle: "Altın Palmiye Gurusu 🎬", level: 9, avatarId: "avatar_director", difficulty: "HARD", rating: 1340, style: "CULT",
+  { name: "TarantinoKult", rankTitle: "Altın Palmiye Gurusu", level: 9, avatarId: "avatar_director", difficulty: "HARD", rating: 1340, style: "CULT",
     quote: { tr: "Video kasetçide çalıştım, hepsini izledim.", en: "I worked a video store. I've seen them all." } },
   { name: "LetterboxdEfsanesi", rankTitle: "5 Yıldız Koleksiyoneri ⭐", level: 10, avatarId: "avatar_critics", difficulty: "HARD", rating: 1390, style: "BALANCED",
     quote: { tr: "Günlüğümde senin cevabın zaten var.", en: "Your answer is already in my diary." } },
-  { name: "ScorseseAilesi", rankTitle: "Sinema Tarihçisi 🍷", level: 8, avatarId: "avatar_noir", difficulty: "HARD", rating: 1290, style: "AGGRESSIVE",
+  { name: "ScorseseAilesi", rankTitle: "Sinema Tarihçisi", level: 8, avatarId: "avatar_noir", difficulty: "HARD", rating: 1290, style: "AGGRESSIVE",
     quote: { tr: "Hattı kurduğunda iş işten geçmiş olur.", en: "By the time you line up, it's over." } },
-  { name: "KubrickBakisli", rankTitle: "Auteur Başyapıt Uykusuzu 👁️", level: 10, avatarId: "avatar_director", difficulty: "HARD", rating: 1360, style: "CAUTIOUS",
+  { name: "KubrickBakisli", rankTitle: "Auteur Başyapıt Uykusuzu", level: 10, avatarId: "avatar_director", difficulty: "HARD", rating: 1360, style: "CAUTIOUS",
     quote: { tr: "Mükemmel kadraj için kırk çekim yaparım.", en: "Forty takes for the perfect frame." } },
 ];
 

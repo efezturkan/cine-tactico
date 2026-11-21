@@ -13,11 +13,11 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         /* Penalty Mentality Soft Game Palette */
-        night: "#0B1220",
-        panel: "#121A2B",
+        night: "#0B0D12",
+        panel: "#14171D",
         control: {
-          DEFAULT: "#16213A",
-          hover: "#1E2B48",
+          DEFAULT: "#181B22",
+          hover: "#1E222B",
         },
         gold: {
           DEFAULT: "#D9A441",

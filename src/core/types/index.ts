@@ -20,22 +20,22 @@ export type CultThemeKey =
 
 export const CULT_THEMES_META: Record<
   CultThemeKey,
-  { label: string; emoji: string; desc: string }
+  { label: string; desc: string }
 > = {
-  PLOT_TWIST: { label: "Ters Köşe (Plot Twist)", emoji: "🌀", desc: "Finalde tüm algıyı altüst eden şok sonlar" },
-  WHODUNNIT: { label: "Katil Kim? (Whodunnit)", emoji: "🔍", desc: "Kapalı kapı ardı cinayet ve dedektif gizemi" },
-  TIME_TRAVEL: { label: "Zaman Yolculuğu", emoji: "⏳", desc: "Geçmişe, geleceğe sıçrama veya zaman kırılması" },
-  NON_LINEAR: { label: "Doğrusal Olmayan Kurgu", emoji: "🔀", desc: "Parçalı, geri dönen veya döngüsel zaman akışı" },
-  SINGLE_LOCATION: { label: "Tek Mekan", emoji: "🚪", desc: "Tüm hikayenin tek bir oda/alanda geçtiği filmler" },
-  HEIST: { label: "Büyük Soygun (Heist)", emoji: "💎", desc: "Kusursuz plan, kasa patlatma ve ekip dehası" },
-  REVENGE: { label: "İntikam (Revenge)", emoji: "⚔️", desc: "Kan davası, geri dönüş ve hesaplaşma" },
-  SURVIVAL: { label: "Hayatta Kalma (Survival)", emoji: "🏕️", desc: "Doğaya veya vahşi evrene karşı tek başına savaş" },
-  DYSTOPIA: { label: "Karanlık Gelecek (Distopya)", emoji: "🌆", desc: "Yıkık uygarlıklar veya totaliter sistemler" },
-  SPACE: { label: "Derin Uzay (Space Odyssey)", emoji: "🚀", desc: "Dünya dışı sonsuz karanlık ve uzay araçları" },
-  AI: { label: "Yapay Zeka & Sayborg", emoji: "🤖", desc: "İnsan bilinci vs. makine ve sentetik akıl" },
-  NEO_NOIR: { label: "Neo-Noir (Karanlık Şehir)", emoji: "🌧️", desc: "Yağmurlu geceler, yozlaşma ve karanlık sokaklar" },
-  LITERALLY_ME: { label: "Literally Me (Anti-Kahraman)", emoji: "🚬", desc: "Yabancılaşmış, yalnız ve melankolik figürler" },
-  CULT_FLOP: { label: "Kült Gişe Fiyaskosu (Flop)", emoji: "💸", desc: "Gişede batmış ama sinema efsanesi olmuş yapımlar" },
+  PLOT_TWIST: { label: "Ters Köşe", desc: "Finalde tüm algıyı altüst eden şok sonlar" },
+  WHODUNNIT: { label: "Katil Kim?", desc: "Kapalı kapı ardı cinayet ve dedektif gizemi" },
+  TIME_TRAVEL: { label: "Zaman Yolculuğu", desc: "Geçmişe, geleceğe sıçrama veya zaman kırılması" },
+  NON_LINEAR: { label: "Doğrusal Olmayan Kurgu", desc: "Parçalı, geri dönen veya döngüsel zaman akışı" },
+  SINGLE_LOCATION: { label: "Tek Mekan", desc: "Tüm hikayenin tek bir oda/alanda geçtiği filmler" },
+  HEIST: { label: "Büyük Soygun", desc: "Kusursuz plan, kasa patlatma ve ekip dehası" },
+  REVENGE: { label: "İntikam", desc: "Kan davası, geri dönüş ve hesaplaşma" },
+  SURVIVAL: { label: "Hayatta Kalma", desc: "Doğaya veya vahşi evrene karşı tek başına savaş" },
+  DYSTOPIA: { label: "Karanlık Gelecek", desc: "Yıkık uygarlıklar veya totaliter sistemler" },
+  SPACE: { label: "Derin Uzay", desc: "Dünya dışı sonsuz karanlık ve uzay araçları" },
+  AI: { label: "Yapay Zeka & Sayborg", desc: "İnsan bilinci vs. makine ve sentetik akıl" },
+  NEO_NOIR: { label: "Neo-Noir", desc: "Yağmurlu geceler, yozlaşma ve karanlık sokaklar" },
+  LITERALLY_ME: { label: "Literally Me", desc: "Yabancılaşmış, yalnız ve melankolik figürler" },
+  CULT_FLOP: { label: "Kült Gişe Fiyaskosu", desc: "Gişede batmış ama sinema efsanesi olmuş yapımlar" },
 };
 
 export type RarityTier = "COMMON" | "UNCOMMON" | "RARE" | "EPIC" | "LEGENDARY";

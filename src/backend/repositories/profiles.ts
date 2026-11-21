@@ -22,7 +22,7 @@ export async function syncProfileToSupabase(
         user_id: actualId,
         username: profile.username,
         avatar_id: profile.avatarId,
-        rank_title: profile.rankTitle || "Bilet Kontrolörü 🍿",
+        rank_title: profile.rankTitle || "Bilet Kontrolörü",
         rating: Math.max(0, 1000 + profile.wins * 25 - profile.losses * 12),
         wins: profile.wins,
         losses: profile.losses,

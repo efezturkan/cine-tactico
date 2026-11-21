@@ -84,12 +84,12 @@ assert(
 
 // 4. Bot Rank Title Translation
 assert(
-  translateBotRankTitle("Bilet Kontrolörü 🍿", "en") === "Ticket Inspector 🍿",
-  "translateBotRankTitle translates 'Bilet Kontrolörü 🍿' to 'Ticket Inspector 🍿'"
+  translateBotRankTitle("Bilet Kontrolörü", "en") === "Ticket Inspector",
+  "translateBotRankTitle translates 'Bilet Kontrolörü' to 'Ticket Inspector'"
 );
 assert(
-  translateBotRankTitle("Bilet Kontrolörü 🍿", "tr") === "Bilet Kontrolörü 🍿",
-  "translateBotRankTitle preserves 'Bilet Kontrolörü 🍿' in TR"
+  translateBotRankTitle("Bilet Kontrolörü", "tr") === "Bilet Kontrolörü",
+  "translateBotRankTitle preserves 'Bilet Kontrolörü' in TR"
 );
 
 // 5. Verification of major Board Titles and Criteria coverage

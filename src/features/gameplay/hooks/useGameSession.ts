@@ -115,7 +115,7 @@ export function useGameSession(
           particleCount: 100,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ["#d97706", "#06b6d4", "#e11d48", "#10b981"],
+          colors: ["#D9A441", "#C9A27A", "#E8E6E1"],
         });
       } catch {
         // Confetti env fallback
