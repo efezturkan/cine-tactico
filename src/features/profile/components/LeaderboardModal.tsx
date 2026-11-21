@@ -102,7 +102,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
     },
     {
       rank: 8,
-      name: "LetterboxdCritic",
+      name: "FilmEleştirmeni",
       title: "Bağımsız Sinefil 📝",
       trophies: 820,
       wins: 51,

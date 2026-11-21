@@ -111,7 +111,7 @@ export const BOT_TITLES_EN: Record<string, string> = {
   "Usta Yönetmen": "Master Director",
   "Hafta Sonu Seyircisi": "Weekend Moviegoer",
   "Gişe Çırağı": "Box Office Apprentice",
-  "Zaman Büken Sinefil ⏳": "Mind-Bending Cinephile ⏳",
+  "Zaman Büken Sinefil": "Mind-Bending Cinephile",
   "Arthouse Takipçisi": "Arthouse Devotee",
   "Kült Bağımlısı": "Cult Film Junkie",
   "Altın Palmiye Avcısı": "Palme d'Or Hunter",

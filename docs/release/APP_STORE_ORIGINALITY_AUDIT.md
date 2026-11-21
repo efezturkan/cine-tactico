@@ -2,7 +2,7 @@
 
 **Uygulama Adı:** Cine-XOX  
 **Paket Kimliği (Bundle ID):** `com.cinetactico.game`  
-**Platform:** Apple iOS (Universal) / iPadOS  
+**Platform:** Apple iOS (yalnızca iPhone, dikey)  
 **Sürüm / Build:** 1.0.0 (Build 1)  
 **Denetim Tarihi:** 3 Kasım 2026  
 **Denetim Standardı:** Apple App Store Review Guidelines (4.1, 4.2, 4.3(a), 4.3(b), 5.2)  

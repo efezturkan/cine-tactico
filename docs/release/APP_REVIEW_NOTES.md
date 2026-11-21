@@ -32,7 +32,7 @@ To help you experience the core game value in the shortest possible time, this g
 5. **How to play a move:**
    - Tap any unoccupied cell on the 3×3 board.
    - Each cell represents the intersection of a **Row criterion** (e.g., *Christopher Nolan*) and a **Column criterion** (e.g., *Sci-Fi* or *Leonardo DiCaprio*).
-   - In the search modal, type at least 2 characters (e.g., *"Inception"* or *"Oppenheimer"*), or tap the hint button if needed.
+   - In the search modal, type at least 2 characters (e.g., *"Inception"* or *"Oppenheimer"*).
    - Tap a valid movie from the list to seal the cell with your mark (**X**).
 6. **Observe the Bot & Tactical Rules:**
    - Notice the **12-second shot clock** ticking down on each turn.
