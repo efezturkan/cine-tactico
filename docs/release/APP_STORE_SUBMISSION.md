@@ -14,7 +14,7 @@ Bu belge, uygulamayı Apple'a gönderirken **kopyalayıp yapıştıracağın her
 | 4 | App Store Connect → *Apps → +* → **New App**: iOS, ad `Cine-XOX`, dil Türkçe, Bundle ID `com.cinetactico.game` (Xcode ilk imzada kaydeder), SKU `cinexox-ios-1` | App Store Connect | 5 dk |
 | 5 | Aşağıdaki **metinleri** yapıştır (bölüm C) | App Store Connect | 15 dk |
 | 6 | **Ekran görüntülerini** yükle (`docs/release/screenshots/`) | App Store Connect | 5 dk |
-| 7 | Xcode: cihaz olarak **Any iOS Device (arm64)** → *Product → Archive* → *Distribute App → App Store Connect → Upload* | Xcode | 10 dk |
+| 7 | Terminalde `npm run build:ios` (env’siz derleme + sync), sonra Xcode: cihaz olarak **Any iOS Device (arm64)** → *Product → Archive* → *Distribute App → App Store Connect → Upload* | Xcode | 10 dk |
 | 8 | **TestFlight**: derleme işlendikten sonra (10-30 dk) iç test grubuna ekle, kendi telefonunda dene | App Store Connect | — |
 | 9 | Her şey iyiyse **Add for Review → Submit** (Export compliance: bölüm D) | App Store Connect | 5 dk |
 
