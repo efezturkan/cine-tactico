@@ -120,6 +120,7 @@ export function GlobalModals(props: GlobalModalsProps) {
         isOpen={props.showDailyShare || (props.mode === "DAILY_SOLO" && props.winner !== null)}
         onClose={props.onCloseDailyShare}
         cells={props.cells}
+        winner={props.winner}
       />
 
       <CustomRoomModal

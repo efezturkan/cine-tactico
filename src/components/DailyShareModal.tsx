@@ -7,42 +7,30 @@ import { X, Share2, Copy, Check } from "lucide-react";
 import { audio } from "@/utils/audio";
 import { Button } from "@/components/ui/Button";
 import { MiniKadrajPreview } from "@/components/ui/MiniKadrajPreview";
+import { summarizeDailyShare } from "@/utils/dailyShare";
 
 interface DailyShareModalProps {
   isOpen: boolean;
   onClose: () => void;
   cells: (CellAnswer | null)[];
+  winner?: "X" | "O" | "DRAW" | null;
 }
 
 export const DailyShareModal: React.FC<DailyShareModalProps> = ({
   isOpen,
   onClose,
   cells,
+  winner,
 }) => {
   const [copiedText, setCopiedText] = useState(false);
 
   if (!isOpen) return null;
 
-  const filledCount = cells.filter((c) => c !== null).length;
-  const isPerfect = filledCount === 9;
+  const summary = summarizeDailyShare(cells, winner);
   const dayStr = getDailyEditionNumber();
-
-  const generateEmojiGrid = () => {
-    let grid = "";
-    for (let r = 0; r < 3; r++) {
-      let rowStr = "";
-      for (let c = 0; c < 3; c++) {
-        const idx = r * 3 + c;
-        rowStr += cells[idx] !== null ? "🟨 " : "⬛ ";
-      }
-      grid += rowStr.trim() + "\n";
-    }
-    return grid;
-  };
-
-  const shareText = `CineXOX · Günün Kadrası NO.${dayStr}\n\n${generateEmojiGrid()}\nSonuç: ${filledCount}/9 Kare ${
-    isPerfect ? "· Tam kadraj!" : ""
-  }\n${typeof window !== "undefined" ? window.location.origin : "cinexox.app"}`;
+  const shareText = `CineXOX · Günün Kadrası NO.${dayStr}\n\n${summary.emojiGrid}\n${summary.resultLine}\n${
+    typeof window !== "undefined" ? window.location.origin : "cinexox.app"
+  }`;
 
   const handleCopyScore = () => {
     audio.playSelect();
@@ -94,10 +82,10 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
             GÜNÜN KADRASI · NO.{dayStr}
           </span>
           <h2 className="font-serif text-2xl font-bold text-[#E8E6E1]">
-            {isPerfect ? "Tam kadraj!" : `${filledCount}/9 Kare`}
+            {summary.headline}
           </h2>
           <p className="text-xs text-[#8A8F9A] font-sans mt-0.5">
-            {isPerfect ? "Kusursuz çekim tamamlandı. Yarın yeni bir tane var." : "Bugünün kadrajı çekildi. Yarın yeni bir tane var."}
+            {summary.subline}
           </p>
         </div>
 
