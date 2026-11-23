@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { trackHiddenTime, shiftTurnStart } from "@/utils/visibilityPause";
 import {
   GameBoard,
   PlayerSymbol,
@@ -192,9 +193,11 @@ export function useGameSession(
     setSecondsRemaining(shotClockLimit);
 
     timerRef.current = setInterval(() => {
+      // Uygulama arka plandayken tur yanmaz; süre dönüşte geri verilir (trackHiddenTime)
+      if (typeof document !== "undefined" && document.hidden) return;
       const now = performance.now();
       const elapsedSec = Math.floor((now - turnStartTimeRef.current) / 1000);
-      const remaining = Math.max(0, shotClockLimit - elapsedSec);
+      const remaining = Math.min(shotClockLimit, Math.max(0, shotClockLimit - elapsedSec));
 
       if (remaining <= 0) {
         try {
@@ -233,7 +236,13 @@ export function useGameSession(
       setSecondsRemaining(remaining);
     }, 250);
 
+    // Arka planda geçen süre turdan düşülmez: arama/bildirim oyuncuyu hakkını yakmaz
+    const stopTracking = trackHiddenTime(ms => {
+      turnStartTimeRef.current = shiftTurnStart(turnStartTimeRef.current, ms, performance.now());
+    });
+
     return () => {
+      stopTracking();
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
