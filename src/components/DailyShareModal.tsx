@@ -8,6 +8,14 @@ import { audio } from "@/utils/audio";
 import { Button } from "@/components/ui/Button";
 import { MiniKadrajPreview } from "@/components/ui/MiniKadrajPreview";
 import { summarizeDailyShare } from "@/utils/dailyShare";
+import { shareText, copyText } from "@/utils/share";
+
+// Uygulama içinde origin "capacitor://localhost" olur; paylaşılan bağlantı herkese açık adres olmalı.
+const PUBLIC_URL = "https://cine-tactico.vercel.app";
+const publicOrigin = () =>
+  typeof window !== "undefined" && /^https?:\/\//.test(window.location.origin) && !/localhost|127\.0\.0\.1/.test(window.location.origin)
+    ? window.location.origin
+    : PUBLIC_URL;
 
 interface DailyShareModalProps {
   isOpen: boolean;
@@ -28,34 +36,24 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
 
   const summary = summarizeDailyShare(cells, winner);
   const dayStr = getDailyEditionNumber();
-  const shareText = `CineXOX · Günün Kadrası NO.${dayStr}\n\n${summary.emojiGrid}\n${summary.resultLine}\n${
-    typeof window !== "undefined" ? window.location.origin : "cinexox.app"
+  const shareBody = `CineXOX · Günün Kadrası NO.${dayStr}\n\n${summary.emojiGrid}\n${summary.resultLine}\n${
+    publicOrigin()
   }`;
 
-  const handleCopyScore = () => {
-    audio.playSelect();
-    if (typeof window !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(shareText);
-      setCopiedText(true);
-      setTimeout(() => setCopiedText(false), 2000);
-    }
+  const flashCopied = () => {
+    setCopiedText(true);
+    setTimeout(() => setCopiedText(false), 2000);
   };
 
-  const handleNativeShare = () => {
+  const handleCopyScore = async () => {
     audio.playSelect();
-    if (typeof window !== "undefined" && navigator.share) {
-      navigator
-        .share({
-          title: `CineXOX Günün Kadrası NO.${dayStr}`,
-          text: shareText,
-          url: window.location.origin,
-        })
-        .catch(() => {
-          handleCopyScore();
-        });
-    } else {
-      handleCopyScore();
-    }
+    if (await copyText(shareBody)) flashCopied();
+  };
+
+  const handleNativeShare = async () => {
+    audio.playSelect();
+    const outcome = await shareText(`CineXOX Günün Kadrası NO.${dayStr}`, shareBody);
+    if (outcome === "copied") flashCopied();
   };
 
   return (
