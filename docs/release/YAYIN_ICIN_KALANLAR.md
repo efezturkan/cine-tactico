@@ -1,70 +1,63 @@
 # Yayın için kalanlar (24 Kasım 2026, dal: `release/final-polish`)
 
-Bu dal main'e **birleştirilmedi, push edilmedi**. Aşağıdaki her "Kanıtlandı" satırı için test çıktısı veya simülatör ekranı var; "Kanıtlanamadı" satırları gerçek cihaz ister.
-
 ## Karar: HAZIR DEĞİL (NOT READY)
 
-Kod tarafında bu turda bulunan iki engelleyici hata düzeltildi, ama yayın **senin Apple hesabına ve gerçek iPhone'a bağlı** adımlar yapılmadan mümkün değil. Nedenler:
+Kod tarafında bilinen engel kalmadı. Yayın; senin Apple hesabına, gerçek iPhone testine ve aşağıdaki açık kararlara bağlı.
 
-1. Apple Developer üyeliği / Team imzası yok (`DEVELOPMENT_TEAM` boş). Archive alınamaz.
-2. Gerçek iPhone'da hiç denenmedi: paylaşım sayfası, ses (sessiz anahtarı), uçak modu, arka plan/ön plan.
-3. TestFlight, yaş derecelendirmesi ve App Store Connect kaydı yapılmadı.
+## 1. Kod tarafında tamamlananlar (kanıtlı)
 
-Kod için engel kalmadı: `tsc` temiz, `npm test` 0 hata.
-
-## 1. Bu turda bulunup düzeltilenler (simülatörde kanıtlı)
-
-| Hata | Etki | Düzeltme | Kanıt |
-|---|---|---|---|
-| Günlük kadrajı hiç oynamadan bırakmak "Sahne senin!" gösteriyordu | Boş tahtada sahte galibiyet, paylaşılan kartta yalan | `resolveFotoFinish` ve Ters Kadraj'da 0 kare artık sayı; boşta kalan oyuncu kazanmaz (29f82d6) | Önce kırılan test, sonra geçen test; cihazda "Bu çekim olmadı." |
-| Günlük sonuç penceresi kapanmıyordu | Oyuncu ekranda kilitleniyordu, uygulamayı kapatmak gerekiyordu | Kapat → Gişe'ye dön (05e6479) | Simülatör: X Gişe'ye döndü |
-| Günlük yeniden açılınca tekrar oynanıyordu | "Her gün tek şans" vaadi bozuktu | Sonuç UTC gününe göre kaydedilir, yeniden açılışta gösterilir | Test 6/6; simülatör: kapat-aç sonrası kayıtlı sonuç |
-| Küçük yazılar (9-10px) | Okunamıyordu | 169 yazının tamamı büyütülmedi; bilgi taşıyan 103 aktif kullanım 11px (d16698d) | 320px ve iOS ekran görüntüleri |
-| Hücre sahipliği yalnızca renkti | Renk körü oyuncu ayıramazdı | X/O işareti, CSS ile (korumalı `XoxBoard.tsx`e dokunulmadı) (5bb9fac) | daltonlens: protan/deutan/tritan; `a11y-ownership.test.ts` |
-
-## 2. Maç akışı testleri
-
-| Senaryo | Sonuç |
-|---|---|
-| Kayıp (Günlük, boşta) | Kanıtlandı: kart "Bu çekim olmadı.", boş ızgara, panoya kopyalama doğru metni verdi |
-| Zafer kartı | Birim testle kanıtlandı (`daily-share.test.ts`); **cihazda gerçek zafer ekranı yakalanmadı** (gerçek film cevabı girişi gerekir) |
-| Beraberlik | **Oyunda olamaz.** Altın Makara ve foto-finiş her zaman bir galip seçer (`golden-reel.test.ts`, 1500 simülasyon, kural ihlali 0) |
-| Yeniden başlatma | Kanıtlandı: temiz açılış, günlük kaydı korunuyor |
-| Türkçe arama | Kanıtlandı: `İstanbul`, `ISPARTA`, `Şahin`, `ÖĞÜŞ`, `Amélie` doğru normalleşiyor. Simülatör klavyesinde elle yazma denenmedi |
-| Uçak modu | Paket denetimi: HTML/CSS'te uzak varlık yok, oyun çevrimdışı çalışır. Simülatör uçak modunu kapatamaz, cihazda denenmeli |
-| Panoya kopyala | Kanıtlandı |
-| **PAYLAŞ (iOS paylaşım sayfası)** | **Kanıtlanamadı.** Simülatörde sayfa görünmedi, hata düşüşü de tetiklenmedi. `navigator.share` var ve söz bekliyor. Gerçek iPhone'da bakılmalı; olmazsa Capacitor Share eklentisi gerekir |
-| Arka plana alıp dönme (maç ortasında) | **Kanıtlanamadı.** Uygulamada yaşam döngüsü yönetimi yok (`visibilitychange`/`appStateChange` yok). Süre davranışı cihazda gözlenmeli |
-| Ses kanalları | Ana kanal, limiter, ses düzeyi testli (`audio-bus.test.ts`); AudioContext `resume()` var. Sessiz anahtarı ve hoparlör/kulaklık geçişi cihazda |
-
-## 3. Karar bekleyenler (ben değiştirmedim)
-
-1. **Bot adları**: `NolanZihni`, `TarantinoKult` gerçek kişi adı içeriyor; `OscarAvcisi` düşük-orta kişilik hakkı/ticari marka riski. Seçenek: genel adlar.
-2. **Süre çubuğu** (`ShotClock.tsx`, korumalı): tahtadan uzakta, ince. Görünürlüğü artırılsın mı?
-3. **Ses**: earshot'tan üretilen gerçek örnekler mi, mevcut sentez + ana kanal mı?
-4. **Rarity** yalnızca beraberlik bozucu; hat kazanımını etkilemiyor. Bu bilinçli mi?
-5. **Online Oda** bayrağı kapalı. Açılmadan önce sunucu `submit_move` yeniden yazılmalı (cevap doğrulaması yok).
-6. **Korumalı dosyalarda** (27 kullanım) küçük kriter etiketleri 9-10px kaldı; yalnızca sen izin verirsen dokunulur.
-7. **Gizli ekranlardaki** (39) küçük yazılar yeniden açılırsa gözden geçirilmeli.
-
-## 4. App Store kontrol listesi: durum
-
-| Madde | Durum | Kim |
+| Konu | Düzeltme | Kanıt |
 |---|---|---|
-| Gizlilik manifesti (`PrivacyInfo.xcprivacy`) | Var | Hazır |
-| Gizlilik sayfası (`/privacy`) | Var | Hazır |
-| İnceleme notları, metinler, ekran görüntüleri | `docs/release/` altında | Hazır, ekran görüntüleri son tasarımla yenilenmeli |
-| Sürüm / build numarası | 1.0 / 1 | Hazır |
-| Reklam, uygulama içi satın alma | Yok, kapsam dışı | Hazır |
-| Apple Developer üyeliği (99 USD/yıl), sözleşmeler | Yok | **Sen** |
-| Xcode: Signing & Capabilities → Team | Boş | **Sen** |
-| `npm run build:ios`, Archive, Upload | Yapılmadı | **Sen** (Team sonrası) |
-| App Store Connect kaydı, yaş derecelendirmesi, gizlilik "beslenme etiketi" | Yok | **Sen** |
-| Gerçek iPhone testi (paylaşım, ses, uçak modu, arka plan) | Yok | **Sen** |
-| TestFlight iç testi, Add for Review | Yok | **Sen** |
+| Boşta bırakılan günlük "Sahne senin!" gösteriyordu | 0 kare artık sayı; boşta kalan kazanmaz | Önce kırılan test, simülatörde "Bu çekim olmadı." |
+| Günlük sonuç penceresi kapanmıyordu | Kapat → Gişe | Simülatör |
+| Günlük tekrar oynanıyordu | Sonuç UTC gününe göre kaydedilir | Simülatör + testler |
+| Tek şans: tarih/UTC/saat oynama | Günler ayrı saklanır (14 gün) | 14 test: UTC 23:59:59 / 00:00:00, İstanbul 02:59 / 03:00, saat ileri-geri, saat geri |
+| PAYLAŞ iOS'ta hiçbir şey yapmıyordu | `navigator.share` WKWebView'da sessizce takılıyor; `@capacitor/share` ile yerel sayfa, sonra web, sonra pano; iptal panoyu tetiklemez | Simülatörde gerçek iOS paylaşım sayfası açıldı; 11 test |
+| Paylaşılan bağlantı `capacitor://localhost` idi | Herkese açık adres kullanılıyor | Pano çıktısı |
+| Arka plana alınca tur yanıyordu, bot hamle yapıyordu | Gizliyken sayaç işlemez, süre geri verilir, başlangıç "şimdi"yi aşamaz | Simülatörde Klasik ve Ters Kadraj; 8 test. Sayaç 36 göstermesi (limit 12) bu sırada yakalanıp düzeltildi |
+| Gerçek zafer kartı | Simülatörde görüldü | "Sahne senin!", sağda 3 altın X, ortada mavi O; pano "4/9 Kare · Sahne senin!" |
+| Ters Kadraj | Baştan sona oynandı (tarayıcı derlemesi) | 3-3, nadirlikle karar, sonuç kartı doğru |
+| Sinefil Konsept | Açıldı, cevap kabul edildi, bot oynadı, kayıp kartı doğru | Tarayıcı derlemesi |
+| Küçük yazılar, renk körlüğü işareti | Önceki turdan | Ekran görüntüleri, daltonlens |
+
+Testler: `tsc` temiz, `npm test` 0 hata. Bir kez tek bir rastgele test dalgalandı, 8 tur × 5 rastgele test ve 4 tam tur tekrarında çıkmadı (kaynağı bulunamadı).
+
+## 2. Gerçek iPhone'da senin test etmen gerekenler
+
+1. **PAYLAŞ**: gerçek paylaşım sayfası (Mesajlar, WhatsApp, X), metin ve bağlantı doğru mu.
+2. **Uçak modu**: paketlenmiş uygulama çevrimdışı açılıyor, bot maçı ve günlük çalışıyor mu (kodda ağ çağrısı yok, cihazda doğrula).
+3. **Ses**: sessiz anahtarı, hoparlör/kulaklık geçişi, ses düzeyi kaydırıcısı, bir telefon araması sonrası ses geri geliyor mu.
+4. **Arka plan / ön plan**: maç ortasında ana ekran, kilit ekranı, bildirim; süre ve hamleler korunuyor mu (simülatörde doğrulandı, gerçek cihazda JS askıya alınır).
+5. **Türkçe klavye**: ş, ğ, ı, İ, ö, ü, ç ile film arama (normalleştirme birim testli, elle yazma simülatörde denenmedi).
+6. **Günlük gece yarısı**: Türkiye saatiyle 03:00'te (UTC 00:00) yeni kadraj geliyor mu, cihaz saatini değiştirince ikinci şans yok mu.
+7. **Sinefil Konsept ve Ters Kadraj** gerçek cihazda dokunarak; arama sonuçları özgün adı gösteriyor ("Parasite" yazınca "Gisaengchung"), bu kasıtlı tasarım ama oyuncuyu şaşırtabilir.
+8. Küçük ekran (iPhone SE benzeri) okunabilirlik.
+
+## 3. Apple Developer ve App Store Connect tarafında yapman gerekenler
+
+1. Apple Developer üyeliği (99 USD/yıl) ve sözleşmeler.
+2. Xcode: `ios/App/App.xcodeproj` → target App → Signing & Capabilities → **Team** (`DEVELOPMENT_TEAM` boş).
+3. `npm run build:ios`, Xcode'da Any iOS Device → Archive → Upload.
+4. App Store Connect: yeni uygulama, metinler `APP_STORE_SUBMISSION.md`'den, ekran görüntüleri `docs/release/screenshots/` (son tasarımla yenile).
+5. Yaş derecelendirmesi anketi, gizlilik "beslenme etiketi" (veri toplanmıyor, `PrivacyInfo.xcprivacy` ve `/privacy` hazır).
+6. TestFlight iç testi, sonra Add for Review (`APP_REVIEW_NOTES.md` hazır).
+
+Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürüm 1.0 (1), reklam/IAP yok.
+
+## 4. Açık kararlar (hiçbirini ben değiştirmedim)
+
+1. **Günlük modda bot yok; sırayla hem X hem O'yu aynı kişi oynuyor** (sıra O'dayken girilen cevap O'ya yazılıyor, boşta kalan O turu 12 sn bekliyor). Fiilen aynı telefonda sırayla oynama; anayasa madde 3 ile çelişiyor ve modun kuralı hiçbir belgede yazmıyor. Öneri: Günlük'te yalnızca X (oyuncu) oynasın, O turu atlansın ya da bot oynasın. **Bu en önemli karar.**
+2. **Günlük kartı yerelleştirilmemiş**: uygulama İngilizce iken oyun içi başlık "Scene's yours!", kart "Sahne senin!". Kart ve paylaşım metni sabit Türkçe. Hangi dillerle yayınlanacak?
+3. Ters Kadraj adı: ana ekranda İngilizce "Reverse Frame", sonuç kartında "Ters Kadraj".
+4. **Bot adları**: `NolanZihni`, `TarantinoKult`, `ScorseseAilesi` gerçek kişi adı içeriyor; `OscarAvcisi` ticari marka/kişilik hakkı riski.
+5. **Süre çubuğu** (`ShotClock.tsx`, korumalı): ince ve tahtadan uzak.
+6. **Ses**: earshot örnekleri mi, mevcut sentez + ana kanal mı.
+7. **Rarity** yalnızca beraberlik bozucu (hat kazanımını etkilemiyor).
+8. **Online Oda** kapalı; açılmadan önce sunucu `submit_move` yeniden yazılmalı.
+9. Korumalı dosyalardaki küçük kriter etiketleri (9-10px) ve gizli ekranlardaki küçük yazılar.
+10. Beraberlik oyunda olamaz (Altın Makara ve nadirlik hep bir galip seçer); "Beraberlik" ekranı beklenmemeli.
 
 ## 5. Pil, boyut, modlar
 
-- Paket: `out/` 4,8 MB, JS yaklaşık 2,6 MB. Zamanlayıcılar yalnızca oyun ve modallarda çalışır.
-- Arka planda süreyi durduran mantık yok; cihazda gözlenmeli (madde 2).
-- Modlar: Klasik Düello ve Günün Kadrajı simülatörde açıldı. Ters Kadraj ve Sinefil Konsept kural düzeyinde testli (`mode-separation.test.ts`, stres testi 46/46), simülatörde oynanmadı.
+- Paket: `out/` yaklaşık 4,8 MB; zamanlayıcılar yalnızca oyunda ve modallarda; arka planda sayaç artık durur.
+- Klasik, Ters Kadraj, Sinefil Konsept ve Günlük çalışıyor; Ters Kadraj ve Konsept simülatör yerine aynı web paketinin tarayıcı derlemesinde oynandı.
