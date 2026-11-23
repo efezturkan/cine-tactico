@@ -7,7 +7,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Klavye kapanınca WKWebView, odaktaki alanı göstermek için yaptığı kaydırmayı geri almaz;
+        // oyun ekranı ~200 px yukarıda kalır. Klavye kapandığında yerel kaydırma ofsetini sıfırla.
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidHideNotification, object: nil, queue: .main) { _ in
+            for scene in UIApplication.shared.connectedScenes {
+                guard let windowScene = scene as? UIWindowScene else { continue }
+                for window in windowScene.windows {
+                    if let bridge = window.rootViewController as? CAPBridgeViewController {
+                        bridge.webView?.scrollView.setContentOffset(.zero, animated: false)
+                    }
+                }
+            }
+        }
         return true
     }
 
