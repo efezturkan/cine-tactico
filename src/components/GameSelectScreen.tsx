@@ -109,7 +109,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
 
         {/* 1. MODLAR */}
         <section className="space-y-2">
-          <span className="px-1 text-[10px] font-semibold tracking-wider uppercase text-[#8A8F9A]">
+          <span className="px-1 text-[11px] font-semibold tracking-wider uppercase text-[#8A8F9A]">
             {isEn ? "Modes" : "Modlar"}
           </span>
           <div className="grid grid-cols-2 gap-3">
@@ -133,7 +133,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
                     <span className="block font-serif font-bold text-[15px] leading-tight text-[#F1EEE7]">
                       {m.title}
                     </span>
-                    <span className="block text-[10px] font-medium mt-0.5" style={{ color: m.color }}>
+                    <span className="block text-[11px] font-medium mt-0.5" style={{ color: m.color }}>
                       {m.sub}
                     </span>
                   </div>
@@ -156,7 +156,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
                 <span className="block font-serif font-bold text-[15px] leading-tight text-[#F1EEE7]">
                   {dict.home.dailyBoardTitle}
                 </span>
-                <span className="block text-[10px] font-mono font-bold mt-0.5 text-[#C9A27A]">
+                <span className="block text-[11px] font-mono font-bold mt-0.5 text-[#C9A27A]">
                   NO.{getDailyEditionNumber()}
                 </span>
               </div>
@@ -170,7 +170,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
         {/* 2. BU HAFTA VİZYONDA */}
         {featured.length > 0 && (
           <section className="space-y-2">
-            <span className="px-1 text-[10px] font-semibold tracking-wider uppercase text-[#8A8F9A]">
+            <span className="px-1 text-[11px] font-semibold tracking-wider uppercase text-[#8A8F9A]">
               {isEn ? "Playing this week" : "Bu hafta vizyonda"}
             </span>
             <div className="space-y-2.5">

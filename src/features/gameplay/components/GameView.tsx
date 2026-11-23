@@ -253,7 +253,7 @@ export function GameView(props: GameViewProps) {
               isPlayerTurn ? "opacity-100 font-bold" : "opacity-60"
             }`}
           >
-            <span className="w-4 h-4 rounded bg-[#D9A441]/20 border border-[#D9A441]/50 text-[#D9A441] font-mono font-bold flex items-center justify-center text-[9px] shrink-0">
+            <span className="w-4 h-4 rounded bg-[#D9A441]/20 border border-[#D9A441]/50 text-[#D9A441] font-mono font-bold flex items-center justify-center text-[11px] shrink-0">
               X
             </span>
             <span className="text-[#D9A441] tracking-wider uppercase text-[11px] truncate">
@@ -270,7 +270,7 @@ export function GameView(props: GameViewProps) {
             <span className="text-[#4FA3C7] tracking-wider uppercase text-[11px] truncate">
               {props.pendingOpponent?.name || (isEn ? "Opponent" : "Rakip")}
             </span>
-            <span className="w-4 h-4 rounded bg-[#4FA3C7]/20 border border-[#4FA3C7]/50 text-[#4FA3C7] font-mono font-bold flex items-center justify-center text-[9px] shrink-0">
+            <span className="w-4 h-4 rounded bg-[#4FA3C7]/20 border border-[#4FA3C7]/50 text-[#4FA3C7] font-mono font-bold flex items-center justify-center text-[11px] shrink-0">
               O
             </span>
           </div>

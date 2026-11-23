@@ -129,7 +129,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
 
         {/* Soru Görevi */}
         <div className="w-full p-3.5 rounded-xl bg-night border border-white/10 text-left my-2">
-          <div className="text-[10px] font-bold text-gold uppercase tracking-wider">
+          <div className="text-[11px] font-bold text-gold uppercase tracking-wider">
             Altın Kriter:
           </div>
           <div className="text-sm font-bold text-ink mt-0.5">
@@ -140,11 +140,11 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
         {/* İstatistik Çubuğu */}
         <div className="w-full grid grid-cols-2 gap-2 my-2 p-2.5 rounded-xl bg-night border border-white/10 text-xs">
           <div className="flex flex-col items-center">
-            <span className="text-[10px] font-bold text-gold">SEN (X)</span>
+            <span className="text-[11px] font-bold text-gold">SEN (X)</span>
             <span className="text-base font-extrabold text-ink font-display">{scoreRarityX} Puan</span>
           </div>
           <div className="flex flex-col items-center">
-            <span className="text-[10px] font-bold text-team-blue">RAKİP (O)</span>
+            <span className="text-[11px] font-bold text-team-blue">RAKİP (O)</span>
             <span className="text-base font-extrabold text-ink font-display">{scoreRarityO} Puan</span>
           </div>
         </div>
@@ -200,7 +200,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
                       <div>
                         <div className="font-bold text-xs text-ink">{movie.title}</div>
                         {hasDiffOriginal && (
-                          <div className="text-[10px] text-muted italic">
+                          <div className="text-[11px] text-muted italic">
                             {movie.originalTitle}
                           </div>
                         )}

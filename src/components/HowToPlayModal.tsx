@@ -65,13 +65,13 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
               </div>
               {/* Sütun Kriteri */}
               <div className="h-9 px-2 rounded-lg bg-[#0B0D12] border border-white/10 flex items-center justify-center text-center">
-                <span className="text-[10px] font-sans font-bold text-[#8A8F9A] truncate">
+                <span className="text-[11px] font-sans font-bold text-[#8A8F9A] truncate">
                   C. Nolan
                 </span>
               </div>
               {/* Satır Kriteri */}
               <div className="h-9 px-2 rounded-lg bg-[#0B0D12] border border-white/10 flex items-center justify-center text-center">
-                <span className="text-[10px] font-sans font-bold text-[#8A8F9A] truncate">
+                <span className="text-[11px] font-sans font-bold text-[#8A8F9A] truncate">
                   L. DiCaprio
                 </span>
               </div>

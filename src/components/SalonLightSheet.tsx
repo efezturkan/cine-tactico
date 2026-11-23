@@ -154,7 +154,7 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
               <h2 className="font-serif text-base font-bold text-[#E8E6E1] leading-tight">{dict.salon.title}</h2>
-              <p className="text-[10px] text-[#8A8F9A] leading-tight truncate">{dict.salon.tapHint}</p>
+              <p className="text-[11px] text-[#8A8F9A] leading-tight truncate">{dict.salon.tapHint}</p>
             </div>
             {compareButton}
           </div>
@@ -185,7 +185,7 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
                     className="w-3.5 h-3.5 rounded-full border border-white/25 shrink-0"
                     style={{ background: `radial-gradient(circle at 35% 30%, ${preset.beam}, ${preset.bg} 85%)` }}
                   />
-                  <span className="text-[10px] font-bold leading-none truncate">
+                  <span className="text-[11px] font-bold leading-none truncate">
                     {preset.label[locale === "en" ? "en" : "tr"]}
                   </span>
                 </button>

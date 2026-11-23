@@ -194,7 +194,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               <p className="text-xs text-[#8A8F9A] mt-1 leading-relaxed">
                 {isEn ? "Enter at least 2 characters to list results." : "Sonuçları listelemek için en az 2 harf girilmelidir."}
               </p>
-              <p className="text-[10px] text-[#8A8F9A]/80 mt-2 font-medium">
+              <p className="text-[11px] text-[#8A8F9A]/80 mt-2 font-medium">
                 {isEn ? "No genre or year hints, to keep it fair" : "Adil oyun için tür ve yıl ipucu gösterilmez"}
               </p>
             </div>
@@ -233,7 +233,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                       {displayTitle}
                     </span>
                     {movie.mediaType === "SERIES" && (
-                      <span className="text-[9px] font-sans font-semibold text-[#4FA3C7] bg-[#4FA3C7]/15 px-1.5 py-0.5 rounded border border-[#4FA3C7]/30 shrink-0">
+                      <span className="text-[11px] font-sans font-semibold text-[#4FA3C7] bg-[#4FA3C7]/15 px-1.5 py-0.5 rounded border border-[#4FA3C7]/30 shrink-0">
                         {isEn ? "SERIES" : "DİZİ"}
                       </span>
                     )}
@@ -241,7 +241,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
 
                   <div className="shrink-0 text-right">
                     {isUsed ? (
-                      <span className="text-[10px] text-[#8A8F9A]">
+                      <span className="text-[11px] text-[#8A8F9A]">
                         {isEn ? "Used" : "Kullanıldı"}
                       </span>
                     ) : (

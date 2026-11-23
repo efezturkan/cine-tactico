@@ -325,12 +325,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
       {/* 7D.4 Sinefil Sicili: Galibiyet / Mağlubiyet / Oran */}
       <div className="w-full p-3.5 rounded-xl bg-[#14171D] border border-white/10 text-center mb-3">
-        <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#D9A441] block mb-2 pb-1.5 border-b border-white/5">
+        <span className="text-[11px] font-sans font-bold uppercase tracking-wider text-[#D9A441] block mb-2 pb-1.5 border-b border-white/5">
           {isEn ? "Cinephile record" : "Sinefil sicili"}
         </span>
         <div className="grid grid-cols-3 gap-2">
           <div>
-            <span className="text-[9px] font-sans font-bold text-[#8A8F9A] uppercase block">
+            <span className="text-[11px] font-sans font-bold text-[#8A8F9A] uppercase block">
               {dict.profile.wins}
             </span>
             <span className="text-lg font-mono font-bold text-[#D9A441] mt-0.5 block">
@@ -338,7 +338,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </span>
           </div>
           <div className="border-x border-white/5">
-            <span className="text-[9px] font-sans font-bold text-[#8A8F9A] uppercase block">
+            <span className="text-[11px] font-sans font-bold text-[#8A8F9A] uppercase block">
               {dict.profile.losses}
             </span>
             <span className="text-lg font-mono font-bold text-[#8A8F9A] mt-0.5 block">
@@ -346,7 +346,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </span>
           </div>
           <div>
-            <span className="text-[9px] font-sans font-bold text-[#8A8F9A] uppercase block">
+            <span className="text-[11px] font-sans font-bold text-[#8A8F9A] uppercase block">
               {dict.profile.winRate}
             </span>
             <span className="text-lg font-mono font-bold text-[#E8E6E1] mt-0.5 block">
@@ -371,7 +371,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           <span className="text-xs font-serif font-bold text-[#E8E6E1] block">
             {isEn ? "Last 5 duels" : "Son 5 düello"}
           </span>
-          <span className="text-[10px] text-[#8A8F9A]">
+          <span className="text-[11px] text-[#8A8F9A]">
             {recent.length === 0 ? (isEn ? "No duels yet." : "Henüz düello yok.") : (isEn ? "Review archive →" : "Arşivi incele →")}
           </span>
         </div>
@@ -412,7 +412,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <div className="text-xs font-bold text-[#E8E6E1]">
                 {isAnonymousUser ? (isEn ? "Guest session" : "Misafir hesabı") : (isEn ? "Registered account" : "Kayıtlı hesap")}
               </div>
-              <div className="text-[10px] text-[#8A8F9A]">
+              <div className="text-[11px] text-[#8A8F9A]">
                 {isAnonymousUser ? (isEn ? "Saved on device." : "Cihazında kayıtlı.") : userEmail || (isEn ? "Cloud linked" : "Buluta bağlı")}
               </div>
             </div>
@@ -485,7 +485,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           </div>
           <a
             href="/privacy"
-            className="text-[10px] font-mono text-[#D9A441] hover:underline"
+            className="text-[11px] font-mono text-[#D9A441] hover:underline"
           >
             {dict.profile.readPolicy}
           </a>
@@ -504,7 +504,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <RotateCcw className="w-3.5 h-3.5 text-[#8A8F9A]" />
               <span>{dict.profile.resetLocal}</span>
             </div>
-            <p className="text-[10px] text-[#8A8F9A] mt-1 line-clamp-1">
+            <p className="text-[11px] text-[#8A8F9A] mt-1 line-clamp-1">
               {dict.profile.resetLocalSub}
             </p>
           </button>
@@ -523,7 +523,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <Trash2 className="w-3.5 h-3.5 text-[#E5484D]" />
               <span>{dict.profile.deleteAccount}</span>
             </div>
-            <p className="text-[10px] text-[#E5484D]/70 mt-1 line-clamp-1">
+            <p className="text-[11px] text-[#E5484D]/70 mt-1 line-clamp-1">
               {dict.profile.deleteAccountSub}
             </p>
           </button>
@@ -577,7 +577,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     }`}
                   >
                     <AvatarIcon id={a.id} className="w-6 h-6" />
-                    <span className="text-[10px] font-sans font-bold truncate max-w-full">
+                    <span className="text-[11px] font-sans font-bold truncate max-w-full">
                       {a.label}
                     </span>
                   </button>
@@ -648,7 +648,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <h3 className="font-serif text-base font-bold text-[#E8E6E1]">
                   {isEn ? "Reset Local Data" : "Yerel Verileri Sıfırla"}
                 </h3>
-                <span className="text-[10px] font-mono text-[#8A8F9A]">
+                <span className="text-[11px] font-mono text-[#8A8F9A]">
                   {isEn ? "Device Cache Cleanup" : "Cihaz Önbelleği Temizliği"}
                 </span>
               </div>
@@ -704,7 +704,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <h3 className="font-serif text-base font-bold text-white">
                   {isEn ? "Delete Account & All Data" : "Hesabı ve Tüm Verileri Sil"}
                 </h3>
-                <span className="text-[10px] font-mono text-[#E5484D]">Apple Guideline 5.1.1(v)</span>
+                <span className="text-[11px] font-mono text-[#E5484D]">Apple Guideline 5.1.1(v)</span>
               </div>
             </div>
 

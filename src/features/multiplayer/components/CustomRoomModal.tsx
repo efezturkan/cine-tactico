@@ -228,7 +228,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
 
               {/* Oda Kodu & Kopyalama / Paylaşım */}
               <div className="p-4 rounded-xl bg-[#14171D] border border-white/10 flex flex-col items-center text-center">
-                <span className="text-[10px] font-sans uppercase font-medium text-[#8A8F9A] tracking-wider mb-1">
+                <span className="text-[11px] font-sans uppercase font-medium text-[#8A8F9A] tracking-wider mb-1">
                   {isEn ? "Room Code" : "Oda Kodu"}
                 </span>
                 <span className="font-mono text-2xl sm:text-3xl font-bold tracking-widest text-[#D9A441] my-1">
@@ -302,7 +302,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
         <form onSubmit={handleJoinByCode} className="space-y-4 min-h-[300px] flex flex-col justify-between">
           <div className="space-y-3">
             <div className="p-4 rounded-xl bg-[#14171D] border border-white/10">
-              <label className="text-[10px] font-sans uppercase font-medium text-[#8A8F9A] tracking-wider block mb-2 text-center">
+              <label className="text-[11px] font-sans uppercase font-medium text-[#8A8F9A] tracking-wider block mb-2 text-center">
                 {isEn ? "Room Code" : "Salon Kodu"}
               </label>
               <div className="relative">
@@ -398,7 +398,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                         {dTitle}
                       </span>
                       {sTitle && (
-                        <span className="text-[10px] text-[#8A8F9A] block truncate mt-0.5">
+                        <span className="text-[11px] text-[#8A8F9A] block truncate mt-0.5">
                           {sTitle}
                         </span>
                       )}

@@ -124,7 +124,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
         {/* 6E.1 Başlık & İki Film Kesişimi (Ters Kadraj Soluk Teal #5FB3A8, Işıltı Yok) */}
         <div className="flex items-start justify-between pb-3 border-b border-white/10 shrink-0">
           <div className="min-w-0">
-            <span className="text-[10px] font-sans uppercase font-bold tracking-wider text-[#5FB3A8] block mb-1">
+            <span className="text-[11px] font-sans uppercase font-bold tracking-wider text-[#5FB3A8] block mb-1">
               {isEn ? "REVERSE FRAME · SHARED ACTOR" : "TERS KADRAJ · ORTAK OYUNCU"}
             </span>
             <div className="flex items-center gap-1.5 flex-wrap">

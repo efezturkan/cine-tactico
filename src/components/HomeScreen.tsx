@@ -240,7 +240,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <span className="text-xs sm:text-sm font-bold text-[#E8E6E1] truncate max-w-[120px] leading-tight">
                 {profile.username}
               </span>
-              <span className="text-[10px] text-[#8A8F9A] truncate leading-tight mt-0.5">
+              <span className="text-[11px] text-[#8A8F9A] truncate leading-tight mt-0.5">
                 {dict.nav.profile} &rarr;
               </span>
             </div>
@@ -356,7 +356,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* ── 4. YATAY KAYDIRMALI MOD AFİŞLERİ (7A.3: Alt etiketler, nokta yok) ─── */}
         <div className="w-full space-y-1.5">
           <div className="flex items-center justify-between px-1">
-            <span className="text-[10px] font-sans font-semibold tracking-wider uppercase text-[#8A8F9A]">
+            <span className="text-[11px] font-sans font-semibold tracking-wider uppercase text-[#8A8F9A]">
               {isEn ? "NOW SHOWING MODES" : "VİZYONDAKİ MODLAR"}
             </span>
           </div>
@@ -410,7 +410,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     >
                       {m.title}
                     </span>
-                    <span className="text-[8.5px] font-sans text-[#8A8F9A] block mt-0.5 whitespace-nowrap">
+                    <span className="text-[11px] font-sans text-[#8A8F9A] block mt-0.5 leading-tight">
                       {m.subLabel}
                     </span>
                   </div>
@@ -462,13 +462,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <span className="text-xs sm:text-sm font-serif font-bold text-[#F1EEE7] block">
                 {dict.home.dailyBoardTitle}
               </span>
-              <p className="text-[10px] sm:text-[11px] text-[#8A8F9A] font-medium mt-0.5 leading-snug">
+              <p className="text-[11px] sm:text-[11px] text-[#8A8F9A] font-medium mt-0.5 leading-snug">
                 {dict.home.dailyBoardSub}
               </p>
             </div>
           </div>
 
-          <div className="pr-2 shrink-0">
+          <div className="pl-3 pr-2 shrink-0">
             <span className="text-xs font-bold text-[#D9A441] font-sans flex items-center gap-0.5">
               {isEn ? "Open Ticket →" : "Bileti Aç →"}
             </span>

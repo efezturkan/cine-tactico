@@ -79,7 +79,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               style={{ color: isActive ? "#D9A441" : "#8A8F9A" }}
             />
             <span
-              className="text-[9px] font-bold mt-0.5 tracking-wide"
+              className="text-[11px] font-bold mt-0.5 tracking-wide"
               style={{ color: isActive ? "#D9A441" : "#8A8F9A" }}
             >
               {tab.label}

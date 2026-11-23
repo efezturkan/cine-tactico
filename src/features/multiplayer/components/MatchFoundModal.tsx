@@ -112,7 +112,7 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
             <span className="text-xs font-bold text-[#D9A441] mt-2.5 truncate max-w-[100px]">
               {userProfile.username}
             </span>
-            <span className="text-[9px] font-medium text-[#A5A8B0] mt-0.5 font-mono">
+            <span className="text-[11px] font-medium text-[#A5A8B0] mt-0.5 font-mono">
               {isEn ? `Level ${userProfile.rankLevel || 1}` : `Seviye ${userProfile.rankLevel || 1}`}
             </span>
           </div>
@@ -141,14 +141,14 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
             <span className="text-xs font-bold text-[#F1EEE7] mt-2.5 truncate max-w-[100px]">
               {opponentName}
             </span>
-            <span className="text-[9px] font-bold text-[#D9A441] mt-0.5 font-mono">
+            <span className="text-[11px] font-bold text-[#D9A441] mt-0.5 font-mono">
               {isEn ? "Cinephile Bot" : "Sinefil Botu"}
             </span>
-            <span className="text-[9px] font-medium text-[#A5A8B0] font-mono">
+            <span className="text-[11px] font-medium text-[#A5A8B0] font-mono">
               {opponent ? `${dict.opponent.rating} ${opponent.rating}` : isEn ? `Level ${opponentLevel}` : `Seviye ${opponentLevel}`}
             </span>
             {record && record.w + record.l + record.d > 0 && (
-              <span className="text-[9px] font-medium text-[#8A8F9A] font-mono">
+              <span className="text-[11px] font-medium text-[#8A8F9A] font-mono">
                 {dict.opponent.record} {record.w}{dict.opponent.wins} {record.l}{dict.opponent.losses}
               </span>
             )}

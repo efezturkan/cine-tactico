@@ -158,10 +158,10 @@ export const ReviewAnswersSheet: React.FC<ReviewAnswersSheetProps> = ({
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center justify-between text-[10px] font-mono text-[#8A8F9A]">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-[#8A8F9A]">
                     <span>{movie.year > 0 ? movie.year : ""}</span>
                     {movie.mediaType === "SERIES" && (
-                      <span className="text-[9px] uppercase tracking-wider text-[#4FA3C7]">
+                      <span className="text-[11px] uppercase tracking-wider text-[#4FA3C7]">
                         {isEn ? "Series" : "Dizi"}
                       </span>
                     )}

@@ -97,20 +97,20 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({ isOpen
                   <div className="flex items-center gap-2">
                     <span className="font-serif font-bold text-[15px] text-[#F1EEE7] truncate">{bot.name}</span>
                     <span
-                      className="shrink-0 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide"
+                      className="shrink-0 px-1.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wide"
                       style={{ color: tier.color, backgroundColor: `${tier.color}22` }}
                     >
                       {tierLabel[bot.difficulty]}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-[10px] text-[#8A8F9A] mt-0.5">
+                  <div className="flex flex-wrap items-center gap-x-2 text-[11px] text-[#8A8F9A] mt-0.5">
                     <span className="font-mono font-bold text-[#D9A441]">
                       {dict.opponent.rating} {bot.rating}
                     </span>
                     <span>·</span>
                     <span>{styleLabel[bot.style]}</span>
                     <span>·</span>
-                    <span className="truncate">
+                    <span>
                       {played
                         ? `${dict.opponent.record} ${rec.w}${dict.opponent.wins} ${rec.l}${dict.opponent.losses}${rec.d ? ` ${rec.d}${dict.opponent.draws}` : ""}`
                         : dict.opponent.firstMeeting}

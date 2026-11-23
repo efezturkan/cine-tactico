@@ -100,7 +100,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
               <div>
                 <span className="text-xs font-medium text-[#E8E6E1] block">{dict.settings.soundEffects}</span>
-                <span className="text-[10px] text-[#8A8F9A]">{muted ? dict.common.off : dict.common.on}</span>
+                <span className="text-[11px] text-[#8A8F9A]">{muted ? dict.common.off : dict.common.on}</span>
               </div>
             </div>
             <button
@@ -125,7 +125,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <div className={`p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 transition-opacity ${muted ? "opacity-40" : ""}`}>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-medium text-[#E8E6E1]">{locale === "en" ? "Volume" : "Ses düzeyi"}</span>
-              <span className="text-[10px] font-mono text-[#8A8F9A]">{locale === "en" ? `${volume}%` : `%${volume}`}</span>
+              <span className="text-[11px] font-mono text-[#8A8F9A]">{locale === "en" ? `${volume}%` : `%${volume}`}</span>
             </div>
             <input
               type="range"
@@ -154,7 +154,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
               <div>
                 <span className="text-xs font-medium text-[#E8E6E1] block">{dict.settings.haptics}</span>
-                <span className="text-[10px] text-[#8A8F9A]">{hapticsEnabled ? dict.common.on : dict.common.off}</span>
+                <span className="text-[11px] text-[#8A8F9A]">{hapticsEnabled ? dict.common.on : dict.common.off}</span>
               </div>
             </div>
             <button
@@ -180,7 +180,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
               <div>
                 <span className="text-xs font-medium text-[#E8E6E1] block">{dict.settings.language}</span>
-                <span className="text-[10px] text-[#8A8F9A]">{dict.settings.languageSub}</span>
+                <span className="text-[11px] text-[#8A8F9A]">{dict.settings.languageSub}</span>
               </div>
             </div>
             <div className="inline-flex items-center rounded-lg bg-[#14171d] border border-white/10 p-0.5">
@@ -232,7 +232,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
               <div>
                 <span className="text-xs font-medium text-[#E8E6E1] block">{dict.settings.salonLight}</span>
-                <span className="text-[10px] text-[#8A8F9A]">{dict.settings.salonLightSub}</span>
+                <span className="text-[11px] text-[#8A8F9A]">{dict.settings.salonLightSub}</span>
               </div>
             </div>
             <ChevronRight className="w-4 h-4 text-[#8A8F9A]" />
@@ -253,7 +253,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
               <div>
                 <span className="text-xs font-medium text-[#E8E6E1] block">{dict.settings.howToPlay}</span>
-                <span className="text-[10px] text-[#8A8F9A]">{dict.settings.howToPlaySub}</span>
+                <span className="text-[11px] text-[#8A8F9A]">{dict.settings.howToPlaySub}</span>
               </div>
             </div>
             <ChevronRight className="w-4 h-4 text-[#8A8F9A]" />
@@ -273,7 +273,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
               <div>
                 <span className="text-xs font-medium text-[#E8E6E1] block">{dict.settings.privacyPolicy}</span>
-                <span className="text-[10px] text-[#8A8F9A]">{dict.settings.privacyPolicySub}</span>
+                <span className="text-[11px] text-[#8A8F9A]">{dict.settings.privacyPolicySub}</span>
               </div>
             </div>
             <ChevronRight className="w-4 h-4 text-[#8A8F9A]" />
@@ -296,7 +296,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span className="text-xs font-medium text-[#E8E6E1] block">
                   {locale === "tr" ? "Kullanım Koşulları" : "Terms of Use"}
                 </span>
-                <span className="text-[10px] text-[#8A8F9A]">
+                <span className="text-[11px] text-[#8A8F9A]">
                   {locale === "tr" ? "Hizmet şartları ve kurallar" : "Service terms and rules"}
                 </span>
               </div>
@@ -329,7 +329,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span className="text-xs font-medium text-[#E8E6E1] block">
                   {locale === "tr" ? "Lisanslar & Görsel Atıfları" : "Licenses & Attributions"}
                 </span>
-                <span className="text-[10px] text-[#8A8F9A]">
+                <span className="text-[11px] text-[#8A8F9A]">
                   Wikimedia Commons (CC BY / CC BY-SA)
                 </span>
               </div>
@@ -338,11 +338,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </button>
 
           {showLicenses && (
-            <div className="p-3 rounded-xl bg-[#07080B] border border-white/5 text-[10px] text-[#8A8F9A] space-y-2 max-h-56 overflow-y-auto">
+            <div className="p-3 rounded-xl bg-[#07080B] border border-white/5 text-[11px] text-[#8A8F9A] space-y-2 max-h-56 overflow-y-auto">
               <p className="text-[11px] text-[#E8E6E1] font-semibold">
                 {locale === "tr" ? "Açık Lisanslı Portreler (Creative Commons):" : "Open Licensed Portraits (Creative Commons):"}
               </p>
-              <p className="text-[9px] text-[#8A8F9A]">
+              <p className="text-[11px] text-[#8A8F9A]">
                 {locale === "tr"
                   ? "Aşağıdaki 11 portre görseli Wikimedia Commons üzerinden alınmış, 160×160 piksel boyutuna kırpılmış ve yeniden boyutlandırılmıştır. Eser sahipleri CineXOX'u onaylamaz veya desteklemez:"
                   : "The following 11 portrait images are sourced from Wikimedia Commons, cropped and resized to 160×160 pixels. Licensors do not endorse CineXOX:"}
@@ -353,10 +353,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <span className="text-[#E8E6E1] font-medium block">
                       {item.title ?? item.id}
                     </span>
-                    <span className="text-[#8A8F9A] text-[9px] block">
+                    <span className="text-[#8A8F9A] text-[11px] block">
                       {locale === "tr" ? "Yazar / Atıf" : "Author / Attribution"}: {item.author} ({item.attribution})
                     </span>
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[9px]">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px]">
                       <a
                         href={item.sourcePageUrl}
                         target="_blank"
@@ -382,7 +382,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       )}
                     </div>
                     {item.modified && (
-                      <span className="text-[#8A8F9A]/80 text-[9px] block italic">
+                      <span className="text-[#8A8F9A]/80 text-[11px] block italic">
                         {locale === "tr"
                           ? "Değişiklik: Uygulama içi gösterim için 160×160 piksel olarak kırpıldı ve yeniden boyutlandırıldı."
                           : "Changes: Cropped and resized to 160×160 pixels for in-app display."}
@@ -400,7 +400,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <Info className="w-3.5 h-3.5 text-[#8A8F9A]" />
               <span className="text-[11px] font-bold text-[#E8E6E1]">CineXOX v1.0.0 (35MM)</span>
             </div>
-            <p className="text-[10px] text-[#8A8F9A] leading-relaxed">
+            <p className="text-[11px] text-[#8A8F9A] leading-relaxed">
               {locale === "tr"
                 ? "Film verileri açık kaynaklardan derlenmiştir. CineXOX, adı geçen kişi, marka ve yapımlarla bağlantılı veya onaylı değildir."
                 : "Film metadata is compiled from open sources. CineXOX is not affiliated with or endorsed by the individuals, brands, or productions mentioned."}
