@@ -304,3 +304,21 @@ button:active:not(:disabled),
     scroll-behavior: auto !important;
   }
 }
+
+/* ── Hücre sahipliği: yalnızca renkle değil HARFLE de (renk körlüğü erişilebilirliği) ──────────
+   XoxBoard.tsx korumalı olduğundan işaret, hücre düğmesinin aria-label sonekinden ("(X)" / "(O)")
+   CSS ile eklenir. Düğme zaten relative + overflow-hidden. Sahipsiz kilitli kare kilit simgesi ve
+   "SAHİPSİZ" metniyle zaten renksiz ayrışır. */
+button[aria-label$="(X)"]::after,
+button[aria-label$="(O)"]::after {
+  position: absolute;
+  top: 3px;
+  right: 6px;
+  font-family: var(--font-sans), -apple-system, system-ui, sans-serif; /* mono'da O, 0'a benzer */
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  pointer-events: none;
+}
+button[aria-label$="(X)"]::after { content: "X"; color: #D9A441; }
+button[aria-label$="(O)"]::after { content: "O"; color: #4FA3C7; }

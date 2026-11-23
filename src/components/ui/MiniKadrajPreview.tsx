@@ -34,10 +34,12 @@ export function MiniKadrajPreview({
         if (c?.answeredBy === "X") bg = "#D9A441";
         else if (c?.answeredBy === "O") bg = "#4FA3C7";
 
+        // Renk dışı ipucu: O yuvarlak, X kare (renk körlüğü). Boş kare kare kalır.
+        const shape = c?.answeredBy === "O" ? "!rounded-full" : "";
         return (
           <div
             key={i}
-            className={`${cellSizes[size]} transition-colors`}
+            className={`${cellSizes[size]} ${shape} transition-colors`}
             style={{ backgroundColor: bg }}
           />
         );
