@@ -32,6 +32,8 @@ export interface GlobalModalsProps {
   showMatchmakingQueue: boolean;
   showMatchFound: boolean;
   showDailyShare: boolean;
+  dailyCells: (CellAnswer | null)[];
+  dailyWinner: PlayerSymbol | "DRAW" | null;
   showCustomLobby: boolean;
   showQuests: boolean;
   showShop: boolean;
@@ -119,8 +121,8 @@ export function GlobalModals(props: GlobalModalsProps) {
       <DailyShareModal
         isOpen={props.showDailyShare || (props.mode === "DAILY_SOLO" && props.winner !== null)}
         onClose={props.onCloseDailyShare}
-        cells={props.cells}
-        winner={props.winner}
+        cells={props.dailyCells}
+        winner={props.dailyWinner}
       />
 
       <CustomRoomModal

@@ -43,6 +43,7 @@ import { haptic } from "@/utils/haptics";
 import { hasSeenGuide } from "@/utils/guideStorage";
 import { readBotRecords, recordBotResult, BotRecordBook } from "@/utils/botRecord";
 import { getGlobalDailyDateKey } from "@/utils/dateUtils";
+import { saveDailyResult, loadDailyResult, StoredDailyResult } from "@/utils/dailyResult";
 import { LanguageProvider, useTranslation } from "@/i18n";
 
 const getDailyBoardConfig = (): { board: GameBoard; index: number } =>
@@ -93,6 +94,8 @@ function CineXoxApp() {
 
   // Modallar
   const [showDailyShare, setShowDailyShare] = useState<boolean>(false);
+  // Bugünkü kadraj zaten oynandıysa: yeni maç yerine kayıtlı sonuç gösterilir (tek şans)
+  const [savedDaily, setSavedDaily] = useState<StoredDailyResult | null>(null);
   const [showCustomLobby, setShowCustomLobby] = useState<boolean>(false);
   const [showQuests, setShowQuests] = useState<boolean>(false);
   const [showProfile, setShowProfile] = useState<boolean>(false);
@@ -747,6 +750,17 @@ function CineXoxApp() {
 
   const handleOpenDailyFromHome = () => {
     audio.playSelect();
+    let played: StoredDailyResult | null = null;
+    try {
+      played = loadDailyResult(localStorage, getGlobalDailyDateKey());
+    } catch {
+      // Depolama yoksa bugünün kadrajı oynanmamış sayılır
+    }
+    if (played) {
+      setSavedDaily(played);
+      setShowDailyShare(true);
+      return;
+    }
     setMode("DAILY_SOLO");
     const { board: dailyBoard, index: dailyIdx } = getDailyBoardConfig();
     setBoardIndex(dailyIdx);
@@ -801,6 +815,28 @@ function CineXoxApp() {
     setCurrentView("GAME");
   };
 
+  // Günlük bitince sonucu kaydet: yeniden açılışta ikinci şans verilmez
+  useEffect(() => {
+    if (mode === "DAILY_SOLO" && winner !== null && winner !== "DRAW") {
+      try {
+        saveDailyResult(localStorage, getGlobalDailyDateKey(), winner, cells);
+      } catch {
+        // ignore
+      }
+    }
+  }, [mode, winner, cells]);
+
+  // Sonuç penceresi kapanınca: biten günlük maçtan Gişe'ye dön (aksi halde pencere açık kalırdı)
+  const handleCloseDailyShare = () => {
+    setShowDailyShare(false);
+    setSavedDaily(null);
+    if (mode === "DAILY_SOLO" && winner !== null) {
+      audio.stopAll();
+      resetGame();
+      setCurrentView("HOME");
+    }
+  };
+
   // Ortak Modallar Props
   const globalModalsProps = {
     showMatchmakingQueue,
@@ -835,7 +871,9 @@ function CineXoxApp() {
     onQueueMatchFound: handleQueueMatchFound,
     onQueuePlayWithAiImmediately: handleQueuePlayWithAiImmediately,
     onMatchFoundCountdownComplete: handleMatchFoundCountdownComplete,
-    onCloseDailyShare: () => setShowDailyShare(false),
+    dailyCells: savedDaily ? savedDaily.cells : cells,
+    dailyWinner: savedDaily ? savedDaily.winner : winner,
+    onCloseDailyShare: handleCloseDailyShare,
     onCloseCustomLobby: () => setShowCustomLobby(false),
     onCreateCustomRoom: handleCreateCustomRoom,
     onJoinCustomRoom: handleJoinCustomRoom,
