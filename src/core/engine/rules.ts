@@ -68,7 +68,12 @@ export function resolveFotoFinish(
 ): PlayerSymbol {
   // Hücre sayıları verildiyse HÜCRE BAŞINA ortalama kıyaslanır: X 5, O 4 hücre doldurduğu için
   // toplam puan yapısal olarak X'i öne geçirir (ölçüm: foto-finişte X ~%90).
-  if (cellsX && cellsO && cellsX > 0 && cellsO > 0) {
+  if (cellsX !== undefined && cellsO !== undefined) {
+    // Sıfır kare "bilinmiyor" değil, bir sayıdır: biri hiç kare alamadıysa diğeri kazanır.
+    // İkisi de 0 ise (tahta tamamen kilitlendi, oyuncu boşta kaldı) oyuncuya zafer VERİLMEZ.
+    if (cellsX === 0 && cellsO === 0) return "O";
+    if (cellsX === 0) return "O";
+    if (cellsO === 0) return "X";
     const avgX = scoreRarityX / cellsX;
     const avgO = scoreRarityO / cellsO;
     if (avgX > avgO) return "X";
@@ -135,6 +140,9 @@ export function evaluateReverseBoardState(
     if (c?.answeredBy === "X") countX++;
     if (c?.answeredBy === "O") countO++;
   }
+
+  // Kimse kare alamadıysa (tahta tamamen kilitlendi, oyuncu boşta kaldı) oyuncuya zafer verilmez.
+  if (countX === 0 && countO === 0) return { winner: "O", line: null };
 
   if (countX > countO) return { winner: "X", line: null };
   if (countO > countX) return { winner: "O", line: null };

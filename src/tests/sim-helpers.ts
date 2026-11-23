@@ -223,7 +223,8 @@ export function checkInvariants(board: GameBoard, r: SimResult): string[] {
   if (r.decidedBy === "MAJORITY") {
     const cx = r.cells.filter(c => c?.answeredBy === "X").length;
     const co = r.cells.filter(c => c?.answeredBy === "O").length;
-    const expect = cx !== co ? (cx > co ? "X" : "O") : r.rarityX !== r.rarityO ? (r.rarityX > r.rarityO ? "X" : "O") : "X";
+    // Kimse kare alamadıysa (0-0) boşta kalan oyuncuya zafer verilmez: O kazanır.
+    const expect = cx === 0 && co === 0 ? "O" : cx !== co ? (cx > co ? "X" : "O") : r.rarityX !== r.rarityO ? (r.rarityX > r.rarityO ? "X" : "O") : "X";
     if (expect !== r.winner) errs.push(`Ters Kadraj kazananı yanlış (${cx}-${co}, rarity ${r.rarityX}-${r.rarityO})`);
   }
   if (r.decidedBy === "FOTO_FINISH") {

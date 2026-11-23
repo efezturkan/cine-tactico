@@ -1,4 +1,4 @@
-import { resolveFotoFinish, getBotGoldenReelPlan, GOLDEN_REEL_BOT, goldenReelAnswerer } from "../core";
+import { evaluateReverseBoardState, createLockedNeutralCell, resolveFotoFinish, getBotGoldenReelPlan, GOLDEN_REEL_BOT, goldenReelAnswerer } from "../core";
 import { generateSolvableBoard } from "../data/generatedBoards";
 import { shuffled } from "../utils/shuffle";
 import { simulateMatch, makeRng, checkInvariants, Agent } from "./sim-helpers";
@@ -16,6 +16,14 @@ assert(resolveFotoFinish(50, 40, 5, 4) === "O", "toplamda önde (50>40) olan X, 
 assert(resolveFotoFinish(64, 53, 5, 4) === "O", "X 64/5=12.8, O 53/4=13.25: ortalaması yüksek O kazanır");
 assert(resolveFotoFinish(70, 40, 5, 4) === "X", "ortalaması açıkça yüksek X kazanır");
 assert(resolveFotoFinish(40, 40, 4, 4) === "O", "tam eşitlikte ikinci oyuncu (O) kazanır");
+// Boşta bırakılan maç: tahta tamamen kilitlendiyse (0-0 kare) kimse "kazanmamış" olur; X'e (oyuncuya) zafer VERİLMEZ.
+// (Simülatörde yakalandı: hiç hamle yapmadan "Sahne senin!" çıkıyordu.)
+assert(resolveFotoFinish(0, 0, 0, 0) === "O", "0-0 kare: oyuncu (X) varsayılan galip sayılmaz");
+assert(resolveFotoFinish(0, 30, 0, 3) === "O", "oyuncunun hiç karesi yoksa rakip kazanır");
+assert(resolveFotoFinish(30, 0, 3, 0) === "X", "rakibin hiç karesi yoksa oyuncu kazanır");
+// Ters Kadraj: tahta tamamen kilitlendiyse (kimse kare alamadı) oyuncu boşta kazanmaz
+const allLocked = Array.from({ length: 9 }, (_, i) => createLockedNeutralCell(i));
+assert(evaluateReverseBoardState(allLocked, 0, 0).winner === "O", "Ters Kadraj: 0-0 kare ve 0-0 rarity, oyuncuya (X) zafer vermez");
 // Eski çağrı biçimi (hücre sayısı yok) bozulmadı
 assert(resolveFotoFinish(45, 30) === "X" && resolveFotoFinish(22, 40) === "O" && resolveFotoFinish(35, 35) === "X", "sayı verilmeyen eski çağrı aynı sonucu verir");
 
