@@ -48,6 +48,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   });
 
   const { locale, setLocale, dict } = useTranslation();
+  const [volume, setVolumeState] = useState<number>(() => Math.round(audio.getVolume() * 100));
   const [showTerms, setShowTerms] = useState<boolean>(false);
   const [showLicenses, setShowLicenses] = useState<boolean>(false);
 
@@ -118,6 +119,31 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 }`}
               />
             </button>
+          </div>
+
+          {/* 1b. Ses düzeyi (ana kanal kazancı) */}
+          <div className={`p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 transition-opacity ${muted ? "opacity-40" : ""}`}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-medium text-[#E8E6E1]">{locale === "en" ? "Volume" : "Ses düzeyi"}</span>
+              <span className="text-[10px] font-mono text-[#8A8F9A]">{locale === "en" ? `${volume}%` : `%${volume}`}</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={volume}
+              disabled={muted}
+              aria-label={locale === "en" ? "Volume" : "Ses düzeyi"}
+              onChange={(e) => {
+                const v = Number(e.target.value);
+                setVolumeState(v);
+                audio.setVolume(v / 100);
+              }}
+              onPointerUp={() => audio.playChessMove()}
+              onKeyUp={() => audio.playChessMove()}
+              className="w-full h-6 accent-[#D9A441]"
+            />
           </div>
 
           {/* 2. Titreşim Anahtarı */}
