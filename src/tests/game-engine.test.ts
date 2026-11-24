@@ -120,8 +120,19 @@ runTest("Board 4 (Süper Kahramanlar) has no single-solution deadlocks", () => {
 runTest("Bot finds valid move on empty board without stalling", () => {
   const board = PRESET_BOARDS[0];
   const cells = Array(9).fill(null);
-  const decision = calculateBotMove(board, cells, [], "MEDIUM", "O");
+  // recall: 1 → bot hiçbir kareyi "unutmaz". Eskiden recall rastgeleydi ve ~%1,6 oranında bot "hatırlayamadı"
+  // (miss) kararı verip test dalgalanıyordu (5000 denemede 81 düşüş, hepsi miss).
+  const decision = calculateBotMove(board, cells, [], "MEDIUM", "O", {}, { recall: 1 });
   return decision !== null && decision.movie !== null && decision.cellIndex >= 0 && decision.cellIndex < 9;
+});
+
+runTest("Bot 'hatırlayamadı' kararı geçerli bir kare ve miss işaretiyle döner (rastgele durum)", () => {
+  for (let i = 0; i < 300; i++) {
+    const d = calculateBotMove(PRESET_BOARDS[0], Array(9).fill(null), [], "MEDIUM", "O");
+    if (d === null) return false;
+    if (d.movie === null && !(d.miss === true && d.cellIndex >= 0 && d.cellIndex < 9)) return false;
+  }
+  return true;
 });
 
 runTest("Bot seizes winning move when available (HARD)", () => {
