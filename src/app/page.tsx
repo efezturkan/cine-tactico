@@ -49,6 +49,7 @@ import { haptic } from "@/utils/haptics";
 import { hasSeenGuide } from "@/utils/guideStorage";
 import { readBotRecords, recordBotResult, BotRecordBook } from "@/utils/botRecord";
 import { getGlobalDailyDateKey } from "@/utils/dateUtils";
+import { parseStoredProfile, serializeProfile } from "@/utils/profileStore";
 import { saveDailyResult, saveDailyProgress, loadDailyProgress, clearDailyProgress, loadDailyResult, StoredDailyResult } from "@/utils/dailyResult";
 import { LanguageProvider, useTranslation } from "@/i18n";
 
@@ -191,13 +192,12 @@ function CineXoxApp() {
     try {
       const savedProfile = localStorage.getItem("cinexox_player_profile");
       if (savedProfile) {
-        const parsedProfile = JSON.parse(savedProfile);
-        if (parsedProfile && typeof parsedProfile === "object") {
-          setProfile(prev => ({
-            ...prev,
-            ...parsedProfile,
-          }));
-        }
+        // Bozuk ya da elle değiştirilmiş kayıt oyunu çökertmez; yalnızca doğrulanmış alanlar alınır
+        const parsedProfile = parseStoredProfile(savedProfile);
+        setProfile(prev => ({
+          ...prev,
+          ...parsedProfile,
+        }));
       } else {
         // İlk açılış: herkes aynı "#3095" adıyla başlamasın
         const suffix = 1000 + Math.floor(Math.random() * 9000);
@@ -222,7 +222,7 @@ function CineXoxApp() {
 
   useEffect(() => {
     try {
-      localStorage.setItem("cinexox_player_profile", JSON.stringify(profile));
+      localStorage.setItem("cinexox_player_profile", serializeProfile(profile));
     } catch {
       // ignore
     }
