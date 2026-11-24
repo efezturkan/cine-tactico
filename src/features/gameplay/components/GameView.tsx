@@ -261,7 +261,10 @@ export function GameView(props: GameViewProps) {
             </span>
           </div>
 
-          {/* RAKİP (O) */}
+          {/* RAKİP (O): Günlük kadrajda rakip yok, tek başına oynanır */}
+          {props.mode === "DAILY_SOLO" ? (
+            <div className="flex-1" aria-hidden="true" />
+          ) : (
           <div
             className={`flex items-center gap-1.5 min-w-0 flex-1 justify-end text-right transition-opacity ${
               !isPlayerTurn ? "opacity-100 font-bold" : "opacity-60"
@@ -274,6 +277,7 @@ export function GameView(props: GameViewProps) {
               O
             </span>
           </div>
+          )}
         </div>
 
         {/* ── 3. KADRAJ (ESNEK ALAN, DİKEY MERKEZ) ─── */}
@@ -510,7 +514,7 @@ export function GameView(props: GameViewProps) {
                 : "Düelloyu bırakırsan yenilmiş sayılırsın."}
             </p>
 
-            {props.pendingOpponent && (
+            {props.pendingOpponent && props.mode !== "DAILY_SOLO" && (
               <div className="w-full p-2.5 rounded-lg bg-[#0B0D12] border border-white/5 text-[11px] text-[#8A8F9A] mb-5 flex items-center justify-between">
                 <span>{isEn ? "Opponent:" : "Rakip:"}</span>
                 <span className="font-semibold text-[#E8E6E1]">
