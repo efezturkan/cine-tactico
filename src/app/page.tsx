@@ -161,7 +161,7 @@ function CineXoxApp() {
       topDirector: "Christopher Nolan",
       topGenre: "Bilim Kurgu (Sci-Fi)",
       topDecade: "2010 Sonrası",
-      cinemaAesthetic: "Karanlık Zihinler & Bilim Kurgu Tutkunu 🌌",
+      cinemaAesthetic: "Karanlık Zihinler & Bilim Kurgu Tutkunu",
       genreBreakdown: [
         { genre: "Bilim Kurgu", percentage: 45 },
         { genre: "Suç & Gerilim", percentage: 35 },

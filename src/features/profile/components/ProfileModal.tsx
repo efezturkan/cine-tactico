@@ -648,9 +648,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <h3 className="font-serif text-base font-bold text-[#E8E6E1]">
                   {isEn ? "Reset Local Data" : "Yerel Verileri Sıfırla"}
                 </h3>
-                <span className="text-[11px] font-mono text-[#8A8F9A]">
-                  {isEn ? "Device Cache Cleanup" : "Cihaz Önbelleği Temizliği"}
-                </span>
               </div>
             </div>
 
@@ -659,11 +656,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 ? "This clears offline bot match records, auditorium ambience preferences, and UI onboarding flags stored on this device."
                 : "Bu işlem cihazınızda kayıtlı çevrimdışı bot maç geçmişini, salon ambiyans tercihlerinizi ve arayüz ipuçlarını sıfırlar."}
             </p>
+            {isSupabaseConfigured && (
             <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-400">
               {isEn
-                ? "✓ Your online rating, titles, and server profile are KEPT SAFE on the server."
-                : "✓ Çevrimiçi lig dereceniz, unvanınız ve profiliniz sunucuda KORUNUR."}
+                ? "Your online rating, titles, and server profile are KEPT SAFE on the server."
+                : "Çevrimiçi lig dereceniz, unvanınız ve profiliniz sunucuda KORUNUR."}
             </div>
+            )}
 
             <div className="flex items-center gap-2 pt-2">
               <Button
@@ -704,12 +703,22 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <h3 className="font-serif text-base font-bold text-white">
                   {isEn ? "Delete Account & All Data" : "Hesabı ve Tüm Verileri Sil"}
                 </h3>
-                <span className="text-[11px] font-mono text-[#E5484D]">Apple Guideline 5.1.1(v)</span>
               </div>
             </div>
 
             <p className="text-xs text-[#E8E6E1]/90 leading-relaxed">
-              {isEn ? (
+              {!isSupabaseConfigured ? (
+                isEn ? (
+                  <>
+                    This action is <strong className="text-[#E5484D]">IRREVERSIBLE</strong>. Your profile, rank title, reels balance, and stats on this device will be <strong>permanently deleted</strong>.
+                  </>
+                ) : (
+                  <>
+                    Bu işlem <strong className="text-[#E5484D]">GERİ ALINAMAZ</strong>. Bu cihazdaki profilin, unvanın, makara bakiyen ve istatistiklerin <strong>kalıcı olarak silinecek</strong>.
+                  </>
+                )
+              ) : (
+                isEn ? (
                 <>
                   This action is <strong className="text-[#E5484D]">IRREVERSIBLE</strong>. Your anonymous account, rank title, rating, reels balance, and stats on Supabase will be <strong>PERMANENTLY DESTROYED</strong>.
                 </>
@@ -717,14 +726,17 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <>
                   Bu işlem <strong className="text-[#E5484D]">GERİ ALINAMAZ</strong>. Supabase üzerindeki anonim oyuncu hesabınız, unvanınız, lig dereceniz, makara bakiyeniz ve tüm istatistikleriniz <strong>KALICI OLARAK YOK EDİLECEKTİR</strong>.
                 </>
+              )
               )}
             </p>
 
+            {isSupabaseConfigured && (
             <div className="p-2.5 rounded-lg bg-[#E5484D]/10 border border-[#E5484D]/25 text-[11px] text-[#E5484D] leading-tight">
               {isEn
-                ? "⚠ Your user references in multiplayer match records will be unlinked (set to null), while your personal profile is completely deleted."
-                : "⚠ Çok oyunculu maç kayıtlarındaki kullanıcı bağlantınız kaldırılacak (oyuncu kimliği sıfırlanacak), kişisel profiliniz tamamen silinecektir."}
+                ? "Your user references in multiplayer match records will be unlinked (set to null), while your personal profile is completely deleted."
+                : "Çok oyunculu maç kayıtlarındaki kullanıcı bağlantınız kaldırılacak (oyuncu kimliği sıfırlanacak), kişisel profiliniz tamamen silinecektir."}
             </div>
+            )}
 
             {deleteAccountError && (
               <div className="p-2 rounded bg-[#E5484D]/20 border border-[#E5484D]/40 text-xs text-[#E5484D] text-center">
