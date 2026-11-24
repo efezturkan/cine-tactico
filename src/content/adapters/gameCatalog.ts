@@ -111,9 +111,22 @@ const verifiedPersonIds = new Set(
 );
 
 /** Oyun bileşenlerinin okuduğu tek liste. Kaynak kanonik katalogdur. */
+const curatedMovies = LEGACY_MOVIE_RECORDS.filter((movie) => playableProductionIds.has(movie.id)).map(withSearchFields);
+
+// Elle seçilmiş kayıt ile toplu içe aktarılan kayıt aynı filmse (aynı özgün ad + yıl) yalnızca elle seçilen kalır;
+// yoksa aramada aynı film iki satır çıkar ve cevap hangisine denk geldiğine bağlı olarak reddedilebilir.
+const dedupeKey = (movie: Movie): string => {
+  const title = normalizeForSearch(movie.originalTitle || movie.title);
+  return title ? `${title}|${movie.year}` : "";
+};
+const curatedKeys = new Set(curatedMovies.map(dedupeKey).filter(Boolean));
+
 export const MOVIES_DATABASE: Movie[] = [
-  ...LEGACY_MOVIE_RECORDS.filter((movie) => playableProductionIds.has(movie.id)).map(withSearchFields),
-  ...pilotMovies(),
+  ...curatedMovies,
+  ...pilotMovies().filter((movie) => {
+    const key = dedupeKey(movie);
+    return !key || !curatedKeys.has(key);
+  }),
 ];
 
 function buildActorsDatabase(): Actor[] {
