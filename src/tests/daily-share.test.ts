@@ -1,5 +1,7 @@
 import { summarizeDailyShare } from "../utils/dailyShare";
 import type { CellAnswer } from "../core";
+import { en } from "../i18n/en";
+import { tr } from "../i18n/tr";
 
 let passed = 0, failed = 0;
 function assert(cond: boolean, msg: string) {
@@ -35,6 +37,14 @@ assert(u.headline === "3/9 Kare" && !u.won, "kazanan bilinmiyorsa yalnızca kare
 const d = summarizeDailyShare(full, "DRAW");
 assert(d.headline === "3/9 Kare", "DRAW da zafer ya da kayıp iddia etmez");
 assert(summarizeDailyShare(Array(9).fill(null), null).emojiGrid.replace(/[⬛ \n]/g, "") === "", "boş tahta: tamamı ⬛");
+
+// Yerelleştirme: kart, uygulamanın diliyle yazılır
+const en1 = summarizeDailyShare(board, "X", en.dailyCard);
+assert(en1.headline === "Scene's yours!" && en1.resultLine === "Result: 1/9 Frames · Scene's yours!", "EN: kazanma kartı İngilizce");
+assert(summarizeDailyShare(full, "O", en.dailyCard).headline === "Not this take.", "EN: kayıp başlığı İngilizce");
+assert(!/[ığşçöüİĞŞÇÖÜ]|Kare|Sahne|Sonuç|Yarın/.test(en1.headline + en1.subline + en1.resultLine), "EN kartında Türkçe metin kalmadı");
+assert(summarizeDailyShare(board, "X").headline === tr.dailyCard.headlineWon, "dil verilmezse Türkçe (eski davranış)");
+assert(Object.keys(en.dailyCard).join() === Object.keys(tr.dailyCard).join(), "TR ve EN kart anahtarları aynı");
 
 console.log(`\nDAILY SHARE RESULT: ${passed}/${passed + failed} PASSED`);
 if (failed > 0) process.exit(1);

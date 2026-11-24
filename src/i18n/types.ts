@@ -188,4 +188,20 @@ export interface TranslationDictionary {
     createRoom: string;
     waitingGuest: string;
   };
+  dailyCard: {
+    caption: string;
+    shareTitle: string;
+    shareHeader: string;
+    share: string;
+    copy: string;
+    copied: string;
+    close: string;
+    headlineWon: string;
+    headlineLost: string;
+    headlineCount: string;
+    sublineWon: string;
+    sublineDone: string;
+    resultLine: string;
+    resultWon: string;
+  };
 }

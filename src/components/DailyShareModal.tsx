@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { MiniKadrajPreview } from "@/components/ui/MiniKadrajPreview";
 import { summarizeDailyShare } from "@/utils/dailyShare";
 import { shareText, copyText } from "@/utils/share";
+import { useTranslation } from "@/i18n";
 
 // Uygulama içinde origin "capacitor://localhost" olur; paylaşılan bağlantı herkese açık adres olmalı.
 const PUBLIC_URL = "https://cine-tactico.vercel.app";
@@ -31,12 +32,15 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
   winner,
 }) => {
   const [copiedText, setCopiedText] = useState(false);
+  const { dict } = useTranslation();
+  const card = dict.dailyCard;
+  const fillN = (s: string, n: string) => s.replace("{n}", n);
 
   if (!isOpen) return null;
 
-  const summary = summarizeDailyShare(cells, winner);
+  const summary = summarizeDailyShare(cells, winner, card);
   const dayStr = getDailyEditionNumber();
-  const shareBody = `CineXOX · Günün Kadrası NO.${dayStr}\n\n${summary.emojiGrid}\n${summary.resultLine}\n${
+  const shareBody = `${fillN(card.shareHeader, dayStr)}\n\n${summary.emojiGrid}\n${summary.resultLine}\n${
     publicOrigin()
   }`;
 
@@ -52,7 +56,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
 
   const handleNativeShare = async () => {
     audio.playSelect();
-    const outcome = await shareText(`CineXOX Günün Kadrası NO.${dayStr}`, shareBody);
+    const outcome = await shareText(fillN(card.shareTitle, dayStr), shareBody);
     if (outcome === "copied") flashCopied();
   };
 
@@ -69,7 +73,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
           variant="icon"
           onClick={onClose}
           className="absolute top-3.5 right-3.5"
-          title="Kapat"
+          title={card.close}
         >
           <X className="w-4 h-4" />
         </Button>
@@ -77,7 +81,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
         {/* Kart Başlığı */}
         <div className="text-center pb-3 border-b border-white/10">
           <span className="text-[9px] font-mono font-bold tracking-[0.25em] text-[#D9A441] uppercase block mb-1">
-            GÜNÜN KADRASI · NO.{dayStr}
+            {fillN(card.caption, dayStr)}
           </span>
           <h2 className="font-serif text-2xl font-bold text-[#E8E6E1]">
             {summary.headline}
@@ -96,19 +100,19 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
         <div className="flex flex-col gap-2 mt-1">
           <Button variant="primary" onClick={handleNativeShare} className="w-full">
             <Share2 className="w-4 h-4" />
-            <span>Paylaş</span>
+            <span>{card.share}</span>
           </Button>
 
           <Button variant="secondary" onClick={handleCopyScore} className="w-full">
             {copiedText ? (
               <>
                 <Check className="w-4 h-4 text-[#D9A441]" />
-                <span className="text-[#D9A441]">Kopyalandı</span>
+                <span className="text-[#D9A441]">{card.copied}</span>
               </>
             ) : (
               <>
                 <Copy className="w-4 h-4 text-[#8A8F9A]" />
-                <span>Panoya Kopyala</span>
+                <span>{card.copy}</span>
               </>
             )}
           </Button>

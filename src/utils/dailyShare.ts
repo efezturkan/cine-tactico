@@ -1,4 +1,8 @@
 import type { CellAnswer } from "@/core";
+import { tr } from "@/i18n/tr";
+
+export type DailyCardText = typeof tr.dailyCard;
+const fill = (s: string, n: number) => s.replace("{n}", String(n));
 
 export interface DailyShareSummary {
   /** Oyuncunun (X) kazandığı kare sayısı. Botun ve kilitli kareler sayılmaz. */
@@ -21,7 +25,8 @@ export interface DailyShareSummary {
  */
 export function summarizeDailyShare(
   cells: readonly (CellAnswer | null)[],
-  winner?: "X" | "O" | "DRAW" | null
+  winner?: "X" | "O" | "DRAW" | null,
+  text: DailyCardText = tr.dailyCard
 ): DailyShareSummary {
   let mine = 0, theirs = 0, locked = 0;
   let grid = "";
@@ -37,10 +42,8 @@ export function summarizeDailyShare(
   }
   const won = winner === "X";
   const lost = winner === "O";
-  const headline = won ? "Sahne senin!" : lost ? "Bu çekim olmadı." : `${mine}/9 Kare`;
-  const subline = won
-    ? "Bugünün kadrajı senin. Yarın yeni bir tane var."
-    : "Bugünün kadrajı çekildi. Yarın yeni bir tane var.";
-  const resultLine = `Sonuç: ${mine}/9 Kare${won ? " · Sahne senin!" : ""}`;
+  const headline = won ? text.headlineWon : lost ? text.headlineLost : fill(text.headlineCount, mine);
+  const subline = won ? text.sublineWon : text.sublineDone;
+  const resultLine = fill(text.resultLine, mine) + (won ? text.resultWon : "");
   return { mine, theirs, locked, emojiGrid: grid, headline, subline, resultLine, won };
 }
