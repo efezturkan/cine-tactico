@@ -1,5 +1,5 @@
 import { CellAnswer, GameBoard, PlayerSymbol } from "../types";
-import { evaluateBoardState, evaluateReverseBoardState, createLockedNeutralCell, isCellDeadlocked } from "./rules";
+import { evaluateBoardState, evaluateReverseBoardState, createLockedNeutralCell, isCellDeadlocked, WINNING_LINES } from "./rules";
 
 /** Bir hamleden sonra maçın ne durumda olduğu. Hook, bot ve testler aynı kararı kullanır. */
 export type BoardOutcome =
@@ -71,4 +71,48 @@ export function hasPlayerTriedCell(attempts: AttemptsPerCell, cellIndex: number,
  */
 export function goldenReelAnswerer(mode: string, submitted: PlayerSymbol): PlayerSymbol {
   return mode === "ONLINE_ROOM" ? submitted : "X";
+}
+
+/**
+ * GÜNLÜK KADRAJ (kelime oyunu mantığı): rakip yok, oyuncu yalnızca X'tir ve 9 kareyi de oynar.
+ * Kare başına tek hak: yanlış cevap ya da süre aşımı kareyi hemen kilitler.
+ */
+export function isSoloMode(mode: string): boolean {
+  return mode === "DAILY_SOLO";
+}
+
+/** Sırayı kim alır? Günlük'te hep X; diğer modlarda sırayla. */
+export function nextTurnAfter(mode: string, current: PlayerSymbol): PlayerSymbol {
+  if (isSoloMode(mode)) return "X";
+  return current === "X" ? "O" : "X";
+}
+
+/** Tek oyunculu modda yanlış cevap: rakip olmadığı için kare iki hak beklenmeden kilitlenir. */
+export function registerSoloFailedAttempt(
+  attempts: AttemptsPerCell,
+  cells: readonly (CellAnswer | null)[],
+  cellIndex: number
+): FailedAttemptResult {
+  const nextCells = [...cells];
+  const shouldLock = nextCells[cellIndex] === null;
+  if (shouldLock) nextCells[cellIndex] = createLockedNeutralCell(cellIndex);
+  return {
+    attempts: { ...attempts, [cellIndex]: { X: true, O: true } },
+    cells: nextCells,
+    locked: shouldLock,
+  };
+}
+
+/**
+ * Günlük sonucu: 9 kare sonuçlanana kadar sürer (hat kurmak oyunu bitirmez).
+ * Bitince oyuncunun üçlü hattı varsa "Sahne senin" (X), yoksa "Bu çekim olmadı" (O). Altın Makara yoktur.
+ * Kare sayısı (n/9) ayrıca sonuç kartında gösterilir.
+ */
+export function evaluateSoloOutcome(cells: readonly (CellAnswer | null)[]): BoardOutcome {
+  if (!cells.every(c => c !== null)) return { kind: "CONTINUE" };
+  const mine = (c: CellAnswer | null) => Boolean(c && !c.isLockedNeutral && c.answeredBy === "X");
+  for (const combo of WINNING_LINES) {
+    if (combo.every(i => mine(cells[i]))) return { kind: "WIN", winner: "X", line: combo };
+  }
+  return { kind: "WIN", winner: "O", line: null };
 }

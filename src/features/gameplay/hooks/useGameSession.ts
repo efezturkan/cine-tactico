@@ -15,7 +15,11 @@ import {
   validateActorIntersection,
   calculateActorRarity,
   evaluateOutcome,
+  evaluateSoloOutcome,
   registerFailedAttempt,
+  registerSoloFailedAttempt,
+  isSoloMode,
+  nextTurnAfter,
   hasPlayerTriedCell,
   BoardOutcome,
   AttemptsPerCell,
@@ -101,10 +105,11 @@ export function useGameSession(
   }, []);
 
   const switchTurn = useCallback(() => {
-    setCurrentTurn(prev => (prev === "X" ? "O" : "X"));
+    // Günlük'te rakip yok: sıra hep X'te kalır, yalnızca süre yenilenir
+    setCurrentTurn(prev => nextTurnAfter(mode, prev));
     turnStartTimeRef.current = performance.now();
     setSecondsRemaining(shotClockLimit);
-  }, [shotClockLimit]);
+  }, [shotClockLimit, mode]);
 
   const handleVictoryEffects = useCallback((winningPlayer: PlayerSymbol | "DRAW") => {
     if (winningPlayer === "X") {
@@ -123,12 +128,25 @@ export function useGameSession(
       }
     } else if (winningPlayer === "O") {
       setScoreO(s => s + 1);
-      audio.playVictory();
+      if (isSoloMode(mode)) {
+        audio.playError(); // Günlük'te "O kazandı" yoktur: çekim olmadı
+      } else {
+        audio.playVictory();
+      }
       haptic.error();
     } else {
       audio.playSelect();
     }
-  }, []);
+  }, [mode]);
+
+  // Günlük'te 9 kare oynanır (hat erken bitirmez); diğer modlarda tahta moduna göre karar verilir
+  const outcomeFor = useCallback(
+    (cells: readonly (CellAnswer | null)[]): BoardOutcome =>
+      isSoloMode(mode)
+        ? evaluateSoloOutcome(cells)
+        : evaluateOutcome(board.boardMode, cells, rarityRef.current.x, rarityRef.current.o),
+    [mode, board.boardMode]
+  );
 
   // Tahta durumu değişince (hamle veya kilit) sonucu uygular. Maç bittiyse true döner.
   const applyOutcome = useCallback(
@@ -161,16 +179,16 @@ export function useGameSession(
   // Referanslar üzerinden saf çalışır (state güncelleyici içinde yan etki yok). Maç bittiyse true döner.
   const recordFailedAttempt = useCallback(
     (cellIndex: number, player: PlayerSymbol): boolean => {
-      const result = registerFailedAttempt(attemptsRef.current, cellsRef.current, cellIndex, player);
+      const result = isSoloMode(mode)
+        ? registerSoloFailedAttempt(attemptsRef.current, cellsRef.current, cellIndex)
+        : registerFailedAttempt(attemptsRef.current, cellsRef.current, cellIndex, player);
       attemptsRef.current = result.attempts;
       setAttemptsPerCell(result.attempts);
       if (!result.locked) return false;
       commitCells(result.cells);
-      return applyOutcome(
-        evaluateOutcome(board.boardMode, result.cells, rarityRef.current.x, rarityRef.current.o)
-      );
+      return applyOutcome(outcomeFor(result.cells));
     },
-    [board.boardMode, applyOutcome, commitCells]
+    [mode, outcomeFor, applyOutcome, commitCells]
   );
 
   useEffect(() => {
@@ -307,10 +325,10 @@ export function useGameSession(
       next[cellIndex] = answer;
       commitCells(next);
 
-      const ended = applyOutcome(evaluateOutcome(board.boardMode, next, rarityRef.current.x, rarityRef.current.o));
+      const ended = applyOutcome(outcomeFor(next));
       if (!ended) switchTurn();
     },
-    [board.boardMode, applyOutcome, commitCells, switchTurn]
+    [outcomeFor, applyOutcome, commitCells, switchTurn]
   );
 
   // Execute Film Move (Klasik Düello ve Sinefil Konsept)
