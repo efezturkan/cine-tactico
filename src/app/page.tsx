@@ -34,10 +34,6 @@ import {
   ContentPoolType,
   PlayerSymbol,
   CellAnswer,
-  DAILY_REWARD_REELS,
-  dailyTierFor,
-  countDailyFrames,
-  nextDailyStreak,
   finishDailyEarly,
 } from "@/core";
 import {
@@ -49,6 +45,7 @@ import { haptic } from "@/utils/haptics";
 import { hasSeenGuide } from "@/utils/guideStorage";
 import { readBotRecords, recordBotResult, BotRecordBook } from "@/utils/botRecord";
 import { getGlobalDailyDateKey } from "@/utils/dateUtils";
+import { applyDailyResultToProfile } from "@/utils/dailyProfile";
 import { parseStoredProfile, serializeProfile, isNewerSchema } from "@/utils/profileStore";
 import { saveDailyResult, saveDailyProgress, loadDailyProgress, clearDailyProgress, loadDailyResult, StoredDailyResult } from "@/utils/dailyResult";
 import { LanguageProvider, useTranslation } from "@/i18n";
@@ -367,20 +364,10 @@ function CineXoxApp() {
       setBotRecords(recordBotResult(pendingOpponent.name, winner === "X" ? "W" : winner === "O" ? "L" : "D"));
     }
 
-    // Günlük Kadraj: rakip yok, maç geçmişine "bot düellosu" yazılmaz. Kademeye göre Makara ödülü (bir kez).
+    // Günlük Kadraj: rakip yok, maç geçmişine "bot düellosu" yazılmaz; ödül ve seri tek yardımcıda
     if (mode === "DAILY_SOLO") {
-      const reward = DAILY_REWARD_REELS[dailyTierFor(countDailyFrames(cells))];
-      setProfile(prev => ({
-        ...prev,
-        totalMatches: prev.totalMatches + 1,
-        wins: winner === "X" ? prev.wins + 1 : prev.wins,
-        losses: winner === "O" ? prev.losses + 1 : prev.losses,
-        // Makara bakiyesi MVP'de gizli (SHOW_COIN_ECONOMY); ödül sessizce biriktirilir
-        reelsBalance: prev.reelsBalance + reward,
-        // Günlük seri: art arda UTC günleri (kademe fark etmez)
-        dailyStreak: nextDailyStreak(prev.dailyStreak, prev.lastStreakDateUtc, getGlobalDailyDateKey()),
-        lastStreakDateUtc: getGlobalDailyDateKey(),
-      }));
+      const key = getGlobalDailyDateKey();
+      setProfile(prev => applyDailyResultToProfile(prev, winner === "X" ? "X" : "O", cells, key));
       return;
     }
 
@@ -882,16 +869,7 @@ function CineXoxApp() {
     } catch {
       // ignore
     }
-    const reward = DAILY_REWARD_REELS[r.tier];
-    setProfile(prev => ({
-      ...prev,
-      totalMatches: prev.totalMatches + 1,
-      wins: r.winner === "X" ? prev.wins + 1 : prev.wins,
-      losses: r.winner === "O" ? prev.losses + 1 : prev.losses,
-      reelsBalance: prev.reelsBalance + reward,
-      dailyStreak: nextDailyStreak(prev.dailyStreak, prev.lastStreakDateUtc, key),
-      lastStreakDateUtc: key,
-    }));
+    setProfile(prev => applyDailyResultToProfile(prev, r.winner, finalCells, key));
     setSavedDaily({ dateKey: key, winner: r.winner, cells: [...finalCells] });
     setShowDailyShare(true);
   };
