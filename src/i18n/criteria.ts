@@ -15,6 +15,9 @@ export const BOARD_TITLES_EN: Record<string, string> = {
   "Sinefil Konsept: Zihin Bükücüler & Gizem Hanedanı": "Cinephile Concept: Mind-Benders & Mystery Dynasty",
   "Sinema Devleri: DiCaprio vs Christian Bale vs Brad Pitt": "Cinema Titans: DiCaprio vs Christian Bale vs Brad Pitt",
   "Süper Kahramanlar: DC vs MARVEL Düellosu": "Superheroes: DC vs MARVEL Duel",
+  // Oyun içi başlıkta ":" öncesi kısa ad kullanılır; ana ekrandaki mod adlarıyla aynı olmalı
+  "Ters Kadraj": "Reverse Frame",
+  "Sinefil Konsept": "Cinephile Concept",
   "Ters Kadraj: Nolan & Yıldızlar Kadrosu": "Reverse Frame: Nolan & Star Ensemble",
   "Ters Kadraj: Suç Dehaları & Mafya Hanedanı": "Reverse Frame: Crime Masterminds & Mob Dynasties",
   "Yıldızlar Buluşması: Karakter × Karakter": "Meeting of Stars: Icon × Icon",

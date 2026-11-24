@@ -82,6 +82,14 @@ assert(
   "translateBoardTitle keeps original in TR"
 );
 
+// Oyun içi başlık ":" öncesi kısa adı çevirir; ana ekrandaki mod adlarıyla (en.ts) aynı olmalı
+assert(
+  translateBoardTitle("Ters Kadraj", "en") === en.home.modes.reverseTitle &&
+    translateBoardTitle("Sinefil Konsept", "en") === en.home.modes.conceptTitle,
+  "oyun içi kısa mod başlıkları ana ekrandaki mod adlarıyla aynı (Reverse Frame / Cinephile Concept)"
+);
+assert(translateBoardTitle("Ters Kadraj", "tr") === tr.home.modes.reverseTitle, "TR kısa başlık ana ekranla aynı");
+
 // 4. Bot Rank Title Translation
 assert(
   translateBotRankTitle("Bilet Kontrolörü", "en") === "Ticket Inspector",

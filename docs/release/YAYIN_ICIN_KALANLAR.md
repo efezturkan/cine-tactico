@@ -69,9 +69,9 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 2. ~~Bot adları~~ **Karar: kalıyor.** Üç zorlukta şaka niteliğinde adlar sorun görülmedi (kullanıcı kararı). Mağaza incelemesi gerçek kişi adı için soru sorarsa `NolanZihni`, `TarantinoKult`, `ScorseseAilesi`, `OscarAvcisi` yeniden adlandırılır (veri değişikliği).
 
 ### B. Yayın kalitesi için düzeltilmeli, engel değil
-3. **Ters Kadraj adı**: ana ekranda "Reverse Frame", oyun başlığı ve sonuç kartında "Ters Kadraj" (simülatörde İngilizce arayüzde doğrulandı). Tek bir dile bağlanmalı.
+3. ~~Ters Kadraj adı~~ **Çözüldü:** oyun içi başlık artık ana ekrandaki mod adıyla aynı (EN: Reverse Frame / Cinephile Concept, TR: Ters Kadraj / Sinefil Konsept). Kalan küçük tutarsızlık: Sinefil Kartı'ndaki maç geçmişi etiketi (`modeLabel`) kayıt anında Türkçe yazılıyor.
 4. **Süre çubuğu** (`ShotClock.tsx`, korumalı): ince ve tahtadan uzak. Sayaç rakamı görünür, bu yüzden engel değil.
-5. **Korumalı dosyalardaki küçük kriter etiketleri** (9-10px) ve gizli ekranlardaki küçük yazılar.
+5. **Korumalı dosyalardaki küçük kriter etiketleri** ve **"Sahipsiz" etiketi** (`XoxBoard.tsx`, korumalı, İngilizce arayüzde Türkçe kalıyor; düzeltmek için dosyaya dokunmak gerekir, onayın olmadan yapmadım) (9-10px) ve gizli ekranlardaki küçük yazılar.
 6. **Beraberlik oyunda olamaz** (Altın Makara ve nadirlik hep bir galip seçer): "Beraberlik" metni beklenmemeli, belgede ve mağaza metninde "berabere" denmesin.
 
 ### C. Yayından sonraya bırakılabilir (MVP için zorunlu değil, eklenmeyecek)
