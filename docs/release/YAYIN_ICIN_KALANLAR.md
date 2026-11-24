@@ -1,4 +1,4 @@
-# Yayın için kalanlar (24 Kasım 2026, dal: `release/final-polish`)
+# Yayın için kalanlar (24 Kasım 2026, dal: `release/round-2`, `main` = `00c7aec`)
 
 ## Karar: HAZIR DEĞİL (NOT READY)
 
@@ -18,9 +18,14 @@ Kod tarafında bilinen engel kalmadı. Yayın; senin Apple hesabına, gerçek iP
 | Gerçek zafer kartı | Simülatörde görüldü | "Sahne senin!", sağda 3 altın X, ortada mavi O; pano "4/9 Kare · Sahne senin!" |
 | Ters Kadraj | Baştan sona oynandı (tarayıcı derlemesi) | 3-3, nadirlikle karar, sonuç kartı doğru |
 | Sinefil Konsept | Açıldı, cevap kabul edildi, bot oynadı, kayıp kartı doğru | Tarayıcı derlemesi |
+| Günlük kartı dile uymuyordu (EN arayüzde TR kart) | Kart, paylaşım başlığı/metni ve düğmeler sözlükten (`dailyCard`), TR/EN | 5 yeni test; simülatör İngilizce açılışı |
+| "Memento" aramada iki satır çıkıyordu | Toplu içe aktarılan kopya, elle seçilen kayıt varken düşer | Simülatörde yakalandı; test düzeltmeden önce 1/3, sonra 3/3 |
+| Ters Kadraj ve Sinefil Konsept simülatörde | Açıldı, cevap sayfası açıldı, bot hamle yaptı, süre işledi (iOS Simulator, iPhone 17 Pro Max) | Ekran görüntüleri; tam maç değil (12 sn tur, araç gecikmesi) |
 | Küçük yazılar, renk körlüğü işareti | Önceki turdan | Ekran görüntüleri, daltonlens |
 
-Testler: `tsc` temiz, `npm test` 0 hata. Bir kez tek bir rastgele test dalgalandı, 8 tur × 5 rastgele test ve 4 tam tur tekrarında çıkmadı (kaynağı bulunamadı).
+Testler: `tsc` temiz, `npm test` 0 hata.
+
+**Dalgalanan test (araştırma sonucu):** daha önce bir tam turda tek bir test bir kez düştü, hangisi olduğunu o an kaydetmemiştim. Şimdi 12 tam tur (tüm test dosyaları ayrı ayrı) ve `game-engine` testi 40 kez tekrar edildi: 0 hata. Rastgelelik kullanan yerler tarandı: bot gecikmeleri (aralık testi geniş, sınır ihlali yok), `getRandomOpponent` (seviye aralıkları örtüşmüyor: EASY 1-3, MEDIUM 5-7, HARD 8-10), rastgele tahta seçimi (`getBoardForMode`). Simülasyon testleri sabit tohumlu. **Kaynağı bulunamadı**, yeniden üretilemedi. Olası aday: bir turda yakalanan, koşu sırasında yan yana çalışan derlemeden gelen zamanlama; kanıtım yok. Tekrar düşerse test çıktısını kaydet.
 
 ## 2. Gerçek iPhone'da senin test etmen gerekenler
 
@@ -44,18 +49,22 @@ Testler: `tsc` temiz, `npm test` 0 hata. Bir kez tek bir rastgele test dalgaland
 
 Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürüm 1.0 (1), reklam/IAP yok.
 
-## 4. Açık kararlar (hiçbirini ben değiştirmedim)
+## 4. Açık kararlar, önem ve yayın gerekliliğine göre (hiçbirini ben değiştirmedim)
 
-1. **Günlük modda bot yok; sırayla hem X hem O'yu aynı kişi oynuyor** (sıra O'dayken girilen cevap O'ya yazılıyor, boşta kalan O turu 12 sn bekliyor). Fiilen aynı telefonda sırayla oynama; anayasa madde 3 ile çelişiyor ve modun kuralı hiçbir belgede yazmıyor. Öneri: Günlük'te yalnızca X (oyuncu) oynasın, O turu atlansın ya da bot oynasın. **Bu en önemli karar.**
-2. **Günlük kartı yerelleştirilmemiş**: uygulama İngilizce iken oyun içi başlık "Scene's yours!", kart "Sahne senin!". Kart ve paylaşım metni sabit Türkçe. Hangi dillerle yayınlanacak?
-3. Ters Kadraj adı: ana ekranda İngilizce "Reverse Frame", sonuç kartında "Ters Kadraj".
-4. **Bot adları**: `NolanZihni`, `TarantinoKult`, `ScorseseAilesi` gerçek kişi adı içeriyor; `OscarAvcisi` ticari marka/kişilik hakkı riski.
-5. **Süre çubuğu** (`ShotClock.tsx`, korumalı): ince ve tahtadan uzak.
-6. **Ses**: earshot örnekleri mi, mevcut sentez + ana kanal mı.
-7. **Rarity** yalnızca beraberlik bozucu (hat kazanımını etkilemiyor).
-8. **Online Oda** kapalı; açılmadan önce sunucu `submit_move` yeniden yazılmalı.
-9. Korumalı dosyalardaki küçük kriter etiketleri (9-10px) ve gizli ekranlardaki küçük yazılar.
-10. Beraberlik oyunda olamaz (Altın Makara ve nadirlik hep bir galip seçer); "Beraberlik" ekranı beklenmemeli.
+### A. Yayından önce karar şart
+1. **Günlük modun kuralı.** Günlük'te bot yok, aynı kişi hem X hem O'yu oynuyor (sıra O'dayken girilen cevap O'ya yazılıyor, boşta kalan O turu 12 sn bekliyor). Fiilen aynı telefonda sırayla oynama; anayasa madde 3'e aykırı ve kural hiçbir belgede yok. Seçenekler sohbette sunuldu (X-only, bot, hayalet rakip). Kullanıcı seçene kadar kod değişmeyecek.
+2. **Bot adları**: `NolanZihni`, `TarantinoKult`, `ScorseseAilesi` gerçek kişi adı içeriyor; `OscarAvcisi` ticari marka/kişilik hakkı riski. Veri değişikliği (yeni özellik değil), App Store incelemesi öncesi önerilir.
+
+### B. Yayın kalitesi için düzeltilmeli, engel değil
+3. **Ters Kadraj adı**: ana ekranda "Reverse Frame", oyun başlığı ve sonuç kartında "Ters Kadraj" (simülatörde İngilizce arayüzde doğrulandı). Tek bir dile bağlanmalı.
+4. **Süre çubuğu** (`ShotClock.tsx`, korumalı): ince ve tahtadan uzak. Sayaç rakamı görünür, bu yüzden engel değil.
+5. **Korumalı dosyalardaki küçük kriter etiketleri** (9-10px) ve gizli ekranlardaki küçük yazılar.
+6. **Beraberlik oyunda olamaz** (Altın Makara ve nadirlik hep bir galip seçer): "Beraberlik" metni beklenmemeli, belgede ve mağaza metninde "berabere" denmesin.
+
+### C. Yayından sonraya bırakılabilir (MVP için zorunlu değil, eklenmeyecek)
+7. **Ses**: earshot örnekleri mi, mevcut sentez + ana kanal mı. Mevcut sentez çalışıyor; gerçek cihazda dinleme sonrası karar.
+8. **Rarity** yalnızca beraberlik bozucu (hat kazanımını etkilemiyor). Tasarım tercihi, hata değil.
+9. **Online Oda**: bayrak kapalı, mağaza sürümünde görünmüyor. Açılmadan önce sunucu `submit_move` yeniden yazılmalı.
 
 ## 5. Pil, boyut, modlar
 
