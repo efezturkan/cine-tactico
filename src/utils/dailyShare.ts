@@ -48,15 +48,15 @@ export function summarizeDailyShare(
   const won = winner === "X";
   const decided = winner === "X" || winner === "O";
   const tier = decided ? dailyTierFor(countDailyFrames(cells)) : null;
-  const TIER_TEXT: Record<DailyTier, [string, string]> = {
-    PERFECT: [text.tierPerfect, text.tierPerfectSub],
-    LEAD: [text.tierLead, text.tierLeadSub],
-    WIN: [text.tierWin, text.tierWinSub],
-    HALF: [text.tierHalf, text.tierHalfSub],
-    NONE: [text.tierNone, text.tierNoneSub],
+  const TIER_TEXT: Record<DailyTier, string> = {
+    PERFECT: text.tierPerfect,
+    LEAD: text.tierLead,
+    WIN: text.tierWin,
+    HALF: text.tierHalf,
+    NONE: text.tierNone,
   };
-  const headline = tier ? TIER_TEXT[tier][0] : fill(text.headlineCount, mine);
-  const subline = tier ? TIER_TEXT[tier][1] : text.tierNoneSub;
+  const headline = tier ? TIER_TEXT[tier] : fill(text.headlineCount, mine);
+  const subline = fill(text.sub, mine);
   const resultLine = fill(text.resultLine, mine) + (tier ? ` · ${headline}` : "");
   const rewardReels = tier ? DAILY_REWARD_REELS[tier] : 0;
   return { mine, theirs, locked, emojiGrid: grid, headline, subline, resultLine, won, tier, rewardReels };

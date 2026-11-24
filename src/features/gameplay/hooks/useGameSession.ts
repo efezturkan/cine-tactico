@@ -17,7 +17,8 @@ import {
   evaluateOutcome,
   evaluateSoloOutcome,
   countDailyFrames,
-  DAILY_TIER_MIN,
+  DAILY_FEEDBACK,
+  dailyTierFor,
   registerFailedAttempt,
   registerSoloFailedAttempt,
   isSoloMode,
@@ -113,39 +114,52 @@ export function useGameSession(
     setSecondsRemaining(shotClockLimit);
   }, [shotClockLimit, mode]);
 
+  // Konfeti, hareket azaltma tercihinde hiç çalışmaz (erişilebilirlik)
+  const burstConfetti = useCallback((particleCount: number, extra: Record<string, unknown> = {}) => {
+    try {
+      if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+      confetti({ particleCount, spread: 70, origin: { y: 0.6 }, colors: ["#D9A441", "#C9A27A", "#E8E6E1"], ...extra });
+    } catch {
+      // Confetti env fallback
+    }
+  }, []);
+
+  // Günlük'te geri bildirim kademeye göre orantılıdır (DAILY_FEEDBACK); diğer modlar eskisi gibi
+  const dailyFeedbackEffects = useCallback(() => {
+    const fb = DAILY_FEEDBACK[dailyTierFor(countDailyFrames(cellsRef.current))];
+    if (fb.sound === "victory") audio.playVictory();
+    else if (fb.sound === "select") audio.playSelect();
+    else audio.playError();
+    if (fb.haptic === "success") haptic.success();
+    else if (fb.haptic === "medium") haptic.medium();
+    else haptic.error();
+    if (fb.confettiParticles > 0) burstConfetti(fb.confettiParticles);
+    for (let i = 0; i < fb.sideBursts; i++) {
+      const left = i % 2 === 0;
+      burstConfetti(70, { angle: left ? 60 : 120, spread: 55, origin: { x: left ? 0.1 : 0.9, y: 0.7 }, colors: ["#D9A441", "#F2C96B", "#E8E6E1"] });
+    }
+  }, [burstConfetti]);
+
   const handleVictoryEffects = useCallback((winningPlayer: PlayerSymbol | "DRAW") => {
+    if (isSoloMode(mode)) {
+      if (winningPlayer === "X") setScoreX(s => s + 1);
+      else if (winningPlayer === "O") setScoreO(s => s + 1);
+      dailyFeedbackEffects();
+      return;
+    }
     if (winningPlayer === "X") {
       setScoreX(s => s + 1);
       audio.playVictory();
       haptic.success();
-      try {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ["#D9A441", "#C9A27A", "#E8E6E1"],
-        });
-        // Günlük'te 9/9 (Kusursuz Kadraj): iki yandan altın yağmur, büyük kademe (game-feel: large tier)
-        if (isSoloMode(mode) && countDailyFrames(cellsRef.current) >= DAILY_TIER_MIN.PERFECT) {
-          for (const x of [0.1, 0.9]) {
-            confetti({ particleCount: 70, angle: x < 0.5 ? 60 : 120, spread: 55, origin: { x, y: 0.7 }, colors: ["#D9A441", "#F2C96B", "#E8E6E1"] });
-          }
-        }
-      } catch {
-        // Confetti env fallback
-      }
+      burstConfetti(100);
     } else if (winningPlayer === "O") {
       setScoreO(s => s + 1);
-      if (isSoloMode(mode)) {
-        audio.playError(); // Günlük'te "O kazandı" yoktur: çekim olmadı
-      } else {
-        audio.playVictory();
-      }
+      audio.playVictory();
       haptic.error();
     } else {
       audio.playSelect();
     }
-  }, [mode]);
+  }, [mode, dailyFeedbackEffects, burstConfetti]);
 
   // Günlük'te 9 kare oynanır (hat erken bitirmez); diğer modlarda tahta moduna göre karar verilir
   const outcomeFor = useCallback(

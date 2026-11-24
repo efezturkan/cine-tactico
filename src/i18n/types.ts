@@ -199,15 +199,11 @@ export interface TranslationDictionary {
     headlineCount: string;
     resultLine: string;
     reward: string;
+    sub: string;
     tierPerfect: string;
-    tierPerfectSub: string;
     tierLead: string;
-    tierLeadSub: string;
     tierWin: string;
-    tierWinSub: string;
     tierHalf: string;
-    tierHalfSub: string;
     tierNone: string;
-    tierNoneSub: string;
   };
 }

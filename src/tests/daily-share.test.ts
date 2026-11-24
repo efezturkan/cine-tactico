@@ -43,6 +43,7 @@ assert(m.mine === 3 && m.tier === "HALF" && !/Kusursuz/.test(m.headline), "dolu 
 const e9 = summarizeDailyShare(finished(9), "X", en.dailyCard);
 assert(e9.headline === "Perfect Reel!" && e9.resultLine === "Result: 9/9 Frames · Perfect Reel!", "EN: kusursuz kart İngilizce");
 assert(summarizeDailyShare(finished(5), "X", en.dailyCard).headline === "Scene's yours!", "EN: çoğunluk başlığı");
+assert(summarizeDailyShare(finished(6), "X").subline === "6/9 kare senin. Yarın yeni bir kadraj var." && e9.subline === "9/9 frames are yours. A new reel tomorrow.", "alt satır gerçek kare sayısını söyler (tüm kademelerde tek, olgusal satır)");
 assert(!/[ığşçöüİĞŞÇÖÜ]|Kare|Sahne|Sonuç|Yarın|Makara/.test(e9.headline + e9.subline + e9.resultLine), "EN kartında Türkçe metin kalmadı");
 assert(summarizeDailyShare(finished(5), "X").headline === tr.dailyCard.tierWin, "dil verilmezse Türkçe");
 assert(Object.keys(en.dailyCard).join() === Object.keys(tr.dailyCard).join(), "TR ve EN kart anahtarları aynı");

@@ -251,10 +251,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {/* 7A.5 Seri Sayısı (Pill'siz) */}
             <div
               className="flex items-center gap-1 text-xs font-mono font-bold text-[#D9A441] px-1"
-              title={`Galibiyet Serisi: ${profile.dailyStreak || 1}`}
+              title={`${isEn ? "Daily streak" : "Günlük seri"}: ${profile.dailyStreak || 0}`}
             >
               <Flame className="w-4 h-4 fill-[#D9A441] text-[#D9A441]" />
-              <span>{profile.dailyStreak || 1}</span>
+              <span>{profile.dailyStreak || 0}</span>
             </div>
 
             {/* Ses Aç / Kapat */}

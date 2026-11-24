@@ -36,6 +36,7 @@ import {
   DAILY_REWARD_REELS,
   dailyTierFor,
   countDailyFrames,
+  nextDailyStreak,
 } from "@/core";
 import {
   UserProfile,
@@ -367,7 +368,11 @@ function CineXoxApp() {
         totalMatches: prev.totalMatches + 1,
         wins: winner === "X" ? prev.wins + 1 : prev.wins,
         losses: winner === "O" ? prev.losses + 1 : prev.losses,
+        // Makara bakiyesi MVP'de gizli (SHOW_COIN_ECONOMY); ödül sessizce biriktirilir
         reelsBalance: prev.reelsBalance + reward,
+        // Günlük seri: art arda UTC günleri (kademe fark etmez)
+        dailyStreak: nextDailyStreak(prev.dailyStreak, prev.lastStreakDateUtc, getGlobalDailyDateKey()),
+        lastStreakDateUtc: getGlobalDailyDateKey(),
       }));
       return;
     }

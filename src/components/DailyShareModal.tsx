@@ -10,6 +10,7 @@ import { MiniKadrajPreview } from "@/components/ui/MiniKadrajPreview";
 import { summarizeDailyShare } from "@/utils/dailyShare";
 import { shareText, copyText } from "@/utils/share";
 import { useTranslation } from "@/i18n";
+import { FLAGS } from "@/config/flags";
 
 // Uygulama içinde origin "capacitor://localhost" olur; paylaşılan bağlantı herkese açık adres olmalı.
 const PUBLIC_URL = "https://cine-tactico.vercel.app";
@@ -89,7 +90,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
           <p className="text-xs text-[#8A8F9A] font-sans mt-0.5">
             {summary.subline}
           </p>
-          {summary.rewardReels > 0 && (
+          {FLAGS.SHOW_COIN_ECONOMY && summary.rewardReels > 0 && (
             <p className="text-xs font-mono font-bold text-[#D9A441] mt-1.5">
               {fillN(card.reward, String(summary.rewardReels))}
             </p>
