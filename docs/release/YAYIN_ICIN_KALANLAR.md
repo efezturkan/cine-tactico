@@ -90,6 +90,14 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 - **audio-design:** ses `audio.ts` içindeki ortak çıkış ve sınırlayıcıdan geçiyor ve tek bir sessiz anahtarı var; kademe sesleri bu tablodaki üç mevcut sesten seçiliyor. Yeni ses üretilmedi, loudness ölçümü yapılmadı (gerçek cihazda dinlenmeli).
 - **Ortam notu:** 13:51'de Homebrew'da `simdjson` yükselmiş (benim işlemim değil), `node` açılmıyor. Çözüm: `brew reinstall node` (sen çalıştır). Ben geçici olarak yalnızca komutlara eski kütüphane yolunu veren bir `node` sarmalayıcısı kullandım, sisteme dokunmadım.
 
+## 4c. Deneyim denetimi (ui-ux-pro-max kuralları, 440x956 ekran)
+
+- **Dokunma hedefleri (≥44pt):** Ana ekran, rakip seçimi, oyun tahtası, hücre cevap sayfası, "Nasıl oynanır" kartında 44pt altı kontrol yok. 5px'lik "35MM" yazıları dekoratif film kenarı.
+- **Kontrast:** metin renkleri (soluk gri, altın, mavi, turkuaz, mor) koyu yüzeylerde 5,4 ile 15,6 arası, hepsi 4,5:1 üstü.
+- **İlk açılış:** "Nasıl oynanır" kartı ✕ ile geçilebiliyor (skill: zorunlu, atlanamaz tur olmamalı).
+- **Etiketler ve tepki:** etiketsiz ikon düğmesi 0, alt metinsiz görsel 0, güvenli alan ve `prefers-reduced-motion` var, 29 yerde dokunma geri bildirimi.
+- **Bulgular (düzeltilmedi):** (1) görünüm alanı `user-scalable=no, maximum-scale=1` (yakınlaştırma kapalı; oyun için yaygın ama erişilebilirlik önerisine aykırı, karar sende), (2) `MatchmakingQueueModal.tsx` başlığında emoji simge (korumalı dosya).
+
 ## 5. Pil, boyut, modlar
 
 - Paket: `out/` yaklaşık 4,8 MB; zamanlayıcılar yalnızca oyunda ve modallarda; arka planda sayaç artık durur.
