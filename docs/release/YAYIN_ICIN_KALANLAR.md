@@ -18,6 +18,7 @@ Kod tarafında bilinen engel kalmadı. Yayın; senin Apple hesabına, gerçek iP
 | Gerçek zafer kartı | Simülatörde görüldü | "Sahne senin!", sağda 3 altın X, ortada mavi O; pano "4/9 Kare · Sahne senin!" |
 | Ters Kadraj | Baştan sona oynandı (tarayıcı derlemesi) | 3-3, nadirlikle karar, sonuç kartı doğru |
 | Sinefil Konsept | Açıldı, cevap kabul edildi, bot oynadı, kayıp kartı doğru | Tarayıcı derlemesi |
+| Günlük modda rakip yoktu, oyuncu X ve O'yu sırayla oynuyordu | Yalnızca X; 9 kare, kare başına tek hak, sonuç sonda | 18 yeni test; tarayıcıda 9 süre aşımı: sıra hep X, 9 kilit, "Not this take", kayıt yazıldı; simülatörde başlıkta rakip yok |
 | Günlük kartı dile uymuyordu (EN arayüzde TR kart) | Kart, paylaşım başlığı/metni ve düğmeler sözlükten (`dailyCard`), TR/EN | 5 yeni test; simülatör İngilizce açılışı |
 | "Memento" aramada iki satır çıkıyordu | Toplu içe aktarılan kopya, elle seçilen kayıt varken düşer | Simülatörde yakalandı; test düzeltmeden önce 1/3, sonra 3/3 |
 | Ters Kadraj ve Sinefil Konsept simülatörde | Açıldı, cevap sayfası açıldı, bot hamle yaptı, süre işledi (iOS Simulator, iPhone 17 Pro Max) | Ekran görüntüleri; tam maç değil (12 sn tur, araç gecikmesi) |
@@ -52,7 +53,7 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 ## 4. Açık kararlar, önem ve yayın gerekliliğine göre (hiçbirini ben değiştirmedim)
 
 ### A. Yayından önce karar şart
-1. **Günlük modun kuralı.** Günlük'te bot yok, aynı kişi hem X hem O'yu oynuyor (sıra O'dayken girilen cevap O'ya yazılıyor, boşta kalan O turu 12 sn bekliyor). Fiilen aynı telefonda sırayla oynama; anayasa madde 3'e aykırı ve kural hiçbir belgede yok. Seçenekler sohbette sunuldu (X-only, bot, hayalet rakip). Kullanıcı seçene kadar kod değişmeyecek.
+1. ~~Günlük modun kuralı~~ **Çözüldü (kullanıcı kararı: yalnızca X, kelime oyunu gibi).** Rakip ve O turu yok; oyuncu 9 kareyi de oynar. Kare başına tek hak: yanlış cevap ya da süre aşımı kareyi hemen kilitler. Hat kurmak oyunu erken bitirmez. 9 kare bitince üçlü hat varsa "Sahne senin", yoksa "Bu çekim olmadı"; kart n/9 kareyi gösterir. Altın Makara yok. **Varsayım (kullanıcı onaylamadı):** "Sahne senin" için üçlü hat şartı; istenirse eşik (ör. 5/9) tek satırda `evaluateSoloOutcome` içinde değişir.
 2. **Bot adları**: `NolanZihni`, `TarantinoKult`, `ScorseseAilesi` gerçek kişi adı içeriyor; `OscarAvcisi` ticari marka/kişilik hakkı riski. Veri değişikliği (yeni özellik değil), App Store incelemesi öncesi önerilir.
 
 ### B. Yayın kalitesi için düzeltilmeli, engel değil
