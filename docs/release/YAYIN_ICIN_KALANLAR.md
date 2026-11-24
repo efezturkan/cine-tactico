@@ -79,6 +79,17 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 8. **Rarity** yalnızca beraberlik bozucu (hat kazanımını etkilemiyor). Tasarım tercihi, hata değil.
 9. **Online Oda**: bayrak kapalı, mağaza sürümünde görünmüyor. Açılmadan önce sunucu `submit_move` yeniden yazılmalı.
 
+## 4b. Skill kontrolü (puzzle, game-feel, audio-design, game-docs, unslop-ui, web araştırması)
+
+- **puzzle:** 400 günün Günlük tahtası çözücüyle denetlendi: 0 çözülemez, hücre başına en az 3 cevap (ortalama 5,4), 1 tekrar eden tahta. Süre/ödül eşikleri için model: bilgi düzeyi 0,5 / 0,75 / 0,9 olan oyuncu için 9 kareden beklenen ~4,5 / ~6,8 / ~8,1 (kademeler Yarım / Sahne senin / Başrol). Model, oyun testi değil.
+- **Araştırma (Game Developer, NYT Wordle yardım sayfası):** Wordle'ın üç sütunu tek bulmaca, paylaşılabilir sonuç ızgarası ve seri; seri en güçlü bağ. Bizde seri alanı vardı ama hiç güncellenmiyordu ve Ana Ekran sahte "1" gösteriyordu: artık art arda UTC günleri sayılır (kademe fark etmez), Ana Ekran gerçek değeri gösterir.
+- **game-feel:** "Yarım çekim" hata sesi ve titreşimi alıyordu (ödüllü kademeye ters). Geri bildirim artık kademeyle orantılı tek tabloda (`DAILY_FEEDBACK`), konfeti `prefers-reduced-motion`'da çalışmaz, yanıp sönme yok.
+- **MVP_SCOPE.md bulgusu:** Makara ekonomisi MVP'de gizli (`SHOW_COIN_ECONOMY=false`). Kartın "+n Makara" satırı bayrağın arkasına alındı; ödül sessizce biriktirilir.
+- **unslop-ui:** kademe başına 5 ayrı alt satır tek, olgusal satıra indirildi ("6/9 kare senin. Yarın yeni bir kadraj var."). Kalan "Sahne senin!" ünlemi tasarım anayasası imzası olduğu için bilerek bırakıldı.
+- **game-docs:** Günlük kuralı `MVP_SCOPE.md` içindeki mevcut maddeye yerinde yazıldı (yeni belge yapısı açılmadı).
+- **audio-design:** ses `audio.ts` içindeki ortak çıkış ve sınırlayıcıdan geçiyor ve tek bir sessiz anahtarı var; kademe sesleri bu tablodaki üç mevcut sesten seçiliyor. Yeni ses üretilmedi, loudness ölçümü yapılmadı (gerçek cihazda dinlenmeli).
+- **Ortam notu:** 13:51'de Homebrew'da `simdjson` yükselmiş (benim işlemim değil), `node` açılmıyor. Çözüm: `brew reinstall node` (sen çalıştır). Ben geçici olarak yalnızca komutlara eski kütüphane yolunu veren bir `node` sarmalayıcısı kullandım, sisteme dokunmadım.
+
 ## 5. Pil, boyut, modlar
 
 - Paket: `out/` yaklaşık 4,8 MB; zamanlayıcılar yalnızca oyunda ve modallarda; arka planda sayaç artık durur.
