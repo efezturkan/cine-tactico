@@ -29,13 +29,13 @@ assert(evaluateSoloOutcome(line).kind === "CONTINUE", "üçlü hat kurulsa da ka
 const mid = empty(); mid[0] = x(0); mid[4] = createLockedNeutralCell(4);
 assert(evaluateSoloOutcome(mid).kind === "CONTINUE", "tahta dolmadan oyun sürer");
 
-// Bitiş: 9 kare sonuçlanınca. Hat varsa Sahne senin, yoksa Bu çekim olmadı. Altın Makara yok.
-const fullLine = Array.from({ length: 9 }, (_, i) => ([0, 1, 2, 5].includes(i) ? x(i) : createLockedNeutralCell(i)));
+// Bitiş: 9 kare sonuçlanınca. Çoğunluk (5/9+) Sahne senin, yoksa Bu çekim olmadı. Altın Makara yok.
+const fullLine = Array.from({ length: 9 }, (_, i) => ([0, 1, 2, 5, 8].includes(i) ? x(i) : createLockedNeutralCell(i)));
 const won = evaluateSoloOutcome(fullLine);
-assert(won.kind === "WIN" && won.winner === "X" && won.line?.join() === "0,1,2", "9 kare bitti, hat var: Sahne senin (X)");
-const noLine = Array.from({ length: 9 }, (_, i) => ([0, 1, 5, 6, 8].includes(i) ? x(i) : createLockedNeutralCell(i)));
+assert(won.kind === "WIN" && won.winner === "X" && won.line?.join() === "0,1,2", "9 kare bitti, çoğunluk (5/9) ve hat var: Sahne senin (X), hat süs olarak döner");
+const noLine = Array.from({ length: 9 }, (_, i) => ([0, 1, 5, 6].includes(i) ? x(i) : createLockedNeutralCell(i)));
 const lost = evaluateSoloOutcome(noLine);
-assert(lost.kind === "WIN" && lost.winner === "O" && lost.line === null, "9 kare bitti, hat yok: Bu çekim olmadı");
+assert(lost.kind === "WIN" && lost.winner === "O" && lost.line === null, "9 kare bitti, çoğunluk yok (4/9): Bu çekim olmadı");
 const idle = Array.from({ length: 9 }, (_, i) => createLockedNeutralCell(i));
 const idleOut = evaluateSoloOutcome(idle);
 assert(idleOut.kind === "WIN" && idleOut.winner === "O", "tamamen boşta kalan oyuncu kazanmaz");

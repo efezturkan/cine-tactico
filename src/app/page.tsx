@@ -33,6 +33,9 @@ import {
   GameBoard,
   ContentPoolType,
   PlayerSymbol,
+  DAILY_REWARD_REELS,
+  dailyTierFor,
+  countDailyFrames,
 } from "@/core";
 import {
   UserProfile,
@@ -354,6 +357,19 @@ function CineXoxApp() {
 
     if (mode === "VS_BOT") {
       setBotRecords(recordBotResult(pendingOpponent.name, winner === "X" ? "W" : winner === "O" ? "L" : "D"));
+    }
+
+    // Günlük Kadraj: rakip yok, maç geçmişine "bot düellosu" yazılmaz. Kademeye göre Makara ödülü (bir kez).
+    if (mode === "DAILY_SOLO") {
+      const reward = DAILY_REWARD_REELS[dailyTierFor(countDailyFrames(cells))];
+      setProfile(prev => ({
+        ...prev,
+        totalMatches: prev.totalMatches + 1,
+        wins: winner === "X" ? prev.wins + 1 : prev.wins,
+        losses: winner === "O" ? prev.losses + 1 : prev.losses,
+        reelsBalance: prev.reelsBalance + reward,
+      }));
+      return;
     }
 
     setProfile(prev => {

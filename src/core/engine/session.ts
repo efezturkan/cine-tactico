@@ -1,4 +1,5 @@
 import { CellAnswer, GameBoard, PlayerSymbol } from "../types";
+import { countDailyFrames, isDailyWin } from "./dailyTier";
 import { evaluateBoardState, evaluateReverseBoardState, createLockedNeutralCell, isCellDeadlocked, WINNING_LINES } from "./rules";
 
 /** Bir hamleden sonra maçın ne durumda olduğu. Hook, bot ve testler aynı kararı kullanır. */
@@ -105,14 +106,17 @@ export function registerSoloFailedAttempt(
 
 /**
  * Günlük sonucu: 9 kare sonuçlanana kadar sürer (hat kurmak oyunu bitirmez).
- * Bitince oyuncunun üçlü hattı varsa "Sahne senin" (X), yoksa "Bu çekim olmadı" (O). Altın Makara yoktur.
- * Kare sayısı (n/9) ayrıca sonuç kartında gösterilir.
+ * Bitince karelerin çoğunluğu (5/9+) senindeyse "Sahne senin" (X), değilse "Bu çekim olmadı" (O).
+ * Kademe (kusursuz, başrol...) ve ödül `dailyTier.ts` içinde kare sayısından hesaplanır. Altın Makara yoktur.
+ * `line`, varsa süs olarak üçlü hattı verir; kararı etkilemez.
  */
 export function evaluateSoloOutcome(cells: readonly (CellAnswer | null)[]): BoardOutcome {
   if (!cells.every(c => c !== null)) return { kind: "CONTINUE" };
-  const mine = (c: CellAnswer | null) => Boolean(c && !c.isLockedNeutral && c.answeredBy === "X");
-  for (const combo of WINNING_LINES) {
-    if (combo.every(i => mine(cells[i]))) return { kind: "WIN", winner: "X", line: combo };
+  const winner = isDailyWin(countDailyFrames(cells)) ? "X" : "O";
+  let line: [number, number, number] | null = null;
+  if (winner === "X") {
+    const mine = (c: CellAnswer | null) => Boolean(c && !c.isLockedNeutral && c.answeredBy === "X");
+    line = WINNING_LINES.find(combo => combo.every(i => mine(cells[i]))) ?? null;
   }
-  return { kind: "WIN", winner: "O", line: null };
+  return { kind: "WIN", winner, line };
 }

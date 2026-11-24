@@ -196,12 +196,18 @@ export interface TranslationDictionary {
     copy: string;
     copied: string;
     close: string;
-    headlineWon: string;
-    headlineLost: string;
     headlineCount: string;
-    sublineWon: string;
-    sublineDone: string;
     resultLine: string;
-    resultWon: string;
+    reward: string;
+    tierPerfect: string;
+    tierPerfectSub: string;
+    tierLead: string;
+    tierLeadSub: string;
+    tierWin: string;
+    tierWinSub: string;
+    tierHalf: string;
+    tierHalfSub: string;
+    tierNone: string;
+    tierNoneSub: string;
   };
 }

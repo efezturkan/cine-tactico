@@ -16,6 +16,8 @@ import {
   calculateActorRarity,
   evaluateOutcome,
   evaluateSoloOutcome,
+  countDailyFrames,
+  DAILY_TIER_MIN,
   registerFailedAttempt,
   registerSoloFailedAttempt,
   isSoloMode,
@@ -123,6 +125,12 @@ export function useGameSession(
           origin: { y: 0.6 },
           colors: ["#D9A441", "#C9A27A", "#E8E6E1"],
         });
+        // Günlük'te 9/9 (Kusursuz Kadraj): iki yandan altın yağmur, büyük kademe (game-feel: large tier)
+        if (isSoloMode(mode) && countDailyFrames(cellsRef.current) >= DAILY_TIER_MIN.PERFECT) {
+          for (const x of [0.1, 0.9]) {
+            confetti({ particleCount: 70, angle: x < 0.5 ? 60 : 120, spread: 55, origin: { x, y: 0.7 }, colors: ["#D9A441", "#F2C96B", "#E8E6E1"] });
+          }
+        }
       } catch {
         // Confetti env fallback
       }

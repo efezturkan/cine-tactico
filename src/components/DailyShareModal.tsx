@@ -89,6 +89,11 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
           <p className="text-xs text-[#8A8F9A] font-sans mt-0.5">
             {summary.subline}
           </p>
+          {summary.rewardReels > 0 && (
+            <p className="text-xs font-mono font-bold text-[#D9A441] mt-1.5">
+              {fillN(card.reward, String(summary.rewardReels))}
+            </p>
+          )}
         </div>
 
         {/* 3x3 Mini Kadraj */}

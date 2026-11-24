@@ -1,5 +1,6 @@
 import type { CellAnswer } from "@/core";
 import { tr } from "@/i18n/tr";
+import { countDailyFrames, dailyTierFor, DAILY_REWARD_REELS, type DailyTier } from "@/core/engine/dailyTier";
 
 export type DailyCardText = typeof tr.dailyCard;
 const fill = (s: string, n: number) => s.replace("{n}", String(n));
@@ -16,6 +17,10 @@ export interface DailyShareSummary {
   /** Paylaşım metnindeki sonuç satırı */
   resultLine: string;
   won: boolean;
+  /** Kare sayısına göre kademe; kazanan bilinmiyorsa null */
+  tier: DailyTier | null;
+  /** Kademenin Makara ödülü; kademe yoksa 0 */
+  rewardReels: number;
 }
 
 /**
@@ -41,9 +46,18 @@ export function summarizeDailyShare(
     grid += row.join(" ") + "\n";
   }
   const won = winner === "X";
-  const lost = winner === "O";
-  const headline = won ? text.headlineWon : lost ? text.headlineLost : fill(text.headlineCount, mine);
-  const subline = won ? text.sublineWon : text.sublineDone;
-  const resultLine = fill(text.resultLine, mine) + (won ? text.resultWon : "");
-  return { mine, theirs, locked, emojiGrid: grid, headline, subline, resultLine, won };
+  const decided = winner === "X" || winner === "O";
+  const tier = decided ? dailyTierFor(countDailyFrames(cells)) : null;
+  const TIER_TEXT: Record<DailyTier, [string, string]> = {
+    PERFECT: [text.tierPerfect, text.tierPerfectSub],
+    LEAD: [text.tierLead, text.tierLeadSub],
+    WIN: [text.tierWin, text.tierWinSub],
+    HALF: [text.tierHalf, text.tierHalfSub],
+    NONE: [text.tierNone, text.tierNoneSub],
+  };
+  const headline = tier ? TIER_TEXT[tier][0] : fill(text.headlineCount, mine);
+  const subline = tier ? TIER_TEXT[tier][1] : text.tierNoneSub;
+  const resultLine = fill(text.resultLine, mine) + (tier ? ` · ${headline}` : "");
+  const rewardReels = tier ? DAILY_REWARD_REELS[tier] : 0;
+  return { mine, theirs, locked, emojiGrid: grid, headline, subline, resultLine, won, tier, rewardReels };
 }

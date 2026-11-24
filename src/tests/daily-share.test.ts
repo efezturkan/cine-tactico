@@ -1,4 +1,5 @@
 import { summarizeDailyShare } from "../utils/dailyShare";
+import { createLockedNeutralCell } from "../core";
 import type { CellAnswer } from "../core";
 import { en } from "../i18n/en";
 import { tr } from "../i18n/tr";
@@ -7,43 +8,43 @@ let passed = 0, failed = 0;
 function assert(cond: boolean, msg: string) {
   if (cond) { passed++; console.log(`  ✓ PASS: ${msg}`); } else { failed++; console.error(`  ✗ FAIL: ${msg}`); }
 }
-const cell = (by: "X" | "O" | "NEUTRAL", locked = false): CellAnswer =>
-  ({ movie: { id: "m" + Math.random(), title: "T", year: 2000, director: "D", cast: [], genres: [], hasOscar: false }, answeredBy: by, timestamp: 0, isLockedNeutral: locked } as CellAnswer);
+const cell = (by: "X" | "O", i: number): CellAnswer =>
+  ({ movie: { id: "m" + i, title: "T", year: 2000, director: "D", cast: [], genres: [], hasOscar: false }, answeredBy: by, timestamp: 0 } as CellAnswer);
+/** n kare senin (X), kalanı kilitli: Günlük'te biten tahta */
+const finished = (n: number): (CellAnswer | null)[] => Array.from({ length: 9 }, (_, i) => (i < n ? cell("X", i) : createLockedNeutralCell(i)));
 
-console.log("GÜNLÜK PAYLAŞIM: SAHİBE GÖRE SONUÇ");
+console.log("GÜNLÜK PAYLAŞIM: KADEME, DİL, ÖDÜL");
 
-// Gerçek senaryo (21 Kasım kaydı): 9 kare dolu, hat yok, Altın Makara'yı oyuncu kazandı.
-// Oyuncu 1 kare, bot 3, 3 kilitli, 2 boş değil: toplam dolu 9 olsun: X1 O3 kilit2 + 3 daha O
-const board: (CellAnswer | null)[] = [cell("O"), cell("X"), null, null, cell("NEUTRAL", true), null, cell("O"), cell("NEUTRAL", true), null];
-const s = summarizeDailyShare(board, "X");
-assert(s.mine === 1 && s.theirs === 2 && s.locked === 2, "kareler sahibine göre sayılır (senin 1, botun 2, kilitli 2)");
-assert((s.emojiGrid.match(/🟨/g) ?? []).length === 1, "ızgarada yalnızca senin karelerin 🟨");
-assert((s.emojiGrid.match(/🟦/g) ?? []).length === 2, "botun kareleri 🟦");
-assert((s.emojiGrid.match(/⬛/g) ?? []).length === 6, "boş ve kilitli kareler ⬛");
-assert(s.emojiGrid.trim().split("\n").length === 3, "ızgara 3 satır");
-assert(s.headline === "Sahne senin!" && s.won, "kazanınca başlık 'Sahne senin!'");
-assert(s.resultLine === "Sonuç: 1/9 Kare · Sahne senin!", "paylaşım satırı gerçek kare sayısını söyler");
+const expectTr: Record<number, string> = { 0: "Bu çekim olmadı.", 2: "Bu çekim olmadı.", 3: "Yarım çekim.", 4: "Yarım çekim.", 5: "Sahne senin!", 6: "Sahne senin!", 7: "Başrol sensin!", 8: "Başrol sensin!", 9: "Kusursuz Kadraj!" };
+for (const n of [0, 2, 3, 4, 5, 6, 7, 8, 9]) {
+  const s = summarizeDailyShare(finished(n), n >= 5 ? "X" : "O");
+  assert(s.headline === expectTr[n] && s.mine === n, `${n}/9 → "${expectTr[n]}"`);
+}
 
-// Eski hata: 9 kare dolu olunca "Tam kadraj / Kusursuz" ilan ediliyordu
-const full: (CellAnswer | null)[] = [cell("O"), cell("O"), cell("X"), cell("X"), cell("O"), cell("O"), cell("X"), cell("O"), cell("O")];
-const l = summarizeDailyShare(full, "O");
-assert(l.mine === 3 && l.headline === "Bu çekim olmadı." && !l.won, "bot kazandıysa 9 kare dolu olsa da kayıp (eskiden 'Tam kadraj!' çıkardı)");
-assert(!l.resultLine.includes("Sahne senin"), "kayıpta zafer metni yok");
-assert(!/Kusursuz|Tam kadraj/.test(l.headline + l.subline + l.resultLine), "'Kusursuz' / 'Tam kadraj' artık hiçbir sonuçta çıkmaz");
+const six = summarizeDailyShare(finished(6), "X");
+assert(six.won && six.resultLine === "Sonuç: 6/9 Kare · Sahne senin!", "paylaşım satırı gerçek kare sayısını ve kademeyi söyler");
+assert((six.emojiGrid.match(/🟨/g) ?? []).length === 6 && (six.emojiGrid.match(/⬛/g) ?? []).length === 3, "ızgarada kazanılan kareler 🟨, kilitliler ⬛");
+assert(six.emojiGrid.trim().split("\n").length === 3, "ızgara 3 satır");
+assert(six.rewardReels === 20 && summarizeDailyShare(finished(9), "X").rewardReels === 50 && summarizeDailyShare(finished(0), "O").rewardReels === 5, "ödül kademeyle artar (9/9: 50, 6/9: 20, 0/9: 5 Makara)");
+assert(summarizeDailyShare(finished(9), "X").tier === "PERFECT", "9/9 kademesi PERFECT");
 
-// Sonuç bilinmiyorsa iddia yok
-const u = summarizeDailyShare(full, undefined);
-assert(u.headline === "3/9 Kare" && !u.won, "kazanan bilinmiyorsa yalnızca kare sayısı");
-const d = summarizeDailyShare(full, "DRAW");
-assert(d.headline === "3/9 Kare", "DRAW da zafer ya da kayıp iddia etmez");
+// Kazanan bilinmiyorsa iddia yok
+const u = summarizeDailyShare(finished(3), undefined);
+assert(u.headline === "3/9 Kare" && !u.won && u.tier === null && u.rewardReels === 0, "kazanan bilinmiyorsa yalnızca kare sayısı, ödül yok");
+assert(summarizeDailyShare(finished(3), "DRAW").tier === null, "DRAW kademe ya da ödül iddia etmez");
 assert(summarizeDailyShare(Array(9).fill(null), null).emojiGrid.replace(/[⬛ \n]/g, "") === "", "boş tahta: tamamı ⬛");
 
-// Yerelleştirme: kart, uygulamanın diliyle yazılır
-const en1 = summarizeDailyShare(board, "X", en.dailyCard);
-assert(en1.headline === "Scene's yours!" && en1.resultLine === "Result: 1/9 Frames · Scene's yours!", "EN: kazanma kartı İngilizce");
-assert(summarizeDailyShare(full, "O", en.dailyCard).headline === "Not this take.", "EN: kayıp başlığı İngilizce");
-assert(!/[ığşçöüİĞŞÇÖÜ]|Kare|Sahne|Sonuç|Yarın/.test(en1.headline + en1.subline + en1.resultLine), "EN kartında Türkçe metin kalmadı");
-assert(summarizeDailyShare(board, "X").headline === tr.dailyCard.headlineWon, "dil verilmezse Türkçe (eski davranış)");
+// Eski hata: başkasının kareleri oyuncunun sayılıyordu. Rakip (O) kareleri hiçbir kademeye katkı yapmaz.
+const mixed: (CellAnswer | null)[] = Array.from({ length: 9 }, (_, i) => (i < 3 ? cell("X", i) : cell("O", i)));
+const m = summarizeDailyShare(mixed, "O");
+assert(m.mine === 3 && m.tier === "HALF" && !/Kusursuz/.test(m.headline), "dolu 9 kare olsa da yalnızca senin karelerin sayılır (eski 'Tam kadraj' hatası yok)");
+
+// Yerelleştirme
+const e9 = summarizeDailyShare(finished(9), "X", en.dailyCard);
+assert(e9.headline === "Perfect Reel!" && e9.resultLine === "Result: 9/9 Frames · Perfect Reel!", "EN: kusursuz kart İngilizce");
+assert(summarizeDailyShare(finished(5), "X", en.dailyCard).headline === "Scene's yours!", "EN: çoğunluk başlığı");
+assert(!/[ığşçöüİĞŞÇÖÜ]|Kare|Sahne|Sonuç|Yarın|Makara/.test(e9.headline + e9.subline + e9.resultLine), "EN kartında Türkçe metin kalmadı");
+assert(summarizeDailyShare(finished(5), "X").headline === tr.dailyCard.tierWin, "dil verilmezse Türkçe");
 assert(Object.keys(en.dailyCard).join() === Object.keys(tr.dailyCard).join(), "TR ve EN kart anahtarları aynı");
 
 console.log(`\nDAILY SHARE RESULT: ${passed}/${passed + failed} PASSED`);

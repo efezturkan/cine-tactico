@@ -7,3 +7,4 @@ export * from "./engine/validator";
 export * from "./engine/bot-ai";
 export * from "./engine/board-generator";
 export * from "./engine/session";
+export * from "./engine/dailyTier";
