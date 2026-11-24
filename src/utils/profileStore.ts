@@ -58,6 +58,17 @@ export function serializeProfile(profile: UserProfile): string {
   return JSON.stringify({ ...profile, schemaVersion: PROFILE_SCHEMA_VERSION });
 }
 
+/** Diskteki kayıt bu sürümden yeniyse true: bu durumda üzerine yazılmamalı (eski sürüme dönülmüş olabilir) */
+export function isNewerSchema(text: string | null): boolean {
+  if (!text) return false;
+  try {
+    const parsed = JSON.parse(text) as unknown;
+    return isPlainObject(parsed) && typeof parsed.schemaVersion === "number" && parsed.schemaVersion > PROFILE_SCHEMA_VERSION;
+  } catch {
+    return false;
+  }
+}
+
 /** Okuma: JSON bozuksa ya da daha yeni sürümse boş döner (varsayılanlar kullanılır) */
 export function parseStoredProfile(text: string | null): Partial<UserProfile> {
   if (!text) return {};

@@ -59,7 +59,7 @@ export function loadDailyResult(storage: StorageLike, dateKey: string): StoredDa
   const rec = readDays(storage)[dateKey];
   if (!rec) return null;
   if (rec.winner !== "X" && rec.winner !== "O") return null;
-  if (!Array.isArray(rec.cells) || rec.cells.length !== 9) return null;
+  if (!Array.isArray(rec.cells) || rec.cells.length !== 9 || !rec.cells.every(isValidCell)) return null;
   return { dateKey, winner: rec.winner, cells: rec.cells };
 }
 
@@ -67,6 +67,14 @@ export function loadDailyResult(storage: StorageLike, dateKey: string): StoredDa
  * Yarıda kalan günlük: oyun başlar başlamaz bugünün hakkı tüketilir. Uygulama kapansa, yenilense ya da
  * oyuncu "terk et" dese de tahta yeniden oynanamaz; kayıtlı kareler sonuç sayılır.
  */
+/** Bir kare ya boştur ya da sahibi ve filmi olan bir nesnedir (elle bozulmuş kayıt kartı çökertmesin) */
+function isValidCell(c: unknown): boolean {
+  if (c === null) return true;
+  if (typeof c !== "object") return false;
+  const cell = c as { answeredBy?: unknown; movie?: unknown };
+  return (cell.answeredBy === "X" || cell.answeredBy === "O" || cell.answeredBy === "NEUTRAL") && typeof cell.movie === "object" && cell.movie !== null;
+}
+
 export const DAILY_PROGRESS_KEY = "cinexox_daily_progress_v1";
 
 export function saveDailyProgress(storage: StorageLike, dateKey: string, cells: readonly (CellAnswer | null)[]): void {
@@ -84,7 +92,7 @@ export function loadDailyProgress(storage: StorageLike, dateKey: string): (CellA
     const parsed = JSON.parse(raw) as { dateKey?: string; cells?: unknown };
     if (!parsed || parsed.dateKey !== dateKey) return null;
     if (!Array.isArray(parsed.cells) || parsed.cells.length !== 9) return null;
-    const ok = parsed.cells.every(c => c === null || (typeof c === "object" && c !== null));
+    const ok = parsed.cells.every(isValidCell);
     return ok ? (parsed.cells as (CellAnswer | null)[]) : null;
   } catch {
     return null;

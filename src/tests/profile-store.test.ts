@@ -1,4 +1,4 @@
-import { sanitizeStoredProfile, parseStoredProfile, serializeProfile, PROFILE_SCHEMA_VERSION } from "../utils/profileStore";
+import { sanitizeStoredProfile, parseStoredProfile, serializeProfile, isNewerSchema, PROFILE_SCHEMA_VERSION } from "../utils/profileStore";
 
 let passed = 0, failed = 0;
 function assert(cond: boolean, msg: string) {
@@ -36,6 +36,8 @@ const full = { username: "Efe", wins: 5, dailyStreak: 2, reelsBalance: 100, last
 const rt = parseStoredProfile(serializeProfile(full));
 assert(rt.wins === 5 && rt.dailyStreak === 2 && rt.reelsBalance === 100 && rt.username === "Efe", "yaz-oku gidiş dönüşü alanları korur");
 assert(JSON.parse(serializeProfile(full)).schemaVersion === PROFILE_SCHEMA_VERSION, "yazılan kayıt sürüm damgalıdır");
+
+assert(isNewerSchema(newer) && !isNewerSchema(serializeProfile(full)) && !isNewerSchema(null) && !isNewerSchema("{bozuk"), "daha yeni sürüm kaydı tanınır (üzerine yazılmaz)");
 
 console.log(`\nPROFILE STORE RESULT: ${passed}/${passed + failed} PASSED`);
 if (failed > 0) process.exit(1);

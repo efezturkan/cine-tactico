@@ -1,4 +1,4 @@
-import { saveDailyProgress, loadDailyProgress, clearDailyProgress, DAILY_PROGRESS_KEY } from "../utils/dailyResult";
+import { saveDailyProgress, loadDailyProgress, clearDailyProgress, loadDailyResult, DAILY_PROGRESS_KEY } from "../utils/dailyResult";
 import { finishDailyEarly } from "../core/engine/dailyTier";
 import { createLockedNeutralCell } from "../core";
 import type { CellAnswer } from "../core";
@@ -44,6 +44,13 @@ const bad = { getItem() { throw new Error("x"); }, setItem() { throw new Error("
 let threw = false;
 try { saveDailyProgress(bad, "2026-11-24", cells); loadDailyProgress(bad, "2026-11-24"); clearDailyProgress(bad); } catch { threw = true; }
 assert(!threw, "depolama hata verirse oyun yine çalışır");
+
+// Elle bozulmuş kareler kabul edilmez
+s.setItem(DAILY_PROGRESS_KEY, JSON.stringify({ dateKey: "2026-11-24", cells: [{}, null, null, null, null, null, null, null, null] }));
+assert(loadDailyProgress(s, "2026-11-24") === null, "sahibi/filmi olmayan kare içeren ilerleme reddedilir");
+const rs = new Mem();
+rs.setItem("cinexox_daily_result_v2", JSON.stringify({ days: { "2026-11-24": { winner: "X", cells: [{}, ...Array(8).fill(null)] } } }));
+assert(loadDailyResult(rs, "2026-11-24") === null, "bozuk kareli sonuç kaydı reddedilir");
 
 console.log(`\nDAILY ABANDON RESULT: ${passed}/${passed + failed} PASSED`);
 if (failed > 0) process.exit(1);

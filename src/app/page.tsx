@@ -49,7 +49,7 @@ import { haptic } from "@/utils/haptics";
 import { hasSeenGuide } from "@/utils/guideStorage";
 import { readBotRecords, recordBotResult, BotRecordBook } from "@/utils/botRecord";
 import { getGlobalDailyDateKey } from "@/utils/dateUtils";
-import { parseStoredProfile, serializeProfile } from "@/utils/profileStore";
+import { parseStoredProfile, serializeProfile, isNewerSchema } from "@/utils/profileStore";
 import { saveDailyResult, saveDailyProgress, loadDailyProgress, clearDailyProgress, loadDailyResult, StoredDailyResult } from "@/utils/dailyResult";
 import { LanguageProvider, useTranslation } from "@/i18n";
 
@@ -222,7 +222,10 @@ function CineXoxApp() {
 
   useEffect(() => {
     try {
-      localStorage.setItem("cinexox_player_profile", serializeProfile(profile));
+      // Daha yeni sürümün kaydı varsa (eski sürüme dönülmüş) üzerine yazılmaz
+      if (!isNewerSchema(localStorage.getItem("cinexox_player_profile"))) {
+        localStorage.setItem("cinexox_player_profile", serializeProfile(profile));
+      }
     } catch {
       // ignore
     }
@@ -293,7 +296,9 @@ function CineXoxApp() {
     setClockCell(activeCellIndex);
   }, [activeCellIndex, setClockCell]);
 
-  const isMatchInProgress = winner === null && cells.some(c => c !== null);
+  // Günlük'te oyun canlı olunca (giriş animasyonu bitince) maç başlamış sayılır: çıkış onay ister, hak tükenir
+  const isDailyLive = mode === "DAILY_SOLO" && currentView === "GAME" && !isGameIntroActive;
+  const isMatchInProgress = winner === null && (cells.some(c => c !== null) || isDailyLive);
 
   // URL Davet Linki ile Odaya Katılım (?room=TRNY-XXXX) & İlk Gişe Açılış Rehberi
   useEffect(() => {
@@ -893,13 +898,14 @@ function CineXoxApp() {
 
   // Günlük açıkken ilerleme kaydedilir: başlamak hakkı tüketir, kapanma/yenileme ikinci şans vermez
   useEffect(() => {
-    if (mode !== "DAILY_SOLO" || currentView !== "GAME" || winner !== null) return;
+    // Giriş animasyonu sırasında hak tüketilmez; oyun canlı olunca başlar
+    if (mode !== "DAILY_SOLO" || currentView !== "GAME" || winner !== null || isGameIntroActive) return;
     try {
       saveDailyProgress(localStorage, getGlobalDailyDateKey(), cells);
     } catch {
       // ignore
     }
-  }, [mode, currentView, winner, cells]);
+  }, [mode, currentView, winner, cells, isGameIntroActive]);
 
   // Sonuç penceresi kapanınca: biten günlük maçtan Gişe'ye dön (aksi halde pencere açık kalırdı)
   const handleCloseDailyShare = () => {
