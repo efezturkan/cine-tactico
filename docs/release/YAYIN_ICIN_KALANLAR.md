@@ -26,7 +26,9 @@ Kod tarafında bilinen engel kalmadı. Yayın; senin Apple hesabına, gerçek iP
 
 Testler: `tsc` temiz, `npm test` 0 hata.
 
-**Dalgalanan test (araştırma sonucu):** daha önce bir tam turda tek bir test bir kez düştü, hangisi olduğunu o an kaydetmemiştim. Şimdi 12 tam tur (tüm test dosyaları ayrı ayrı) ve `game-engine` testi 40 kez tekrar edildi: 0 hata. Rastgelelik kullanan yerler tarandı: bot gecikmeleri (aralık testi geniş, sınır ihlali yok), `getRandomOpponent` (seviye aralıkları örtüşmüyor: EASY 1-3, MEDIUM 5-7, HARD 8-10), rastgele tahta seçimi (`getBoardForMode`). Simülasyon testleri sabit tohumlu. **Kaynağı bulunamadı**, yeniden üretilemedi. Olası aday: bir turda yakalanan, koşu sırasında yan yana çalışan derlemeden gelen zamanlama; kanıtım yok. Tekrar düşerse test çıktısını kaydet.
+**Dalgalanan test: KÖK NEDEN BULUNDU.** `game-engine.test.ts` → "Bot finds valid move on empty board" rastgele bota bağlıydı: bot bir kareyi "hatırlayamayınca" (kasıtlı `miss`, recall 0,75) `movie: null` döner ve test düşüyordu. 5000 denemede 81 düşüş (%1,6), hepsi miss. Test `recall: 1` ile sabitlendi, miss kararı ayrı bir testle doğrulanıyor. Aşağıdaki eski araştırma notu geçmiş kaydıdır:
+
+**(Eski not)** daha önce bir tam turda tek bir test bir kez düştü, hangisi olduğunu o an kaydetmemiştim. Şimdi 12 tam tur (tüm test dosyaları ayrı ayrı) ve `game-engine` testi 40 kez tekrar edildi: 0 hata. Rastgelelik kullanan yerler tarandı: bot gecikmeleri (aralık testi geniş, sınır ihlali yok), `getRandomOpponent` (seviye aralıkları örtüşmüyor: EASY 1-3, MEDIUM 5-7, HARD 8-10), rastgele tahta seçimi (`getBoardForMode`). Simülasyon testleri sabit tohumlu. **Kaynağı bulunamadı**, yeniden üretilemedi. Olası aday: bir turda yakalanan, koşu sırasında yan yana çalışan derlemeden gelen zamanlama; kanıtım yok. Tekrar düşerse test çıktısını kaydet.
 
 ## 2. Gerçek iPhone'da senin test etmen gerekenler
 
@@ -53,8 +55,18 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 ## 4. Açık kararlar, önem ve yayın gerekliliğine göre (hiçbirini ben değiştirmedim)
 
 ### A. Yayından önce karar şart
-1. ~~Günlük modun kuralı~~ **Çözüldü (kullanıcı kararı: yalnızca X, kelime oyunu gibi).** Rakip ve O turu yok; oyuncu 9 kareyi de oynar. Kare başına tek hak: yanlış cevap ya da süre aşımı kareyi hemen kilitler. Hat kurmak oyunu erken bitirmez. 9 kare bitince üçlü hat varsa "Sahne senin", yoksa "Bu çekim olmadı"; kart n/9 kareyi gösterir. Altın Makara yok. **Varsayım (kullanıcı onaylamadı):** "Sahne senin" için üçlü hat şartı; istenirse eşik (ör. 5/9) tek satırda `evaluateSoloOutcome` içinde değişir.
-2. **Bot adları**: `NolanZihni`, `TarantinoKult`, `ScorseseAilesi` gerçek kişi adı içeriyor; `OscarAvcisi` ticari marka/kişilik hakkı riski. Veri değişikliği (yeni özellik değil), App Store incelemesi öncesi önerilir.
+1. ~~Günlük modun kuralı~~ **Çözüldü (kullanıcı kararı: yalnızca X, kelime oyunu gibi, 9 kare, kademeli sonuç).** Rakip ve O turu yok. Kare başına tek hak: yanlış cevap ya da süre aşımı kareyi kilitler. Hat oyunu bitirmez. 9 kare bitince kademe, doldurulan kare sayısına göre (`dailyTier.ts`):
+
+| Kare | Kademe (TR / EN) | Makara ödülü |
+|---|---|---|
+| 9/9 | Kusursuz Kadraj! / Perfect Reel! (iki yandan altın konfeti) | +50 |
+| 7-8 | Başrol sensin! / Lead role! | +30 |
+| 5-6 (çoğunluk) | Sahne senin! / Scene's yours! | +20 |
+| 3-4 | Yarım çekim. / Half a take. | +10 |
+| 0-2 | Bu çekim olmadı. / Not this take. | +5 |
+
+   Eşikler ve ödüller tek yerde (`DAILY_TIER_MIN`, `DAILY_REWARD_REELS`); Wordle benzeri oyunlar cezalandırmaz, derecelendirir, bu yüzden en düşük kademe de küçük ödül alır. Ödül yalnızca kozmetik para birimidir (anayasa madde 5). **Varsayım, kullanıcı onaylamadı:** bu eşik ve ödül sayıları. Günlük artık "bot düellosu" olarak maç geçmişine yazılmaz.
+2. ~~Bot adları~~ **Karar: kalıyor.** Üç zorlukta şaka niteliğinde adlar sorun görülmedi (kullanıcı kararı). Mağaza incelemesi gerçek kişi adı için soru sorarsa `NolanZihni`, `TarantinoKult`, `ScorseseAilesi`, `OscarAvcisi` yeniden adlandırılır (veri değişikliği).
 
 ### B. Yayın kalitesi için düzeltilmeli, engel değil
 3. **Ters Kadraj adı**: ana ekranda "Reverse Frame", oyun başlığı ve sonuç kartında "Ters Kadraj" (simülatörde İngilizce arayüzde doğrulandı). Tek bir dile bağlanmalı.
