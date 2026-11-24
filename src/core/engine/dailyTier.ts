@@ -78,3 +78,11 @@ export function nextDailyStreak(prevStreak: number, lastDateKey: string | undefi
   if (today <= last) return Math.max(prev, 1);
   return today - last === 1 ? prev + 1 : 1;
 }
+
+/**
+ * Günlük yarıda bırakılırsa (terk, uygulama kapanması) sonuç: kayıtlı kareler sayılır, açık kareler senin değildir.
+ */
+export function finishDailyEarly(cells: readonly (CellAnswer | null)[]): { winner: "X" | "O"; frames: number; tier: DailyTier } {
+  const frames = countDailyFrames(cells);
+  return { winner: isDailyWin(frames) ? "X" : "O", frames, tier: dailyTierFor(frames) };
+}

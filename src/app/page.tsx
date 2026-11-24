@@ -33,10 +33,12 @@ import {
   GameBoard,
   ContentPoolType,
   PlayerSymbol,
+  CellAnswer,
   DAILY_REWARD_REELS,
   dailyTierFor,
   countDailyFrames,
   nextDailyStreak,
+  finishDailyEarly,
 } from "@/core";
 import {
   UserProfile,
@@ -47,7 +49,7 @@ import { haptic } from "@/utils/haptics";
 import { hasSeenGuide } from "@/utils/guideStorage";
 import { readBotRecords, recordBotResult, BotRecordBook } from "@/utils/botRecord";
 import { getGlobalDailyDateKey } from "@/utils/dateUtils";
-import { saveDailyResult, loadDailyResult, StoredDailyResult } from "@/utils/dailyResult";
+import { saveDailyResult, saveDailyProgress, loadDailyProgress, clearDailyProgress, loadDailyResult, StoredDailyResult } from "@/utils/dailyResult";
 import { LanguageProvider, useTranslation } from "@/i18n";
 
 const getDailyBoardConfig = (): { board: GameBoard; index: number } =>
@@ -606,6 +608,13 @@ function CineXoxApp() {
     audio.stopAll();
     audio.playError();
     setShowSurrenderConfirm(false);
+    if (mode === "DAILY_SOLO") {
+      // Günlük'te "terk" sonuçtur: aldığın kareler sayılır, bugünün hakkı tükenir (bot düellosu kaydı yok)
+      concludeDailyEarly(cells);
+      resetGame();
+      setCurrentView("HOME");
+      return;
+    }
     setProfile(prev => {
       const currentLast5 = prev.lastFiveMatches?.length ? prev.lastFiveMatches : [];
       const updatedLast5 = [...currentLast5.slice(1), "L"] as ("W" | "L" | "D")[];
@@ -782,6 +791,16 @@ function CineXoxApp() {
       setShowDailyShare(true);
       return;
     }
+    let unfinished: (CellAnswer | null)[] | null = null;
+    try {
+      unfinished = loadDailyProgress(localStorage, getGlobalDailyDateKey());
+    } catch {
+      // ignore
+    }
+    if (unfinished) {
+      concludeDailyEarly(unfinished);
+      return;
+    }
     setMode("DAILY_SOLO");
     const { board: dailyBoard, index: dailyIdx } = getDailyBoardConfig();
     setBoardIndex(dailyIdx);
@@ -841,11 +860,46 @@ function CineXoxApp() {
     if (mode === "DAILY_SOLO" && winner !== null && winner !== "DRAW") {
       try {
         saveDailyResult(localStorage, getGlobalDailyDateKey(), winner, cells);
+        clearDailyProgress(localStorage);
       } catch {
         // ignore
       }
     }
   }, [mode, winner, cells]);
+
+  // Günlük yarıda bitirilir (terk ya da uygulama kapanıp açılınca): kayıtlı kareler sonuç sayılır, tahta yeniden oynanamaz
+  const concludeDailyEarly = (finalCells: (CellAnswer | null)[]) => {
+    const key = getGlobalDailyDateKey();
+    const r = finishDailyEarly(finalCells);
+    try {
+      saveDailyResult(localStorage, key, r.winner, finalCells);
+      clearDailyProgress(localStorage);
+    } catch {
+      // ignore
+    }
+    const reward = DAILY_REWARD_REELS[r.tier];
+    setProfile(prev => ({
+      ...prev,
+      totalMatches: prev.totalMatches + 1,
+      wins: r.winner === "X" ? prev.wins + 1 : prev.wins,
+      losses: r.winner === "O" ? prev.losses + 1 : prev.losses,
+      reelsBalance: prev.reelsBalance + reward,
+      dailyStreak: nextDailyStreak(prev.dailyStreak, prev.lastStreakDateUtc, key),
+      lastStreakDateUtc: key,
+    }));
+    setSavedDaily({ dateKey: key, winner: r.winner, cells: [...finalCells] });
+    setShowDailyShare(true);
+  };
+
+  // Günlük açıkken ilerleme kaydedilir: başlamak hakkı tüketir, kapanma/yenileme ikinci şans vermez
+  useEffect(() => {
+    if (mode !== "DAILY_SOLO" || currentView !== "GAME" || winner !== null) return;
+    try {
+      saveDailyProgress(localStorage, getGlobalDailyDateKey(), cells);
+    } catch {
+      // ignore
+    }
+  }, [mode, currentView, winner, cells]);
 
   // Sonuç penceresi kapanınca: biten günlük maçtan Gişe'ye dön (aksi halde pencere açık kalırdı)
   const handleCloseDailyShare = () => {

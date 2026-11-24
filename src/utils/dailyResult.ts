@@ -16,6 +16,7 @@ export interface StoredDailyResult {
 interface StorageLike {
   getItem(k: string): string | null;
   setItem(k: string, v: string): void;
+  removeItem?(k: string): void;
 }
 
 type DayMap = Record<string, { winner: PlayerSymbol; cells: (CellAnswer | null)[] }>;
@@ -60,4 +61,41 @@ export function loadDailyResult(storage: StorageLike, dateKey: string): StoredDa
   if (rec.winner !== "X" && rec.winner !== "O") return null;
   if (!Array.isArray(rec.cells) || rec.cells.length !== 9) return null;
   return { dateKey, winner: rec.winner, cells: rec.cells };
+}
+
+/**
+ * Yarıda kalan günlük: oyun başlar başlamaz bugünün hakkı tüketilir. Uygulama kapansa, yenilense ya da
+ * oyuncu "terk et" dese de tahta yeniden oynanamaz; kayıtlı kareler sonuç sayılır.
+ */
+export const DAILY_PROGRESS_KEY = "cinexox_daily_progress_v1";
+
+export function saveDailyProgress(storage: StorageLike, dateKey: string, cells: readonly (CellAnswer | null)[]): void {
+  try {
+    storage.setItem(DAILY_PROGRESS_KEY, JSON.stringify({ dateKey, cells: [...cells] }));
+  } catch {
+    // Depolama yoksa ilerleme tutulmaz
+  }
+}
+
+export function loadDailyProgress(storage: StorageLike, dateKey: string): (CellAnswer | null)[] | null {
+  try {
+    const raw = storage.getItem(DAILY_PROGRESS_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { dateKey?: string; cells?: unknown };
+    if (!parsed || parsed.dateKey !== dateKey) return null;
+    if (!Array.isArray(parsed.cells) || parsed.cells.length !== 9) return null;
+    const ok = parsed.cells.every(c => c === null || (typeof c === "object" && c !== null));
+    return ok ? (parsed.cells as (CellAnswer | null)[]) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function clearDailyProgress(storage: StorageLike): void {
+  try {
+    if (storage.removeItem) storage.removeItem(DAILY_PROGRESS_KEY);
+    else storage.setItem(DAILY_PROGRESS_KEY, "");
+  } catch {
+    // yok say
+  }
 }

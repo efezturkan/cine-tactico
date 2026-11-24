@@ -13,7 +13,7 @@ console.log("MVP ARAYÜZÜNDE EMOJI YOK (yapısal simge = vektör)");
 const FLAGGED_OFF = ["LeaderboardModal.tsx", "QuestsModal.tsx", "ShopModal.tsx", "NotificationPanel.tsx"];
 const INTENTIONAL = ["dailyShare.ts" /* paylaşım ızgarası kare emojileri bilerek */, "profile.ts" /* avatar verisi, yalnızca kapalı mağazada */];
 
-const PICTOGRAPH = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B50}\u{2B1B}\u{2B1C}\u{2705}\u{274C}]/u;
+const PICTOGRAPH = new RegExp("[\\u{1F300}-\\u{1FAFF}\\u{2600}-\\u{27BF}\\u{2B50}\\u{2B1B}\\u{2B1C}\\u{2705}\\u{274C}]", "u");
 const ALLOWED_GLYPHS = /[✓✕✖]/g; // ✓ ✕ ✖: metin işareti (şekille anlam taşır), emoji değil
 
 function walk(dir: string, out: string[] = []): string[] {

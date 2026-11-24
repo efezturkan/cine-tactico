@@ -505,11 +505,17 @@ export function GameView(props: GameViewProps) {
             </div>
 
             <h3 className="font-serif text-lg font-bold text-[#E8E6E1] mb-1">
-              {isEn ? "Abandon Duel" : "Düellodan Çekil"}
+              {props.mode === "DAILY_SOLO"
+                ? isEn ? "End today's reel?" : "Bugünün kadrajı bitsin mi?"
+                : isEn ? "Abandon Duel" : "Düellodan Çekil"}
             </h3>
 
             <p className="text-xs text-[#8A8F9A] leading-relaxed mb-4">
-              {isEn
+              {props.mode === "DAILY_SOLO"
+                ? isEn
+                  ? "Your reel ends with the frames you have. You can't replay it today."
+                  : "Kadrajın aldığın karelerle biter. Bugün yeniden oynayamazsın."
+                : isEn
                 ? "Leaving the duel counts as a defeat."
                 : "Düelloyu bırakırsan yenilmiş sayılırsın."}
             </p>
@@ -534,7 +540,7 @@ export function GameView(props: GameViewProps) {
                 variant="primary"
                 onClick={props.onConfirmSurrender}
               >
-                {isEn ? "Surrender" : "Bırak"}
+                {props.mode === "DAILY_SOLO" ? (isEn ? "End reel" : "Bitir") : isEn ? "Surrender" : "Bırak"}
               </Button>
             </div>
           </div>
