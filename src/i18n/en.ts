@@ -50,6 +50,9 @@ export const en: TranslationDictionary = {
   },
   game: {
     yourTurn: "Your Turn",
+    cellUnowned: "Unclaimed",
+    clapperScene: "SCENE 01 · TAKE 01",
+    clapperAction: "ACTION!",
     opponentTurn: "Opponent's Turn",
     shotClock: "Shot Clock",
     meltTheClock: "Melt the Clock",

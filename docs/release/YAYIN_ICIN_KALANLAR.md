@@ -70,8 +70,8 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 
 ### B. Yayın kalitesi için düzeltilmeli, engel değil
 3. ~~Ters Kadraj adı~~ **Çözüldü:** oyun içi başlık artık ana ekrandaki mod adıyla aynı (EN: Reverse Frame / Cinephile Concept, TR: Ters Kadraj / Sinefil Konsept). Kalan küçük tutarsızlık: Sinefil Kartı'ndaki maç geçmişi etiketi (`modeLabel`) kayıt anında Türkçe yazılıyor.
-4. **Süre çubuğu** (`ShotClock.tsx`, korumalı): ince ve tahtadan uzak. Sayaç rakamı görünür, bu yüzden engel değil.
-5. **Korumalı dosyalardaki küçük kriter etiketleri** ve **"Sahipsiz" etiketi** (`XoxBoard.tsx`, korumalı, İngilizce arayüzde Türkçe kalıyor; düzeltmek için dosyaya dokunmak gerekir, onayın olmadan yapmadım) (9-10px) ve gizli ekranlardaki küçük yazılar.
+4. ~~Süre çubuğu~~ **İncelendi:** `ShotClock.tsx` projede hiçbir yerde kullanılmıyor (ölü kod); oyunun gerçek sayacı GameView'daki zaman kodu ve alt çubuk. Bu dosyaya dokunulmadı, silinmedi.
+5. ~~Korumalı dosyalardaki küçük yazılar, emoji, Sahipsiz etiketi~~ **Çözüldü (kullanıcı korumalı dosyalara izin verdi):** `XoxBoard.tsx` kriter etiketleri 7,5px → 11px, kategori 10px, yıl 10-11px; "Sahipsiz" ve klaket "SAHNE 01 · ÇEKİM 01 / AKSİYON!" metinleri TR/EN sözlüğünden (EN: Unclaimed, SCENE 01 · TAKE 01, ACTION!). `MatchmakingQueueModal.tsx`: emoji yerine lucide simgeleri, zorluk rengine metin eşlik ediyor, kapat düğmesi 44pt. Yapı (3x3 + başlık satırı/sütunu, makara modalı) değişmedi.
 6. **Beraberlik oyunda olamaz** (Altın Makara ve nadirlik hep bir galip seçer): "Beraberlik" metni beklenmemeli, belgede ve mağaza metninde "berabere" denmesin.
 
 ### C. Yayından sonraya bırakılabilir (MVP için zorunlu değil, eklenmeyecek)
@@ -96,7 +96,7 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 - **Kontrast:** metin renkleri (soluk gri, altın, mavi, turkuaz, mor) koyu yüzeylerde 5,4 ile 15,6 arası, hepsi 4,5:1 üstü.
 - **İlk açılış:** "Nasıl oynanır" kartı ✕ ile geçilebiliyor (skill: zorunlu, atlanamaz tur olmamalı).
 - **Etiketler ve tepki:** etiketsiz ikon düğmesi 0, alt metinsiz görsel 0, güvenli alan ve `prefers-reduced-motion` var, 29 yerde dokunma geri bildirimi.
-- **Bulgular (düzeltilmedi):** (1) görünüm alanı `user-scalable=no, maximum-scale=1` (yakınlaştırma kapalı; oyun için yaygın ama erişilebilirlik önerisine aykırı, karar sende), (2) `MatchmakingQueueModal.tsx` başlığında emoji simge (korumalı dosya).
+- **Bulgular (düzeltilmedi):** (1) görünüm alanı `user-scalable=no, maximum-scale=1` (yakınlaştırma kapalı; oyun için yaygın ama erişilebilirlik önerisine aykırı, karar sende), (2) ~~`MatchmakingQueueModal.tsx` emoji~~ çözüldü.
 
 ## 5. Pil, boyut, modlar
 

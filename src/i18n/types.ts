@@ -50,6 +50,9 @@ export interface TranslationDictionary {
   };
   game: {
     yourTurn: string;
+    cellUnowned: string;
+    clapperScene: string;
+    clapperAction: string;
     opponentTurn: string;
     shotClock: string;
     meltTheClock: string;

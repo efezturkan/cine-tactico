@@ -29,6 +29,7 @@ const CellMoviePoster: React.FC<{
   cellData: CellAnswer;
   isWinning?: boolean;
 }> = ({ cellData }) => {
+  const { dict } = useTranslation();
   const { movie, answeredBy, actorName, rarityScore, isLockedNeutral } = cellData;
   const isNeutral = answeredBy === "NEUTRAL" || isLockedNeutral;
 
@@ -36,8 +37,8 @@ const CellMoviePoster: React.FC<{
     return (
       <div className="relative w-full h-full flex flex-col items-center justify-center p-1 bg-[#14171D] border border-white/10 rounded-xl select-none min-w-0 overflow-hidden">
         <Lock className="w-3.5 h-3.5 text-[#A5A8B0] mb-0.5" />
-        <span className="text-[7.5px] sm:text-[9px] font-black text-[#A5A8B0] uppercase tracking-wider">
-          Sahipsiz
+        <span className="text-[10px] sm:text-[11px] font-black text-[#A5A8B0] uppercase tracking-wider">
+          {dict.game.cellUnowned}
         </span>
       </div>
     );
@@ -48,7 +49,7 @@ const CellMoviePoster: React.FC<{
       {/* Üst Bilgi: Rarity Puanı (Varsa) */}
       <div className="flex items-center justify-between w-full min-w-0 z-10">
         {FLAGS.SHOW_POINTS_SYSTEM && rarityScore ? (
-          <span className="text-[7px] sm:text-[8px] font-mono font-bold text-[#D9A441]/75">
+          <span className="text-[10px] font-mono font-bold text-[#D9A441]/75">
             +{rarityScore}
           </span>
         ) : (
@@ -62,7 +63,7 @@ const CellMoviePoster: React.FC<{
           {actorName || movie.title}
         </span>
         {!actorName && movie.year > 0 && (
-          <span className="text-[8px] sm:text-[9px] text-[#8A8F9A] font-mono mt-0.5 block">
+          <span className="text-[10px] sm:text-[11px] text-[#8A8F9A] font-mono mt-0.5 block">
             {movie.year}
           </span>
         )}
@@ -83,7 +84,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
   isReviewMode = false,
   selectedReviewCellIndex = null,
 }) => {
-  const { tCriterion, locale } = useTranslation();
+  const { tCriterion, locale, dict } = useTranslation();
 
   const getInitials = (name: string) => {
     const parts = name.trim().split(" ");
@@ -146,11 +147,11 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
           {iconElement}
         </div>
         {areRowColDifferent && (
-          <span className="text-[8px] sm:text-[9px] uppercase tracking-wide text-[#8A8F9A] font-sans font-medium mb-0.5 truncate max-w-full leading-none">
+          <span className="text-[10px] uppercase tracking-wide text-[#8A8F9A] font-sans font-medium mb-0.5 truncate max-w-full leading-none">
             {badgeLabel}
           </span>
         )}
-        <span className="text-[7.5px] sm:text-[10px] md:text-xs font-bold text-[#E8E6E1] line-clamp-2 leading-tight px-0.5 max-w-full break-words">
+        <span className="text-[11px] md:text-xs font-bold text-[#E8E6E1] line-clamp-2 leading-tight px-0.5 max-w-full break-words">
           {tCriterion(crit.label)}
         </span>
       </div>
@@ -185,7 +186,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
               }}
             >
               <Clapperboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[#D9A441]" />
-              <span className="text-[6.5px] sm:text-[7.5px] md:text-[9px] font-bold mt-0.5 tracking-wider text-[#D9A441] uppercase font-mono">
+              <span className="text-[9px] md:text-[10px] font-bold mt-0.5 tracking-wider text-[#D9A441] uppercase font-mono">
                 35MM
               </span>
             </div>
@@ -359,11 +360,11 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
 
                     {/* Klaket Gövdesi & Büyük Serif AKSİYON! (Vuruş anında mikro sekme ve altın parlama) */}
                     <div className="bg-[#14171D] border border-white/15 rounded-b-xl px-4 py-2 sm:px-6 sm:py-2.5 md:px-8 md:py-3 shadow-[0_16px_40px_rgba(0,0,0,0.9)] flex flex-col items-center relative -mt-0.5 min-w-[140px] sm:min-w-[170px] md:min-w-[200px] clapper-body-animate">
-                      <span className="font-mono text-[7px] sm:text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-[#8A8F9A] mb-0.5">
-                        SAHNE 01 · ÇEKİM 01
+                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#8A8F9A] mb-0.5">
+                        {dict.game.clapperScene}
                       </span>
                       <span className="font-serif text-xl sm:text-2xl md:text-3xl font-black text-[#D9A441] tracking-wider action-text-flash drop-shadow-[0_2px_12px_rgba(217,164,65,0.4)]">
-                        AKSİYON!
+                        {dict.game.clapperAction}
                       </span>
                     </div>
                   </div>

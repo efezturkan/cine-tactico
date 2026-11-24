@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Film, X, Bot, RefreshCw } from "lucide-react";
+import { Film, X, Bot, RefreshCw, Clapperboard, Users, Compass, Trophy, Tv, Zap } from "lucide-react";
 import { audio } from "@/utils/audio";
 import { ContentPoolType } from "@/core";
 import { UserProfile, AVATAR_OPTIONS } from "@/types/profile";
@@ -93,26 +93,27 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
 
   if (!isOpen) return null;
 
+  // Yapısal simgeler emoji değil vektör (lucide); zorluk rengi yalnızca renge bağlı kalmasın diye metinle birlikte
   const modeLabel =
     selectedMode === "CLASSIC"
-      ? isEn ? "🎭 Classic Duel" : "🎭 Klasik Düello"
+      ? isEn ? "Classic Duel" : "Klasik Düello"
       : selectedMode === "REVERSE_CAST"
-      ? isEn ? "🎭 Reverse Frame" : "🎭 Ters Kadraj"
+      ? isEn ? "Reverse Frame" : "Ters Kadraj"
       : selectedMode === "CINE_CONCEPT"
-      ? isEn ? "🌀 Cinephile Concept" : "🌀 Sinefil Konsept"
-      : isEn ? "🏆 Cinephile" : "🏆 Sinefil";
+      ? isEn ? "Cinephile Concept" : "Sinefil Konsept"
+      : isEn ? "Cinephile" : "Sinefil";
+  const ModeIcon =
+    selectedMode === "CLASSIC" ? Clapperboard : selectedMode === "REVERSE_CAST" ? Users : selectedMode === "CINE_CONCEPT" ? Compass : Trophy;
   const poolLabel =
     contentPool === "FILM"
-      ? isEn ? "🎬 Movie" : "🎬 Film"
+      ? isEn ? "Movie" : "Film"
       : contentPool === "SERIES"
-      ? isEn ? "📺 Series" : "📺 Dizi"
-      : isEn ? "⚡ Hybrid" : "⚡ Karma";
+      ? isEn ? "Series" : "Dizi"
+      : isEn ? "Hybrid" : "Karma";
+  const PoolIcon = contentPool === "FILM" ? Film : contentPool === "SERIES" ? Tv : Zap;
   const diffLabel =
-    difficulty === "HARD"
-      ? isEn ? "🔴 Hard" : "🔴 Zor"
-      : difficulty === "NORMAL"
-      ? isEn ? "🟡 Normal" : "🟡 Normal"
-      : isEn ? "🟢 Easy" : "🟢 Kolay";
+    difficulty === "HARD" ? (isEn ? "Hard" : "Zor") : difficulty === "NORMAL" ? "Normal" : isEn ? "Easy" : "Kolay";
+  const diffDot = difficulty === "HARD" ? "bg-[#E5484D]" : difficulty === "NORMAL" ? "bg-[#D9A441]" : "bg-[#46A758]";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in select-none">
@@ -135,7 +136,8 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
             audio.playSelect();
             onCancel();
           }}
-          className="absolute top-4 right-4 p-2 rounded-lg bg-[#181B22] border border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7] transition-all"
+          aria-label={isEn ? "Cancel" : "İptal"}
+          className="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-lg bg-[#181B22] border border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7] transition-all"
         >
           <X className="w-4 h-4" />
         </button>
@@ -143,7 +145,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
         {/* Başlık ve Durum */}
         <div className="flex items-center gap-1.5 mb-2 px-3 py-1 rounded-md bg-[#181B22] border border-[#D9A441]/30">
           <Film className="w-3 h-3 text-[#D9A441]" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#D9A441] font-mono">
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#D9A441] font-mono">
             {isEn ? "PREPARING SESSION" : "SEANS HAZIRLANIYOR"}
           </span>
         </div>
@@ -154,13 +156,16 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
 
         {/* Seçilen Ayarlar Etiketleri */}
         <div className="flex items-center gap-1.5 my-2.5 flex-wrap justify-center">
-          <span className="text-[9px] font-bold px-2.5 py-1 rounded-md bg-[#181B22] border border-[#D9A441]/40 text-[#D9A441]">
+          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-md bg-[#181B22] border border-[#D9A441]/40 text-[#D9A441]">
+            <ModeIcon className="w-3 h-3" aria-hidden="true" />
             {modeLabel}
           </span>
-          <span className="text-[9px] font-bold px-2.5 py-1 rounded-md bg-[#181B22] border border-[#4FA3C7]/40 text-[#4FA3C7]">
+          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-md bg-[#181B22] border border-[#4FA3C7]/40 text-[#4FA3C7]">
+            <PoolIcon className="w-3 h-3" aria-hidden="true" />
             {poolLabel}
           </span>
-          <span className="text-[9px] font-bold px-2.5 py-1 rounded-md bg-[#181B22] border border-white/20 text-[#A5A8B0]">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-md bg-[#181B22] border border-white/20 text-[#A5A8B0]">
+            <span className={`w-2 h-2 rounded-full ${diffDot}`} aria-hidden="true" />
             {diffLabel}
           </span>
         </div>
@@ -207,7 +212,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#181B22] border border-white/10 mb-2">
           <span className="text-sm">{userAvatar.emoji}</span>
           <span className="text-[11px] font-bold text-[#F1EEE7]">{userProfile.username}</span>
-          <span className="text-[9px] font-mono text-[#D9A441] font-bold">Lv.{userProfile.rankLevel || 1}</span>
+          <span className="text-[11px] font-mono text-[#D9A441] font-bold">Lv.{userProfile.rankLevel || 1}</span>
         </div>
 
         {/* Zaman Sayacı (00:07) */}

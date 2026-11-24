@@ -50,6 +50,9 @@ export const tr: TranslationDictionary = {
   },
   game: {
     yourTurn: "Hamle sende",
+    cellUnowned: "Sahipsiz",
+    clapperScene: "SAHNE 01 · ÇEKİM 01",
+    clapperAction: "AKSİYON!",
     opponentTurn: "Rakip hamlede",
     shotClock: "Şut Saati",
     meltTheClock: "Zaman Erir",
