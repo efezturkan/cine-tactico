@@ -98,6 +98,17 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 - **Etiketler ve tepki:** etiketsiz ikon düğmesi 0, alt metinsiz görsel 0, güvenli alan ve `prefers-reduced-motion` var, 29 yerde dokunma geri bildirimi.
 - **Bulgular (düzeltilmedi):** (1) görünüm alanı `user-scalable=no, maximum-scale=1` (yakınlaştırma kapalı; oyun için yaygın ama erişilebilirlik önerisine aykırı, karar sende), (2) ~~`MatchmakingQueueModal.tsx` emoji~~ çözüldü.
 
+## 4d. Tam tarama (tüm skill'ler, akışlar, güvenlik)
+
+- **unslop-ui + emoji:** MVP'de görünen kodda emoji yok (regresyon testi `no-emoji-ui.test.ts`; bayrakla kapalı Liderlik, Görevler, Mağaza, Bildirim yüzeyleri kapsam dışı, açılmadan önce vektör simgeye çevrilmeli). Sıfırla/Sil iletişim kutularında sızan "Apple Guideline 5.1.1(v)" notu ve çevrimdışı uygulamada "sunucuda korunur / Supabase" metni kaldırıldı.
+- **Akış taraması (tarayıcı, 375-440 px):** profil, ayarlar, sekmeler, rakip seçimi, 3 mod, hücre cevap sayfası, Günlük, sonuç kartı: hepsinde çıkış yolu var, boşluğa düşen ekran yok. **Bulunan açık:** Günlük yarıda bırakılınca ya da uygulama kapanınca hak kaydedilmiyordu (tahta yeniden oynanabiliyordu); düzeltildi, hak oyun canlı olunca başlar. 10.000 oturumluk soak testi: hepsi 9 karede biter.
+- **game-ai / strateji ölçümü (300 maç/hücre):** zorluk sırası düzgün (Zor > Orta > Kolay; Kolay-Zor %5, Zor-Kolay %99). Aynı seviyede ilk oynayan X %58-65 kazanıyor (hafif ilk hamle avantajı, insan X olduğu için oyuncu lehine); Zor-Zor maçların %80'i Altın Makara'ya düşüyor (tek hak kuralının sonucu). Tasarım kararı, değiştirilmedi.
+- **save-systems:** profil kaydı sürüm damgalı ve doğrulanmış (bozuk/elle değiştirilmiş kayıt NaN göstermez, çökertmez, daha yeni sürüm üzerine yazılmaz). Günlük tahtası herkese aynı (altın değer testi, `Math.random`'dan bağımsız).
+- **code-review (high):** 5 bulgu, 4'ü düzeltildi (giriş animasyonunda hak tüketme, canlı Günlük'te onaysız çıkış, sürüm düşürmede ezme, gevşek hücre doğrulaması), 1'i not edildi (katalog tekilleştirme, tek gerçek kopya var).
+- **security-review:** yeni kod `innerHTML`, `eval`, ağ çağrısı, yeni bağımlılık içermiyor; yüksek güvenle bulgu yok. Kayıtlar beyaz listeyle doğrulanıyor.
+- **simplify:** Günlük sonucunun profile etkisi iki yerde kopyaydı, tek yardımcıya alındı.
+- **paranoid-qa (kaos, 375 px):** çift tıklama tek rakip seçimi/tek oyun; arama kutusuna `<script>`, `<img onerror>`, SQL, emoji, 5000 karakter, boşluk, Türkçe karakter: çökme yok, betik çalışmadı, boş durum mesajı var; yatay kaydırma yok; 44 pt altı hedef yok. **Kalanlar:** Esc ile pencere kapanmıyor (yalnızca klavyeli cihaz), yakınlaştırma kapalı (`user-scalable=no`), arama açıkken süre işlemeye devam eder (tasarım).
+
 ## 5. Pil, boyut, modlar
 
 - Paket: `out/` yaklaşık 4,8 MB; zamanlayıcılar yalnızca oyunda ve modallarda; arka planda sayaç artık durur.
