@@ -103,7 +103,7 @@ export const ReviewAnswersSheet: React.FC<ReviewAnswersSheetProps> = ({
         {/* Başlık Alanı */}
         <div className="flex items-start justify-between gap-2 mb-3 shrink-0">
           <div className="min-w-0 flex-1">
-            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#D9A441] font-bold block mb-0.5">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#D9A441] font-bold block mb-0.5">
               {t("game.validAlternativesTitle")}
             </span>
             <h3 className="font-serif text-sm sm:text-base font-bold text-[#E8E6E1] truncate leading-snug">

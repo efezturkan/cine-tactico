@@ -238,7 +238,7 @@ export function GameView(props: GameViewProps) {
             <Button
               variant="icon"
               onClick={props.onRequestExitGame}
-              title="Düellodan Çık"
+              title={props.mode === "DAILY_SOLO" ? (isEn ? "End today's reel" : "Kadrajı bitir") : isEn ? "Leave duel" : "Düellodan Çık"}
             >
               <X className="w-4 h-4" />
             </Button>

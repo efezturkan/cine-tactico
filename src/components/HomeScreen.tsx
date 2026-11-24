@@ -450,7 +450,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <div className="flex items-center gap-3 pl-2 min-w-0">
             <div className="w-9 h-9 rounded-xl bg-[#181B22] border border-[#D9A441]/40 flex flex-col items-center justify-center shrink-0">
               <Ticket className="w-4 h-4 text-[#D9A441]" />
-              <span className="text-[7px] font-mono text-[#D9A441] font-bold">
+              <span className="text-[9px] font-mono text-[#D9A441] font-bold">
                 NO.{getDailyEditionNumber()}
               </span>
             </div>

@@ -81,7 +81,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
 
         {/* Kart Başlığı */}
         <div className="text-center pb-3 border-b border-white/10">
-          <span className="text-[9px] font-mono font-bold tracking-[0.25em] text-[#D9A441] uppercase block mb-1">
+          <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-[#D9A441] uppercase block mb-1">
             {fillN(card.caption, dayStr)}
           </span>
           <h2 className="font-serif text-2xl font-bold text-[#E8E6E1]">

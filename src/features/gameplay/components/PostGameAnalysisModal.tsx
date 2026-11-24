@@ -108,7 +108,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
 
         {/* Top Micro Tag */}
         <div className="text-center mb-1">
-          <span className="text-[9px] font-mono font-bold tracking-[0.25em] text-[#D9A441] uppercase">
+          <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-[#D9A441] uppercase">
             35MM · 24 FPS
           </span>
         </div>
@@ -162,7 +162,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
         {/* Clean Match Summary Card */}
         <div className="w-full my-3 py-3 px-2 rounded-xl bg-[#0F1115] border border-white/5 grid grid-cols-3 gap-1 text-center">
           <div>
-            <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
+            <span className="text-[10px] font-mono font-bold text-[#8A8F9A] uppercase block">
               {isEn ? "YOU (X)" : "SEN (X)"}
             </span>
             <span className="text-base font-mono font-bold text-[#D9A441] mt-0.5 block">
@@ -170,7 +170,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
             </span>
           </div>
           <div className="border-x border-white/5">
-            <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
+            <span className="text-[10px] font-mono font-bold text-[#8A8F9A] uppercase block">
               {isEn ? "OPPONENT (O)" : "RAKİP (O)"}
             </span>
             <span className="text-base font-mono font-bold text-[#4FA3C7] mt-0.5 block">
@@ -178,11 +178,11 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
             </span>
           </div>
           <div>
-            <span className="text-[8px] font-mono font-bold text-[#8A8F9A] uppercase block">
+            <span className="text-[10px] font-mono font-bold text-[#8A8F9A] uppercase block">
               {isEn ? "RARITY" : "NADİRLİK"}
             </span>
             <span className="text-base font-mono font-bold text-[#E8E6E1] mt-0.5 block">
-              %{rarityScore}
+              {isEn ? `${rarityScore}%` : `%${rarityScore}`}
             </span>
           </div>
         </div>
