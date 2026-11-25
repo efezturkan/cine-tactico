@@ -1,8 +1,8 @@
 # Yayın için kalanlar (24 Kasım 2026, dal: `release/round-2`, `main` = `00c7aec`)
 
-## Karar: HAZIR DEĞİL (NOT READY)
+## Karar: KOD HAZIR, YAYIN SENİN ADIMLARINA BAĞLI
 
-Kod tarafında bilinen engel kalmadı. Yayın; senin Apple hesabına, gerçek iPhone testine ve aşağıdaki açık kararlara bağlı.
+Kod tarafında bilinen engel kalmadı (26 Kasım: `tsc` temiz, `npm test` 0 hata). Sıralı yol ve kimin ne yapacağı: `APP_STORE_SUBMISSION.md` bölüm 0. Yayın; Apple hesabına, ad kararına ve gerçek iPhone testine bağlı.
 
 ## 1. Kod tarafında tamamlananlar (kanıtlı)
 

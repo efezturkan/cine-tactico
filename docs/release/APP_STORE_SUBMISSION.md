@@ -4,6 +4,28 @@ Bu belge, uygulamayı Apple'a gönderirken **kopyalayıp yapıştıracağın her
 
 ---
 
+## 0. Yol (26 Kasım 2026): sırayla, kim ne yapar
+
+Kod kapısı kapalı: `tsc` temiz, `npm test` 0 hata (26 Kasım), gizlilik/destek adresleri HTTP 200. Aşağıda "Sen" yazan adımları ben yapamam: ödeme, kimlik doğrulama, sözleşme kabulü ve parola/2FA bende olamaz.
+
+| # | Adım | Kim | Çıkış kriteri |
+|---|---|---|---|
+| 1 | **Ad kararı (10 dk, ücretsiz).** Aday adı şu kayıtlarda ara, sınıf 9 ve 41 (oyun/eğlence): USPTO (tmsearch.uspto.gov), TMview (tmdn.org/tmview), WIPO Brand DB (branddb.wipo.int), TÜRKPATENT. Bilinen: CROSSCUT (ABD Reg. 3368825, sınıf 41, Cascade Public Media) canlı görünüyor. Kural: sınıf 9/41'de canlı çakışma yoksa o ad; ikisi de temizse Crosscut; Crosscut çakışırsa Nitrate'a geç (aynı aramayı Nitrate için de yap, ben resmî kayıtlara erişemiyorum). Ad değişirse bana "adı X yap" de: `src/config/brand.ts`, Info.plist, capacitor.config, mağaza metni ve görseller bir seferde güncellenir (~1 saat). Bundle ID (`com.crosscutgame.app`) kalıcıdır ve ada uymak zorunda değil; kullanıcı görmez | Sen | Karar yazıldı |
+| 2 | **Apple Developer Program** (bireysel, 99 USD/yıl): developer.apple.com/programs → Apple Kimliği + 2FA, iPhone'daki "Apple Developer" uygulamasıyla kimlik doğrulama, ödeme. Onay saatler-günler sürebilir | Sen | Hesapta "Team ID" görünüyor |
+| 3 | App Store Connect: Business → sözleşmeleri kabul et (Free Apps). Apps → + → New App: iOS, ad, birincil dil İngilizce (ABD), Bundle ID, SKU `crosscut-ios-1` | Sen | Uygulama kaydı oluştu |
+| 4 | Xcode → Settings → Accounts → Apple Kimliğin; `ios/App/App.xcodeproj` → App → Signing & Capabilities → Team seç | Sen | İmza hatasız |
+| 5 | Bana "Team seçildi" yaz. Ben: `npm run build:ios`, sürüm/build numarası kontrolü, `xcodebuild archive` (imzalı), doğrulama | Ben | Arşiv hatasız |
+| 6 | Xcode Organizer → Distribute App → App Store Connect → Upload (parola/uygulama özel parolası yazmam gerekmez, Xcode'da oturumun açık) | Sen | Derleme "İşleniyor" → "Hazır" |
+| 7 | **TestFlight** iç test: gerçek iPhone'da `YAYIN_ICIN_KALANLAR.md` bölüm 2 listesi (paylaş, uçak modu, ses, arka plan, Türkçe klavye, gece yarısı) | Sen | 6 maddenin hepsi geçti |
+| 8 | Metinler (bölüm C), görseller (`docs/release/store/en` ve `tr`, 6'şar, 1320×2868), kategori Games > Trivia + Strategy, fiyat Ücretsiz, Gizlilik "Veri toplanmıyor", Yaş sınırı anketi (şiddet/kumar yok → 4+), Export compliance "Hayır" (`ITSAppUsesNonExemptEncryption=false`), inceleme notları (`APP_REVIEW_NOTES.md`) | Sen (ben metni hazırladım) | Tüm zorunlu alanlar yeşil |
+| 9 | Add for Review → Submit. Apple yanıtı genelde 24-48 saat | Sen | "Waiting for Review" |
+
+**%100 hazır tanımı (hepsi doğru olmalı):** (a) ad kararı yazılı, (b) 7. adım 6/6, (c) TR ve EN metin ve görseller ASC'de, (d) gizlilik/destek adresleri çalışıyor, (e) katalog dondurulmuş, (f) `main`'e alma/etiket kararın.
+
+Ek: gizlilik/destek adresi şu an `cine-tactico.vercel.app` (eski ad). Alan adı alırsan `SITE_URL` (`src/config/brand.ts`) ve ASC adreslerini birlikte güncelle; zorunlu değil, yayını engellemez.
+
+---
+
 ## A. Senin yapacakların (sırayla)
 
 | # | Adım | Nerede | Süre |
