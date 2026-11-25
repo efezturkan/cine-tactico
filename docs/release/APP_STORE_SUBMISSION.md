@@ -71,7 +71,7 @@ Satranç botlarındaki gibi Kolay, Orta ve Zor rakipler seni bekler. Her birinin
 • Klasik Düello: yönetmen, oyuncu, tür ve dönem kesişimleri.
 • Ters Kadraj: iki filmin ortak oyuncusunu kendin yaz.
 • Sinefil Konsept: kült temalar, akımlar ve anlatı kalıpları.
-• Günün Kadrası: dünya genelinde herkese aynı tahta, her gün yeni.
+• Günün Kadrası: herkese aynı tahta, her gün yeni. Rakip yok: 9 kareyi tek başına doldur, kare sayına göre derecelen (Kusursuz Kadraj'a kadar). Günde tek hak.
 
 SADE VE ÇEVRİMDIŞI
 Hesap yok, reklam yok, internet gerekmez. Salon Işığı ile sinema salonunun atmosferini kendin ayarla: loşluk, projeksiyon, 35mm gren.
@@ -82,7 +82,7 @@ Sinefilsen, buradasın.
 ### English (ikinci dil)
 - **Name:** `Cine-XOX`
 - **Subtitle:** `Tic-tac-toe for movie buffs`
-- **Promotional text:** `Every square is the crossing of two clues. Find the film, build the line, beat the bots. A new Daily Frame arrives every day.`
+- **Promotional text:** `Every square is the crossing of two clues. Find the film, build the line, beat the bots. A new Daily Reel arrives every day.`
 - **Keywords:** `movie,film,cinema,trivia,quiz,tic tac toe,actor,director,puzzle,strategy,cinephile,xo`
 - **Description:**
 
@@ -104,7 +104,7 @@ THREE MODES + DAILY FRAME
 • Classic Duel: director, actor, genre and decade crossings.
 • Reverse Frame: type the actor two films share.
 • Cinephile Concept: cult themes, movements and storytelling patterns.
-• Daily Frame: the same board for everyone in the world, new every day.
+• Daily Reel: the same board for everyone, new every day. No opponent: fill all nine frames yourself and earn a rank up to Perfect Reel. One attempt a day.
 
 SIMPLE AND OFFLINE
 No account, no ads, no internet needed. Set the mood with Auditorium Ambience: dimness, projection beam, 35mm grain.
@@ -114,7 +114,7 @@ If you love cinema, you're home.
 
 ### "Sürüm Notları" (What's New, 1.0)
 - TR: `İlk sürüm. Kolay, Orta ve Zor botlarla düello, Günün Kadrası, üç mod, Salon Işığı.`
-- EN: `First release. Duels against Easy, Medium and Hard bots, Daily Frame, three modes, Auditorium Ambience.`
+- EN: `First release. Duels against Easy, Medium and Hard bots, Daily Reel, three modes, Auditorium Ambience.`
 
 ### Telif / İletişim
 - **Telif hakkı:** `2026 Efe Öztürkan`
@@ -145,15 +145,16 @@ Tüm sorulara **None / Hayır**: şiddet, cinsellik, küfür, korku, kumar, alko
 
 ## E. Ekran görüntüleri
 
-`docs/release/screenshots/` klasöründe **iPhone 6.9"** (1320×2868, iPhone 17 Pro Max) boyutunda hazırdır. Bu ölçü zorunlu ana boyuttur; daha küçük iPhone boyutlarını App Store kendisi ölçekler. Sıra:
+Hazır: `docs/release/store/tr/` ve `docs/release/store/en/` (her biri 6 görsel, **1320×2868**, RGB, alfa yok, iPhone 6.9"). Gerçek simülatör ekranları (iPhone 17 Pro Max) + başlık; olmayan özellik gösterilmiyor (Online Oda, Mağaza, Makara bakiyesi yok). Yükleme sırası:
 
-1. `01-rakip-sec.png`: Rakibini Seç
-2. `02-oyun.png`: Oyun ekranı
-3. `03-gise.png`: Gişe
-4. `04-vizyondakiler.png`: Vizyondakiler
-5. `05-sinefil-karti.png`: Sinefil Kartı
+1. Gişe (ana ekran)
+2. Klasik Düello
+3. Ters Kadraj
+4. Sinefil Konsept
+5. Günün Kadrası
+6. Sonuç ve paylaşım kartı (Kusursuz Kadraj)
 
-Yeniden üretmek için: `npm run ios:sim` → Pro Max simülatöründe aç → ekranları yakala.
+Türkçe mağaza dili için `tr/`, İngilizce için `en/` klasörünü kullan. Eski `docs/release/screenshots/` klasörü tasarım öncesidir, yüklenmemeli. Yeniden üretme adımları `docs/release/store/README.md` içinde.
 
 ---
 
@@ -161,7 +162,7 @@ Yeniden üretmek için: `npm run ios:sim` → Pro Max simülatöründe aç → e
 
 | Risk (Guideline) | Durum |
 |---|---|
-| 4.2 Minimum işlev (web sarmalayıcı) | Yerel motor, bot AI, haptik, çevrimdışı oyun, özgün tasarım. Notlarda belirtildi. |
+| 4.2 Minimum işlev (web sarmalayıcı) | Yerel motor, bot AI, haptik (Capacitor Haptics, gerçek cihazda henüz doğrulanmadı), çevrimdışı oyun, özgün tasarım. Notlarda belirtildi. |
 | 5.1.1(v) Hesap silme | Hesap yok → silinecek veri yok. Yerel veriler Profil'den silinir. |
 | 5.1.2 Veri kullanımı | Hiç veri toplanmıyor, ağ isteği yok. Etiket ve politika tutarlı. |
 | 4.1 Taklit / marka | IMDb/TMDb adı, logosu ve verisi yok. Afiş yok. Wikidata (CC0) + Wikimedia Commons. |
