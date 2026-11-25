@@ -1,4 +1,6 @@
 import { shareText, copyText, ShareDeps } from "../utils/share";
+import { buildDuelSharePayload } from "../utils/dailyShare";
+import type { CellAnswer } from "../core";
 
 let passed = 0, failed = 0;
 function assert(c: boolean, m: string) { if (c) { passed++; console.log(`  ✓ PASS: ${m}`); } else { failed++; console.error(`  ✗ FAIL: ${m}`); } }
@@ -38,6 +40,47 @@ function assert(c: boolean, m: string) { if (c) { passed++; console.log(`  ✓ P
   assert(await copyText("x", mk({})) === true, "copyText başarılı");
   assert(await copyText("x", mk({ copy: async () => { throw new Error("no"); } })) === false, "copyText reddedilince false");
   assert(await copyText("x", mk({ copy: undefined })) === false, "pano API'si yoksa false");
+
+  // Duel share payload verification (spoiler-free 3x3 + localized outcome + URL)
+  const mockMovie = { id: "m_test", title: "Secret Answer Film", year: 2010, director: "Dir", cast: [], genres: [], hasOscar: false };
+  const sampleCells: (CellAnswer | null)[] = Array(9).fill(null);
+  sampleCells[0] = { movie: mockMovie, answeredBy: "X", timestamp: 1, pointsEarned: 15, rarityScore: 5 };
+  sampleCells[1] = { movie: mockMovie, answeredBy: "X", timestamp: 2, pointsEarned: 15, rarityScore: 5 };
+  sampleCells[2] = { movie: mockMovie, answeredBy: "X", timestamp: 3, pointsEarned: 15, rarityScore: 5 };
+  sampleCells[4] = { movie: mockMovie, answeredBy: "O", timestamp: 4, pointsEarned: 10, rarityScore: 0 };
+
+  const duelEn = buildDuelSharePayload({
+    cells: sampleCells,
+    winner: "X",
+    boardTitle: "Auteur Wars",
+    opponentName: "TarantinoCult",
+    rarityScore: 15,
+    locale: "en",
+    siteUrl: "https://cine-tactico.vercel.app",
+  });
+  assert(
+    duelEn.text.includes("3–1 vs TarantinoCult") &&
+      duelEn.text.includes("Scene's yours!") &&
+      duelEn.text.includes("https://cine-tactico.vercel.app") &&
+      !duelEn.text.includes("Secret Answer Film"),
+    "Duel share payload (EN) formats 3x3 grid, score, opponent, URL, and leaks zero movie titles"
+  );
+
+  const duelTr = buildDuelSharePayload({
+    cells: sampleCells,
+    winner: "O",
+    boardTitle: "Auteur Savaşları",
+    opponentName: "TarantinoKult",
+    rarityScore: 12,
+    locale: "tr",
+    siteUrl: "https://cine-tactico.vercel.app",
+  });
+  assert(
+    duelTr.text.includes("3–1 vs TarantinoKult") &&
+      duelTr.text.includes("Bu çekim olmadı.") &&
+      !duelTr.text.includes("Secret Answer Film"),
+    "Duel share payload (TR) formats localized Turkish summary without spoilers"
+  );
 
   console.log(`\nSHARE RESULT: ${passed}/${passed + failed} PASSED`);
   if (failed > 0) process.exit(1);

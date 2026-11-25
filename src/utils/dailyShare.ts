@@ -1,5 +1,6 @@
 import type { CellAnswer } from "@/core";
 import { tr } from "@/i18n/tr";
+import { BRAND_NAME } from "@/config/brand";
 import { countDailyFrames, dailyTierFor, DAILY_REWARD_REELS, type DailyTier } from "@/core/engine/dailyTier";
 
 export type DailyCardText = typeof tr.dailyCard;
@@ -60,4 +61,69 @@ export function summarizeDailyShare(
   const resultLine = fill(text.resultLine, mine) + (tier ? ` · ${headline}` : "");
   const rewardReels = tier ? DAILY_REWARD_REELS[tier] : 0;
   return { mine, theirs, locked, emojiGrid: grid, headline, subline, resultLine, won, tier, rewardReels };
+}
+
+export interface DuelShareOptions {
+  cells: readonly (CellAnswer | null)[];
+  winner: "X" | "O" | "DRAW" | null;
+  boardTitle: string;
+  opponentName?: string;
+  rarityScore?: number;
+  locale: "tr" | "en";
+  siteUrl: string;
+}
+
+/**
+ * Düello sonuç kartı ve Arşiv için spoiler içermeyen 3×3 paylaşım metni üretir.
+ * Film adlarını ifşa etmez; tahta ızgarasını, rakibi ve skoru paylaşılabilir kılar.
+ */
+export function buildDuelSharePayload(opts: DuelShareOptions): { title: string; text: string } {
+  const isEn = opts.locale === "en";
+  let mine = 0;
+  let theirs = 0;
+  const rows: string[] = [];
+
+  for (let r = 0; r < 3; r++) {
+    const row: string[] = [];
+    for (let c = 0; c < 3; c++) {
+      const cell = opts.cells[r * 3 + c] ?? null;
+      if (cell && !cell.isLockedNeutral && cell.answeredBy === "X") {
+        mine++;
+        row.push("🟨");
+      } else if (cell && !cell.isLockedNeutral && cell.answeredBy === "O") {
+        theirs++;
+        row.push("🟦");
+      } else {
+        row.push("⬛");
+      }
+    }
+    rows.push(row.join(" "));
+  }
+
+  const outcomeLabel = isEn
+    ? opts.winner === "X"
+      ? "Scene's yours!"
+      : opts.winner === "DRAW"
+      ? "Blind Frame"
+      : "Not this take."
+    : opts.winner === "X"
+    ? "Sahne senin!"
+    : opts.winner === "DRAW"
+    ? "Kör kadraj"
+    : "Bu çekim olmadı.";
+
+  const header = `${BRAND_NAME} · ${opts.boardTitle}`;
+  const vsPart = opts.opponentName ? ` vs ${opts.opponentName}` : "";
+  const rarityPart =
+    typeof opts.rarityScore === "number"
+      ? isEn
+        ? ` · Rarity ${opts.rarityScore}%`
+        : ` · Nadirlik %${opts.rarityScore}`
+      : "";
+  const scoreLine = `${mine}–${theirs}${vsPart} · ${outcomeLabel}${rarityPart}`;
+  const text = `${header}\n\n${rows.join("\n")}\n\n${scoreLine}\n${opts.siteUrl}`;
+  return {
+    title: isEn ? `${BRAND_NAME} Duel` : `${BRAND_NAME} Düellosu`,
+    text,
+  };
 }

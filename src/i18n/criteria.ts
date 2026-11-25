@@ -115,11 +115,32 @@ export const BOT_TITLES_EN: Record<string, string> = {
   "Hafta Sonu Seyircisi": "Weekend Moviegoer",
   "Gişe Çırağı": "Box Office Apprentice",
   "Zaman Büken Sinefil": "Mind-Bending Cinephile",
+  "Akademi Tahmincisi": "Academy Predictor",
+  "Arrakis Bilgesi": "Sage of Arrakis",
+  "Karanlık Zihinler Dedektifi": "Dark Mind Detective",
+  "Altın Palmiye Gurusu": "Palme d'Or Guru",
+  "5 Yıldız Koleksiyoneri": "Five-Star Collector",
+  "Sinema Tarihçisi": "Cinema Historian",
+  "Auteur Başyapıt Uykusuzu": "Auteur Insomniac",
   "Arthouse Takipçisi": "Arthouse Devotee",
   "Kült Bağımlısı": "Cult Film Junkie",
   "Altın Palmiye Avcısı": "Palme d'Or Hunter",
   "Akademi Seçmeni": "Academy Voter",
   "35mm Ustası": "35mm Master",
+};
+
+export const BOT_NAMES_EN: Record<string, string> = {
+  PatlamisMisirci: "PopcornClerk",
+  SeansGezgini: "MatineeDrifter",
+  PopcornCanavari: "PopcornFiend",
+  NolanZihni: "NolanMind",
+  AltinMakaraAvcisi: "GoldenReelHunter",
+  DuneSeyyahi: "DuneWanderer",
+  FincherDedektif: "FincherSleuth",
+  TarantinoKult: "TarantinoCult",
+  BesYildizEfsanesi: "FiveStarLegend",
+  ScorseseAilesi: "ScorseseClan",
+  KubrickBakisli: "KubrickGaze",
 };
 
 export function translateBoardTitle(title: string, locale: Locale): string {
@@ -143,4 +164,9 @@ export function translateCriterionSubLabel(subLabel: string | undefined, locale:
 export function translateBotRankTitle(rankTitle: string, locale: Locale): string {
   if (locale === "tr") return rankTitle;
   return BOT_TITLES_EN[rankTitle] || rankTitle;
+}
+
+export function translateBotName(name: string, locale: Locale): string {
+  if (locale === "tr") return name;
+  return BOT_NAMES_EN[name] || name;
 }

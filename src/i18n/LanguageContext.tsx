@@ -9,6 +9,7 @@ import {
   translateCriterionLabel,
   translateCriterionSubLabel,
   translateBotRankTitle,
+  translateBotName,
 } from "./criteria";
 
 export const LOCALE_STORAGE_KEY = "cinexox_locale";
@@ -23,6 +24,7 @@ export interface LanguageContextType {
   tCriterion: (label: string) => string;
   tSubLabel: (subLabel?: string) => string | undefined;
   tBot: (rankTitle: string) => string;
+  tBotName: (name: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -137,6 +139,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   const tCriterionFn = useCallback((label: string) => translateCriterionLabel(label, locale), [locale]);
   const tSubLabelFn = useCallback((sub?: string) => translateCriterionSubLabel(sub, locale), [locale]);
   const tBotFn = useCallback((rank: string) => translateBotRankTitle(rank, locale), [locale]);
+  const tBotNameFn = useCallback((name: string) => translateBotName(name, locale), [locale]);
 
   const value = useMemo(
     () => ({
@@ -149,8 +152,9 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
       tCriterion: tCriterionFn,
       tSubLabel: tSubLabelFn,
       tBot: tBotFn,
+      tBotName: tBotNameFn,
     }),
-    [locale, setLocale, isInitialized, dict, t, tBoardTitleFn, tCriterionFn, tSubLabelFn, tBotFn]
+    [locale, setLocale, isInitialized, dict, t, tBoardTitleFn, tCriterionFn, tSubLabelFn, tBotFn, tBotNameFn]
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
@@ -170,6 +174,7 @@ export function useTranslation(): LanguageContextType {
       tCriterion: (label: string) => label,
       tSubLabel: (sub?: string) => sub,
       tBot: (rank: string) => rank,
+      tBotName: (name: string) => name,
     };
   }
   return context;

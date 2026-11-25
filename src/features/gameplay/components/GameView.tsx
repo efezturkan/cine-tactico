@@ -172,7 +172,7 @@ export function GameView(props: GameViewProps) {
 
   const isIntro = showClapper;
 
-  const { t, tBoardTitle, locale, dict } = useTranslation();
+  const { t, tBoardTitle, tBotName, locale, dict } = useTranslation();
   const isEn = locale === "en";
 
   const isPlayerTurn = props.currentTurn === "X";
@@ -271,7 +271,7 @@ export function GameView(props: GameViewProps) {
             }`}
           >
             <span className="text-[#4FA3C7] tracking-wider uppercase text-[11px] truncate">
-              {props.pendingOpponent?.name || (isEn ? "Opponent" : "Rakip")}
+              {props.pendingOpponent?.name ? tBotName(props.pendingOpponent.name) : isEn ? "Opponent" : "Rakip"}
             </span>
             <span className="w-4 h-4 rounded bg-[#4FA3C7]/20 border border-[#4FA3C7]/50 text-[#4FA3C7] font-mono font-bold flex items-center justify-center text-[11px] shrink-0">
               O
@@ -482,6 +482,7 @@ export function GameView(props: GameViewProps) {
         board={props.board}
         cells={props.cells}
         profile={props.profile}
+        opponentName={props.mode === "DAILY_SOLO" ? undefined : props.pendingOpponent?.name}
         totalArcadeScore={props.totalArcadeScore}
         onPlayAgain={props.onPlayAgain}
         onNextBoard={props.onNextBoard}
@@ -524,7 +525,7 @@ export function GameView(props: GameViewProps) {
               <div className="w-full p-2.5 rounded-lg bg-[#0B0D12] border border-white/5 text-[11px] text-[#8A8F9A] mb-5 flex items-center justify-between">
                 <span>{isEn ? "Opponent:" : "Rakip:"}</span>
                 <span className="font-semibold text-[#E8E6E1]">
-                  {props.pendingOpponent.name}
+                  {tBotName(props.pendingOpponent.name)}
                 </span>
               </div>
             )}

@@ -37,7 +37,7 @@ function drawOpponents(): BotOpponentProfile[] {
  * Oyuncu "kolay / orta / zor" kararını burada, rakibin kimliğini görerek verir.
  */
 export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({ isOpen, records, onPick, onClose }) => {
-  const { dict, locale } = useTranslation();
+  const { dict, locale, tBotName } = useTranslation();
   const isEn = locale === "en";
   const opponents = useMemo(() => (isOpen ? drawOpponents() : []), [isOpen]);
 
@@ -95,7 +95,7 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({ isOpen
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-serif font-bold text-[15px] text-[#F1EEE7] truncate">{bot.name}</span>
+                    <span className="font-serif font-bold text-[15px] text-[#F1EEE7] truncate">{tBotName(bot.name)}</span>
                     <span
                       className="shrink-0 px-1.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wide"
                       style={{ color: tier.color, backgroundColor: `${tier.color}22` }}

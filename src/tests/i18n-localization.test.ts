@@ -5,10 +5,14 @@ import {
   translateCriterionLabel,
   translateCriterionSubLabel,
   translateBotRankTitle,
+  translateBotName,
   BOARD_TITLES_EN,
   CRITERIA_LABELS_EN,
   BOT_TITLES_EN,
 } from "../i18n/criteria";
+import { BOT_OPPONENTS } from "../data/boards";
+import { MOVIES_DATABASE } from "../content/adapters/gameCatalog";
+import { formatMovieDisplayTitle } from "../content/search/movieTitle";
 
 console.log("=================================================");
 console.log("CINEXOX FAZ 3: GLOBAL TR / EN LOCALIZATION TEST SUITE");
@@ -97,7 +101,7 @@ assert(
   "tüm hazır tahtaların İngilizce başlığı tanımlı (İngilizce arayüzde Türkçe başlık kalmaz)"
 );
 
-// 4. Bot Rank Title Translation
+// 4. Bot Rank Title & Bot Handle Translation (100% of BOT_OPPONENTS)
 assert(
   translateBotRankTitle("Bilet Kontrolörü", "en") === "Ticket Inspector",
   "translateBotRankTitle translates 'Bilet Kontrolörü' to 'Ticket Inspector'"
@@ -105,6 +109,45 @@ assert(
 assert(
   translateBotRankTitle("Bilet Kontrolörü", "tr") === "Bilet Kontrolörü",
   "translateBotRankTitle preserves 'Bilet Kontrolörü' in TR"
+);
+assert(
+  BOT_OPPONENTS.every((b) => translateBotRankTitle(b.rankTitle, "en") !== b.rankTitle),
+  "All 11 BOT_OPPONENTS rankTitles translate into English (0 raw Turkish rank titles)"
+);
+assert(
+  BOT_OPPONENTS.every((b) => translateBotName(b.name, "en") !== b.name),
+  "All 11 BOT_OPPONENTS handles translate into English (0 raw Turkish bot handles in EN)"
+);
+assert(
+  BOT_OPPONENTS.every((b) => translateBotName(b.name, "tr") === b.name),
+  "All 11 BOT_OPPONENTS handles preserve canonical TR key in TR"
+);
+
+// 4b. Search Display Title Normalization (Foreign Scripts & Subtitles)
+const parasite = MOVIES_DATABASE.find((m) => m.title === "Parasite");
+assert(
+  Boolean(parasite && formatMovieDisplayTitle(parasite, "en") === "Parasite"),
+  "Parasite displays readable canonical title 'Parasite' instead of 'Gisaengchung'"
+);
+const oldboy = MOVIES_DATABASE.find((m) => m.title === "Oldboy");
+assert(
+  Boolean(oldboy && formatMovieDisplayTitle(oldboy, "en") === "Oldboy"),
+  "Oldboy displays readable canonical title 'Oldboy' instead of raw Hangul"
+);
+const shoplifters = MOVIES_DATABASE.find((m) => m.title === "Shoplifters");
+assert(
+  Boolean(shoplifters && formatMovieDisplayTitle(shoplifters, "en") === "Shoplifters"),
+  "Shoplifters displays readable canonical title 'Shoplifters' instead of raw Kanji"
+);
+const duneOne = MOVIES_DATABASE.find((m) => m.id === "m_dune_part_one");
+assert(
+  Boolean(duneOne && formatMovieDisplayTitle(duneOne, "en") === "Dune: Part One"),
+  "Dune: Part One displays 'Dune: Part One' (does not collide with 1984 'Dune')"
+);
+const godfather = MOVIES_DATABASE.find((m) => m.title.startsWith("The Godfather ("));
+assert(
+  Boolean(godfather && formatMovieDisplayTitle(godfather, "en") === "The Godfather"),
+  "Legacy Turkish parenthetical '(Baba)' is cleanly stripped in English display"
 );
 
 // 5. Verification of major Board Titles and Criteria coverage

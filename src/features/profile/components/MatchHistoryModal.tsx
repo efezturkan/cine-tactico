@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/Button";
 import { MiniKadrajPreview } from "@/components/ui/MiniKadrajPreview";
 import { FLAGS } from "@/config/flags";
 import { useTranslation } from "@/i18n";
+import { buildDuelSharePayload } from "@/utils/dailyShare";
+import { shareText } from "@/utils/share";
+import { SITE_URL } from "@/config/brand";
 
 interface MatchHistoryModalProps {
   isOpen: boolean;
@@ -22,7 +25,7 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
   onClose,
   profile,
 }) => {
-  const { locale, tBoardTitle } = useTranslation();
+  const { dict, locale, tBoardTitle, tBotName } = useTranslation();
   const isEn = locale === "en";
 
   const [selectedMatch, setSelectedMatch] = useState<MatchRecord | null>(null);
@@ -42,28 +45,21 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
     }
   };
 
-  const handleShare = (m: MatchRecord) => {
+  const handleShare = async (m: MatchRecord) => {
     audio.playSelect();
     haptic.light();
-    const rawTitle = m.board.title.includes(":") ? m.board.title.split(":")[0].trim() : m.board.title;
-    const dTitle = tBoardTitle(rawTitle);
-    const outcomeText = isEn
-      ? m.outcome === "VICTORY"
-        ? "Scene's yours!"
-        : m.outcome === "DRAW"
-        ? "Blind Frame (Tie)"
-        : "Not this take"
-      : m.outcome === "VICTORY"
-      ? "Sahne senin!"
-      : m.outcome === "DRAW"
-      ? "Kör kadraj"
-      : "Bu çekim olmadı";
-    const shareText = `${isEn ? "Crosscut Duel" : "Crosscut Düellosu"}: ${dTitle} · ${isEn ? "Result" : "Sonuç"}: ${outcomeText}`;
-    if (navigator.share) {
-      navigator.share({ title: "Crosscut", text: shareText }).catch(() => {});
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(shareText);
-    }
+    const fullTitle = tBoardTitle(m.board.title);
+    const dTitle = fullTitle.includes(":") ? fullTitle.split(":")[0].trim() : fullTitle;
+    const winnerSym = m.outcome === "VICTORY" ? "X" : m.outcome === "DRAW" ? "DRAW" : "O";
+    const payload = buildDuelSharePayload({
+      cells: m.cells,
+      winner: winnerSym,
+      boardTitle: dTitle,
+      opponentName: m.opponent?.name ? tBotName(m.opponent.name) : undefined,
+      locale,
+      siteUrl: SITE_URL,
+    });
+    await shareText(payload.title, payload.text);
   };
 
   return (
@@ -81,13 +77,13 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
         <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
           <div>
             <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#E8E6E1] tracking-wide">
-              Arşiv
+              {isEn ? "Archive" : "Arşiv"}
             </h2>
             <p className="text-xs text-[#8A8F9A] mt-0.5 font-sans">
-              Son düellolar
+              {isEn ? "Recent duels" : "Son düellolar"}
             </p>
           </div>
-          <Button variant="icon" onClick={onClose} title="Kapat">
+          <Button variant="icon" onClick={onClose} title={dict.common.close}>
             <X className="w-4 h-4" />
           </Button>
         </div>
@@ -123,7 +119,7 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
                   {tBoardTitle(selectedMatch.board.title)}
                 </span>
                 <span className="text-xs text-[#8A8F9A] mt-0.5 block">
-                  vs {selectedMatch.opponent.name} · {formatDateShort(selectedMatch.timestamp)}
+                  vs {selectedMatch.opponent?.name ? tBotName(selectedMatch.opponent.name) : isEn ? "Cinephile Bot" : "Sinefil Botu"} · {formatDateShort(selectedMatch.timestamp)}
                 </span>
               </div>
 
@@ -145,10 +141,11 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
             matches.map((m) => {
               const isWin = m.outcome === "VICTORY";
               const isDraw = m.outcome === "DRAW";
-              const dTitle = m.board.title.includes(":")
-                ? m.board.title.split(":")[0].trim()
-                : m.board.title;
-              const oppName = m.opponent?.name || (isEn ? "Cinephile Bot" : "Sinefil Botu");
+              const fullTitle = tBoardTitle(m.board.title);
+              const dTitle = fullTitle.includes(":")
+                ? fullTitle.split(":")[0].trim()
+                : fullTitle;
+              const oppName = m.opponent?.name ? tBotName(m.opponent.name) : (isEn ? "Cinephile Bot" : "Sinefil Botu");
 
               return (
                 <div

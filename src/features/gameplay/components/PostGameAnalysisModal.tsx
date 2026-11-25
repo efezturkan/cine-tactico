@@ -1,19 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { PlayerSymbol, GameBoard, CellAnswer } from "@/core";
 import { UserProfile } from "@/types/profile";
-import { RotateCcw, Home, Film } from "lucide-react";
+import { RotateCcw, Home, Film, Share2, Check } from "lucide-react";
 import { audio } from "@/utils/audio";
+import { haptic } from "@/utils/haptics";
 import { MiniKadrajPreview } from "@/components/ui/MiniKadrajPreview";
 import { Button } from "@/components/ui/Button";
 import { useTranslation } from "@/i18n";
+import { buildDuelSharePayload } from "@/utils/dailyShare";
+import { shareText } from "@/utils/share";
+import { SITE_URL } from "@/config/brand";
 
 interface PostGameAnalysisModalProps {
   winner: PlayerSymbol | "DRAW" | null;
   board: GameBoard;
   cells: (CellAnswer | null)[];
   profile?: UserProfile;
+  opponentName?: string;
   totalArcadeScore?: number;
   onPlayAgain: () => void;
   onNextBoard?: () => void;
@@ -50,12 +55,14 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   winner,
   board,
   cells,
+  opponentName,
   onPlayAgain,
   onBackToHome,
   onReviewKadraj,
 }) => {
-  const { dict, locale, tBoardTitle } = useTranslation();
+  const { dict, locale, tBoardTitle, tBotName } = useTranslation();
   const isEn = locale === "en";
+  const [copiedShare, setCopiedShare] = useState(false);
 
   const [lossSubtitleIndex] = React.useState(
     () => Math.floor(Math.random() * 3)
@@ -85,7 +92,38 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   const rawTitle =
     board.displayTitle ||
     (board.title.includes(":") ? board.title.split(":")[0].trim() : board.title);
-  const displayTitle = tBoardTitle(rawTitle);
+  const fullTranslated = tBoardTitle(board.title);
+  const displayTitle = board.displayTitle
+    ? tBoardTitle(board.displayTitle)
+    : fullTranslated.includes(":")
+    ? fullTranslated.split(":")[0].trim()
+    : tBoardTitle(rawTitle);
+
+  const publicSiteUrl =
+    typeof window !== "undefined" &&
+    /^https?:\/\//.test(window.location.origin) &&
+    !/localhost|127\.0\.0\.1/.test(window.location.origin)
+      ? window.location.origin
+      : SITE_URL;
+
+  const handleShareDuel = async () => {
+    audio.playSelect();
+    haptic.light();
+    const payload = buildDuelSharePayload({
+      cells,
+      winner,
+      boardTitle: displayTitle,
+      opponentName: opponentName ? tBotName(opponentName) : undefined,
+      rarityScore,
+      locale,
+      siteUrl: publicSiteUrl,
+    });
+    const outcome = await shareText(payload.title, payload.text);
+    if (outcome === "copied") {
+      setCopiedShare(true);
+      setTimeout(() => setCopiedShare(false), 2000);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
@@ -200,6 +238,27 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
           >
             <RotateCcw className="w-4 h-4 stroke-[2.5]" />
             <span>{dict.game.playAgain}</span>
+          </Button>
+
+          <Button
+            variant="secondary"
+            data-testid="post-game-share-btn"
+            onClick={handleShareDuel}
+            className="w-full gap-2"
+          >
+            {copiedShare ? (
+              <>
+                <Check className="w-4 h-4 text-[#D9A441]" />
+                <span className="text-[#D9A441]">
+                  {dict.common.copied}
+                </span>
+              </>
+            ) : (
+              <>
+                <Share2 className="w-4 h-4 text-[#D9A441]" />
+                <span>{isEn ? "SHARE DUEL" : "DÜELLOYU PAYLAŞ"}</span>
+              </>
+            )}
           </Button>
 
           {onReviewKadraj && (

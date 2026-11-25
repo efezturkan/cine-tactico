@@ -50,6 +50,7 @@ import { parseStoredProfile, serializeProfile, isNewerSchema } from "@/utils/pro
 import { saveDailyResult, saveDailyProgress, loadDailyProgress, clearDailyProgress, loadDailyResult, StoredDailyResult } from "@/utils/dailyResult";
 import { BRAND_NAME } from "@/config/brand";
 import { LanguageProvider, useTranslation } from "@/i18n";
+import { resolveInitialLocale, LOCALE_STORAGE_KEY } from "@/i18n/LanguageContext";
 
 const getDailyBoardConfig = (): { board: GameBoard; index: number } =>
   getDailyBoardForDate(getGlobalDailyDateKey());
@@ -197,9 +198,18 @@ function CineXoxApp() {
           ...parsedProfile,
         }));
       } else {
-        // İlk açılış: herkes aynı "#3095" adıyla başlamasın
+        // İlk açılış: herkes aynı "#3095" adıyla başlamasın; dil tercihine göre adlandırılır
         const suffix = 1000 + Math.floor(Math.random() * 9000);
-        setProfile(prev => ({ ...prev, username: `Sinefil #${suffix}` }));
+        const initialLang = resolveInitialLocale(
+          localStorage.getItem(LOCALE_STORAGE_KEY),
+          typeof navigator !== "undefined"
+            ? navigator.languages && navigator.languages.length > 0
+              ? navigator.languages
+              : navigator.language
+            : null
+        );
+        const defaultHandle = initialLang === "en" ? `Cinephile #${suffix}` : `Sinefil #${suffix}`;
+        setProfile(prev => ({ ...prev, username: defaultHandle }));
       }
 
 

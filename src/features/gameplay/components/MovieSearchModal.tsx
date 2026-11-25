@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Criterion, Movie, ContentPoolType, CellAnswer } from "@/core";
 import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
-import { movieMatchesTitleQuery } from "@/content/search/movieTitle";
+import { movieMatchesTitleQuery, formatMovieDisplayTitle } from "@/content/search/movieTitle";
 import { Search, X, AlertTriangle } from "lucide-react";
 import { haptic } from "@/utils/haptics";
 import { Button } from "@/components/ui/Button";
@@ -210,8 +210,8 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
           ) : (
             visibleMovies.map((movie) => {
               const isUsed = usedIdsSet.has(movie.id);
-              // 6D.2: film simgesi karosu YOK. Özgün başlık. Tüm satır dokunulabilir.
-              const displayTitle = movie.originalTitle || movie.title;
+              // 6D.2: film simgesi karosu YOK. Kanonik okunabilir başlık. Tüm satır dokunulabilir.
+              const displayTitle = formatMovieDisplayTitle(movie, locale);
 
               return (
                 <button
