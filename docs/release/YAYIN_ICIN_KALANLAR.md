@@ -122,7 +122,7 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 
 - **Alınan (testli, commit'li):** İngilizce bot adları ve "Cinephile #" varsayılan adı, spoiler'sız düello paylaşım kartı (`buildDuelSharePayload`), İngilizce arama sonucunda okunabilir film adı ("Parasite", "Oldboy"), `docs/strategy/`.
 - **Çelişki, senin kararın:** Arama sonucunda özgün ad davranışı brief'te "dokunulmayacak" idi; paralel oturum İngilizce arayüzde kanonik adı gösterecek şekilde değiştirdi (`formatMovieDisplayTitle`). Test yeşil, ama bu karar kuralı değiştiriyor. Geri almak istersen `src/content/search/movieTitle.ts` ve `MovieSearchModal.tsx` tek commit içinde.
-- **Başlanmadı (yeni özellik, kod dondurma ile çelişir):** sunucu `submit_move` yeniden yazımı, 20-24 kartlık "Contact Sheet" modu, prosedürel Ters Kadraj, Wikidata 2023-2026 betiği, Screening Room/Ghost-Challenge.
+- **Başlanmadı (yeni özellik, kod dondurma ile çelişir):** sunucu `submit_move` yeniden yazımı, 20-24 kartlık "Contact Sheet" modu, Screening Room/Ghost-Challenge.
 - **Rapordaki eksik:** en yakın rakip CinemaXOX (13 Kasım 2026) analizde yoktu.
 
 ## 4g. Nihai strateji
@@ -133,7 +133,14 @@ Bkz. `docs/strategy/00_FINAL_STRATEGY.md` (konumlandırma, sıra, kapılar). Öz
 
 - Katalog 721 → 1.040 yapım; 2023+ 10 → 258. Günlük tahta 400 gün yine çözülebilir (min. 3 cevap/hücre). Günlük altın tahta değerleri yenilendi. Bundle boyutu ~4,8 MB.
 - **Kural:** göndermeden önce katalog dondurulur; yayın sonrası değişiklik günlük tahtayı sürümler arası ayırır (bkz. strateji Bölüm 6).
-- Yapılmadı: prosedürel Ters Kadraj, Anora (Wikidata verisi eksik).
+- Yapılmadı: Anora (Wikidata verisi eksik). Prosedürel Ters Kadraj sonradan yapıldı (bkz. 4i).
+
+## 4i. Kapanış durumu (26 Kasım)
+
+- **Kapandı:** prosedürel Ters Kadraj (`generateReverseBoard`, test: `reverse-generated.test.ts`; çeşitlilik ölçüldü, Marvel payı ~%33 kaldı); Wikidata 2023-2026 betiği; Sinefil Kartı mod etiketi artık kayıt dilinde; sahne ışığı maçta çizilmiyor; rakip seçimi ortada pencere.
+- **Rakip yenilemesi:** `docs/strategy/03_REFRESH_AND_HONEST_VERDICT.md` (bugünkü mağaza verisi, teknoloji parmak izi, SWOT, katalog ölçütü, 90 gün planı).
+- **Açık, yalnızca sende:** ad kararı + marka sorgusu, alan adı, Xcode Team/Archive/App Store Connect, gerçek iPhone testi, main'e alma onayı.
+- **Bilinçli ertelendi (1.0.1/1.1):** `DAILY_POOL_VERSION`, katalog delikleri (Anora, animasyon, belgesel, yönetmen havuzu), franchise başına Ters Kadraj sınırı, 1.1 paylaşım linki. Android: bilerek dokunulmadı (`com.cinetactico.game`).
 
 ## 5. Pil, boyut, modlar
 

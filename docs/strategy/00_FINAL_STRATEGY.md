@@ -18,7 +18,9 @@ Kaynaklar: iki paralel oturum raporu, bu oturumun marka/App Store taraması, kod
 
 **1.0'dan hemen önce (YAPILDI, 25 Kasım):**
 1. Katalog 2022-2026: 721 → 1.040 yapım, 2023 ve sonrası 10 → 258 (Past Lives, Poor Things, The Substance, Challengers, Anatomy of a Fall artık var; Anora Wikidata'da eksik veriyle elendi). Betik: `scripts/fetch_wikidata_recent.py` (yalnızca ekler, yeni kayıt başına yönetmen, tür ve ≥3 oyuncu şartı). Eski not: 721 yapımın yalnızca 10'u 2023 ve sonrasıydı. Bulunmayanlar: Anora, Past Lives, Poor Things, Challengers, The Substance, Anatomy of a Fall. Bir sinefil bunları yazıp "bulunamadı" görürse siler (Sportrix'in ölüm nedeni). Doğrulama kapılı CC0 Wikidata hattıyla ~150-250 popüler yapım.
-2. Prosedürel Ters Kadraj: HÂLÂ YAPILMADI (2 hazır tahta, Konsept 5). 1.0.1 için ilk iş.
+2. Prosedürel Ters Kadraj: YAPILDI (26 Kasım, `generateReverseBoard`, hazır tahtalar yedek). Konsept hâlâ 5 hazır tahta.
+
+Güncel doğrulama ve dürüst hüküm: `03_REFRESH_AND_HONEST_VERDICT.md`.
 
 **1.1 (yayın sonrası 2-3 hafta):** (a) Aynı tahtayı arkadaşa gönderme linki (`?c=seed`, sunucusuz; web'de anında oynanır), (b) yanlış cevapta hangi eksenin tutmadığını göster (✓/✕), (c) hızlı rövanş (kısa klaket), (d) çerezsiz analitik + çökme izleme (gizlilik etiketiyle birlikte güncellenir).
 
