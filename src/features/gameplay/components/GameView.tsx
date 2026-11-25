@@ -178,10 +178,10 @@ export function GameView(props: GameViewProps) {
   const isPlayerTurn = props.currentTurn === "X";
 
   // 2.5 Metin kısaltma: displayTitle (kısa ad)
-  const rawTitle = props.board.title.includes(":")
-    ? props.board.title.split(":")[0].trim()
-    : props.board.title;
-  const displayTitle = tBoardTitle(rawTitle);
+  // Önce TAM başlık çevrilir, sonra ":" öncesi kısa ad alınır (çeviri tablosu tam başlıklarla anahtarlı;
+  // eskiden kısa ad çevrilmeye çalışılıyor ve İngilizce arayüzde "Epik Bilim Kurgu" Türkçe kalıyordu)
+  const fullTitle = tBoardTitle(props.board.title);
+  const displayTitle = fullTitle.includes(":") ? fullTitle.split(":")[0].trim() : fullTitle;
 
   return (
     <div

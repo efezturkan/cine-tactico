@@ -90,6 +90,13 @@ assert(
 );
 assert(translateBoardTitle("Ters Kadraj", "tr") === tr.home.modes.reverseTitle, "TR kısa başlık ana ekranla aynı");
 
+// Oyun içi başlık TAM başlığın çevirisinden türetilir: hiçbir hazır tahtanın İngilizce başlığı eksik olmamalı
+import { PRESET_BOARDS } from "../data/boards";
+assert(
+  PRESET_BOARDS.every(b => translateBoardTitle(b.title, "en") !== b.title),
+  "tüm hazır tahtaların İngilizce başlığı tanımlı (İngilizce arayüzde Türkçe başlık kalmaz)"
+);
+
 // 4. Bot Rank Title Translation
 assert(
   translateBotRankTitle("Bilet Kontrolörü", "en") === "Ticket Inspector",
