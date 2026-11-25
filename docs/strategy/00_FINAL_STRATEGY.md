@@ -63,7 +63,7 @@ Derin incelemeler: `01` ve `04`, `05` (mağaza, ekran görüntüsü, yorum, geli
 - Segmentler: günlük bulmaca (Callback, Cinematrix), trivia quiz (Popcorn, Icon Pop), oyuncu tahmini (Actorle), sosyal/grup (Actorle 2.0), koleksiyon (Filmed Up), grid (Sportrix, Gridiron). Film için "rekabetçi 1v1 grid" boş (CinemaXOX hariç, 0 oy) — boş olması otomatik fırsat değil; talep kanıtı sporda var, filmde sınanmadı (C).
 
 ## 5. Fırsat var mı?
-**Evet, koşullu (C).** Kanıt: grid türünün sporda mobilde 2.277 ve 950 oy aldığı (A), film için web oyunlarının milyonluk ziyareti olduğu (Framed 3–4,8 milyon ziyaret/ay, benzer web ölçümü; B), mobil film oyunu arzının eski ya da 0 oylu olduğu (A). Risk: film grid'in mobilde talebi kanıtlanmadı; Callback ve Actorle 2.0 aynı kitleye sosyal özellikle yöneliyor; dağıtım ve veri tazeliği kazananı belirler (Sportrix'in ölümü).
+**Evet, koşullu (C).** Kanıt: grid türünün sporda mobilde 2.277 ve 950 oy aldığı (A), film için web oyunlarının milyonluk ziyareti olduğu (Framed 3–4,8 milyon ziyaret/ay: `01` belgesindeki üçüncü taraf ölçümü, bu oturumda yeniden doğrulanmadı; C), mobil film oyunu arzının eski ya da 0 oylu olduğu (A). Risk: film grid'in mobilde talebi kanıtlanmadı; Callback ve Actorle 2.0 aynı kitleye sosyal özellikle yöneliyor; dağıtım ve veri tazeliği kazananı belirler (Sportrix'in ölümü).
 
 ## 6. Strateji seçenekleri ve puan (1–5 × ağırlık)
 | Kriter (ağırlık) | A: Film düellosu (strateji+bilgi) | B: Günlük film oyunu ekosistemi | C: Arkadaş grubu rekabeti | D: Fandom marka/topluluk |
