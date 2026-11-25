@@ -114,3 +114,9 @@ Onay gerektiren ve yapılmayanlar: main'e alma/push, ücretli servis, mağaza ya
 
 ## 13. Operasyon kuralı
 Günlük tahta katalogdan türetilir; yayından sonra katalog değişirse eski/yeni sürümde farklı tahta görülür. Çözüm P1'deki `DAILY_POOL_VERSION`; 1.0 öncesi katalog dondurulur.
+
+## 14. Ad, SEO ve GEO kararı (26 Kasım)
+- **Karar: Crosscut ile devam.** Hukuk (A, WIPO resmî kayıtları): oyun/yazılım için çakışma yok; en yakın canlı kayıt ABD 3368825, yalnızca haber hizmeti. Hukuki görüş değildir; ayrıntı `APP_STORE_SUBMISSION.md` H.
+- **SEO/GEO zayıflığı (A):** "Crosscut" arandığında ilk sonuçlar testere, sözlük, Home Depot ve 1995 filmi (arama sonucu, bu tarih). Yani marka teriminde organik sıra almak zor; ürün adıyla değil, **kategori + ad** ile aranıp bulunur ("crosscut movie game", "crosscut trivia"). Önlemler: ad her yerde tanımlayıcıyla ("Crosscut: Movie Trivia Game"), varlık cümlesi birebir aynı (kodda var: `ENTITY_SENTENCE`, JSON-LD, llms.txt), mağaza ve site metninde "movie game" geçsin.
+- **Alan adı:** `crosscutgame.com`, `crosscut.game`, `crosscutgame.app`, `crosscut.gg` DNS'te çözülmüyor (muhtemelen alınabilir, C: kayıt şirketinde doğrula). `crosscut.app`, `playcrosscut.com`, `crosscut.games` alınmış. Öneri: `crosscutgame.com` (+ `crosscutgame.app`), sonra `SITE_URL` ve `public/robots.txt`, `sitemap.xml`, `llms.txt` güncellenir. Yayını engellemez.
+- **iOS konumlanma:** kategori Games > Trivia (ikincil Strategy), ad "Crosscut: Movie Trivia Game", alt başlık "Daily movie duel. No ads.", anahtar kelimeler 97 bayt, 6 görsel (TR/EN). Bunlar `APP_STORE_SUBMISSION.md` C ve `docs/release/store/`.

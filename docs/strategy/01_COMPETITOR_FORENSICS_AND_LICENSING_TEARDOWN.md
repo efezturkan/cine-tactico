@@ -109,6 +109,6 @@ Halka açık paketler, `Terms of Service` metinleri ve mağaza kayıtları incel
 
 - **Doğrulandı (iTunes Lookup API):** FilmedUp ABD 3.479 oy / 4,66★; Callback ABD 4 oy; Actorle ABD 122 oy; CineQuizz ABD/TR 0 oy (Fransa'da var). Rapor rakamları tutarlı.
 - **Eksik rakip:** **CinemaXOX: Movie Tic-Tac-Toe** (iOS id6828127619, yayın 13 Kasım 2026, TR'de 3 oy 5★, ABD 0) bu analizde yok. Aynı 3×3 XOX + film konseptinde, EN/TR, canlı düello ve günlük grid sunuyor. En yakın doğrudan rakip budur; ad olarak "Cine-XOX" ile karışırdı (rebrand gerekçelerinden biri).
-- **Marka bulgusu iki bağımsız kaynakla aynı:** ABD'de CROSSCUT (Reg. 3368825, Sınıf 41, Cascade Public Media) açık kaynaklarda canlı görünüyor. Resmî USPTO sorgusu hâlâ yapılmadı.
+- **Marka bulgusu (düzeltildi, 26 Kasım):** önceki not CROSSCUT sahibini "Cascade Public Media" diye yazıyordu; WIPO resmî kaydında sahip Crosscut LLC ve kapsam yalnızca haber hizmeti. Oyun için çakışma yok (bkz. `APP_STORE_SUBMISSION.md` H).
 - **Kapsam çatışması:** Bu planın Faz 2-3 maddeleri (sunucu RPC yeniden yazımı, Contact Sheet modu, Screening Room, Wikidata betiği) yeni özelliktir; 1.0 kod dondurma kararıyla çelişir. Onay olmadan başlanmadı.
 - **Android:** `android/app/build.gradle` hâlâ `com.cinetactico.game`; iOS `com.crosscutgame.app`. 1.0 yalnızca iOS olduğu için dokunulmadı; Android çıkmadan birleştirilmeli.
