@@ -109,6 +109,13 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 - **simplify:** Günlük sonucunun profile etkisi iki yerde kopyaydı, tek yardımcıya alındı.
 - **paranoid-qa (kaos, 375 px):** çift tıklama tek rakip seçimi/tek oyun; arama kutusuna `<script>`, `<img onerror>`, SQL, emoji, 5000 karakter, boşluk, Türkçe karakter: çökme yok, betik çalışmadı, boş durum mesajı var; yatay kaydırma yok; 44 pt altı hedef yok. **Kalanlar:** Esc ile pencere kapanmıyor (yalnızca klavyeli cihaz), yakınlaştırma kapalı (`user-scalable=no`), arama açıkken süre işlemeye devam eder (tasarım).
 
+## 4e. Mağaza hazırlığı (25 Kasım)
+
+- **Hazır:** TR/EN ekran görüntüleri (`docs/release/store/`), güncel metadata (`APP_STORE_SUBMISSION.md`), güncel inceleme notları (`APP_REVIEW_NOTES.md`), App Icon (1024, alfa yok), gizlilik manifesti (izleme yok, veri yok, UserDefaults gerekçesi CA92.1).
+- **Doğrulandı:** canlı `/`, `/privacy`, `/support` adresleri 200 dönüyor; imzasız Release derlemesi (`generic/platform=iOS`) başarılı; cihaz ailesi yalnızca iPhone, yalnızca dikey.
+- **Karar bekleyen:** uygulama adı (kodda ve mağaza metinlerinde "Cine-XOX", brief "Cine-Tactico" diyor).
+- **Hâlâ senin:** Team seçimi, Archive, App Store Connect, gerçek iPhone testi, 9/9 kartı gerçek oyunla da bir kez görmek.
+
 ## 5. Pil, boyut, modlar
 
 - Paket: `out/` yaklaşık 4,8 MB; zamanlayıcılar yalnızca oyunda ve modallarda; arka planda sayaç artık durur.
