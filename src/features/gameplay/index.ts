@@ -1,6 +1,5 @@
 export * from "./hooks/useGameSession";
 export * from "./components/XoxBoard";
-export * from "./components/ShotClock";
 export * from "./components/MovieSearchModal";
 export * from "./components/ActorSearchModal";
 export * from "./components/PostGameAnalysisModal";
