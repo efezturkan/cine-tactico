@@ -46,13 +46,14 @@ To help you experience the core game value in the shortest possible time, this g
 ### Flow 1: Offline / Airplane Mode Verification (Guideline 4.2)
 1. Turn on **Airplane Mode** on your iOS test device (disable both Wi-Fi and Cellular data).
 2. Launch or return to Cine-XOX.
-3. Start a game against the AI Bot via **"DÜELLOYA GİR" / "ENTER DUEL"** or play **"Günün XOX'u" / "Daily XOX"**.
+3. Start a game against the AI Bot via **"DÜELLOYA GİR" / "ENTER DUEL"** or play **"Günün Kadrası" / "Daily Reel"**.
 4. **Behavior:** The entire curated movie/actor verification graph, daily board generator, and AI bot engine are bundled locally and run 100% client-side without internet access.
 
-### Flow 2: Daily Challenge Flow ("Günün XOX'u" / "Daily XOX")
-1. On the home lobby, tap the **"Günün XOX'u" / "Daily XOX"** card (or the **Flame / Streak icon** in the top bar).
-2. The daily 3×3 board is deterministically selected for the current UTC date.
-3. Complete the match to record your daily streak locally and generate a shareable scorecard.
+### Flow 2: Daily Reel ("Günün Kadrası" / "Daily Reel")
+1. On the home lobby, tap the **"Günün Kadrası" / "Daily Reel"** ticket at the bottom (**"Bileti Aç" / "Open Ticket"**).
+2. The daily 3×3 board is the same for everyone and is chosen from the current UTC date. There is **no opponent**: the player fills all nine squares alone, 12 seconds per square. A wrong answer or a timeout locks that square.
+3. After the ninth square the result card shows your rank by squares won (9/9 "Kusursuz Kadraj" / "Perfect Reel" down to 0-2 "Bu çekim olmadı" / "Not this take"). The card has **Share** (native iOS share sheet) and **Copy to clipboard**.
+4. One attempt per UTC day: reopening the ticket shows today's result instead of a new game. Leaving a live Daily ends it with the squares earned. Consecutive days are counted as a local daily streak (flame icon, top bar).
 
 ### Flow 3: Data & Account (Guideline 5.1.1)
 Version 1.0 has **no accounts, no sign-in, and no server communication**. All data (nickname, avatar, bot match history) stays on the device. Profile > "Reset Local Data" erases it; uninstalling removes everything.
