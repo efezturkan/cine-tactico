@@ -48,7 +48,7 @@ Bu belge, uygulamayı Apple'a gönderirken **kopyalayıp yapıştıracağın her
 
 ### Türkçe (birincil dil)
 - **Ad (30):** `Crosscut: Film Bilgi Yarışması` (30)
-- **Alt başlık (30):** `Günlük sinema oyunu` (19)
+- **Alt başlık (30):** `Günlük film düellosu` (20)
 - **Tanıtım metni (170):** `Her kare iki ipucunun kesişimi. Doğru filmi bul, üçlü hattı kur, botları yen. Günün Kadrası her gün yeni bir tahta getirir.`
 - **Anahtar kelimeler (100 bayt, addaki ve alt başlıktaki kelimeleri tekrarlama):** `film,sinema,quiz,bilgi,oyun,tahmin,günlük,yönetmen,oyuncu,bulmaca,çevrimdışı,xox` (bayt sayısını App Store Connect doğrular)
 - **Açıklama:**
@@ -83,7 +83,7 @@ Sinefilsen, buradasın.
 
 ### English (ikinci dil)
 - **Name:** `Crosscut: Movie Trivia Game` (27)
-- **Subtitle:** `Daily film quiz vs bots` (23)
+- **Subtitle:** `Daily movie duel. No ads.` (25)
 - **Promotional text:** `Every square is the crossing of two clues. Find the film, build the line, beat the bots. A new Daily Reel arrives every day.`
 - **Keywords (100 bytes):** `film,quiz,cinema,daily,guess,grid,tic tac toe,movies,puzzle,cinephile,offline` (no "Oscar", studio, actor or competitor names)
 - **Description:**
