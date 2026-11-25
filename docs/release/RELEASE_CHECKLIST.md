@@ -69,7 +69,7 @@ Sunucu, RLS, API anahtarı, rate limit: ➖ bu sürümde sunucu yok (RLS ve sunu
 | Poster/kare/logo | ✅ | 0 poster, 0 afiş CDN'i; dış resim yok |
 | Oyuncu portreleri | ✅ | 11 Wikimedia Commons (CC BY/BY-SA), Ayarlar → Lisanslar'da atıflı |
 | Film verisi | ✅ | CC0 Wikidata, olgusal alanlar, kayıt başına kaynak; TMDb/IMDb verisi yok |
-| Yazı tipleri, ses | ✅ | Fontlar pakette gömülü; sesler `earshot` ile cihazda sentezlenir (kayıt/örnek yok) |
+| Yazı tipleri, ses | ✅ | Fontlar pakette gömülü; sesler Web Audio ile cihazda sentezlenir (kayıt/örnek dosya yok) |
 | Açık kaynak lisansları | ⏳ | Capacitor (MIT) ve npm bağımlılıkları için toplu lisans/atıf listesi yok; MIT için telif metni gerekir. Ayarlar → Lisanslar'a "Açık kaynak" bölümü eklenmesi önerilir (1.0.1) |
 | Resmî ürün izlenimi | ✅ | Mağaza metni "Not affiliated with…" satırı; Ayarlar → Hakkında |
 
