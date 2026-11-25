@@ -113,7 +113,9 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 
 - **Hazır:** TR/EN ekran görüntüleri (`docs/release/store/`), güncel metadata (`APP_STORE_SUBMISSION.md`), güncel inceleme notları (`APP_REVIEW_NOTES.md`), App Icon (1024, alfa yok), gizlilik manifesti (izleme yok, veri yok, UserDefaults gerekçesi CA92.1).
 - **Doğrulandı:** canlı `/`, `/privacy`, `/support` adresleri 200 dönüyor; imzasız Release derlemesi (`generic/platform=iOS`) başarılı; cihaz ailesi yalnızca iPhone, yalnızca dikey.
-- **Karar bekleyen:** uygulama adı (kodda ve mağaza metinlerinde "Cine-XOX", brief "Cine-Tactico" diyor).
+- **Ad: Crosscut** (kullanıcı kararı). Kodda, Info.plist'te, manifestte, mağaza metinlerinde ve ekran görüntülerinde güncellendi; Bundle ID `com.crosscutgame.app`. Tek kaynak: `src/config/brand.ts`.
+- **ŞART, yapılmadı:** USPTO/TMview/TÜRKPATENT/WIPO marka sorgusu (bkz. `APP_STORE_SUBMISSION.md` Bölüm H). Bilinen risk: ABD'de CROSSCUT (Reg. 3368825, Sınıf 41, Cascade Public Media) açık kaynaklarda canlı görünüyor. Sonuç olumsuz çıkarsa dönüş planı: `brand.ts` + `Info.plist` + `capacitor.config.ts` + store metni; yedek ad Nitrate (mağazada tam ad çakışması yok).
+- **Alan adı alınmadı:** site şu an `cine-tactico.vercel.app`. Alınca `brand.ts` `SITE_URL`, `public/robots.txt`, `sitemap.xml`, `llms.txt` güncellenecek (privacy/support URL'leri de yeni alan adına taşınmalı).
 - **Hâlâ senin:** Team seçimi, Archive, App Store Connect, gerçek iPhone testi, 9/9 kartı gerçek oyunla da bir kez görmek.
 
 ## 5. Pil, boyut, modlar
