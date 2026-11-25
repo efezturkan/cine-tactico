@@ -171,3 +171,72 @@ export function generateSolvableBoard(seed: number, opts: GeneratedBoardOptions 
   }
   return null;
 }
+
+/**
+ * TERS KADRAJ (ortak oyuncu) için katalogtan tahta üretimi.
+ * 3 satır filmi ile 3 sütun filmi seçilir; her satır-sütun çiftinin en az `minShared` ortak oyuncusu vardır; 9 hücrenin toplam cevap sayısı en az `minTotal` olur (çoğu hücrede birden fazla doğru cevap).
+ * Satır ve sütun filmleri birbirinden farklıdır, başlıklar katalogda tektir (cevap araması başlıkla yapılır).
+ * Aynı `seed` aynı tahtayı verir.
+ */
+let reversePoolCache: { films: typeof MOVIES_DATABASE; byActor: Map<string, number[]>; hubs: number[] } | null = null;
+
+function getReversePool() {
+  if (reversePoolCache) return reversePoolCache;
+  const titleCount = new Map<string, number>();
+  for (const m of MOVIES_DATABASE) {
+    const t = m.title.toLowerCase();
+    titleCount.set(t, (titleCount.get(t) ?? 0) + 1);
+  }
+  const films = MOVIES_DATABASE.filter(m => (m.cast?.length ?? 0) >= 5 && titleCount.get(m.title.toLowerCase()) === 1);
+  const byActor = new Map<string, number[]>();
+  films.forEach((m, i) => m.cast.forEach(a => byActor.set(a, [...(byActor.get(a) ?? []), i])));
+  // Sütun filmi adayları: en çok başka filmle ≥2 ortak oyuncusu olanlar (rastgele film çoğu zaman uygun satır bulamaz)
+  const degree = films.map((m, i) => {
+    const hits = new Map<number, number>();
+    m.cast.forEach(a => (byActor.get(a) ?? []).forEach(j => j !== i && hits.set(j, (hits.get(j) ?? 0) + 1)));
+    let d = 0;
+    hits.forEach(n => n >= 2 && d++);
+    return { i, d };
+  });
+  const hubs = degree.sort((a, b) => b.d - a.d).slice(0, 250).map(x => x.i);
+  reversePoolCache = { films, byActor, hubs };
+  return reversePoolCache;
+}
+
+export function generateReverseBoard(seed: number, minShared = 1, minTotal = 14): GameBoard | null {
+  const { films, byActor, hubs } = getReversePool();
+  const rng = makeSeededRng(seed);
+  const shared = (a: number, b: number) => {
+    const cb = new Set(films[b].cast);
+    return films[a].cast.filter(x => cb.has(x)).length;
+  };
+
+  for (let attempt = 0; attempt < 400; attempt++) {
+    const cols = pickDistinct(hubs, 3, rng);
+    // Sütun filmlerinin hepsiyle yeterli ortak oyuncusu olan adaylar
+    const counts = new Map<number, number>();
+    for (const c of cols) {
+      const seen = new Set<number>();
+      films[c].cast.forEach(a => (byActor.get(a) ?? []).forEach(i => seen.add(i)));
+      seen.forEach(i => counts.set(i, (counts.get(i) ?? 0) + 1));
+    }
+    const eligible = Array.from(counts.entries())
+      .filter(([i, n]) => n === 3 && !cols.includes(i) && cols.every(c => shared(i, c) >= minShared))
+      .map(([i]) => i);
+    if (eligible.length < 3) continue;
+    const rows = pickDistinct(eligible, 3, rng);
+    const board: GameBoard = {
+      id: `genrev_${seed}`,
+      title: `${films[rows[0]].title} · ${films[rows[1]].title} · ${films[rows[2]].title}`,
+      difficulty: "MEDIUM",
+      boardMode: "REVERSE_CAST",
+      rows: rows.map((f, i) => ({ id: `gr${seed}_r${i}`, type: "MOVIE_INTERSECTION", label: films[f].title, value: films[f].title })),
+      cols: cols.map((f, i) => ({ id: `gr${seed}_c${i}`, type: "MOVIE_INTERSECTION", label: films[f].title, value: films[f].title })),
+      validCounts: {},
+    };
+    board.validCounts = calculateBoardValidCounts(board);
+    const vc = Object.values(board.validCounts);
+    if (vc.every(n => n >= minShared) && vc.reduce((a, b) => a + b, 0) >= minTotal) return board;
+  }
+  return null;
+}

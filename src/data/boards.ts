@@ -2,7 +2,7 @@ import { GameBoard, BotDifficulty, BotSkill, BOT_SKILLS } from "@/core";
 import { shuffled } from "@/utils/shuffle";
 import { findMatchingMovies } from "@/core";
 import { calculateBoardValidCounts, ensureBoardValidCounts } from "@/core/engine/board-generator";
-import { generateSolvableBoard } from "./generatedBoards";
+import { generateSolvableBoard, generateReverseBoard } from "./generatedBoards";
 
 export { ensureBoardValidCounts };
 
@@ -988,6 +988,14 @@ export function getBoardForMode(
   let matchingIndices: number[] = [];
 
   if (mode === "REVERSE_CAST") {
+    // Çoğunlukla katalogtan taze tahta; ara sıra elle seçilmiş tahta
+    if (Math.random() < 0.75) {
+      const generated = generateReverseBoard(Math.floor(Math.random() * 1_000_000_000));
+      if (generated) {
+        const anchor = PRESET_BOARDS.findIndex(b => b.boardMode === "REVERSE_CAST");
+        return { board: generated, index: anchor === -1 ? 0 : anchor };
+      }
+    }
     matchingIndices = PRESET_BOARDS.map((b, idx) => ({ b, idx }))
       .filter(item => item.b.boardMode === "REVERSE_CAST")
       .map(item => item.idx);
