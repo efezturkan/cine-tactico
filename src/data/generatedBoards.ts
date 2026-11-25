@@ -198,7 +198,7 @@ function getReversePool() {
     hits.forEach(n => n >= 2 && d++);
     return { i, d };
   });
-  const hubs = degree.sort((a, b) => b.d - a.d).slice(0, 250).map(x => x.i);
+  const hubs = degree.sort((a, b) => b.d - a.d).slice(0, 700).map(x => x.i);
   reversePoolCache = { films, byActor, hubs };
   return reversePoolCache;
 }
@@ -211,7 +211,7 @@ export function generateReverseBoard(seed: number, minShared = 1, minTotal = 14)
     return films[a].cast.filter(x => cb.has(x)).length;
   };
 
-  for (let attempt = 0; attempt < 400; attempt++) {
+  for (let attempt = 0; attempt < 3000; attempt++) {
     const cols = pickDistinct(hubs, 3, rng);
     // Sütun filmlerinin hepsiyle yeterli ortak oyuncusu olan adaylar
     const counts = new Map<number, number>();

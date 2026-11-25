@@ -989,7 +989,7 @@ export function getBoardForMode(
 
   if (mode === "REVERSE_CAST") {
     // Çoğunlukla katalogtan taze tahta; ara sıra elle seçilmiş tahta
-    if (Math.random() < 0.75) {
+    if (Math.random() < 0.9) {
       const generated = generateReverseBoard(Math.floor(Math.random() * 1_000_000_000));
       if (generated) {
         const anchor = PRESET_BOARDS.findIndex(b => b.boardMode === "REVERSE_CAST");
