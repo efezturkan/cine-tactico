@@ -378,13 +378,14 @@ function CineXoxApp() {
       const updatedLast5 = [...currentLast5, outcome].slice(-5) as ("W" | "L" | "D")[];
 
       const matchMode: MatchRecord["mode"] = board.boardMode || (mode === "ONLINE_ROOM" ? "ONLINE_ROOM" : "CLASSIC");
+      // Etiket kayıt anındaki arayüz dilinden gelir (sabit Türkçe değil); mod adları ana ekranla aynı sözlükten
       const modeLabel = board.boardMode === "REVERSE_CAST"
-        ? "Ters Kadraj"
+        ? dict.home.modes.reverseTitle
         : board.boardMode === "CINE_CONCEPT"
-        ? "Sinefil Konsept"
+        ? dict.home.modes.conceptTitle
         : mode === "ONLINE_ROOM"
-        ? "Canlı Çevrimiçi Düello"
-        : "Klasik Düello";
+        ? (locale === "en" ? "Live Online Duel" : "Canlı Çevrimiçi Düello")
+        : dict.home.modes.classicTitle;
 
       const newRecord: MatchRecord = {
         id: `match_${Date.now()}`,
