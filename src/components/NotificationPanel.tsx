@@ -99,7 +99,7 @@ interface NotifBellProps {
 export const NotifBell: React.FC<NotifBellProps> = ({ unreadCount, onClick }) => (
   <button
     onClick={onClick}
-    className="relative p-2 rounded-xl bg-[#0e1018] border border-[#1a1c24] hover:border-[#8b151b]/50 text-zinc-400 hover:text-white transition-all active:scale-95"
+    className="relative p-2 rounded-xl bg-[#0e1018] border border-[#1a1c24] hover:border-[#8b151b]/50 text-zinc-400 hover:text-white transition active:scale-95"
     title="Bildirimler"
   >
     <Bell className="w-4 h-4" />
@@ -126,7 +126,7 @@ export const NotifToast: React.FC<NotifToastProps> = ({ notif, onDismiss, onCta 
 
   return (
     <div className="notif-enter fixed top-2 left-2 right-2 z-[999] max-w-md mx-auto">
-      <div className={`flex items-start gap-3 p-3 rounded-2xl border backdrop-blur-md shadow-2xl ${NOTIF_COLORS[notif.type]}`}
+      <div className={`flex items-start gap-3 p-3 rounded-2xl border shadow-2xl ${NOTIF_COLORS[notif.type]}`}
         style={{ background: "rgba(7,8,11,0.95)" }}>
         <div className="w-8 h-8 rounded-xl bg-[#0e1018] border border-[#1a1c24] flex items-center justify-center shrink-0">
           {NOTIF_ICONS[notif.type]}
@@ -139,7 +139,7 @@ export const NotifToast: React.FC<NotifToastProps> = ({ notif, onDismiss, onCta 
           {notif.cta && onCta && (
             <button
               onClick={() => { onCta(); onDismiss(); }}
-              className="text-[10px] font-black text-[#d97706] bg-[#d97706]/10 border border-[#d97706]/30 px-2 py-1 rounded-lg hover:bg-[#d97706]/20 transition-all active:scale-95"
+              className="text-[10px] font-black text-[#d97706] bg-[#d97706]/10 border border-[#d97706]/30 px-2 py-1 rounded-lg hover:bg-[#d97706]/20 transition active:scale-95"
             >
               {notif.cta}
             </button>
@@ -186,7 +186,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 z-[90] backdrop-blur-sm"
+        className="fixed inset-0 bg-black/60 z-[90]"
         onClick={onClose}
       />
 
@@ -227,7 +227,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
               )}
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg bg-[#0e1018] border border-[#1a1c24] text-zinc-400 hover:text-white transition-all active:scale-95"
+                className="p-1.5 rounded-lg bg-[#0e1018] border border-[#1a1c24] text-zinc-400 hover:text-white transition active:scale-95"
               >
                 <X className="w-3.5 h-3.5" />
               </button>

@@ -224,7 +224,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               haptic.light();
               onOpenProfileModal();
             }}
-            className="flex items-center gap-2.5 p-1 rounded-2xl hover:bg-white/5 active:translate-y-[1px] transition-all text-left min-w-0 group"
+            className="flex items-center gap-2.5 p-1 rounded-2xl hover:bg-white/5 active:translate-y-[1px] transition text-left min-w-0 group"
             title={dict.nav.profile}
           >
             <div
@@ -321,7 +321,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
         {/* ── 3. SINGLE-FOCUS HERO DUEL STAGE (7A.1 & 7A.2: pb-7, köşe boşluğu >= 12px, kesilmeyen metin) ─── */}
         <div
-          className="w-full pt-5 px-5 pb-7 rounded-2xl relative overflow-hidden transition-all bg-[#14171D] border border-white/10"
+          className="w-full pt-5 px-5 pb-7 rounded-2xl relative overflow-hidden transition bg-[#14171D] border border-white/10"
         >
           {/* Viewfinder Framing Brackets (İmza Öğesi 2: Köşe boşluğu >= 12px) */}
           <div className="absolute top-2.5 left-2.5 w-3 h-3 border-t-2 border-l-2 border-[#D9A441] pointer-events-none rounded-tl-sm" />
@@ -379,7 +379,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   aria-checked={isSelected}
                   data-testid={`mode-card-${m.id}`}
                   onClick={() => handleSelectModeCard(m.id)}
-                  className={`flex-1 min-w-[94px] sm:min-w-[115px] p-3 rounded-2xl flex flex-col items-center justify-between text-center gap-2 transition-all active:scale-[0.98] relative cursor-pointer snap-start shrink-0 select-none ${
+                  className={`flex-1 min-w-[94px] sm:min-w-[115px] p-3 rounded-2xl flex flex-col items-center justify-between text-center gap-2 transition active:scale-[0.98] relative cursor-pointer snap-start shrink-0 select-none ${
                     isSelected
                       ? "border-[1.5px] border-[#D9A441]"
                       : "border border-white/10 hover:border-white/20"
@@ -429,7 +429,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             haptic.light();
             onOpenDaily();
           }}
-          className="w-full relative p-3 sm:p-3.5 rounded-2xl flex items-center justify-between transition-all active:scale-[0.98] cursor-pointer overflow-hidden text-left bg-[#14171D] border border-dashed border-[#D9A441]/35 hover:border-[#D9A441]/60"
+          className="w-full relative p-3 sm:p-3.5 rounded-2xl flex items-center justify-between transition active:scale-[0.98] cursor-pointer overflow-hidden text-left bg-[#14171D] border border-dashed border-[#D9A441]/35 hover:border-[#D9A441]/60"
         >
           {/* Sol ve Sağ Bilet Kupürü Çentikleri */}
           <div
@@ -471,7 +471,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           <div className="pl-3 pr-2 shrink-0">
             <span className="text-xs font-bold text-[#D9A441] font-sans flex items-center gap-0.5">
-              {isEn ? "Open Ticket →" : "Bileti Aç →"}
+              {isEn ? "Open Ticket" : "Bileti Aç"}
             </span>
           </div>
         </button>

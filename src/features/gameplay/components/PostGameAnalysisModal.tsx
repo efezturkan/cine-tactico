@@ -126,7 +126,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 animate-in fade-in duration-200 select-none">
       <div
         className="w-full max-w-sm rounded-2xl p-6 flex flex-col relative text-[#E8E6E1] bg-[#14171D] border border-white/10 shadow-2xl overflow-hidden"
       >
@@ -143,13 +143,6 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
         <div className="absolute top-2 right-5 w-2.5 h-2.5 border-t border-r border-white/20 pointer-events-none" />
         <div className="absolute bottom-2 left-5 w-2.5 h-2.5 border-b border-l border-white/20 pointer-events-none" />
         <div className="absolute bottom-2 right-5 w-2.5 h-2.5 border-b border-r border-white/20 pointer-events-none" />
-
-        {/* Top Micro Tag */}
-        <div className="text-center mb-1">
-          <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-[#D9A441] uppercase">
-            35MM · 24 FPS
-          </span>
-        </div>
 
         {/* Main Result Serif Title */}
         <div className="text-center my-3">
@@ -287,13 +280,6 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
             <Home className="w-4 h-4 text-[#8A8F9A]" />
             <span>{dict.game.backToHome}</span>
           </Button>
-        </div>
-
-        {/* Bottom Micro Tag: 30% Opacity */}
-        <div className="text-center mt-3">
-          <span className="text-[8px] font-mono tracking-widest text-[#8A8F9A] opacity-30 uppercase">
-            Crosscut · 35MM
-          </span>
         </div>
       </div>
     </div>

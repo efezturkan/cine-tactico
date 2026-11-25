@@ -175,7 +175,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
             setSubTab("CREATE");
             setJoinError(null);
           }}
-          className={`h-11 rounded-xl text-xs font-sans font-bold uppercase tracking-wider transition-all border ${
+          className={`h-11 rounded-xl text-xs font-sans font-bold uppercase tracking-wider transition border ${
             subTab === "CREATE"
               ? "bg-[#181B22] border-[#D9A441] text-[#D9A441]"
               : "bg-transparent border-white/10 text-[#8A8F9A] hover:text-[#E8E6E1]"
@@ -190,7 +190,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
             setSubTab("JOIN");
             setJoinError(null);
           }}
-          className={`h-11 rounded-xl text-xs font-sans font-bold uppercase tracking-wider transition-all border ${
+          className={`h-11 rounded-xl text-xs font-sans font-bold uppercase tracking-wider transition border ${
             subTab === "JOIN"
               ? "bg-[#181B22] border-[#D9A441] text-[#D9A441]"
               : "bg-transparent border-white/10 text-[#8A8F9A] hover:text-[#E8E6E1]"
@@ -354,7 +354,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowBoardPicker(false);
           }}
-          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm select-none"
+          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 select-none"
         >
           <div className="w-full max-w-lg mx-auto bg-[#14171D] border-t border-x border-white/10 rounded-t-[24px] p-4 sm:p-5 flex flex-col max-h-[80dvh] shadow-2xl animate-in slide-in-from-bottom-5 duration-200">
             <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
@@ -387,7 +387,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
                       setSelectedBoardId(b.id);
                       setShowBoardPicker(false);
                     }}
-                    className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all ${
+                    className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition ${
                       isSelected
                         ? "bg-[#181B22] border-[#D9A441] text-[#E8E6E1]"
                         : "bg-[#14171D] border-white/10 text-[#8A8F9A] hover:text-[#E8E6E1] hover:border-white/20"
@@ -427,7 +427,7 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
 
   // Modal modu fallback (varsa)
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 animate-in fade-in duration-200 select-none">
       <div className="w-full max-w-md rounded-2xl bg-[#0B0D12] border border-white/10 shadow-2xl overflow-hidden relative">
         {onClose && (
           <Button

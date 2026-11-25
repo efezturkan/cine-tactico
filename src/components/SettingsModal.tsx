@@ -193,7 +193,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     setLocale("tr");
                   }
                 }}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
+                className={`px-3 py-1 text-xs font-medium rounded-md transition ${
                   locale === "tr" ? "bg-[#D9A441] text-[#0B0D12] font-semibold shadow-sm" : "text-[#8A8F9A] hover:text-[#E8E6E1]"
                 }`}
               >
@@ -208,7 +208,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     setLocale("en");
                   }
                 }}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
+                className={`px-3 py-1 text-xs font-medium rounded-md transition ${
                   locale === "en" ? "bg-[#D9A441] text-[#0B0D12] font-semibold shadow-sm" : "text-[#8A8F9A] hover:text-[#E8E6E1]"
                 }`}
               >
@@ -224,7 +224,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               audio.playSelect();
               onOpenSalonLight();
             }}
-            className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 hover:border-white/15 transition-all active:scale-[0.99] text-left"
+            className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 hover:border-white/15 transition active:scale-[0.99] text-left"
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#181B22] flex items-center justify-center text-[#D9A441]">
@@ -245,7 +245,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               audio.playSelect();
               onOpenHowToPlay();
             }}
-            className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 hover:border-white/15 transition-all active:scale-[0.99] text-left"
+            className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 hover:border-white/15 transition active:scale-[0.99] text-left"
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#181B22] flex items-center justify-center text-[#8A8F9A]">
@@ -265,7 +265,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => audio.playSelect()}
-            className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 hover:border-white/15 transition-all text-left"
+            className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 hover:border-white/15 transition text-left"
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#181B22] flex items-center justify-center text-[#8A8F9A]">
@@ -286,7 +286,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               audio.playSelect();
               setShowTerms(!showTerms);
             }}
-            className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 hover:border-white/15 transition-all text-left"
+            className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 hover:border-white/15 transition text-left"
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#181B22] flex items-center justify-center text-[#8A8F9A]">
@@ -319,7 +319,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               audio.playSelect();
               setShowLicenses(!showLicenses);
             }}
-            className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 hover:border-white/15 transition-all text-left"
+            className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 hover:border-white/15 transition text-left"
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#181B22] flex items-center justify-center text-[#D9A441]">

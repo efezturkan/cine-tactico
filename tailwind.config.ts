@@ -6,6 +6,11 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/features/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    // Sınıf adı içeren veri dosyaları (avatar gradyanları vb.) taranmazsa stiller sessizce kaybolur
+    "./src/types/**/*.{ts,tsx}",
+    "./src/data/**/*.{ts,tsx}",
+    "./src/i18n/**/*.{ts,tsx}",
+    "./src/utils/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {

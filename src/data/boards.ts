@@ -55,7 +55,7 @@ export const BOT_OPPONENTS: BotOpponentProfile[] = [
   // ORTA: meraklı sinefil, hattı kurar ve kapatır
   { name: "NolanZihni", rankTitle: "Zaman Büken Sinefil", level: 6, avatarId: "avatar_director", difficulty: "MEDIUM", rating: 1110, style: "BALANCED",
     quote: { tr: "Zaman bende, sıra sende.", en: "I have the time. Your move." } },
-  { name: "AltinMakaraAvcisi", rankTitle: "Akademi Tahmincisi", level: 5, avatarId: "avatar_critics", difficulty: "MEDIUM", rating: 1080, style: "AGGRESSIVE",
+  { name: "AltinMakaraAvcisi", rankTitle: "Akademi Tahmincisi", level: 5, avatarId: "avatar_lens", difficulty: "MEDIUM", rating: 1080, style: "AGGRESSIVE",
     quote: { tr: "Heykelcikler peşimde, ben hattın.", en: "Statuettes chase me. I chase lines." } },
   { name: "DuneSeyyahi", rankTitle: "Arrakis Bilgesi", level: 7, avatarId: "avatar_scifi", difficulty: "MEDIUM", rating: 1150, style: "CULT",
     quote: { tr: "Bilmediğin filmleri bilirim.", en: "I know the films you don't." } },
@@ -65,7 +65,7 @@ export const BOT_OPPONENTS: BotOpponentProfile[] = [
   // ZOR: sinema tarihçisi, kült cevaplara hâkim, hata affetmez
   { name: "TarantinoKult", rankTitle: "Altın Palmiye Gurusu", level: 9, avatarId: "avatar_director", difficulty: "HARD", rating: 1340, style: "CULT",
     quote: { tr: "Video kasetçide çalıştım, hepsini izledim.", en: "I worked a video store. I've seen them all." } },
-  { name: "BesYildizEfsanesi", rankTitle: "5 Yıldız Koleksiyoneri", level: 10, avatarId: "avatar_critics", difficulty: "HARD", rating: 1390, style: "BALANCED",
+  { name: "BesYildizEfsanesi", rankTitle: "5 Yıldız Koleksiyoneri", level: 10, avatarId: "avatar_lens", difficulty: "HARD", rating: 1390, style: "BALANCED",
     quote: { tr: "Günlüğümde senin cevabın zaten var.", en: "Your answer is already in my diary." } },
   { name: "ScorseseAilesi", rankTitle: "Sinema Tarihçisi", level: 8, avatarId: "avatar_noir", difficulty: "HARD", rating: 1290, style: "AGGRESSIVE",
     quote: { tr: "Hattı kurduğunda iş işten geçmiş olur.", en: "By the time you line up, it's over." } },

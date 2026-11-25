@@ -93,7 +93,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 animate-in fade-in duration-200">
       <div
         className="w-full max-w-md rounded-3xl p-5 flex flex-col max-h-[92vh] overflow-y-auto custom-scrollbar relative text-[#F1EEE7] tactile-card"
         style={{
@@ -135,7 +135,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
               audio.playSelect();
               setActiveTab("DAILY_QUESTS");
             }}
-            className={`flex-1 py-1.5 rounded-xl transition-all ${
+            className={`flex-1 py-1.5 rounded-xl transition ${
               activeTab === "DAILY_QUESTS"
                 ? "tactile-btn-amber text-[#0F1115] font-black shadow-md"
                 : "hover:text-[#F1EEE7]"
@@ -148,7 +148,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
               audio.playSelect();
               setActiveTab("WEEKLY_MEGA");
             }}
-            className={`flex-1 py-1.5 rounded-xl transition-all ${
+            className={`flex-1 py-1.5 rounded-xl transition ${
               activeTab === "WEEKLY_MEGA"
                 ? "tactile-btn-surface text-[#F5A623] font-black shadow-md"
                 : "hover:text-[#F1EEE7]"
@@ -161,7 +161,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
               audio.playSelect();
               setActiveTab("DAILY_LOGIN");
             }}
-            className={`flex-1 py-1.5 rounded-xl transition-all ${
+            className={`flex-1 py-1.5 rounded-xl transition ${
               activeTab === "DAILY_LOGIN"
                 ? "tactile-btn-cyan text-[#0F1115] font-black shadow-md"
                 : "hover:text-[#F1EEE7]"
@@ -269,7 +269,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
               {dailyRewards.slice(0, 4).map(r => (
                 <div
                   key={r.day}
-                  className={`p-2.5 rounded-2xl border text-center transition-all ${
+                  className={`p-2.5 rounded-2xl border text-center transition ${
                     r.day <= dailyStreak
                       ? "bg-amber-400/10 border-amber-400/50 text-amber-300"
                       : "bg-[#10182b] border-zinc-800 text-zinc-500"
@@ -288,7 +288,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
               {dailyRewards.slice(4).map(r => (
                 <div
                   key={r.day}
-                  className={`p-2.5 rounded-2xl border text-center transition-all ${
+                  className={`p-2.5 rounded-2xl border text-center transition ${
                     r.day === 7
                       ? "bg-gradient-to-tr from-amber-500/20 to-yellow-500/20 border-amber-400 text-amber-300"
                       : r.day <= dailyStreak
@@ -309,7 +309,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
                 onClaimDaily(100);
               }}
               disabled={claimedDaily}
-              className={`w-full py-3.5 rounded-2xl font-black text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 ${
+              className={`w-full py-3.5 rounded-2xl font-black text-xs flex items-center justify-center gap-2 shadow-lg transition active:scale-95 ${
                 claimedDaily
                   ? "bg-zinc-800 text-zinc-500 cursor-not-allowed border border-zinc-700"
                   : "bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 text-cinema-dark shadow-amber-500/20"

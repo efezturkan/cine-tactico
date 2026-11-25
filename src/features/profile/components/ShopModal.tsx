@@ -49,7 +49,7 @@ export const ShopModal: React.FC<ShopModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 animate-in fade-in duration-200">
       <div
         className="w-full max-w-md rounded-3xl p-5 flex flex-col max-h-[90vh] overflow-y-auto custom-scrollbar relative text-[#F1EEE7] tactile-card"
         style={{
@@ -124,7 +124,7 @@ export const ShopModal: React.FC<ShopModalProps> = ({
             return (
               <div
                 key={a.id}
-                className={`p-3 rounded-2xl flex flex-col items-center text-center relative border transition-all ${
+                className={`p-3 rounded-2xl flex flex-col items-center text-center relative border transition ${
                   isEquipped
                     ? "bg-[#141b2d] border-amber-400/70 shadow-lg shadow-amber-950/30"
                     : isUnlocked
@@ -138,7 +138,7 @@ export const ShopModal: React.FC<ShopModalProps> = ({
                 >
                   {a.emoji}
                   {!isUnlocked && (
-                    <div className="absolute inset-0 bg-black/50 backdrop-blur-[1px] rounded-2xl flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/50-[1px] rounded-2xl flex items-center justify-center">
                       <Lock className="w-4 h-4 text-zinc-300" />
                     </div>
                   )}
@@ -157,14 +157,14 @@ export const ShopModal: React.FC<ShopModalProps> = ({
                   ) : isUnlocked ? (
                     <button
                       onClick={() => handleEquip(a)}
-                      className="w-full py-1.5 px-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-black text-[10px] active:scale-95 transition-all border border-zinc-700"
+                      className="w-full py-1.5 px-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-black text-[10px] active:scale-95 transition border border-zinc-700"
                     >
                       Kullan
                     </button>
                   ) : (
                     <button
                       onClick={() => handlePurchase(a)}
-                      className={`w-full py-1.5 px-2 rounded-xl font-black text-[10px] flex items-center justify-center gap-1 active:scale-95 transition-all shadow ${
+                      className={`w-full py-1.5 px-2 rounded-xl font-black text-[10px] flex items-center justify-center gap-1 active:scale-95 transition shadow ${
                         canAfford
                           ? "bg-amber-400 hover:bg-amber-300 text-cinema-dark"
                           : "bg-zinc-800/80 text-zinc-500 cursor-not-allowed"

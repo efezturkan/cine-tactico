@@ -93,7 +93,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-night/95 backdrop-blur-md select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-night/95 select-none">
       <div className="relative w-full max-w-md animate-card-in bg-panel border-2 border-gold rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center overflow-hidden text-ink">
         {/* Dönen Altın Makara Simgesi */}
         <div className="relative my-3 flex items-center justify-center">
@@ -195,7 +195,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
                     <button
                       key={movie.id}
                       onClick={() => handleSelectMovie(movie)}
-                      className="w-full p-2.5 rounded-xl bg-control hover:bg-control-hover border border-white/10 hover:border-gold flex items-center justify-between text-left transition-all"
+                      className="w-full p-2.5 rounded-xl bg-control hover:bg-control-hover border border-white/10 hover:border-gold flex items-center justify-between text-left transition"
                     >
                       <div>
                         <div className="font-bold text-xs text-ink">{movie.title}</div>

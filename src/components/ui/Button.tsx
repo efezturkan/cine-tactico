@@ -18,15 +18,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       case "primary":
         // Ana: altın zemin, koyu yazı, büyük harf sans 700, yükseklik 52, 3 px alt kenar, basınca scale(.97)
         variantStyles = disabled
-          ? "h-[52px] px-6 text-sm font-bold uppercase tracking-wider bg-[#D9A441]/40 text-[#0B0D12]/60 border-b-[3px] border-[#8E651B]/40 cursor-not-allowed rounded-xl"
-          : "h-[52px] px-6 text-sm font-bold uppercase tracking-wider bg-[#D9A441] text-[#0B0D12] border-b-[3px] border-[#8E651B] hover:brightness-[1.03] active:translate-y-[1px] active:border-b-[1.5px] rounded-xl shadow-none";
+          ? "gap-2 h-[52px] px-6 text-sm font-bold uppercase tracking-wider bg-[#D9A441]/40 text-[#0B0D12]/60 border-b-[3px] border-[#8E651B]/40 cursor-not-allowed rounded-xl"
+          : "gap-2 h-[52px] px-6 text-sm font-bold uppercase tracking-wider bg-[#D9A441] text-[#0B0D12] border-b-[3px] border-[#8E651B] hover:brightness-[1.03] active:translate-y-[1px] active:border-b-[1.5px] rounded-xl shadow-none";
         break;
 
       case "secondary":
         // İkincil: saydam zemin, 1 px çerçeve, yükseklik 52, büyük harf
         variantStyles = disabled
-          ? "h-[52px] px-6 text-sm font-bold uppercase tracking-wider bg-transparent text-[#8A8F9A]/40 border border-white/5 cursor-not-allowed rounded-xl"
-          : "h-[52px] px-6 text-sm font-bold uppercase tracking-wider bg-transparent text-[#E8E6E1] border border-white/15 hover:border-white/30 hover:bg-white/[0.03] rounded-xl";
+          ? "gap-2 h-[52px] px-6 text-sm font-bold uppercase tracking-wider bg-transparent text-[#8A8F9A]/40 border border-white/5 cursor-not-allowed rounded-xl"
+          : "gap-2 h-[52px] px-6 text-sm font-bold uppercase tracking-wider bg-transparent text-[#E8E6E1] border border-white/15 hover:border-white/30 hover:bg-white/[0.03] rounded-xl";
         break;
 
       case "icon":

@@ -83,7 +83,7 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({ isOpen
                   haptic.light();
                   onPick(bot);
                 }}
-                className="w-full p-3 rounded-2xl bg-[#0F1218] border border-white/10 hover:border-white/25 active:scale-[0.98] transition-all text-left flex items-center gap-3"
+                className="w-full p-3 rounded-2xl bg-[#0F1218] border border-white/10 hover:border-white/25 active:scale-[0.98] transition text-left flex items-center gap-3"
                 style={{ borderLeft: `3px solid ${tier.color}` }}
               >
                 <div

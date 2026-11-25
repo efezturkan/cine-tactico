@@ -116,7 +116,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
   const diffDot = difficulty === "HARD" ? "bg-[#E5484D]" : difficulty === "NORMAL" ? "bg-[#D9A441]" : "bg-[#46A758]";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 animate-in fade-in select-none">
       <div
         className="w-full max-w-sm rounded-2xl p-6 flex flex-col items-center relative text-[#F1EEE7] overflow-hidden"
         style={{
@@ -137,7 +137,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
             onCancel();
           }}
           aria-label={isEn ? "Cancel" : "İptal"}
-          className="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-lg bg-[#181B22] border border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7] transition-all"
+          className="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-lg bg-[#181B22] border border-white/10 text-[#A5A8B0] hover:text-[#F1EEE7] transition"
         >
           <X className="w-4 h-4" />
         </button>

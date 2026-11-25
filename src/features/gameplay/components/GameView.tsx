@@ -305,7 +305,7 @@ export function GameView(props: GameViewProps) {
                 </div>
               ) : props.winner === null ? (
                 <div
-                  className={`font-mono text-xs sm:text-sm font-bold tracking-[0.2em] px-3 py-0.5 rounded-md border transition-all duration-300 ${
+                  className={`font-mono text-xs sm:text-sm font-bold tracking-[0.2em] px-3 py-0.5 rounded-md border transition duration-300 ${
                     props.secondsRemaining <= 3
                       ? "text-[#E5484D] border-[#E5484D]/40 bg-[#E5484D]/15 animate-pulse shadow-[0_0_12px_rgba(229,72,77,0.3)]"
                       : "text-[#D9A441] border-[#D9A441]/25 bg-[#14171D] shadow-[0_0_8px_rgba(217,164,65,0.08)]"
@@ -498,7 +498,7 @@ export function GameView(props: GameViewProps) {
               props.onCancelSurrender();
             }
           }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm select-none animate-in fade-in duration-150"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 select-none animate-in fade-in duration-150"
         >
           <div className="w-full max-w-sm rounded-2xl p-6 flex flex-col items-center text-center text-[#E8E6E1] bg-[#14171D] border border-white/10 shadow-2xl relative">
             <div className="w-12 h-12 rounded-xl bg-[#E5484D]/15 border border-[#E5484D]/30 flex items-center justify-center text-[#E5484D] mb-3">

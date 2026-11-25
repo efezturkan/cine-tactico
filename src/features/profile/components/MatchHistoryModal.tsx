@@ -67,7 +67,7 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm select-none"
+      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 select-none"
     >
       {/* 2.4 & 7E Alt Sheet (Bottom Sheet) */}
       <div className="w-full max-w-lg mx-auto bg-[#14171D] border-t border-x border-white/10 rounded-t-[24px] p-4 sm:p-5 flex flex-col max-h-[92dvh] shadow-2xl animate-in slide-in-from-bottom-5 duration-200">

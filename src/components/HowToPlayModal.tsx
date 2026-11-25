@@ -31,7 +31,7 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) handleDismiss();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm select-none animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 select-none animate-in fade-in duration-150"
     >
       <div className="w-full max-w-sm rounded-2xl bg-[#14171D] border border-white/10 p-5 sm:p-6 flex flex-col shadow-2xl relative">
         {/* Viewfinder corner brackets */}
@@ -40,12 +40,6 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
         <div className="absolute bottom-2.5 left-2.5 w-2 h-2 border-b border-l border-white/20 pointer-events-none" />
         <div className="absolute bottom-2.5 right-2.5 w-2 h-2 border-b border-r border-white/20 pointer-events-none" />
 
-        {/* Top micro tag */}
-        <div className="text-center mb-1">
-          <span className="text-[9px] font-mono font-bold tracking-[0.25em] text-[#D9A441] uppercase">
-            35MM · 24 FPS
-          </span>
-        </div>
 
         {/* Title (Serif, Alt başlık kaldırıldı) */}
         <div className="text-center my-1.5">

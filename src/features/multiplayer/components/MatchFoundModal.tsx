@@ -69,7 +69,7 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in duration-200 select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 animate-in fade-in duration-200 select-none">
       <div
         className="w-full max-w-sm rounded-2xl p-6 flex flex-col items-center relative text-[#F1EEE7] overflow-hidden"
         style={{

@@ -1,5 +1,6 @@
 "use client";
 
+import { formatMovieDisplayTitle } from "@/content/search/movieTitle";
 import React from "react";
 import { GameBoard, CellAnswer, PlayerSymbol, Criterion } from "@/core";
 import { audio } from "@/utils/audio";
@@ -29,7 +30,7 @@ const CellMoviePoster: React.FC<{
   cellData: CellAnswer;
   isWinning?: boolean;
 }> = ({ cellData }) => {
-  const { dict } = useTranslation();
+  const { dict, locale } = useTranslation();
   const { movie, answeredBy, actorName, rarityScore, isLockedNeutral } = cellData;
   const isNeutral = answeredBy === "NEUTRAL" || isLockedNeutral;
 
@@ -60,7 +61,7 @@ const CellMoviePoster: React.FC<{
       {/* Film / Aktör adı serif (2 satıra kadar) - Temiz ve okunur */}
       <div className="flex-1 flex flex-col items-center justify-center text-center my-auto min-w-0 z-10 px-0.5">
         <span className="font-serif text-[11px] sm:text-xs md:text-sm font-semibold text-[#F1EEE7] line-clamp-2 leading-tight">
-          {actorName || movie.title}
+          {actorName || formatMovieDisplayTitle(movie, locale)}
         </span>
         {!actorName && movie.year > 0 && (
           <span className="text-[10px] sm:text-[11px] text-[#8A8F9A] font-mono mt-0.5 block">
@@ -162,7 +163,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
     <div className="w-full mx-auto px-0 py-0 min-w-0">
       {/* 4x4 Matris Grid Kart Kapsayıcısı */}
       <div
-        className="rounded-2xl relative w-full overflow-hidden p-1.5 sm:p-2.5 shadow-2xl transition-all"
+        className="rounded-2xl relative w-full overflow-hidden p-1.5 sm:p-2.5 shadow-2xl transition"
         style={{
           background: "#14171D",
           border: "1px solid rgba(255, 255, 255, 0.08)",
@@ -259,7 +260,7 @@ export const XoxBoard: React.FC<XoxBoardProps> = ({
                         audio.playSelect();
                         onCellClick(cellIndex);
                       }}
-                      className={`w-full aspect-square relative rounded-xl overflow-hidden min-w-0 transition-all transform active:scale-[0.98] group ${
+                      className={`w-full aspect-square relative rounded-xl overflow-hidden min-w-0 transition transform active:scale-[0.98] group ${
                         isWinning ? "scale-[1.02] z-10 winning-beam ring-1 ring-[#D9A441]" : ""
                       } ${isSelectedInReview ? "ring-2 ring-[#D9A441] shadow-[0_0_16px_rgba(217,164,65,0.35)]" : ""} ${isShaking ? "animate-shake-120" : ""}`}
                       style={{

@@ -365,14 +365,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             onOpenArchive();
           }
         }}
-        className="w-full p-3.5 rounded-xl bg-[#14171D] border border-white/10 hover:border-white/20 transition-all mb-3 flex items-center justify-between text-left"
+        className="w-full p-3.5 rounded-xl bg-[#14171D] border border-white/10 hover:border-white/20 transition mb-3 flex items-center justify-between text-left"
       >
         <div>
           <span className="text-xs font-serif font-bold text-[#E8E6E1] block">
             {isEn ? "Last 5 duels" : "Son 5 düello"}
           </span>
           <span className="text-[11px] text-[#8A8F9A]">
-            {recent.length === 0 ? (isEn ? "No duels yet." : "Henüz düello yok.") : (isEn ? "Review archive →" : "Arşivi incele →")}
+            {recent.length === 0 ? (isEn ? "No duels yet." : "Henüz düello yok.") : (isEn ? "Review archive" : "Arşivi incele")}
           </span>
         </div>
 
@@ -479,19 +479,19 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[#8A8F9A]" />
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#8A8F9A]">
+            <span className="text-xs font-sans font-bold uppercase tracking-wider text-[#A5A8B0]">
               {dict.profile.dataPrivacy}
             </span>
           </div>
           <a
             href="/privacy"
-            className="text-[11px] font-mono text-[#D9A441] hover:underline"
+            className="text-xs font-sans font-semibold text-[#D9A441] hover:underline"
           >
             {dict.profile.readPolicy}
           </a>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 pt-1">
+        <div className={`grid gap-2 pt-1 ${isSupabaseConfigured ? "grid-cols-2" : "grid-cols-1"}`}>
           <button
             type="button"
             onClick={() => {
@@ -531,12 +531,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         </div>
       </div>
 
-      {/* 7D.8 Alt Etiket */}
-      <div className="text-center mt-2">
-        <span className="text-[9px] font-mono tracking-widest text-[#8A8F9A] opacity-40 uppercase">
-          35MM · 24 FPS
-        </span>
-      </div>
 
       {/* 7D.2 Avatar Seçici Alt Sheet */}
       {showAvatarPicker && (
@@ -544,7 +538,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowAvatarPicker(false);
           }}
-          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm select-none"
+          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 select-none"
         >
           <div className="w-full max-w-lg mx-auto bg-[#14171D] border-t border-x border-white/10 rounded-t-[24px] p-4 sm:p-5 flex flex-col max-h-[85dvh] shadow-2xl animate-in slide-in-from-bottom-5 duration-200">
             <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
@@ -570,7 +564,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     key={a.id}
                     type="button"
                     onClick={() => handleSelectAvatar(a.id)}
-                    className={`p-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all border active:scale-95 ${
+                    className={`p-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition border active:scale-95 ${
                       isSelected
                         ? "bg-[#181B22] border-[#D9A441] text-[#D9A441]"
                         : "bg-[#0B0D12] border-white/5 text-[#8A8F9A] hover:text-[#E8E6E1] hover:border-white/15"
@@ -594,7 +588,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowDirectorPicker(false);
           }}
-          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm select-none"
+          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 select-none"
         >
           <div className="w-full max-w-lg mx-auto bg-[#14171D] border-t border-x border-white/10 rounded-t-[24px] p-4 sm:p-5 flex flex-col max-h-[80dvh] shadow-2xl animate-in slide-in-from-bottom-5 duration-200">
             <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
@@ -637,7 +631,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           onClick={(e) => {
             if (e.target === e.currentTarget && !isResettingLocal) setShowResetLocalModal(false);
           }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm select-none"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 select-none"
         >
           <div className="w-full max-w-sm bg-[#14171D] border border-white/10 rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 space-y-4">
             <div className="flex items-center gap-3">
@@ -692,7 +686,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           onClick={(e) => {
             if (e.target === e.currentTarget && !isDeletingAccount) setShowDeleteAccountModal(false);
           }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md select-none"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 select-none"
         >
           <div className="w-full max-w-sm bg-[#14171D] border border-[#E5484D]/40 rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 space-y-4">
             <div className="flex items-center gap-3">
@@ -777,7 +771,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 animate-in fade-in duration-200 select-none">
       <div className="w-full max-w-sm rounded-2xl bg-[#0B0D12] border border-white/10 shadow-2xl overflow-hidden relative">
         {onClose && (
           <Button

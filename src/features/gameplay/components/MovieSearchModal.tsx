@@ -102,7 +102,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
           onClose();
         }
       }}
-      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm select-none"
+      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 select-none"
       style={{
         top: vpStyle.top !== undefined ? `${vpStyle.top}px` : 0,
         height: vpStyle.height !== undefined ? `${vpStyle.height}px` : "100dvh",
@@ -222,7 +222,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                     haptic.light();
                     onSelectMovie(movie);
                   }}
-                  className={`w-full p-3 rounded-xl flex items-center justify-between text-left transition-all border ${
+                  className={`w-full p-3 rounded-xl flex items-center justify-between text-left transition border ${
                     isUsed
                       ? "opacity-35 bg-[#0B0D12] border-white/5 cursor-not-allowed"
                       : "bg-[#181B22] hover:bg-[#1E222B] border-white/10 hover:border-[#D9A441]/50 active:scale-[0.99]"

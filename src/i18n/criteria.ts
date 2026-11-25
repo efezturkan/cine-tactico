@@ -152,7 +152,8 @@ export function translateCriterionLabel(label: string, locale: Locale): string {
   // TR: parantezli İngilizce eklemeler yasak (tasarım anayasası 1.2): "Suç (Crime)" -> "Suç".
   // Yalnızca ASCII parantez eki silinir; Türkçe karakterli ekler ("Batman Begins (Batman Başlıyor)") korunur.
   if (locale === "tr") return label.replace(/\s*\([A-Za-z0-9 .'&-]+\)\s*$/, "");
-  return CRITERIA_LABELS_EN[label] || label;
+  // EN: eski küratörlü kayıtlardaki Türkçe parantez eki ("The Godfather (Baba)") İngilizce arayüzde görünmez.
+  return CRITERIA_LABELS_EN[label] || label.replace(/\s*\([^)]*[çğıöşüÇĞİÖŞÜ][^)]*\)\s*$/, "");
 }
 
 export function translateCriterionSubLabel(subLabel: string | undefined, locale: Locale): string | undefined {

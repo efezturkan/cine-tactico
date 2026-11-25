@@ -207,7 +207,7 @@ input, textarea {
 }
 
 .winning-beam {
-  animation: winning-pulse 1.2s ease-in-out infinite alternate;
+  animation: winning-pulse 1.2s ease-in-out 6 alternate;
 }
 
 /* ─── Clapper Strike & Diegetic Snap Polish ────────────────── */

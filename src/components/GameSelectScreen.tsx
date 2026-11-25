@@ -109,7 +109,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
 
         {/* 1. MODLAR */}
         <section className="space-y-2">
-          <span className="px-1 text-[11px] font-semibold tracking-wider uppercase text-[#8A8F9A]">
+          <span className="text-[11px] font-semibold tracking-wider uppercase text-[#8A8F9A]">
             {isEn ? "Modes" : "Modlar"}
           </span>
           <div className="grid grid-cols-2 gap-3">
@@ -121,7 +121,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
                   type="button"
                   data-testid={`vizyon-mode-${m.id}`}
                   onClick={tap(() => onStartMode(m.id))}
-                  className="relative p-3.5 rounded-2xl text-left flex flex-col gap-2 bg-[#14171D] border border-white/10 hover:border-white/20 active:scale-[0.98] transition-all min-h-[148px]"
+                  className="relative p-3.5 rounded-2xl text-left flex flex-col gap-2 bg-[#14171D] border border-white/10 hover:border-white/20 active:scale-[0.98] transition min-h-[148px]"
                 >
                   <div
                     className="w-9 h-9 rounded-xl flex items-center justify-center"
@@ -147,7 +147,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
               type="button"
               data-testid="vizyon-mode-DAILY"
               onClick={tap(onOpenDaily)}
-              className="relative p-3.5 rounded-2xl text-left flex flex-col gap-2 bg-[#14171D] border border-dashed border-[#C9A27A]/45 hover:border-[#C9A27A]/70 active:scale-[0.98] transition-all min-h-[148px]"
+              className="relative p-3.5 rounded-2xl text-left flex flex-col gap-2 bg-[#14171D] border border-dashed border-[#C9A27A]/45 hover:border-[#C9A27A]/70 active:scale-[0.98] transition min-h-[148px]"
             >
               <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#C9A27A]/15 text-[#C9A27A]">
                 <Ticket className="w-[18px] h-[18px]" />
@@ -170,7 +170,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
         {/* 2. BU HAFTA VİZYONDA */}
         {featured.length > 0 && (
           <section className="space-y-2">
-            <span className="px-1 text-[11px] font-semibold tracking-wider uppercase text-[#8A8F9A]">
+            <span className="text-[11px] font-semibold tracking-wider uppercase text-[#8A8F9A]">
               {isEn ? "Playing this week" : "Bu hafta vizyonda"}
             </span>
             <div className="space-y-2.5">
@@ -185,7 +185,7 @@ export const GameSelectScreen: React.FC<GameSelectScreenProps> = ({
                     type="button"
                     data-testid={`vizyon-featured-${board.id}`}
                     onClick={tap(() => onSelectBoard(index, "VS_BOT"))}
-                    className="w-full p-3.5 rounded-2xl flex items-center gap-3 text-left bg-[#14171D] border border-white/10 hover:border-[#D9A441]/50 active:scale-[0.98] transition-all"
+                    className="w-full p-3.5 rounded-2xl flex items-center gap-3 text-left bg-[#14171D] border border-white/10 hover:border-[#D9A441]/50 active:scale-[0.98] transition"
                   >
                     <div className="min-w-0 flex-1">
                       <span className="block font-serif font-bold text-[15px] leading-tight text-[#F1EEE7]">

@@ -1,5 +1,6 @@
 "use client";
 
+import { formatMovieDisplayTitle } from "@/content/search/movieTitle";
 import React, { useMemo } from "react";
 import { GameBoard, ContentPoolType, Movie } from "@/core";
 import { findMatchingMovies, getSharedActors } from "@/core/engine/validator";
@@ -86,7 +87,7 @@ export const ReviewAnswersSheet: React.FC<ReviewAnswersSheetProps> = ({
     <>
       {/* Hafif arka plan tülü */}
       <div
-        className="fixed inset-0 z-30 bg-black/45 backdrop-blur-[1px] animate-in fade-in duration-150"
+        className="fixed inset-0 z-30 bg-black/45-[1px] animate-in fade-in duration-150"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -150,7 +151,7 @@ export const ReviewAnswersSheet: React.FC<ReviewAnswersSheetProps> = ({
                 >
                   <div className="flex items-start justify-between gap-1">
                     <span className="font-serif text-xs font-semibold text-[#E8E6E1] line-clamp-2 leading-tight">
-                      {movie.title}
+                      {formatMovieDisplayTitle(movie, locale)}
                     </span>
                     {movie.hasOscar && (
                       <span title="Oscar" className="shrink-0 mt-0.5">

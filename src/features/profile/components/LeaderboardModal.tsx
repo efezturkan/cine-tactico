@@ -182,7 +182,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       : activeData.filter((item) => item.league === activeLeague);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 animate-in fade-in duration-200 select-none">
       <div
         className="w-full max-w-md rounded-3xl p-4 sm:p-5 flex flex-col max-h-[92vh] overflow-hidden relative text-[#F1EEE7] tactile-card"
         style={{
@@ -234,7 +234,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                 audio.playSelect();
                 setActiveLeague(lig.id);
               }}
-              className={`px-2.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+              className={`px-2.5 py-1.5 rounded-xl whitespace-nowrap transition ${
                 activeLeague === lig.id
                   ? "tactile-btn-amber text-[#0F1115]"
                   : "tactile-btn-surface text-[#A5A8B0] hover:text-[#F1EEE7]"
@@ -251,7 +251,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             return (
               <div
                 key={item.rank}
-                className={`p-2.5 rounded-2xl flex items-center justify-between transition-all border ${
+                className={`p-2.5 rounded-2xl flex items-center justify-between transition border ${
                   item.rank === 1
                     ? "bg-gradient-to-r from-[#F5A623]/20 via-[#181B22] to-[#181B22] border-[#F5A623]/55 shadow-[0_3px_0_#090A0D]"
                     : item.rank === 2

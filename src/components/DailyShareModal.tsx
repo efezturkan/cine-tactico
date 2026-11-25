@@ -67,7 +67,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm select-none animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 select-none animate-in fade-in duration-150"
     >
       <div className="w-full max-w-sm bg-[#14171D] border border-white/10 rounded-2xl p-5 shadow-2xl flex flex-col relative overflow-hidden">
         {/* Kapat Butonu */}

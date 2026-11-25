@@ -102,7 +102,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
           onClose();
         }
       }}
-      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm select-none"
+      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/75 select-none"
       style={{
         top: vpStyle.top !== undefined ? `${vpStyle.top}px` : 0,
         height: vpStyle.height !== undefined ? `${vpStyle.height}px` : "100dvh",
@@ -210,7 +210,7 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
                     haptic.light();
                     onSelectActor(actor.primaryName);
                   }}
-                  className="flex items-center justify-between p-2.5 rounded-lg bg-[#181B22] hover:bg-[#1E222B] border border-white/10 hover:border-[#5FB3A8]/50 transition-all text-left shrink-0"
+                  className="flex items-center justify-between p-2.5 rounded-lg bg-[#181B22] hover:bg-[#1E222B] border border-white/10 hover:border-[#5FB3A8]/50 transition text-left shrink-0"
                 >
                   <span className="text-xs font-bold text-[#E8E6E1]">
                     {actor.primaryName}

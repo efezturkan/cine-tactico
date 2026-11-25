@@ -149,7 +149,7 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
           {compareButton}
         </div>
       ) : (
-        <div className="absolute inset-x-0 bottom-0 w-full max-w-lg mx-auto bg-[#10131A]/92 backdrop-blur-md border-t border-x border-white/10 rounded-t-[20px] px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col gap-2.5 shadow-2xl animate-in slide-in-from-bottom-3 duration-150">
+        <div className="absolute inset-x-0 bottom-0 w-full max-w-lg mx-auto bg-[#10131A]/92 border-t border-x border-white/10 rounded-t-[20px] px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col gap-2.5 shadow-2xl animate-in slide-in-from-bottom-3 duration-150">
           {/* Başlık + karşılaştır */}
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
@@ -175,7 +175,7 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
                     haptic.light();
                     update({ preset: pid });
                   }}
-                  className={`min-h-[44px] rounded-xl border flex items-center justify-center gap-1 px-0.5 transition-all active:scale-95 ${
+                  className={`min-h-[44px] rounded-xl border flex items-center justify-center gap-1 px-0.5 transition active:scale-95 ${
                     isSelected
                       ? "bg-[#181B22] border-[#D9A441] text-[#D9A441]"
                       : "bg-[#0B0D12]/80 border-white/10 text-[#8A8F9A]"
@@ -205,7 +205,7 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
                   audio.playSelect();
                   setTab(t.id);
                 }}
-                className={`flex-1 min-h-[34px] rounded-md text-[11px] font-bold transition-all ${
+                className={`flex-1 min-h-[34px] rounded-md text-[11px] font-bold transition ${
                   tab === t.id ? "bg-[#D9A441] text-[#0B0D12]" : "text-[#8A8F9A]"
                 }`}
               >
@@ -224,7 +224,7 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
                     audio.playSelect();
                     update({ grain: g.id });
                   }}
-                  className={`flex-1 min-h-[40px] rounded-md text-xs font-bold transition-all ${
+                  className={`flex-1 min-h-[40px] rounded-md text-xs font-bold transition ${
                     config.grain === g.id ? "bg-[#D9A441] text-[#0B0D12]" : "text-[#8A8F9A]"
                   }`}
                 >
