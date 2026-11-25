@@ -9,7 +9,7 @@ Bu doküman, CineXOX projesinin MVP kapsamını, kilitlenen sınırlarını ve n
 - **Günün Kadrası**: Takvim gününe (UTC) göre bilet formatında tekil günlük seans (NO.03). Kelime oyunu mantığı: rakip yok, oyuncu yalnızca X'tir ve 9 kareyi de oynar. Kare başına tek hak (yanlış cevap ya da 12 sn dolması kareyi kilitler), hat oyunu bitirmez, Altın Makara yok. Sonuç kare sayısına göre kademelidir: 9/9 Kusursuz Kadraj, 7-8 Başrol sensin, 5-6 Sahne senin, 3-4 Yarım çekim, 0-2 Bu çekim olmadı (eşikler `src/core/engine/dailyTier.ts`). Günde tek sonuç, art arda günler "Günlük seri" sayılır. Makara ödülü kademeyle artar ama bakiye MVP'de gizlidir (`SHOW_COIN_ECONOMY`), ekranda gösterilmez.
 - **Tek ve Ortak Oyun Motoru**: Bot (`VS_BOT`) ve Özel Gösterim (`ONLINE_ROOM`) aynı `src/core/` motorunu çalıştırır.
 - **4 Tam Ekran Sayfa**: Gişe, Vizyondakiler, Özel Gösterim, Sinefil Kartı (`BottomNav` ile).
-- **Sinematik Geri Bildirim**: Klaket geri sayımı, 12 saniye süre çubuğu, deklanşör tıkı, "Sahne senin!" zafer anı, "Bu çekim olmadı." kayıp anı, "Kör kadraj" berabere anı.
+- **Sinematik Geri Bildirim**: Klaket geri sayımı, 12 saniye süre çubuğu, deklanşör tıkı, "Sahne senin!" zafer anı, "Bu çekim olmadı." kayıp anı.
 - **Salon Işığı**: 4 hazır ayar (Kadife, Analog, Gümüş, Gece mavisi), Loşluk, Projeksiyon (Işık huzmesi), Gren.
 - **Moda Göre Otomatik Atmosfer**: Klasik (`#D9A441`), Ters Kadraj (`#5FB3A8`), Sinefil Konsept (`#9A8FD8`), Günün Kadrası (`#C9A27A`).
 - **İlk Açılış Rehberi**: "Nasıl Oynanır?" (3 adımlı sinematik kart).

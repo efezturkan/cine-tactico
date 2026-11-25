@@ -37,7 +37,7 @@ To help you experience the core game value in the shortest possible time, this g
 6. **Observe the Bot & Tactical Rules:**
    - Notice the **12-second shot clock** ticking down on each turn.
    - The AI Bot immediately calculates a counter-move and marks a cell with (**O**), attempting to block your lines.
-   - **Win condition:** First player to form a 3-in-a-row line (horizontal, vertical, or diagonal) wins immediately. If a cell becomes mathematically impossible or all 9 cells fill without a line, the engine resolves via Golden Reel / Tie-break rules.
+   - **Win condition:** First player to form a 3-in-a-row line (horizontal, vertical, or diagonal) wins immediately. If all 9 cells are resolved without a line, a one-question Golden Reel round decides the winner. There are no draws.
 
 ---
 
