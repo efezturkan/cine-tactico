@@ -66,7 +66,7 @@ Version 1.0 has **no accounts, no sign-in, and no server communication**. All da
 ### Flow 5: Language Switching (TR / EN)
 1. Open **Settings (Gear icon)** at the top right of the lobby.
 2. Next to **"Dil / Language"**, tap **TR** or **EN**.
-3. **Behavior:** All UI menus, board titles, criteria labels, bot rank titles, Settings panels, and Account Deletion dialogs switch immediately between Turkish and English.
+3. **Behavior:** All UI menus, board titles, criteria labels, bot rank titles, Settings panels, and Reset Local Data dialogs switch immediately between Turkish and English.
 
 ### Flow 6: Online Multiplayer
 Not included in version 1.0. It is disabled behind a feature flag and will be announced in a future update.

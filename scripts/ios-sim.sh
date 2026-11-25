@@ -16,7 +16,8 @@ if pgrep -f "next dev" >/dev/null 2>&1; then
 fi
 
 echo "1/5 Web build (static export)…"
-npm run build >/dev/null
+# Yayın derlemesiyle aynı: Supabase anahtarı pakete girmesin (build:ios ile aynı boş ortam değişkenleri)
+NEXT_PUBLIC_SUPABASE_URL= NEXT_PUBLIC_SUPABASE_ANON_KEY= npm run build >/dev/null
 
 echo "2/5 Capacitor sync…"
 npx cap sync ios >/dev/null
