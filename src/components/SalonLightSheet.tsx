@@ -185,7 +185,7 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
                     className="w-3.5 h-3.5 rounded-full border border-white/25 shrink-0"
                     style={{ background: `radial-gradient(circle at 35% 30%, ${preset.beam}, ${preset.bg} 85%)` }}
                   />
-                  <span className="text-[11px] font-bold leading-none truncate">
+                  <span className="text-[11px] font-bold leading-tight truncate">
                     {preset.label[locale === "en" ? "en" : "tr"]}
                   </span>
                 </button>
