@@ -104,12 +104,12 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({
 
         {/* Aksiyonlar */}
         <div className="flex flex-col gap-2 mt-1">
-          <Button variant="primary" onClick={handleNativeShare} className="w-full">
+          <Button variant="primary" onClick={handleNativeShare} className="w-full gap-2">
             <Share2 className="w-4 h-4" />
             <span>{card.share}</span>
           </Button>
 
-          <Button variant="secondary" onClick={handleCopyScore} className="w-full">
+          <Button variant="secondary" onClick={handleCopyScore} className="w-full gap-2">
             {copiedText ? (
               <>
                 <Check className="w-4 h-4 text-[#D9A441]" />
