@@ -250,96 +250,8 @@ def label_of(resolved, qid):
     return row.get("tr") or row.get("en")
 
 
-def main():
-    print("film listesi", flush=True)
-    films = qid_list(
-        """
-        SELECT ?item ?s WHERE {
-          ?item wdt:P31 wd:Q11424 ; wikibase:sitelinks ?s .
-          FILTER(?s >= 35)
-        }
-        ORDER BY DESC(?s)
-        LIMIT 720
-        """
-    )
-    print("dizi listesi", flush=True)
-    series = qid_list(
-        """
-        SELECT ?item ?s WHERE {
-          VALUES ?type { wd:Q5398426 wd:Q1259759 }
-          ?item wdt:P31 ?type ; wikibase:sitelinks ?s .
-          FILTER(?s >= 20)
-        }
-        ORDER BY DESC(?s)
-        LIMIT 260
-        """
-    )
-    known_films, known_series = existing_types()
-    known = known_films | known_series
-    film_ids = {qid for qid, _ in films}
-    series_ids = {qid for qid, _ in series}
-    rank = {qid: score for qid, score in films + series}
-    fetch_ids = []
-    seen = set()
-    for qid, _ in films + series:
-        if qid not in seen:
-            seen.add(qid)
-            fetch_ids.append(qid)
-    for qid in known:
-        if qid not in seen:
-            seen.add(qid)
-            fetch_ids.append(qid)
-    print(f"çekilecek {len(fetch_ids)}", flush=True)
-
-    cache_path = Path("/tmp/cinexox-extracted.json")
-    extracted = {}
-    if cache_path.exists():
-        extracted = json.loads(cache_path.read_text(encoding="utf-8"))
-        print(f"önbellek {len(extracted)}", flush=True)
-    pending = [qid for qid in fetch_ids if qid not in extracted]
-    done = len(fetch_ids) - len(pending)
-    for entities in entity_batches(pending):
-        for eid, entity in entities.items():
-            if entity.get("missing"):
-                continue
-            labels = entity.get("labels", {})
-            claims = entity.get("claims", {})
-            extracted[eid] = {
-                "en": (labels.get("en") or {}).get("value"),
-                "tr": (labels.get("tr") or {}).get("value"),
-                "years": claim_times(claims, "P577") or claim_times(claims, "P580"),
-                "originals": monolingual(claims, "P1476"),
-                "countries": [qid for qid, _ in claim_ids(claims, "P495")],
-                "languages": [qid for qid, _ in claim_ids(claims, "P364")],
-                "genres": [qid for qid, _ in claim_ids(claims, "P136")],
-                "directors": [qid for qid, _ in claim_ids(claims, "P57")],
-                "writers": [qid for qid, _ in claim_ids(claims, "P58")][:5],
-                "actors": [qid for qid, _ in claim_ids(claims, "P161")][:12],
-                "awards": [
-                    ("WINNER", qid, qualifier_year(quals))
-                    for qid, quals in claim_ids(claims, "P166")
-                ]
-                + [
-                    ("NOMINEE", qid, qualifier_year(quals))
-                    for qid, quals in claim_ids(claims, "P1411")
-                ],
-            }
-        done += 8
-        cache_path.write_text(json.dumps(extracted), encoding="utf-8")
-        print(f"  yapım {min(done, len(fetch_ids))}/{len(fetch_ids)}", flush=True)
-
-    ref_ids = []
-    for row in extracted.values():
-        ref_ids.extend(row["countries"])
-        ref_ids.extend(row["languages"])
-        ref_ids.extend(row["genres"])
-        ref_ids.extend(row["directors"])
-        ref_ids.extend(row["writers"])
-        ref_ids.extend(row["actors"])
-        ref_ids.extend(award[1] for award in row["awards"])
-    print(f"referans {len(set(ref_ids))}", flush=True)
-    resolved = resolve(ref_ids, ["P297", "P218", "P569"])
-
+def build_productions(extracted, resolved, known_films, known_series, known, series_ids, film_ids, rank):
+    """Çıkarılmış Wikidata satırlarından üretim kayıtlarını kurar (tek yer: ana betik ve güncel-film betiği kullanır)."""
     productions = []
     country_labels = {}
     language_labels = {}
@@ -475,6 +387,103 @@ def main():
                 "known": qid in known,
             }
         )
+
+    return productions, country_labels, language_labels
+
+
+def main():
+    print("film listesi", flush=True)
+    films = qid_list(
+        """
+        SELECT ?item ?s WHERE {
+          ?item wdt:P31 wd:Q11424 ; wikibase:sitelinks ?s .
+          FILTER(?s >= 35)
+        }
+        ORDER BY DESC(?s)
+        LIMIT 720
+        """
+    )
+    print("dizi listesi", flush=True)
+    series = qid_list(
+        """
+        SELECT ?item ?s WHERE {
+          VALUES ?type { wd:Q5398426 wd:Q1259759 }
+          ?item wdt:P31 ?type ; wikibase:sitelinks ?s .
+          FILTER(?s >= 20)
+        }
+        ORDER BY DESC(?s)
+        LIMIT 260
+        """
+    )
+    known_films, known_series = existing_types()
+    known = known_films | known_series
+    film_ids = {qid for qid, _ in films}
+    series_ids = {qid for qid, _ in series}
+    rank = {qid: score for qid, score in films + series}
+    fetch_ids = []
+    seen = set()
+    for qid, _ in films + series:
+        if qid not in seen:
+            seen.add(qid)
+            fetch_ids.append(qid)
+    for qid in known:
+        if qid not in seen:
+            seen.add(qid)
+            fetch_ids.append(qid)
+    print(f"çekilecek {len(fetch_ids)}", flush=True)
+
+    cache_path = Path("/tmp/cinexox-extracted.json")
+    extracted = {}
+    if cache_path.exists():
+        extracted = json.loads(cache_path.read_text(encoding="utf-8"))
+        print(f"önbellek {len(extracted)}", flush=True)
+    pending = [qid for qid in fetch_ids if qid not in extracted]
+    done = len(fetch_ids) - len(pending)
+    for entities in entity_batches(pending):
+        for eid, entity in entities.items():
+            if entity.get("missing"):
+                continue
+            labels = entity.get("labels", {})
+            claims = entity.get("claims", {})
+            extracted[eid] = {
+                "en": (labels.get("en") or {}).get("value"),
+                "tr": (labels.get("tr") or {}).get("value"),
+                "years": claim_times(claims, "P577") or claim_times(claims, "P580"),
+                "originals": monolingual(claims, "P1476"),
+                "countries": [qid for qid, _ in claim_ids(claims, "P495")],
+                "languages": [qid for qid, _ in claim_ids(claims, "P364")],
+                "genres": [qid for qid, _ in claim_ids(claims, "P136")],
+                "directors": [qid for qid, _ in claim_ids(claims, "P57")],
+                "writers": [qid for qid, _ in claim_ids(claims, "P58")][:5],
+                "actors": [qid for qid, _ in claim_ids(claims, "P161")][:12],
+                "awards": [
+                    ("WINNER", qid, qualifier_year(quals))
+                    for qid, quals in claim_ids(claims, "P166")
+                ]
+                + [
+                    ("NOMINEE", qid, qualifier_year(quals))
+                    for qid, quals in claim_ids(claims, "P1411")
+                ],
+            }
+        done += 8
+        cache_path.write_text(json.dumps(extracted), encoding="utf-8")
+        print(f"  yapım {min(done, len(fetch_ids))}/{len(fetch_ids)}", flush=True)
+
+    ref_ids = []
+    for row in extracted.values():
+        ref_ids.extend(row["countries"])
+        ref_ids.extend(row["languages"])
+        ref_ids.extend(row["genres"])
+        ref_ids.extend(row["directors"])
+        ref_ids.extend(row["writers"])
+        ref_ids.extend(row["actors"])
+        ref_ids.extend(award[1] for award in row["awards"])
+    print(f"referans {len(set(ref_ids))}", flush=True)
+    resolved = resolve(ref_ids, ["P297", "P218", "P569"])
+
+    productions, country_labels, language_labels = build_productions(
+        extracted, resolved, known_films, known_series, known, series_ids, film_ids, rank
+    )
 
     productions.sort(key=lambda item: item["sitelinks"], reverse=True)
     chosen = []

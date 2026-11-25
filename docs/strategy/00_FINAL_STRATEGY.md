@@ -16,9 +16,9 @@ Kaynaklar: iki paralel oturum raporu, bu oturumun marka/App Store taraması, kod
 ## 2. Sıra
 **1.0 (gönderim):** donmuş kod + marka kararı + mağaza paketi. Gizlilik etiketi "veri toplanmıyor" doğru kalsın diye 1.0'a analitik koyma.
 
-**1.0'dan hemen önce (3-5 gün, tek sefer içerik yaması, senin onayınla):**
-1. Katalog 2022-2026: şu an 721 yapımın yalnızca 10'u 2023 ve sonrası. Bulunmayanlar: Anora, Past Lives, Poor Things, Challengers, The Substance, Anatomy of a Fall. Bir sinefil bunları yazıp "bulunamadı" görürse siler (Sportrix'in ölüm nedeni). Doğrulama kapılı CC0 Wikidata hattıyla ~150-250 popüler yapım.
-2. Prosedürel Ters Kadraj: şu an 2 hazır tahta var (Konsept: 5). İkinci maçta tekrar eder.
+**1.0'dan hemen önce (YAPILDI, 25 Kasım):**
+1. Katalog 2022-2026: 721 → 1.040 yapım, 2023 ve sonrası 10 → 258 (Past Lives, Poor Things, The Substance, Challengers, Anatomy of a Fall artık var; Anora Wikidata'da eksik veriyle elendi). Betik: `scripts/fetch_wikidata_recent.py` (yalnızca ekler, yeni kayıt başına yönetmen, tür ve ≥3 oyuncu şartı). Eski not: 721 yapımın yalnızca 10'u 2023 ve sonrasıydı. Bulunmayanlar: Anora, Past Lives, Poor Things, Challengers, The Substance, Anatomy of a Fall. Bir sinefil bunları yazıp "bulunamadı" görürse siler (Sportrix'in ölüm nedeni). Doğrulama kapılı CC0 Wikidata hattıyla ~150-250 popüler yapım.
+2. Prosedürel Ters Kadraj: HÂLÂ YAPILMADI (2 hazır tahta, Konsept 5). 1.0.1 için ilk iş.
 
 **1.1 (yayın sonrası 2-3 hafta):** (a) Aynı tahtayı arkadaşa gönderme linki (`?c=seed`, sunucusuz; web'de anında oynanır), (b) yanlış cevapta hangi eksenin tutmadığını göster (✓/✕), (c) hızlı rövanş (kısa klaket), (d) çerezsiz analitik + çökme izleme (gizlilik etiketiyle birlikte güncellenir).
 
@@ -38,3 +38,6 @@ D1 ≥ %35, D7 ≥ %12, oturum başına ≥ 2,5 maç, çökmesiz oturum ≥ %99,
 - **Rekabet:** CinemaXOX'u izle; 1.1 paylaşım döngüsü onun canlı düello avantajına karşı cevabımız.
 - **Telif:** 0 poster, olgusal veri; metadata'da Oscar/IMDb/oyuncu adı yok.
 - **Eksik gelir:** 1.0 gelirsiz; kabul edilmiş bilinçli seçim.
+
+## 6. Operasyon kuralı: katalog değişince günlük tahta değişir
+Günlük tahta katalogdan türetilir (`daily-board-golden.test.ts` bunu kanıtlar). Yayından sonra katalog güncellenirse eski ve yeni sürümdeki oyuncular aynı gün farklı tahta görür ("herkese aynı" vaadi bozulur). Çözüm planı (1.0.1): günlük tahtayı sabit bir katalog anlık görüntüsüne (`DAILY_POOL_VERSION`) bağla, anlık görüntü yalnızca ileri tarihlerde değişsin. 1.0 gönderilmeden önce katalog dondurulmalı.

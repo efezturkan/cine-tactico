@@ -15,8 +15,8 @@ const sig = (k: string) => {
 // oyuncuların tahtası farklılaşır ve paylaşılan sonuçlar karşılaştırılamaz.
 const GOLDEN: Record<string, string> = {
   "2026-11-05": "Robert Zemeckis|Steven Spielberg|Tom Cruise#90'lar|Bilim Kurgu|Dram",
-  "2026-11-24": "Steven Spielberg|Brad Pitt|Natalie Portman#Macera|Aksiyon|90'lar",
-  "2026-12-31": "Steven Spielberg|Harrison Ford|Robert Zemeckis#Bilim Kurgu|80'ler ve Öncesi|Oscar Kazanmadı",
+  "2026-11-24": "David Fincher|Robert De Niro|Jeff Goldblum#Gerilim|Oscar Kazandı|90'lar",
+  "2026-12-31": "Steven Spielberg|Sigourney Weaver|Robert Zemeckis#Bilim Kurgu|80'ler ve Öncesi|Oscar Kazanmadı",
 };
 for (const [day, expected] of Object.entries(GOLDEN)) {
   assert(sig(day) === expected, `${day} tahtası sabit (değiştiyse katalog/üretici değişti: bilerek ise altın değeri güncelle)`);

@@ -129,6 +129,12 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 
 Bkz. `docs/strategy/00_FINAL_STRATEGY.md` (konumlandırma, sıra, kapılar). Özet: 1.0 dondurulmuş kodla gider; tek istisna önerisi, göndermeden önce 3-5 günlük içerik yaması (2022-2026 film kataloğu + prosedürel Ters Kadraj). Marka sorgusu kapı.
 
+## 4h. İçerik yaması (25 Kasım)
+
+- Katalog 721 → 1.040 yapım; 2023+ 10 → 258. Günlük tahta 400 gün yine çözülebilir (min. 3 cevap/hücre). Günlük altın tahta değerleri yenilendi. Bundle boyutu ~4,8 MB.
+- **Kural:** göndermeden önce katalog dondurulur; yayın sonrası değişiklik günlük tahtayı sürümler arası ayırır (bkz. strateji Bölüm 6).
+- Yapılmadı: prosedürel Ters Kadraj, Anora (Wikidata verisi eksik).
+
 ## 5. Pil, boyut, modlar
 
 - Paket: `out/` yaklaşık 4,8 MB; zamanlayıcılar yalnızca oyunda ve modallarda; arka planda sayaç artık durur.
