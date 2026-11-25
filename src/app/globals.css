@@ -30,10 +30,9 @@
   --rec-red: #E5484D;
 }
 
-/* Salon Işığı: maç sırasında okunabilirlik için etkisi kısılır */
-html[data-view="GAME"] {
-  --salon-ctx-dim: 0.55;
-  --salon-ctx-grain: 0.5;
+/* Salon Işığı: maç sırasında hiç çizilmez (okunabilirlik + iOS WebView'da dört tam ekran katman tasarrufu) */
+html[data-view="GAME"] .salon-atmosphere {
+  display: none;
 }
 
 html {

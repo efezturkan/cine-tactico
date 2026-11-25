@@ -10,8 +10,8 @@ const GRAIN_SVG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='h
  * Salon Işığı'nın tek uygulama noktası. Uygulamanın en üstünde bir kez monte edilir;
  * Gişe, Vizyondakiler, Sinefil Kartı ve oyun ekranı aynı ışığı paylaşır.
  * Katmanlar modal'ların (z-50) altında, içerik ve alt barın (z-40) üstündedir.
- * Maç sırasında (html[data-view="GAME"]) loşluk ve gren kısılır: süre baskısı altında okunabilirlik
- * hiçbir ayarla bozulamaz. Blend modu kullanılmaz (iOS WebView'da pahalı).
+ * Maç sırasında (html[data-view="GAME"]) katman hiç çizilmez (globals.css): süre baskısı altında okunabilirlik
+ * hiçbir ayarla bozulamaz ve dört tam ekran katman GPU'da boşuna birleştirilmez. Blend modu kullanılmaz (iOS WebView'da pahalı).
  */
 export const SalonAtmosphere: React.FC = () => {
   useEffect(() => {
@@ -19,7 +19,7 @@ export const SalonAtmosphere: React.FC = () => {
   }, []);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[45] overflow-hidden">
+    <div aria-hidden="true" className="salon-atmosphere pointer-events-none fixed inset-0 z-[45] overflow-hidden">
       {/* 1. Salonun ışık rengi */}
       <div className="absolute inset-0" style={{ background: "var(--salon-tint, transparent)" }} />
 

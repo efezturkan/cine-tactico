@@ -57,13 +57,12 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({ isOpen
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/65 select-none animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] bg-black/70 select-none animate-in fade-in duration-150"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full max-w-lg mx-auto bg-[#14171D] border-t border-x border-white/10 rounded-t-[24px] px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl animate-in slide-in-from-bottom-5 duration-200">
-        <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3" />
+      <div className="w-full max-w-sm max-h-full overflow-y-auto bg-[#14171D] border border-white/10 rounded-[24px] px-4 pt-5 pb-4 shadow-2xl animate-in zoom-in-95 fade-in duration-200">
         <h2 className="font-serif text-xl font-bold text-[#F1EEE7] text-center">{dict.opponent.title}</h2>
         <p className="text-xs text-[#8A8F9A] text-center mt-0.5 mb-3">{dict.opponent.sub}</p>
 
