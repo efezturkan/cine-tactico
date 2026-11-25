@@ -118,6 +118,13 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 - **Alan adı alınmadı:** site şu an `cine-tactico.vercel.app`. Alınca `brand.ts` `SITE_URL`, `public/robots.txt`, `sitemap.xml`, `llms.txt` güncellenecek (privacy/support URL'leri de yeni alan adına taşınmalı).
 - **Hâlâ senin:** Team seçimi, Archive, App Store Connect, gerçek iPhone testi, 9/9 kartı gerçek oyunla da bir kez görmek.
 
+## 4f. Paralel oturumun raporu (devralındı, 25 Kasım)
+
+- **Alınan (testli, commit'li):** İngilizce bot adları ve "Cinephile #" varsayılan adı, spoiler'sız düello paylaşım kartı (`buildDuelSharePayload`), İngilizce arama sonucunda okunabilir film adı ("Parasite", "Oldboy"), `docs/strategy/`.
+- **Çelişki, senin kararın:** Arama sonucunda özgün ad davranışı brief'te "dokunulmayacak" idi; paralel oturum İngilizce arayüzde kanonik adı gösterecek şekilde değiştirdi (`formatMovieDisplayTitle`). Test yeşil, ama bu karar kuralı değiştiriyor. Geri almak istersen `src/content/search/movieTitle.ts` ve `MovieSearchModal.tsx` tek commit içinde.
+- **Başlanmadı (yeni özellik, kod dondurma ile çelişir):** sunucu `submit_move` yeniden yazımı, 20-24 kartlık "Contact Sheet" modu, prosedürel Ters Kadraj, Wikidata 2023-2026 betiği, Screening Room/Ghost-Challenge.
+- **Rapordaki eksik:** en yakın rakip CinemaXOX (13 Kasım 2026) analizde yoktu.
+
 ## 5. Pil, boyut, modlar
 
 - Paket: `out/` yaklaşık 4,8 MB; zamanlayıcılar yalnızca oyunda ve modallarda; arka planda sayaç artık durur.
