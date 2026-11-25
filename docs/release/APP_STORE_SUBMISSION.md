@@ -85,7 +85,7 @@ Sinefilsen, buradasın.
 - **Name:** `Crosscut: Movie Trivia Game` (27)
 - **Subtitle:** `Daily movie duel. No ads.` (25)
 - **Promotional text:** `Every square is the crossing of two clues. Find the film, build the line, beat the bots. A new Daily Reel arrives every day.`
-- **Keywords (100 bytes):** `film,quiz,cinema,daily,guess,grid,tic tac toe,movies,puzzle,cinephile,offline` (no "Oscar", studio, actor or competitor names)
+- **Keywords (100 bytes):** `film,quiz,cinema,guess,grid,puzzle,versus,bot,offline,cinephile,actor,director,tic tac toe,streak` (97 bytes; adda ve alt başlıkta geçen movie, trivia, game, daily, duel, ads tekrarlanmaz; "Oscar", stüdyo, oyuncu adı, rakip adı yok)
 - **Description:**
 
 ```
