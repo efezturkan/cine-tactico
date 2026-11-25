@@ -125,6 +125,10 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 - **Başlanmadı (yeni özellik, kod dondurma ile çelişir):** sunucu `submit_move` yeniden yazımı, 20-24 kartlık "Contact Sheet" modu, prosedürel Ters Kadraj, Wikidata 2023-2026 betiği, Screening Room/Ghost-Challenge.
 - **Rapordaki eksik:** en yakın rakip CinemaXOX (13 Kasım 2026) analizde yoktu.
 
+## 4g. Nihai strateji
+
+Bkz. `docs/strategy/00_FINAL_STRATEGY.md` (konumlandırma, sıra, kapılar). Özet: 1.0 dondurulmuş kodla gider; tek istisna önerisi, göndermeden önce 3-5 günlük içerik yaması (2022-2026 film kataloğu + prosedürel Ters Kadraj). Marka sorgusu kapı.
+
 ## 5. Pil, boyut, modlar
 
 - Paket: `out/` yaklaşık 4,8 MB; zamanlayıcılar yalnızca oyunda ve modallarda; arka planda sayaç artık durur.
