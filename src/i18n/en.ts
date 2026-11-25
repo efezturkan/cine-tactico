@@ -193,8 +193,8 @@ export const en: TranslationDictionary = {
   },
   dailyCard: {
     caption: "DAILY REEL · NO.{n}",
-    shareTitle: "CineXOX Daily Reel NO.{n}",
-    shareHeader: "CineXOX · Daily Reel NO.{n}",
+    shareTitle: "Crosscut Daily Reel NO.{n}",
+    shareHeader: "Crosscut · Daily Reel NO.{n}",
     share: "Share",
     copy: "Copy to clipboard",
     copied: "Copied",

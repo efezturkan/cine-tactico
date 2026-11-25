@@ -1,7 +1,7 @@
-# App Review Notes for Cine-XOX
+# App Review Notes for Crosscut
 
-**App Name:** Cine-XOX  
-**Bundle ID:** `com.cinetactico.game`  
+**App Name:** Crosscut  
+**Bundle ID:** `com.crosscutgame.app`  
 **Version:** 1.0.0 (Build 1)  
 **Platform:** iPhone (iOS 15.0+), portrait  
 **Primary Category:** Games (Subcategories: Trivia / Strategy)  
@@ -11,9 +11,9 @@
 
 ### Dear Apple App Review Team,
 
-Thank you for reviewing **Cine-XOX**!
+Thank you for reviewing **Crosscut**!
 
-Cine-XOX is an original cinematic tactical board game combining 3×3 intersection film trivia with Tic-Tac-Toe strategic placement, dynamic 12-second shot clocks, and fully offline autonomous AI gameplay.
+Crosscut is an original cinematic tactical board game combining 3×3 intersection film trivia with Tic-Tac-Toe strategic placement, dynamic 12-second shot clocks, and fully offline autonomous AI gameplay.
 
 To help you experience the core game value in the shortest possible time, this guide is divided into:
 - **Part 1:** Quick Core Loop (Playable in under 1 minute, no sign-up required)
@@ -25,7 +25,7 @@ To help you experience the core game value in the shortest possible time, this g
 ## PART 1: QUICK CORE VALUE EXPERIENCE (< 60 SECONDS)
 
 ### Instant Play vs Autonomous AI Bot (No Sign-Up Required)
-1. Launch **Cine-XOX**.
+1. Launch **Crosscut**.
 2. The app operates immediately with a local/anonymous guest session. **No registration, email address, phone number, or password is required to play.**
 3. On the home lobby (**"Gişe"**), tap the primary gold button: **"DÜELLOYA GİR" / "ENTER DUEL"** (or open the **"Vizyondakiler" / "Now Showing"** tab and pick a mode).
 4. A **"Rakibini Seç" / "Choose Your Opponent"** sheet lists three offline AI opponents (Easy, Medium, Hard) with rating and play style. Tap any one; the match starts after a short countdown. These are on-device bots, not other users.
@@ -45,7 +45,7 @@ To help you experience the core game value in the shortest possible time, this g
 
 ### Flow 1: Offline / Airplane Mode Verification (Guideline 4.2)
 1. Turn on **Airplane Mode** on your iOS test device (disable both Wi-Fi and Cellular data).
-2. Launch or return to Cine-XOX.
+2. Launch or return to Crosscut.
 3. Start a game against the AI Bot via **"DÜELLOYA GİR" / "ENTER DUEL"** or play **"Günün Kadrası" / "Daily Reel"**.
 4. **Behavior:** The entire curated movie/actor verification graph, daily board generator, and AI bot engine are bundled locally and run 100% client-side without internet access.
 
@@ -75,7 +75,7 @@ Not included in version 1.0. It is disabled behind a feature flag and will be an
 
 ## PART 3: ASSET & INTELLECTUAL PROPERTY SUMMARY (GUIDELINE 5.2)
 
-- **Zero Copyrighted Posters:** Cine-XOX bundles **0 movie posters** or studio promotional stills, and connects to **0 external image CDNs** (no IMDb/TMDb poster URLs). All movies are rendered using typographic cards and vector icons.
+- **Zero Copyrighted Posters:** Crosscut bundles **0 movie posters** or studio promotional stills, and connects to **0 external image CDNs** (no IMDb/TMDb poster URLs). All movies are rendered using typographic cards and vector icons.
 - **11 Open-Licensed Portraits:** All 11 actor/director portraits in `/assets/portraits/` are verified open-licensed works from **Wikimedia Commons** (`CC BY 2.0`, `CC BY-SA 2.0`, `CC BY-SA 3.0`, `CC BY 4.0`, `CC BY-SA 4.0`), attributed both in `public/assets/portraits/pilot_manifest.json` and in-app under **Settings → Licenses & Attributions**.
 - **Factual Trivia Metadata:** Film titles, release years, directors, and cast intersections are factual historical metadata cross-referenced with public Wikidata Q-IDs.
 

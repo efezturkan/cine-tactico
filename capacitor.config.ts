@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.cinetactico.game",
-  appName: "Cine-XOX",
+  appId: "com.crosscutgame.app",
+  appName: "Crosscut",
   webDir: "out",
   // İlk karede beyaz parlama olmasın: WebView ve pencere koyu zeminle açılır
   backgroundColor: "#0B0D12",

@@ -1,7 +1,7 @@
 {
-  "name": "CineXOX — Sinema Taktik Düellosu",
-  "short_name": "CineXOX",
-  "description": "Film ve dizi kültürünün günlük 3x3 XOX oyunu.",
+  "name": "Crosscut: Movie Trivia Game",
+  "short_name": "Crosscut",
+  "description": "Free offline movie trivia: name the film where two clues cross.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

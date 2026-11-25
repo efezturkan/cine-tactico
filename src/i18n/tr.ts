@@ -193,8 +193,8 @@ export const tr: TranslationDictionary = {
   },
   dailyCard: {
     caption: "GÜNÜN KADRASI · NO.{n}",
-    shareTitle: "CineXOX Günün Kadrası NO.{n}",
-    shareHeader: "CineXOX · Günün Kadrası NO.{n}",
+    shareTitle: "Crosscut Günün Kadrası NO.{n}",
+    shareHeader: "Crosscut · Günün Kadrası NO.{n}",
     share: "Paylaş",
     copy: "Panoya Kopyala",
     copied: "Kopyalandı",

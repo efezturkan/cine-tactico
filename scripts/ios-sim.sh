@@ -5,7 +5,7 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
-BUNDLE_ID="com.cinetactico.game"
+BUNDLE_ID="com.crosscutgame.app"
 SIM_NAME="${SIM_NAME:-iPhone 17}"
 DERIVED="ios/App/build/sim"
 

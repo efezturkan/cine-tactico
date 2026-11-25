@@ -1,4 +1,4 @@
-# Cine-XOX — App Store Gönderim Paketi (v1.0)
+# Crosscut — App Store Gönderim Paketi (v1.0)
 
 Bu belge, uygulamayı Apple'a gönderirken **kopyalayıp yapıştıracağın her şeyi** ve **senin onaylaman gereken adımları** içerir. Kod tarafı hazırdır; kalanlar Apple hesabına bağlı işlerdir.
 
@@ -11,7 +11,7 @@ Bu belge, uygulamayı Apple'a gönderirken **kopyalayıp yapıştıracağın her
 | 1 | **Apple Developer Program** üyeliği (99 USD/yıl). Bireysel hesap yeterli. | developer.apple.com/programs | Onay 1-2 gün sürebilir |
 | 2 | App Store Connect'te **Sözleşmeler**'i (Paid/Free Apps) kabul et | appstoreconnect.apple.com → Business | 5 dk |
 | 3 | Xcode → `ios/App/App.xcodeproj` → target **App** → *Signing & Capabilities* → **Team** seç ("Automatically manage signing" açık kalsın) | Xcode | 2 dk |
-| 4 | App Store Connect → *Apps → +* → **New App**: iOS, ad `Cine-XOX`, dil Türkçe, Bundle ID `com.cinetactico.game` (Xcode ilk imzada kaydeder), SKU `cinexox-ios-1` | App Store Connect | 5 dk |
+| 4 | App Store Connect → *Apps → +* → **New App**: iOS, ad `Crosscut: Movie Trivia Game`, dil İngilizce (ABD), ikinci dil Türkçe, Bundle ID `com.crosscutgame.app` (Xcode ilk imzada kaydeder), SKU `crosscut-ios-1` | App Store Connect | 5 dk |
 | 5 | Aşağıdaki **metinleri** yapıştır (bölüm C) | App Store Connect | 15 dk |
 | 6 | **Ekran görüntülerini** yükle (`docs/release/screenshots/`) | App Store Connect | 5 dk |
 | 7 | Terminalde `npm run build:ios` (env’siz derleme + sync), sonra Xcode: cihaz olarak **Any iOS Device (arm64)** → *Product → Archive* → *Distribute App → App Store Connect → Upload* | Xcode | 10 dk |
@@ -24,7 +24,7 @@ Bu belge, uygulamayı Apple'a gönderirken **kopyalayıp yapıştıracağın her
 
 ## B. Kod tarafında hazır olanlar (doğrulandı)
 
-- Bundle ID `com.cinetactico.game`, sürüm `1.0`, build `1`, **yalnızca iPhone**, **dikey**, iOS 15.0+, `arm64`.
+- Bundle ID `com.crosscutgame.app`, sürüm `1.0`, build `1`, **yalnızca iPhone**, **dikey**, iOS 15.0+, `arm64`.
 - **Uygulama ikonu**: 1024×1024, **alfa kanalı yok** (App Store şartı), marka diline uygun.
 - **Gizlilik manifesti** (`PrivacyInfo.xcprivacy`): izleme yok, toplanan veri yok.
 - **Export compliance**: `ITSAppUsesNonExemptEncryption = false`.
@@ -47,16 +47,18 @@ Bu belge, uygulamayı Apple'a gönderirken **kopyalayıp yapıştıracağın her
 - **Fiyat:** Ücretsiz · **Uygulama içi satın alma:** yok · **Reklam:** yok
 
 ### Türkçe (birincil dil)
-- **Ad (30):** `Cine-XOX`
-- **Alt başlık (30):** `Sinema bilgisiyle XOX düellosu`
+- **Ad (30):** `Crosscut: Film Bilgi Yarışması` (30)
+- **Alt başlık (30):** `Günlük sinema oyunu` (19)
 - **Tanıtım metni (170):** `Her kare iki ipucunun kesişimi. Doğru filmi bul, üçlü hattı kur, botları yen. Günün Kadrası her gün yeni bir tahta getirir.`
-- **Anahtar kelimeler (100):** `film,sinema,xox,bilgi yarışması,quiz,oyuncu,yönetmen,bulmaca,strateji,sinefil,trivia,dizi`
+- **Anahtar kelimeler (100 bayt, addaki ve alt başlıktaki kelimeleri tekrarlama):** `film,sinema,quiz,bilgi,oyun,tahmin,günlük,yönetmen,oyuncu,bulmaca,çevrimdışı,xox` (bayt sayısını App Store Connect doğrular)
 - **Açıklama:**
 
 ```
+Crosscut, her karesi iki film ipucunun kesişimi olan ücretsiz bir film bilgi yarışması oyunudur (iOS).
+
 Filmleri bilmek yetmez. Rakibini de yenmelisin.
 
-Cine-XOX, sinema bilgisini taktikle birleştiren bir XOX düellosudur. Tahtadaki her kare iki ipucunun kesişimidir: bir yönetmen ile bir tür, bir oyuncu ile bir dönem... Kesişime uyan filmi bul, kareyi mühürle, üçlü hattı kur.
+Crosscut, sinema bilgisini taktikle birleştiren bir XOX düellosudur. Tahtadaki her kare iki ipucunun kesişimidir: bir yönetmen ile bir tür, bir oyuncu ile bir dönem... Kesişime uyan filmi bul, kareyi mühürle, üçlü hattı kur.
 
 NASIL OYNANIR
 • 3×3 tahtada sırayla oynarsın. Her hamle için 12 saniyen var.
@@ -80,16 +82,18 @@ Sinefilsen, buradasın.
 ```
 
 ### English (ikinci dil)
-- **Name:** `Cine-XOX`
-- **Subtitle:** `Tic-tac-toe for movie buffs`
+- **Name:** `Crosscut: Movie Trivia Game` (27)
+- **Subtitle:** `Daily film quiz vs bots` (23)
 - **Promotional text:** `Every square is the crossing of two clues. Find the film, build the line, beat the bots. A new Daily Reel arrives every day.`
-- **Keywords:** `movie,film,cinema,trivia,quiz,tic tac toe,actor,director,puzzle,strategy,cinephile,xo`
+- **Keywords (100 bytes):** `film,quiz,cinema,daily,guess,grid,tic tac toe,movies,puzzle,cinephile,offline` (no "Oscar", studio, actor or competitor names)
 - **Description:**
 
 ```
+Crosscut is a free iOS movie trivia game where each square of a 3x3 grid is the crossing of two film clues.
+
 Knowing movies isn't enough. You have to beat your opponent too.
 
-Cine-XOX is tic-tac-toe played with cinema knowledge. Every square is the crossing of two clues: a director and a genre, an actor and a decade... Find the film that fits, seal the square, build the line.
+Crosscut is tic-tac-toe played with cinema knowledge. Every square is the crossing of two clues: a director and a genre, an actor and a decade... Find the film that fits, seal the square, build the line.
 
 HOW IT PLAYS
 • Take turns on a 3×3 board. You get 12 seconds per move.
@@ -174,3 +178,14 @@ Türkçe mağaza dili için `tr/`, İngilizce için `en/` klasörünü kullan. E
 
 ## G. Sürüm 1.1 için park edilenler
 Çevrimiçi Özel Gösterim (sunucuda cevap doğrulaması gerekir), iPad desteği, daha fazla elle seçilmiş Sinefil Konsept tahtası, bot başına detaylı istatistikler.
+
+
+---
+
+## H. Marka ve hukuki kontrol (Crosscut)
+
+- **Varlık cümlesi** (mağaza açıklamasının ilk satırı, site, sosyal profiller, şemada AYNEN): "Crosscut is a free iOS movie trivia game where each square of a 3x3 grid is the crossing of two film clues." Kod: `src/config/brand.ts`.
+- **Açıklamaya eklenecek satır:** "Not affiliated with or endorsed by any studio, film database or the people named in the puzzles." (Uygulamada Ayarlar → Hakkında'da zaten var.)
+- **Metadata'da yasak:** "Oscar", stüdyo/oyuncu adları, IMDb/Letterboxd, rakip uygulama adları, "best/#1", "Android" (Apple 2.3.7 ve 5.2).
+- **Marka sorgusu (yapılmadı, senin yapacağın):** USPTO https://tmsearch.uspto.gov (kelime: crosscut, cross cut; sınıflar 9, 28, 41; canlı + ölü), TMview https://www.tmdn.org/tmview (EM, TR, US, WIPO), TÜRKPATENT https://opts.turkpatent.gov.tr/trademark, WIPO https://branddb.wipo.int. **Bilinen bulgu:** ABD'de CROSSCUT (Reg. 3368825, Sınıf 41, Cascade Public Media, eski Seattle haber sitesi) açık web kaynaklarında "canlı" görünüyor, hizmet tanımı doğrulanmadı. Sınıf 9'da ilgisiz bir sinyal işleme markası var.
+- **Patent:** açık web taramasında bu oyun mekaniğini kapsayan patent bulunmadı (yüzeysel tarama, serbest işletme görüşü değildir). Google Patents'ta elle: "tic-tac-toe" trivia category intersection; CPC A63F 3/06.

@@ -11,9 +11,10 @@ import { summarizeDailyShare } from "@/utils/dailyShare";
 import { shareText, copyText } from "@/utils/share";
 import { useTranslation } from "@/i18n";
 import { FLAGS } from "@/config/flags";
+import { SITE_URL } from "@/config/brand";
 
 // Uygulama içinde origin "capacitor://localhost" olur; paylaşılan bağlantı herkese açık adres olmalı.
-const PUBLIC_URL = "https://cine-tactico.vercel.app";
+const PUBLIC_URL = SITE_URL;
 const publicOrigin = () =>
   typeof window !== "undefined" && /^https?:\/\//.test(window.location.origin) && !/localhost|127\.0\.0\.1/.test(window.location.origin)
     ? window.location.origin

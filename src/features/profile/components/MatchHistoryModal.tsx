@@ -58,9 +58,9 @@ export const MatchHistoryModal: React.FC<MatchHistoryModalProps> = ({
       : m.outcome === "DRAW"
       ? "Kör kadraj"
       : "Bu çekim olmadı";
-    const shareText = `${isEn ? "CineXOX Duel" : "CineXOX Düellosu"}: ${dTitle} · ${isEn ? "Result" : "Sonuç"}: ${outcomeText}`;
+    const shareText = `${isEn ? "Crosscut Duel" : "Crosscut Düellosu"}: ${dTitle} · ${isEn ? "Result" : "Sonuç"}: ${outcomeText}`;
     if (navigator.share) {
-      navigator.share({ title: "CineXOX", text: shareText }).catch(() => {});
+      navigator.share({ title: "Crosscut", text: shareText }).catch(() => {});
     } else if (navigator.clipboard) {
       navigator.clipboard.writeText(shareText);
     }

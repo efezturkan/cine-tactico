@@ -50,7 +50,7 @@ export default function PrivacyPage() {
             {lang === "TR" ? "Gizlilik Politikası" : "Privacy Policy"}
           </h1>
           <p className="text-xs text-zinc-400 font-mono">
-            {lang === "TR" ? "Son Güncelleme: 4 Kasım 2026" : "Last Updated: November 4, 2026"} · Cine-XOX
+            {lang === "TR" ? "Son Güncelleme: 4 Kasım 2026" : "Last Updated: November 4, 2026"} · Crosscut
           </p>
         </div>
       </div>
@@ -64,7 +64,7 @@ export default function PrivacyPage() {
                 <Lock className="w-4 h-4 text-emerald-400" /> 1. Toplanan Veriler
               </h2>
               <p>
-                <strong>Cine-XOX</strong> hesap, kayıt ya da giriş gerektirmez. Ad, e-posta, telefon, konum veya cihaz kimliği toplamaz; verilerinizi sunucuya göndermez.
+                <strong>Crosscut</strong> hesap, kayıt ya da giriş gerektirmez. Ad, e-posta, telefon, konum veya cihaz kimliği toplamaz; verilerinizi sunucuya göndermez.
               </p>
               <p className="mt-2 text-xs text-zinc-400">
                 Yalnızca cihazınızın yerel belleğinde (localStorage) şunlar saklanır: takma adınız, avatarınız, bot maç geçmişi ve istatistikleriniz, günlük seri bilgisi, ses/titreşim ve salon ambiyans tercihleriniz.
@@ -100,7 +100,7 @@ export default function PrivacyPage() {
                 <FileText className="w-4 h-4 text-blue-400" /> 5. Fikri Mülkiyet, Açık Lisanslar ve Görsel Atıfları
               </h2>
               <p>
-                <strong>Telifli Afişler:</strong> Cine-XOX içerisinde hiçbir stüdyo film afişi veya telifli tanıtım görseli barındırılmaz. Tüm filmler tipografik ve vektörel gösterimlerle sunulur.
+                <strong>Telifli Afişler:</strong> Crosscut içerisinde hiçbir stüdyo film afişi veya telifli tanıtım görseli barındırılmaz. Tüm filmler tipografik ve vektörel gösterimlerle sunulur.
               </p>
               <p className="mt-2 text-xs text-zinc-400">
                 <strong>Creative Commons Portreler:</strong> Uygulama paketinde yer alan 11 aktör ve yönetmen portresi Wikimedia Commons üzerinden CC BY ve CC BY-SA açık lisanslarıyla temin edilmiştir. Her görsel 160×160 kare formatında kırpılmış olup, yazar ve lisans detayları Ayarlar menüsündeki &quot;Lisanslar &amp; Görsel Atıfları&quot; alanında tam olarak listelenmektedir.
@@ -114,7 +114,7 @@ export default function PrivacyPage() {
                 <Lock className="w-4 h-4 text-emerald-400" /> 1. Data Collection
               </h2>
               <p>
-                <strong>Cine-XOX</strong> needs no account, sign-up, or login. It does not collect your name, email, phone number, location, or device identifiers, and it does not send your data to any server.
+                <strong>Crosscut</strong> needs no account, sign-up, or login. It does not collect your name, email, phone number, location, or device identifiers, and it does not send your data to any server.
               </p>
               <p className="mt-2 text-xs text-zinc-400">
                 Only your device&apos;s local storage holds: your nickname, avatar, bot match history and stats, daily streak, and sound, haptic and ambience preferences.
@@ -150,7 +150,7 @@ export default function PrivacyPage() {
                 <FileText className="w-4 h-4 text-blue-400" /> 5. Intellectual Property & Creative Commons Licensing
               </h2>
               <p>
-                <strong>Zero Copyrighted Posters:</strong> Cine-XOX hosts 0 copyrighted studio posters or promotional stills. All movie titles use typographic representations and icons.
+                <strong>Zero Copyrighted Posters:</strong> Crosscut hosts 0 copyrighted studio posters or promotional stills. All movie titles use typographic representations and icons.
               </p>
               <p className="mt-2 text-xs text-zinc-400">
                 <strong>Creative Commons Portraits:</strong> The 11 actor and director portraits packaged locally are sourced from Wikimedia Commons under CC BY and CC BY-SA open licenses. All items are cropped to 160×160 pixels. Full author, license, and provenance attribution is publicly accessible in the Settings &gt; &quot;Licenses &amp; Attributions&quot; panel.

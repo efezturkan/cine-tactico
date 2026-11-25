@@ -1,0 +1,8 @@
+# Crosscut
+
+> Crosscut is a free iOS movie trivia game where each square of a 3x3 grid is the crossing of two film clues.
+
+Crosscut works offline, has no account, no ads and no in-app purchases. Modes: Classic Duel, Reverse Frame, Cinephile Concept. A shared Daily Reel puzzle appears every UTC day (one attempt). Available in English and Turkish.
+
+- [Privacy](https://cine-tactico.vercel.app/privacy)
+- [Support](https://cine-tactico.vercel.app/support)

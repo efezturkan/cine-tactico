@@ -23,7 +23,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("CineXOX Uncaught Client Error:", error, errorInfo);
+    console.error("Crosscut Uncaught Client Error:", error, errorInfo);
   }
 
   private handleReset = () => {

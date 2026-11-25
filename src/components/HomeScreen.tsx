@@ -27,6 +27,7 @@ import { SalonLightSheet } from "./SalonLightSheet";
 import { HowToPlayModal } from "./HowToPlayModal";
 import { OpeningLightLeak } from "./OpeningLightLeak";
 import { useTranslation } from "@/i18n";
+import { BRAND_WORDMARK } from "@/config/brand";
 
 export type ArenaModeKey = "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT";
 
@@ -304,14 +305,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* ── 2. EDITORIAL CINEMA BRAND HEADER ─── */}
         <div className="text-center my-1">
           <h1 className="text-3xl sm:text-4xl font-serif tracking-[0.16em] text-[#F1EEE7] leading-none">
-            CINE
+            {BRAND_WORDMARK[0]}
             <span
               style={{ color: effectiveCornerColor }}
               className="italic font-serif"
             >
               ·
             </span>
-            XOX
+            {BRAND_WORDMARK[1]}
           </h1>
           <p className="text-xs text-[#A5A8B0] font-medium mt-1">
             {dict.home.subTagline}

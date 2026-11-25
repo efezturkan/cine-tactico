@@ -103,10 +103,10 @@ export const CustomRoomModal: React.FC<CustomRoomModalProps> = ({
     audio.playSelect();
     haptic.light();
     const url = typeof window !== "undefined" ? `${window.location.origin}?room=${roomCode}` : "";
-    const shareText = `CineXOX Düellosu: ${roomCode}`;
+    const shareText = `Crosscut Düellosu: ${roomCode}`;
     if (navigator.share) {
       navigator.share({
-        title: "CineXOX Özel Gösterim",
+        title: "Crosscut Özel Gösterim",
         text: shareText,
         url,
       }).catch(() => {

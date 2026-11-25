@@ -48,6 +48,7 @@ import { getGlobalDailyDateKey } from "@/utils/dateUtils";
 import { applyDailyResultToProfile } from "@/utils/dailyProfile";
 import { parseStoredProfile, serializeProfile, isNewerSchema } from "@/utils/profileStore";
 import { saveDailyResult, saveDailyProgress, loadDailyProgress, clearDailyProgress, loadDailyResult, StoredDailyResult } from "@/utils/dailyResult";
+import { BRAND_NAME } from "@/config/brand";
 import { LanguageProvider, useTranslation } from "@/i18n";
 
 const getDailyBoardConfig = (): { board: GameBoard; index: number } =>
@@ -959,7 +960,7 @@ function CineXoxApp() {
           35MM · 24 FPS
         </span>
         <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#E8E6E1] tracking-wider">
-          CineXOX
+          {BRAND_NAME}
         </h1>
       </div>
     );

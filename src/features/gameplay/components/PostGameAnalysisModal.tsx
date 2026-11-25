@@ -233,7 +233,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
         {/* Bottom Micro Tag: 30% Opacity */}
         <div className="text-center mt-3">
           <span className="text-[8px] font-mono tracking-widest text-[#8A8F9A] opacity-30 uppercase">
-            CineXOX · 35MM
+            Crosscut · 35MM
           </span>
         </div>
       </div>

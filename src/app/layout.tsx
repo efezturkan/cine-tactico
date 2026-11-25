@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { BRAND_NAME, SITE_URL, ENTITY_SENTENCE } from "@/config/brand";
 import { Inter, Newsreader, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import { SalonAtmosphere } from "@/components/SalonAtmosphere";
@@ -22,10 +23,23 @@ const fontDisplay = Barlow_Condensed({
 });
 
 export const metadata: Metadata = {
-  title: "CINE-XOX | Kareyi Seç. Rakibini Oku.",
+  metadataBase: new URL(SITE_URL),
+  title: `${BRAND_NAME}: Movie Trivia Game for iPhone | Film Bilgi Yarışması`,
   description:
-    "3×3 taktiksel sinema düellosu. İki ipucu, bir film, 12 saniye. Üçlü hattı kur, kareyi mühürle!",
+    "Crosscut is a free offline movie trivia game. Name a film that fits two clues, beat bots in 12 seconds, and play one shared Daily Reel puzzle. Crosscut, ücretsiz çevrimdışı film bilgi oyunu: iki ipucunun kesiştiği filmi bul.",
+  applicationName: BRAND_NAME,
   manifest: "/manifest.json",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: BRAND_NAME,
+    title: `${BRAND_NAME}: Movie Trivia Game for iPhone`,
+    description: ENTITY_SENTENCE,
+    url: SITE_URL,
+    locale: "en_US",
+    alternateLocale: ["tr_TR"],
+  },
+  twitter: { card: "summary", title: `${BRAND_NAME}: Movie Trivia Game`, description: ENTITY_SENTENCE },
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
@@ -33,8 +47,24 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "CINE-XOX",
+    title: BRAND_NAME,
   },
+};
+
+// Yapılandırılmış veri (SEO/GEO): yalnızca doğru olanlar. Puan/yorum, indirme bağlantısı ve sameAs, gerçekleşince eklenecek.
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": ["SoftwareApplication", "VideoGame"],
+  name: BRAND_NAME,
+  url: SITE_URL,
+  description: ENTITY_SENTENCE,
+  applicationCategory: "GameApplication",
+  operatingSystem: "iOS",
+  gamePlatform: "iOS",
+  genre: ["Trivia", "Puzzle", "Strategy"],
+  inLanguage: ["en", "tr"],
+  isAccessibleForFree: true,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
 };
 
 export const viewport: Viewport = {
@@ -57,6 +87,7 @@ export default function RootLayout({
         className="bg-[#0B0D12] text-[#E8E6E1] antialiased min-h-screen"
         style={{ backgroundColor: "#0B0D12", colorScheme: "dark" }}
       >
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
         {children}
         <SalonAtmosphere />
       </body>

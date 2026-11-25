@@ -307,8 +307,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           {showTerms && (
             <div className="p-3 rounded-xl bg-[#07080B] border border-white/5 text-[11px] text-[#8A8F9A] leading-relaxed">
               {locale === "tr"
-                ? "CineXOX, sinemaseverler için geliştirilmiş taktiksel bir oyundur. Yapılan hamleler ve oyuncu kayıtları yerel veya anonim olarak saklanır. Servis kesintilerinden veya üçüncü taraf veri uyuşmazlıklarından dolayı sorumluluk kabul edilmez."
-                : "CineXOX is a tactical game designed for cinephiles. Moves and player records are stored locally or anonymously. No liability is accepted for service interruptions or third-party data discrepancies."}
+                ? "Crosscut, sinemaseverler için geliştirilmiş taktiksel bir oyundur. Yapılan hamleler ve oyuncu kayıtları yerel veya anonim olarak saklanır. Servis kesintilerinden veya üçüncü taraf veri uyuşmazlıklarından dolayı sorumluluk kabul edilmez."
+                : "Crosscut is a tactical game designed for cinephiles. Moves and player records are stored locally or anonymously. No liability is accepted for service interruptions or third-party data discrepancies."}
             </div>
           )}
 
@@ -344,8 +344,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </p>
               <p className="text-[11px] text-[#8A8F9A]">
                 {locale === "tr"
-                  ? "Aşağıdaki 11 portre görseli Wikimedia Commons üzerinden alınmış, 160×160 piksel boyutuna kırpılmış ve yeniden boyutlandırılmıştır. Eser sahipleri CineXOX'u onaylamaz veya desteklemez:"
-                  : "The following 11 portrait images are sourced from Wikimedia Commons, cropped and resized to 160×160 pixels. Licensors do not endorse CineXOX:"}
+                  ? "Aşağıdaki 11 portre görseli Wikimedia Commons üzerinden alınmış, 160×160 piksel boyutuna kırpılmış ve yeniden boyutlandırılmıştır. Eser sahipleri Crosscut'u onaylamaz veya desteklemez:"
+                  : "The following 11 portrait images are sourced from Wikimedia Commons, cropped and resized to 160×160 pixels. Licensors do not endorse Crosscut:"}
               </p>
               <div className="space-y-2 pt-1">
                 {ASSET_MANIFEST.map((item) => (
@@ -398,12 +398,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <div className="p-3.5 rounded-xl bg-[#0B0D12] border border-white/5">
             <div className="flex items-center gap-2 mb-1">
               <Info className="w-3.5 h-3.5 text-[#8A8F9A]" />
-              <span className="text-[11px] font-bold text-[#E8E6E1]">CineXOX v1.0.0 (35MM)</span>
+              <span className="text-[11px] font-bold text-[#E8E6E1]">Crosscut v1.0.0 (35MM)</span>
             </div>
             <p className="text-[11px] text-[#8A8F9A] leading-relaxed">
               {locale === "tr"
-                ? "Film verileri açık kaynaklardan derlenmiştir. CineXOX, adı geçen kişi, marka ve yapımlarla bağlantılı veya onaylı değildir."
-                : "Film metadata is compiled from open sources. CineXOX is not affiliated with or endorsed by the individuals, brands, or productions mentioned."}
+                ? "Film verileri açık kaynaklardan derlenmiştir. Crosscut, adı geçen kişi, marka ve yapımlarla bağlantılı veya onaylı değildir."
+                : "Film metadata is compiled from open sources. Crosscut is not affiliated with or endorsed by the individuals, brands, or productions mentioned."}
             </p>
           </div>
         </div>

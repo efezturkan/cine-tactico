@@ -46,10 +46,10 @@ export default function SupportPage() {
       </div>
 
       <h1 className="font-serif text-3xl font-bold mb-2">{tr ? "Destek" : "Support"}</h1>
-      <p className="text-sm text-[#8A8F9A] mb-6">Cine-XOX · {tr ? "Sinema Taktik Düellosu" : "Cinema Tactics Duel"}</p>
+      <p className="text-sm text-[#8A8F9A] mb-6">Crosscut · {tr ? "Sinema Taktik Düellosu" : "Cinema Tactics Duel"}</p>
 
       <a
-        href={`mailto:${SUPPORT_EMAIL}?subject=Cine-XOX`}
+        href={`mailto:${SUPPORT_EMAIL}?subject=Crosscut`}
         className="flex items-center gap-3 p-4 rounded-2xl bg-[#14171D] border border-white/10 mb-8"
       >
         <Mail className="w-5 h-5 text-[#D9A441]" />

@@ -55,7 +55,7 @@ export const BOT_OPPONENTS: BotOpponentProfile[] = [
   // ORTA: meraklı sinefil, hattı kurar ve kapatır
   { name: "NolanZihni", rankTitle: "Zaman Büken Sinefil", level: 6, avatarId: "avatar_director", difficulty: "MEDIUM", rating: 1110, style: "BALANCED",
     quote: { tr: "Zaman bende, sıra sende.", en: "I have the time. Your move." } },
-  { name: "OscarAvcisi", rankTitle: "Akademi Tahmincisi", level: 5, avatarId: "avatar_critics", difficulty: "MEDIUM", rating: 1080, style: "AGGRESSIVE",
+  { name: "AltinMakaraAvcisi", rankTitle: "Akademi Tahmincisi", level: 5, avatarId: "avatar_critics", difficulty: "MEDIUM", rating: 1080, style: "AGGRESSIVE",
     quote: { tr: "Heykelcikler peşimde, ben hattın.", en: "Statuettes chase me. I chase lines." } },
   { name: "DuneSeyyahi", rankTitle: "Arrakis Bilgesi", level: 7, avatarId: "avatar_scifi", difficulty: "MEDIUM", rating: 1150, style: "CULT",
     quote: { tr: "Bilmediğin filmleri bilirim.", en: "I know the films you don't." } },

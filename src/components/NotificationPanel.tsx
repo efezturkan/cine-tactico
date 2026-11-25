@@ -39,7 +39,7 @@ const DEFAULT_NOTIFS: CineNotification[] = [
   {
     id: "n1",
     type: "promo",
-    title: "CineXOX Kadrajına Hoş Geldin! 🎬",
+    title: "Crosscut Kadrajına Hoş Geldin! 🎬",
     body: "35mm sinema kadrajında düelloya başla, nadir filmleri bil ve rütbeni yükselt.",
     cta: "Düelloya Başla",
     timestamp: new Date(Date.now() - 2 * 60 * 1000),
@@ -57,7 +57,7 @@ const DEFAULT_NOTIFS: CineNotification[] = [
   {
     id: "n3",
     type: "daily",
-    title: "Günün Kadresi seni bekliyor 🎬",
+    title: "Günün Kadrajı seni bekliyor 🎬",
     body: "Bugünkü sinema bulmacasını henüz çözmedin. Seri devam etsin!",
     cta: "Şimdi Oyna",
     timestamp: new Date(Date.now() - 60 * 60 * 1000),
