@@ -56,7 +56,7 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({ isOpen
   };
 
   return (
-    <div
+    <div role="dialog" aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] bg-black/70 select-none animate-in fade-in duration-150"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -102,18 +102,17 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({ isOpen
                       {tierLabel[bot.difficulty]}
                     </span>
                   </div>
-                  <div className="flex flex-wrap items-center gap-x-2 text-[11px] text-[#8A8F9A] mt-0.5">
+                  <div className="flex items-center gap-x-2 text-[11px] text-[#8A8F9A] mt-0.5 whitespace-nowrap">
                     <span className="font-mono font-bold text-[#D9A441]">
                       {dict.opponent.rating} {bot.rating}
                     </span>
-                    <span>·</span>
+                    <span aria-hidden="true">·</span>
                     <span>{styleLabel[bot.style]}</span>
-                    <span>·</span>
-                    <span>
-                      {played
-                        ? `${dict.opponent.record} ${rec.w}${dict.opponent.wins} ${rec.l}${dict.opponent.losses}${rec.d ? ` ${rec.d}${dict.opponent.draws}` : ""}`
-                        : dict.opponent.firstMeeting}
-                    </span>
+                  </div>
+                  <div className="text-[11px] text-[#8A8F9A] mt-0.5 truncate">
+                    {played
+                      ? `${dict.opponent.record} ${rec.w}${dict.opponent.wins} ${rec.l}${dict.opponent.losses}${rec.d ? ` ${rec.d}${dict.opponent.draws}` : ""}`
+                      : dict.opponent.firstMeeting}
                   </div>
                   <p className="text-[11px] italic text-[#A5A8B0] mt-1 leading-snug line-clamp-1">
                     “{isEn ? bot.quote.en : bot.quote.tr}”

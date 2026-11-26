@@ -6,6 +6,7 @@ import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
 import { movieMatchesTitleQuery } from "@/content/search/movieTitle";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
+import { useTranslation } from "@/i18n";
 import { Sparkles, Film, Clock, X, AlertTriangle } from "lucide-react";
 
 interface GoldenReelModalProps {
@@ -27,6 +28,8 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
   onSubmitAnswer,
   onTimeout,
 }) => {
+  const { locale, tCriterion } = useTranslation();
+  const isEn = locale === "en";
   const [seconds, setSeconds] = useState<number>(12);
   const [query, setQuery] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -84,7 +87,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
   const handleSelectMovie = (movie: Movie) => {
     const res = onSubmitAnswer(movie, currentTurn);
     if (!res.success) {
-      setErrorMessage(res.message || "Hatalı film!");
+      setErrorMessage(res.message || (isEn ? "Wrong film!" : "Hatalı film!"));
       audio.playError();
       haptic.error();
     }
@@ -93,7 +96,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-night/95 select-none">
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-night/95 select-none">
       <div className="relative w-full max-w-md animate-card-in bg-panel border-2 border-gold rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center overflow-hidden text-ink">
         {/* Dönen Altın Makara Simgesi */}
         <div className="relative my-3 flex items-center justify-center">
@@ -110,13 +113,15 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
 
         {/* Başlık & Kural */}
         <div className="text-xs font-semibold uppercase tracking-widest text-gold">
-          ALTIN MAKARA · UZATMA
+          {isEn ? "GOLDEN REEL · OVERTIME" : "ALTIN MAKARA · UZATMA"}
         </div>
         <h2 className="mt-1 font-display text-4xl font-extrabold italic uppercase tracking-wide text-ink">
-          SON KARAR
+          {isEn ? "FINAL CALL" : "SON KARAR"}
         </h2>
         <p className="text-xs text-muted mt-1 max-w-xs">
-          9 kare doldu, 3&apos;lü hat çıkmadı! İlk doğru filmi yazan anında kazanır.
+          {isEn
+            ? "Nine frames filled, no line. First correct film wins."
+            : "9 kare doldu, 3'lü hat çıkmadı! İlk doğru filmi yazan anında kazanır."}
         </p>
 
         {/* 12 Saniye Geri Sayımı */}
@@ -130,22 +135,22 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
         {/* Soru Görevi */}
         <div className="w-full p-3.5 rounded-xl bg-night border border-white/10 text-left my-2">
           <div className="text-[11px] font-bold text-gold uppercase tracking-wider">
-            Altın Kriter:
+            {isEn ? "Golden criterion:" : "Altın Kriter:"}
           </div>
           <div className="text-sm font-bold text-ink mt-0.5">
-            {question}
+            {tCriterion(question)}
           </div>
         </div>
 
         {/* İstatistik Çubuğu */}
         <div className="w-full grid grid-cols-2 gap-2 my-2 p-2.5 rounded-xl bg-night border border-white/10 text-xs">
           <div className="flex flex-col items-center">
-            <span className="text-[11px] font-bold text-gold">SEN (X)</span>
-            <span className="text-base font-extrabold text-ink font-display">{scoreRarityX} Puan</span>
+            <span className="text-[11px] font-bold text-gold">{isEn ? "YOU (X)" : "SEN (X)"}</span>
+            <span className="text-base font-extrabold text-ink font-display">{scoreRarityX} {isEn ? "pts" : "Puan"}</span>
           </div>
           <div className="flex flex-col items-center">
-            <span className="text-[11px] font-bold text-team-blue">RAKİP (O)</span>
-            <span className="text-base font-extrabold text-ink font-display">{scoreRarityO} Puan</span>
+            <span className="text-[11px] font-bold text-team-blue">{isEn ? "OPPONENT (O)" : "RAKİP (O)"}</span>
+            <span className="text-base font-extrabold text-ink font-display">{scoreRarityO} {isEn ? "pts" : "Puan"}</span>
           </div>
         </div>
 
@@ -159,7 +164,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
         {isPhotoFinish ? (
           <div className="my-3 p-3 rounded-xl bg-gold/15 border border-gold text-gold text-xs font-bold flex items-center justify-center gap-2">
             <Clock className="w-4 h-4 animate-spin text-gold" />
-            <span>Süre Doldu! Karar hesaplanıyor...</span>
+            <span>{isEn ? "Time is up. Calculating the result..." : "Süre Doldu! Karar hesaplanıyor..."}</span>
           </div>
         ) : (
           <div className="w-full mt-2">
@@ -169,7 +174,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Hemen bir film adı yaz..."
+                placeholder={isEn ? "Type a film title..." : "Hemen bir film adı yaz..."}
                 className="w-full bg-night border border-white/15 focus:border-gold rounded-xl px-4 py-3 text-sm text-ink placeholder-muted/50 font-semibold outline-none"
                 autoComplete="off"
               />
@@ -206,7 +211,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
                         )}
                       </div>
                       <span className="font-display text-xs font-extrabold uppercase text-gold">
-                        GÖNDER &rarr;
+                        {isEn ? "SUBMIT" : "GÖNDER"}
                       </span>
                     </button>
                   );

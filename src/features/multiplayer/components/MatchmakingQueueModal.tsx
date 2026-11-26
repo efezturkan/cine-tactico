@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { Film, X, Bot, RefreshCw, Clapperboard, Users, Compass, Trophy, Tv, Zap } from "lucide-react";
 import { audio } from "@/utils/audio";
 import { ContentPoolType } from "@/core";
-import { UserProfile, AVATAR_OPTIONS } from "@/types/profile";
+import { UserProfile } from "@/types/profile";
+import { AvatarIcon } from "@/components/ui/AvatarIcon";
 import { useTranslation } from "@/i18n";
 
 interface MatchmakingQueueModalProps {
@@ -38,9 +39,6 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
   const [showAiFallback, setShowAiFallback] = useState<boolean>(false);
   const matchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const userAvatar =
-    AVATAR_OPTIONS.find((a) => a.id === userProfile.avatarId) || AVATAR_OPTIONS[0];
-
   useEffect(() => {
     if (!isOpen) {
       setSecondsElapsed(0);
@@ -67,9 +65,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
           );
         } else if (next === 2) {
           setStatusText(
-            isEn
-              ? "Session ready! In opposite seat: Cinephile Bot."
-              : "Seans hazır! Karşı koltukta: Sinefil Botu."
+            isEn ? "Session ready." : "Seans hazır."
           );
           matchTimeoutRef.current = setTimeout(() => {
             onMatchFound();
@@ -116,7 +112,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
   const diffDot = difficulty === "HARD" ? "bg-[#E5484D]" : difficulty === "NORMAL" ? "bg-[#D9A441]" : "bg-[#46A758]";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 animate-in fade-in select-none">
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 animate-in fade-in select-none">
       <div
         className="w-full max-w-sm rounded-2xl p-6 flex flex-col items-center relative text-[#F1EEE7] overflow-hidden"
         style={{
@@ -143,14 +139,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
         </button>
 
         {/* Başlık ve Durum */}
-        <div className="flex items-center gap-1.5 mb-2 px-3 py-1 rounded-md bg-[#181B22] border border-[#D9A441]/30">
-          <Film className="w-3 h-3 text-[#D9A441]" />
-          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#D9A441] font-mono">
-            {isEn ? "PREPARING SESSION" : "SEANS HAZIRLANIYOR"}
-          </span>
-        </div>
-
-        <h2 className="text-xl font-bold font-serif text-[#F1EEE7] tracking-wide mb-1">
+        <h2 className="text-xl font-bold font-serif text-[#F1EEE7] tracking-wide mb-1 mt-1">
           {isEn ? "Preparing Session..." : "Seans Hazırlanıyor..."}
         </h2>
 
@@ -210,7 +199,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
 
         {/* Oyuncu Künyesi */}
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#181B22] border border-white/10 mb-2">
-          <span className="text-sm">{userAvatar.emoji}</span>
+          <AvatarIcon id={userProfile.avatarId} className="w-4 h-4 text-[#D9A441]" />
           <span className="text-[11px] font-bold text-[#F1EEE7]">{userProfile.username}</span>
           <span className="text-[11px] font-mono text-[#D9A441] font-bold">Lv.{userProfile.rankLevel || 1}</span>
         </div>
@@ -261,7 +250,7 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
             className="w-full py-2.5 px-3 rounded-xl tactile-btn-surface text-[11px] font-bold text-[#D9A441] hover:text-[#F1EEE7] flex items-center justify-center gap-1.5 mb-2"
           >
             <Bot className="w-3.5 h-3.5" />
-            <span>{isEn ? "Don't want to wait? Start now \u2192" : "Beklemek istemiyor musun? Hemen başla \u2192"}</span>
+            <span>{isEn ? "Don't want to wait? Start now" : "Beklemek istemiyor musun? Hemen başla"}</span>
           </button>
         )}
 
