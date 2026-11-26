@@ -26,19 +26,55 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error("Crosscut Uncaught Client Error:", error, errorInfo);
   }
 
-  private handleReset = () => {
+  public componentDidMount() {
+    window.addEventListener("error", this.recordWindowError);
+    window.addEventListener("unhandledrejection", this.recordRejection);
+  }
+
+  public componentWillUnmount() {
+    window.removeEventListener("error", this.recordWindowError);
+    window.removeEventListener("unhandledrejection", this.recordRejection);
+  }
+
+  // Yakalanmayan JS hataları native çökme üretmez, Xcode Organizer görmez. Ağ yok, SDK yok:
+  // son hata yalnızca cihazda tutulur ve destek yazışmasında istenirse kullanıcı iletebilir.
+  private remember(kind: string, reason: unknown) {
+    const text = reason instanceof Error ? `${reason.message}\n${reason.stack ?? ""}` : String(reason);
+    console.error(`Crosscut ${kind}:`, reason);
     try {
-      const keysToRemove: string[] = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && (key.startsWith("cinexox_") || key.startsWith("cinetactico_") || key.startsWith("sb-"))) {
-          keysToRemove.push(key);
-        }
-      }
-      keysToRemove.forEach(k => localStorage.removeItem(k));
-      sessionStorage.clear();
+      sessionStorage.setItem("crosscut_last_error", `${kind}: ${text}`.slice(0, 2000));
     } catch {
-      // ignore
+      // Depolama doluysa hata konsola yazılmıştır; kayıt tutulamaz.
+    }
+  }
+
+  private recordWindowError = (event: ErrorEvent) => this.remember("window.onerror", event.error ?? event.message);
+  private recordRejection = (event: PromiseRejectionEvent) => this.remember("unhandledrejection", event.reason);
+
+  // İlk dokunuş yalnızca yeniden yükler: ilerleme, seri ve Günlük Kadraj sonucu korunur.
+  // Aynı oturumda hata tekrarlarsa (bozuk kayıt şüphesi) yerel veri son çare olarak silinir.
+  private handleReset = () => {
+    let attempts = 1;
+    try {
+      attempts = Number(sessionStorage.getItem("crosscut_boundary_retries") ?? "0") + 1;
+      sessionStorage.setItem("crosscut_boundary_retries", String(attempts));
+    } catch {
+      // Sayaç tutulamıyorsa her seferinde yalnızca yeniden yüklenir; veri silinmez.
+    }
+    if (attempts >= 3) {
+      try {
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && (key.startsWith("cinexox_") || key.startsWith("cinetactico_") || key.startsWith("sb-"))) {
+            keysToRemove.push(key);
+          }
+        }
+        keysToRemove.forEach((k) => localStorage.removeItem(k));
+        sessionStorage.clear();
+      } catch {
+        // Silinemiyorsa yeniden yükleme yine denenir.
+      }
     }
     window.location.href = "/";
   };

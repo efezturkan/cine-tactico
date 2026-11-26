@@ -1,15 +1,15 @@
-// Cross-platform tactile haptic feedback (Capacitor Native Taptic Engine + Web Vibration API Fallback)
+// Dokunsal geri bildirim: iOS/Android'de Capacitor Haptics (Taptic Engine), tarayıcıda Vibration API.
+import { Capacitor } from "@capacitor/core";
 import { Haptics, ImpactStyle, NotificationType } from "@capacitor/haptics";
 
-const isNative = () => {
-  return typeof window !== "undefined" && (window as unknown as { Capacitor?: { isNativePlatform: () => boolean } }).Capacitor?.isNativePlatform?.();
-};
+type Step = () => Promise<void>;
 
 function hapticAllowed(): boolean {
   if (typeof window === "undefined") return false;
   try {
     return localStorage.getItem("cinexox_haptic") !== "0";
   } catch {
+    // Depolama kapalıysa (özel gezinme) varsayılan: açık.
     return true;
   }
 }
@@ -18,153 +18,52 @@ export function setHapticEnabled(enabled: boolean): void {
   try {
     localStorage.setItem("cinexox_haptic", enabled ? "1" : "0");
   } catch {
-    // Storage can be unavailable in private browsing.
+    // Depolama kapalıysa tercih bu oturumla sınırlı kalır; oyun etkilenmez.
+  }
+}
+
+const impact = (style: ImpactStyle): Step => () => Haptics.impact({ style });
+const notify = (type: NotificationType): Step => () => Haptics.notification({ type });
+
+let reported = false;
+function reportOnce(error: unknown): void {
+  // Titreşim oyunun parçası değildir, ama sessizce yutulmaz: bir kez uyarı yazılır.
+  if (reported) return;
+  reported = true;
+  console.warn("[haptics] native çağrı başarısız oldu; titreşim bu oturumda sessiz kalabilir", error);
+}
+
+/**
+ * Yerel platformda sırayla Capacitor adımlarını, web'de tek bir titreşim desenini çalıştırır.
+ * Web'de `navigator.vibrate` özelliği platform kontrolüyle seçilir; çağrı istisna fırlatmaz.
+ */
+async function play(steps: Step[], webPattern: number | number[]): Promise<void> {
+  if (!hapticAllowed()) return;
+  if (Capacitor.isNativePlatform()) {
+    try {
+      for (let i = 0; i < steps.length; i++) {
+        if (i > 0) await new Promise((r) => setTimeout(r, 60));
+        await steps[i]();
+      }
+    } catch (error) {
+      reportOnce(error);
+    }
+    return;
+  }
+  if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
+    navigator.vibrate(webPattern);
   }
 }
 
 export const haptic = {
-  // Hafif dokunma
-  light: async () => {
-    if (!hapticAllowed()) return;
-    try {
-      if (isNative()) {
-        await Haptics.impact({ style: ImpactStyle.Light });
-        return;
-      }
-      if (typeof window !== "undefined" && "vibrate" in navigator) {
-        navigator.vibrate(10);
-      }
-    } catch {
-      // Safe fallback
-    }
-  },
-
-  // Orta sertlikte dokunma (Joker, hamle patlaması)
-  medium: async () => {
-    if (!hapticAllowed()) return;
-    try {
-      if (isNative()) {
-        await Haptics.impact({ style: ImpactStyle.Medium });
-        return;
-      }
-      if (typeof window !== "undefined" && "vibrate" in navigator) {
-        navigator.vibrate(35);
-      }
-    } catch {
-      // Safe fallback
-    }
-  },
-
-  // Başarılı hamle (Çift tatlı vuruş)
-  success: async () => {
-    if (!hapticAllowed()) return;
-    try {
-      if (isNative()) {
-        await Haptics.notification({ type: NotificationType.Success });
-        return;
-      }
-      if (typeof window !== "undefined" && "vibrate" in navigator) {
-        navigator.vibrate([20, 40, 30]);
-      }
-    } catch {
-      // Safe fallback
-    }
-  },
-
-  // Hata / Süre uyarısı (Sert titreşim)
-  error: async () => {
-    if (!hapticAllowed()) return;
-    try {
-      if (isNative()) {
-        await Haptics.notification({ type: NotificationType.Error });
-        return;
-      }
-      if (typeof window !== "undefined" && "vibrate" in navigator) {
-        navigator.vibrate([60, 30, 60]);
-      }
-    } catch {
-      // Safe fallback
-    }
-  },
-
-  // Zafer / XOX çizgisi
-  victory: async () => {
-    if (!hapticAllowed()) return;
-    try {
-      if (isNative()) {
-        await Haptics.notification({ type: NotificationType.Success });
-        setTimeout(() => {
-          Haptics.impact({ style: ImpactStyle.Heavy }).catch(() => {});
-        }, 150);
-        return;
-      }
-      if (typeof window !== "undefined" && "vibrate" in navigator) {
-        navigator.vibrate([40, 60, 40, 60, 100]);
-      }
-    } catch {
-      // Safe fallback
-    }
-  },
-
-  // ── Tur 10B: Standart Haptic Haritası ──
-  // Hücre seç = hafif
-  cellSelect: async () => {
-    return haptic.light();
-  },
-
-  // Yanlış = çift kısa
-  wrong: async () => {
-    if (!hapticAllowed()) return;
-    try {
-      if (isNative()) {
-        await Haptics.impact({ style: ImpactStyle.Light });
-        setTimeout(() => {
-          Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
-        }, 60);
-        return;
-      }
-      if (typeof window !== "undefined" && "vibrate" in navigator) {
-        navigator.vibrate([20, 30, 20]);
-      }
-    } catch {
-      // Titreşim en iyi çabayla çalışır: destek yoksa oyun etkilenmez.
-    }
-  },
-
-  // Kesin! = orta
-  kesin: async () => {
-    return haptic.medium();
-  },
-
-  // Kayıp = tek uzun hafif
-  loss: async () => {
-    if (!hapticAllowed()) return;
-    try {
-      if (isNative()) {
-        await Haptics.impact({ style: ImpactStyle.Light });
-        return;
-      }
-      if (typeof window !== "undefined" && "vibrate" in navigator) {
-        navigator.vibrate(70);
-      }
-    } catch {
-      // Titreşim en iyi çabayla çalışır: destek yoksa oyun etkilenmez.
-    }
-  },
-
-  // Geri sayım tık = çok hafif
-  tick: async () => {
-    if (!hapticAllowed()) return;
-    try {
-      if (isNative()) {
-        await Haptics.impact({ style: ImpactStyle.Light });
-        return;
-      }
-      if (typeof window !== "undefined" && "vibrate" in navigator) {
-        navigator.vibrate(5);
-      }
-    } catch {
-      // Titreşim en iyi çabayla çalışır: destek yoksa oyun etkilenmez.
-    }
-  },
+  light: () => play([impact(ImpactStyle.Light)], 10),
+  medium: () => play([impact(ImpactStyle.Medium)], 35),
+  success: () => play([notify(NotificationType.Success)], [20, 40, 30]),
+  error: () => play([notify(NotificationType.Error)], [60, 30, 60]),
+  victory: () => play([notify(NotificationType.Success), impact(ImpactStyle.Heavy)], [40, 60, 40, 60, 100]),
+  cellSelect: () => haptic.light(),
+  wrong: () => play([impact(ImpactStyle.Light), impact(ImpactStyle.Light)], [20, 30, 20]),
+  kesin: () => haptic.medium(),
+  loss: () => play([impact(ImpactStyle.Light)], 70),
+  tick: () => play([impact(ImpactStyle.Light)], 5),
 };
