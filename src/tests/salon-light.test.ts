@@ -42,7 +42,7 @@ assert(keys.every(k => tr.salon[k] && en.salon[k]), `Salon sözlüğü TR/EN eks
 assert(DEFAULT_SALON_CONFIG.dimness <= 20, "Varsayılan loşluk tasarımın orijinal parlaklığını korur (≤%20)");
 assert(Number(computeSalonVars(DEFAULT_SALON_CONFIG).dimFlat) <= 0.1, "Varsayılan düz karartma ≤0.10");
 
-// --- Perde (bordo-siyah salon perdesi) ---
+// --- Kırmızı (kardeş ayarlarla aynı mantık: neredeyse siyah zemin + ışık rengi) ---
 const hex = (h: string) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
 const lin = (c: number) => { const v = c / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
 const lum = (rgb: number[]) => 0.2126 * lin(rgb[0]) + 0.7152 * lin(rgb[1]) + 0.0722 * lin(rgb[2]);
@@ -50,25 +50,27 @@ const contrast = (a: number[], b: number[]) => { const [x, y] = [lum(a), lum(b)]
 const over = (base: number[], c: number[], a: number) => base.map((v, i) => v * (1 - a) + c[i] * a);
 const rgba = (s: string) => { const m = s.match(/rgba\(([\d.]+),\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)\)/)!; return { rgb: [Number(m[1]), Number(m[2]), Number(m[3])], a: Number(m[4]) }; };
 
-const perde = SALON_PRESETS.perde;
-assert(Boolean(perde) && perde.label.tr === "Perde" && perde.label.en === "Curtain", "Perde hazır ayarı TR ve EN adıyla var");
-assert(sanitizeSalonConfig({ preset: "perde" }).preset === "perde", "Kayıtlı 'perde' ayarı korunur");
-const [pr, pg, pb] = hex(perde.bg);
-assert(pr > pg && pr > pb && pr <= 24, "Perde zemini kırmızıya çalan siyah (koyu, R baskın)");
-const pt = rgba(perde.tint);
-assert(pt.rgb[0] > pt.rgb[1] * 4 && pt.rgb[0] > pt.rgb[2] * 3 && pt.a >= 0.12 && pt.a <= 0.2, "Perde ışık rengi bordo ve Kadife'den belirgin (0.12-0.20), metni boğmaz");
-assert(pt.a > rgba(SALON_PRESETS.kadife.tint).a, "Perde, Kadife'den daha kırmızı");
-assert(Boolean(perde.folds) && perde.folds!.includes("repeating-linear-gradient"), "Perde pilileri statik gradyan (animasyonsuz)");
-assert(computeSalonVars({ ...DEFAULT_SALON_CONFIG, preset: "perde" }).folds === perde.folds, "Perde pilileri ekrana değişken olarak geçer");
-assert(computeSalonVars(DEFAULT_SALON_CONFIG).folds === "none", "Pilisiz hazır ayarlarda doku kapalı ('none'): ayar değişince eski doku kalmaz");
-assert(Object.values(SALON_PRESETS).filter(p => p.folds).length === 1, "Yalnızca Perde dokulu (ek maliyet tek ayarda)");
+const kirmizi = SALON_PRESETS.kirmizi;
+assert(Boolean(kirmizi) && kirmizi.label.tr === "Kırmızı" && kirmizi.label.en === "Red", "Kırmızı hazır ayarı TR ve EN adıyla var");
+assert(sanitizeSalonConfig({ preset: "kirmizi" }).preset === "kirmizi", "Kayıtlı 'kirmizi' ayarı korunur");
+assert(sanitizeSalonConfig({ preset: "perde" }).preset === "kadife", "Eski 'perde' kaydı güvenle Kadife'ye düşer");
+assert(DEFAULT_SALON_CONFIG.preset === "kadife", "Varsayılan hazır ayar Kadife (kırmızı isteğe bağlı)");
+const [kr, kg, kb] = hex(kirmizi.bg);
+assert(kr > kg && kr > kb, "Kırmızı zemin kırmızıya çalan siyah");
+const siblings = Object.values(SALON_PRESETS).filter(p => p.id !== "kirmizi");
+assert(lum(hex(kirmizi.bg)) <= Math.max(...siblings.map(p => lum(hex(p.bg)))) * 1.5, "Kırmızı zemin kardeş ayarlar kadar koyu: tasarımın siyah sinema zemini bozulmaz");
+const kt = rgba(kirmizi.tint);
+assert(kt.rgb[0] > kt.rgb[1] * 4 && kt.rgb[0] > kt.rgb[2] * 2.5, "Kırmızı ışık rengi belirgin kırmızı");
+assert(kt.a >= 0.10 && kt.a <= Math.max(...siblings.map(p => rgba(p.tint).a)), "Kırmızı ışık opaklığı Kadife'den güçlü, en güçlü kardeşi (Gece mavisi) geçmez");
+assert(kt.a > rgba(SALON_PRESETS.kadife.tint).a, "Kırmızı, Kadife'den daha kırmızı");
+assert(Object.values(SALON_PRESETS).every(p => !("folds" in p)), "Hiçbir hazır ayarda doku/katman yok (düz renk)");
+assert(Object.keys(computeSalonVars(DEFAULT_SALON_CONFIG)).every(k => k !== "folds"), "Doku değişkeni kaldırıldı");
 
-// En parlak olası perde yüzeyi: zemin + ışık rengi + pili vurgusu. Okunabilirlik burada da korunmalı.
-const surface = over(over(hex(perde.bg), pt.rgb, pt.a), [150, 22, 40], 0.10);
-assert(contrast(hex("#E8E6E1"), surface) >= 12, "Perde üzerinde ana metin kontrastı ≥ 12:1");
-assert(contrast(hex("#8A8F9A"), surface) >= 4.5, "Perde üzerinde soluk metin kontrastı ≥ 4.5:1");
-assert(contrast(hex("#D9A441"), surface) >= 7, "Perde üzerinde altın vurgu kontrastı ≥ 7:1");
-assert(contrast(hex("#E5484D"), surface) >= 4.0, "Perde üzerinde hata/REC kırmızısı seçilebilir (≥ 4:1)");
+const surface = over(hex(kirmizi.bg), kt.rgb, kt.a);
+assert(contrast(hex("#E8E6E1"), surface) >= 12, "Kırmızı üzerinde ana metin kontrastı ≥ 12:1");
+assert(contrast(hex("#8A8F9A"), surface) >= 4.5, "Kırmızı üzerinde soluk metin kontrastı ≥ 4.5:1");
+assert(contrast(hex("#D9A441"), surface) >= 7, "Kırmızı üzerinde altın vurgu kontrastı ≥ 7:1");
+assert(contrast(hex("#E5484D"), surface) >= 4.0, "Kırmızı üzerinde hata/REC kırmızısı seçilebilir (≥ 4:1)");
 
 console.log(`\nSALON RESULT: ${passed}/${passed + failed} PASSED`);
 if (failed > 0) process.exit(1);

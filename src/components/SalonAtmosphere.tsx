@@ -20,11 +20,8 @@ export const SalonAtmosphere: React.FC = () => {
 
   return (
     <div aria-hidden="true" className="salon-atmosphere pointer-events-none fixed inset-0 z-[45] overflow-hidden">
-      {/* 1. Salonun ışık rengi (+ varsa perde pilileri; yeni katman açmadan aynı katmana biner) */}
-      <div
-        className="absolute inset-0"
-        style={{ backgroundColor: "var(--salon-tint, transparent)", backgroundImage: "var(--salon-folds, none)" }}
-      />
+      {/* 1. Salonun ışık rengi */}
+      <div className="absolute inset-0" style={{ background: "var(--salon-tint, transparent)" }} />
 
       {/* 2. Projeksiyon huzması (üstten aşağı) */}
       {FLAGS.LIGHT_BEAM && (
