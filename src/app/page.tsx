@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { HomeScreen, GameSelectScreen, ErrorBoundary, GlobalModals } from "@/components";
+import { startDurableStore } from "@/utils/durableStore";
 import { BottomNav } from "@/components/ui/BottomNav";
 import { GameView, useGameSession } from "@/features/gameplay";
 import { useRealtimeMatch, CustomRoomModal } from "@/features/multiplayer";
@@ -79,26 +80,26 @@ function CineXoxApp() {
     try {
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (!prefersReduced && !sessionStorage.getItem("cinexox_splash_seen")) {
+        // Bayrak, perde gösterilmeye karar verildiği anda yazılır: tek korumalı bölge.
+        sessionStorage.setItem("cinexox_splash_seen", "1");
         setShowSplash(true);
       }
     } catch {
-      // Depolama erişilemezse açılış logosu atlanır
+      // matchMedia veya sessionStorage yoksa (ör. depolama kapalı) açılış perdesi atlanır; oyun etkilenmez.
     }
   }, []);
 
   useEffect(() => {
     if (showSplash) {
       const timer = setTimeout(() => {
-        try {
-          sessionStorage.setItem("cinexox_splash_seen", "1");
-        } catch {
-          // Depolama kapalıysa açılış perdesi bir sonraki açılışta yine görünür; zararsız.
-        }
         setShowSplash(false);
       }, 300);
       return () => clearTimeout(timer);
     }
   }, [showSplash]);
+
+  // iOS WebView verisini silerse seri ve Günlük Kadraj sonucu yerel yedekten döner.
+  useEffect(() => startDurableStore(), []);
 
   // Modallar
   const [showDailyShare, setShowDailyShare] = useState<boolean>(false);
