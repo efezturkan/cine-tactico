@@ -533,12 +533,14 @@ export function GameView(props: GameViewProps) {
             <div className="grid grid-cols-2 gap-2.5 w-full">
               <Button
                 variant="secondary"
+                className="!px-3 whitespace-nowrap"
                 onClick={props.onCancelSurrender}
               >
                 {isEn ? "Keep Playing" : "Devam et"}
               </Button>
               <Button
                 variant="primary"
+                className="!px-3 whitespace-nowrap"
                 onClick={props.onConfirmSurrender}
               >
                 {props.mode === "DAILY_SOLO" ? (isEn ? "End reel" : "Bitir") : isEn ? "Surrender" : "Bırak"}
