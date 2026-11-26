@@ -1,3 +1,5 @@
+import * as fs from "fs";
+import * as path from "path";
 import {
   sanitizeSalonConfig,
   computeSalonVars,
@@ -71,6 +73,13 @@ assert(contrast(hex("#E8E6E1"), surface) >= 12, "Kırmızı üzerinde ana metin 
 assert(contrast(hex("#8A8F9A"), surface) >= 4.5, "Kırmızı üzerinde soluk metin kontrastı ≥ 4.5:1");
 assert(contrast(hex("#D9A441"), surface) >= 7, "Kırmızı üzerinde altın vurgu kontrastı ≥ 7:1");
 assert(contrast(hex("#E5484D"), surface) >= 4.0, "Kırmızı üzerinde hata/REC kırmızısı seçilebilir (≥ 4:1)");
+
+// --- Huzma yalnızca ana sayfada ---
+const css = fs.readFileSync(path.join(__dirname, "..", "app", "globals.css"), "utf8");
+const atmos = fs.readFileSync(path.join(__dirname, "..", "components", "SalonAtmosphere.tsx"), "utf8");
+assert(/className="salon-beam /.test(atmos), "Huzma katmanı salon-beam sınıfını taşır");
+assert(["GAME_SELECT", "CUSTOM_ROOM", "PROFILE"].every(v => css.includes(`html[data-view="${v}"] .salon-beam`)), "Huzma mod seçimi, oda ve profil ekranlarında gizli");
+assert(!css.includes('html[data-view="HOME"] .salon-beam'), "Ana sayfada huzma gizlenmez");
 
 console.log(`\nSALON RESULT: ${passed}/${passed + failed} PASSED`);
 if (failed > 0) process.exit(1);

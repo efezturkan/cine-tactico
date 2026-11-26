@@ -35,6 +35,14 @@ html[data-view="GAME"] .salon-atmosphere {
   display: none;
 }
 
+/* Projeksiyon huzması yalnızca ana sayfanın sahnesidir; mod seçimi, oda ve profil ekranlarında kartların üstüne ışık lekesi düşürür.
+   Öznitelik ilk boyamada henüz yoksa huzma görünür kalır (ana sayfada yanıp sönme olmaz). */
+html[data-view="GAME_SELECT"] .salon-beam,
+html[data-view="CUSTOM_ROOM"] .salon-beam,
+html[data-view="PROFILE"] .salon-beam {
+  display: none;
+}
+
 html {
   height: 100%;
   overscroll-behavior: none;
