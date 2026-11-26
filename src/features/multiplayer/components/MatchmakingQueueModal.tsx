@@ -59,17 +59,12 @@ export const MatchmakingQueueModal: React.FC<MatchmakingQueueModalProps> = ({
       setSecondsElapsed((prev) => {
         const next = prev + 1;
 
+        // Çevrimdışı oyunda gerçek bir eşleşme beklenmez: seans ilk saniyede hazırdır.
         if (next === 1) {
-          setStatusText(
-            isEn ? "The hall is dim, preparing session..." : "Salon loş, seans hazırlanıyor..."
-          );
-        } else if (next === 2) {
-          setStatusText(
-            isEn ? "Session ready." : "Seans hazır."
-          );
+          setStatusText(isEn ? "Session ready." : "Seans hazır.");
           matchTimeoutRef.current = setTimeout(() => {
             onMatchFound();
-          }, 600);
+          }, 400);
         } else if (next >= 4) {
           setShowAiFallback(true);
         }

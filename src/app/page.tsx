@@ -91,7 +91,9 @@ function CineXoxApp() {
       const timer = setTimeout(() => {
         try {
           sessionStorage.setItem("cinexox_splash_seen", "1");
-        } catch {}
+        } catch {
+          // Depolama kapalıysa açılış perdesi bir sonraki açılışta yine görünür; zararsız.
+        }
         setShowSplash(false);
       }, 300);
       return () => clearTimeout(timer);

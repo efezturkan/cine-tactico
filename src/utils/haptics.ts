@@ -126,7 +126,9 @@ export const haptic = {
       if (typeof window !== "undefined" && "vibrate" in navigator) {
         navigator.vibrate([20, 30, 20]);
       }
-    } catch {}
+    } catch {
+      // Titreşim en iyi çabayla çalışır: destek yoksa oyun etkilenmez.
+    }
   },
 
   // Kesin! = orta
@@ -145,7 +147,9 @@ export const haptic = {
       if (typeof window !== "undefined" && "vibrate" in navigator) {
         navigator.vibrate(70);
       }
-    } catch {}
+    } catch {
+      // Titreşim en iyi çabayla çalışır: destek yoksa oyun etkilenmez.
+    }
   },
 
   // Geri sayım tık = çok hafif
@@ -159,6 +163,8 @@ export const haptic = {
       if (typeof window !== "undefined" && "vibrate" in navigator) {
         navigator.vibrate(5);
       }
-    } catch {}
+    } catch {
+      // Titreşim en iyi çabayla çalışır: destek yoksa oyun etkilenmez.
+    }
   },
 };
