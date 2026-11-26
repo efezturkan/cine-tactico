@@ -16,10 +16,8 @@ import {
   Info,
   ChevronRight,
   Globe,
-  Image as ImageIcon,
 } from "lucide-react";
 import { useTranslation } from "@/i18n";
-import { ASSET_MANIFEST } from "@/data/assets";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -50,7 +48,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const { locale, setLocale, dict } = useTranslation();
   const [volume, setVolumeState] = useState<number>(() => Math.round(audio.getVolume() * 100));
   const [showTerms, setShowTerms] = useState<boolean>(false);
-  const [showLicenses, setShowLicenses] = useState<boolean>(false);
 
   if (!isOpen) return null;
 
@@ -309,88 +306,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               {locale === "tr"
                 ? "Crosscut, sinemaseverler için geliştirilmiş taktiksel bir oyundur. Yapılan hamleler ve oyuncu kayıtları yerel veya anonim olarak saklanır. Servis kesintilerinden veya üçüncü taraf veri uyuşmazlıklarından dolayı sorumluluk kabul edilmez."
                 : "Crosscut is a tactical game designed for cinephiles. Moves and player records are stored locally or anonymously. No liability is accepted for service interruptions or third-party data discrepancies."}
-            </div>
-          )}
-
-          {/* 7. Lisanslar ve Görsel Atıfları (Creative Commons) */}
-          <button
-            type="button"
-            onClick={() => {
-              audio.playSelect();
-              setShowLicenses(!showLicenses);
-            }}
-            className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 hover:border-white/15 transition text-left"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#181B22] flex items-center justify-center text-[#D9A441]">
-                <ImageIcon className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="text-xs font-medium text-[#E8E6E1] block">
-                  {locale === "tr" ? "Lisanslar & Görsel Atıfları" : "Licenses & Attributions"}
-                </span>
-                <span className="text-[11px] text-[#8A8F9A]">
-                  Wikimedia Commons (CC BY / CC BY-SA)
-                </span>
-              </div>
-            </div>
-            <ChevronRight className={`w-4 h-4 text-[#8A8F9A] transition-transform ${showLicenses ? "rotate-90" : ""}`} />
-          </button>
-
-          {showLicenses && (
-            <div className="p-3 rounded-xl bg-[#07080B] border border-white/5 text-[11px] text-[#8A8F9A] space-y-2 max-h-56 overflow-y-auto">
-              <p className="text-[11px] text-[#E8E6E1] font-semibold">
-                {locale === "tr" ? "Açık Lisanslı Portreler (Creative Commons):" : "Open Licensed Portraits (Creative Commons):"}
-              </p>
-              <p className="text-[11px] text-[#8A8F9A]">
-                {locale === "tr"
-                  ? "Aşağıdaki 11 portre görseli Wikimedia Commons üzerinden alınmış, 160×160 piksel boyutuna kırpılmış ve yeniden boyutlandırılmıştır. Eser sahipleri Crosscut'u onaylamaz veya desteklemez:"
-                  : "The following 11 portrait images are sourced from Wikimedia Commons, cropped and resized to 160×160 pixels. Licensors do not endorse Crosscut:"}
-              </p>
-              <div className="space-y-2 pt-1">
-                {ASSET_MANIFEST.map((item) => (
-                  <div key={item.id} className="border-b border-white/5 pb-1.5 space-y-0.5">
-                    <span className="text-[#E8E6E1] font-medium block">
-                      {item.title ?? item.id}
-                    </span>
-                    <span className="text-[#8A8F9A] text-[11px] block">
-                      {locale === "tr" ? "Yazar / Atıf" : "Author / Attribution"}: {item.author} ({item.attribution})
-                    </span>
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px]">
-                      <a
-                        href={item.sourcePageUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#D9A441] underline hover:opacity-80"
-                      >
-                        {locale === "tr" ? "Kaynak (Wikimedia Commons)" : "Source (Wikimedia Commons)"}
-                      </a>
-                      <span>·</span>
-                      {item.licenseUrl ? (
-                        <a
-                          href={item.licenseUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#D9A441] underline hover:opacity-80"
-                        >
-                          {locale === "tr" ? "Lisans" : "License"}: {item.license}
-                        </a>
-                      ) : (
-                        <span className="text-[#D9A441]">
-                          {locale === "tr" ? "Lisans" : "License"}: {item.license}
-                        </span>
-                      )}
-                    </div>
-                    {item.modified && (
-                      <span className="text-[#8A8F9A]/80 text-[11px] block italic">
-                        {locale === "tr"
-                          ? "Değişiklik: Uygulama içi gösterim için 160×160 piksel olarak kırpıldı ve yeniden boyutlandırıldı."
-                          : "Changes: Cropped and resized to 160×160 pixels for in-app display."}
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
             </div>
           )}
 

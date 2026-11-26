@@ -138,6 +138,6 @@ Planın `com.cinetactico.game` bundle kimliği, Pass & Play ve çevrimiçi oda v
 | Kapandı | WebView verisi silinirse seri, profil ve Günlük Kadraj sonucu Preferences yedeğinden döner | `src/tests/durable-store.test.ts` 9/9; simülatörde localStorage silinip yeniden açıldı, 5 anahtar geri geldi |
 | Kapandı | Tek dokunuşla arama paneli açılıyor ve klavye kendiliğinden açılıyor, panel klavyenin üstünde | simülatör ekran görüntüsü (iPhone 16e) |
 | Kapandı | Release paketinde `server.url`, localhost, hata ayıklama ucu, sahte veri, kimlik bilgisi yok; oyun `ios/App/App/public` içinden açılıyor | `capacitor.config.json`, paket taraması |
-| DEFERRED | 11 portre dosyası pakette ama hiçbir oyun ekranında gösterilmiyor (yalnızca Ayarlar > Lisanslar'da atıf listesi). Kişilik hakkı riski gösterim olmadığı için düşük; mağaza görsellerinde yok. 1.0.1'de dosyalar ve manifest birlikte kaldırılacak (asset-system testi güncellenerek) | `src/utils/assetResolver.ts` yalnızca testte kullanılıyor |
+| Kapandı | 11 portre dosyası pakette gösterilmeden duruyordu; dosyalar, Ayarlar > Lisanslar paneli ve gizlilik paragrafları kaldırıldı | `src/tests/asset-system.test.ts` (manifest boş, klasör yok) |
 | USER ACTION | Gerçek iPhone'da yazarak arama (klavye gecikmesi, 12 sn saat), sessiz kip, arka plan, uçak modu, 30 dk ısınma; Apple hesabı, formlar, imzalı arşiv, TestFlight, 5-10 kişilik kör test | `APP_STORE_LAUNCH_KIT.md` bölüm 7 |
 | LOW | iOS klavyesinin form aksesuar çubuğu (^ v ✓) görünüyor; gizlemek için Capacitor Keyboard eklentisi gerekir, 1.0 için eklenmedi | simülatör |

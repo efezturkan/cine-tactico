@@ -1,13 +1,34 @@
 import fs from "fs";
 import path from "path";
-import crypto from "crypto";
-import { assetResolver, AssetResolver } from "../utils/assetResolver";
+import { AssetResolver } from "../utils/assetResolver";
 import { ASSET_MANIFEST, auditAssetManifest, isValidAssetManifestItem } from "../data/assets";
 import { AssetManifestItem, Criterion } from "../core";
 
 console.log("=================================================");
 console.log("CINEXOX ASSET INFRASTRUCTURE & RESOLVER TEST SUITE");
 console.log("=================================================");
+
+// Sürüm 1.0 hiçbir portre paketlemez (ASSET_MANIFEST boş). Çözümleyici mantığı, dosyası olmayan
+// kurgusal kayıtlarla sınanır: kimlik, ad, takma ad ve tür eşleşmeleri aynı kalır.
+const fixture = (id: string, entityType: "person", entityId: string, file: string): AssetManifestItem => ({
+  id,
+  entityType,
+  entityId,
+  assetType: "portrait",
+  localPath: `/assets/portraits/${file}`,
+  source: "Fixture",
+  license: "CC0",
+  author: "Fixture Author",
+  attribution: "Fixture / CC0",
+  modified: false,
+  checksum: "000000000000",
+});
+const FIXTURE_MANIFEST: AssetManifestItem[] = [
+  fixture("ast_act_dicaprio_portrait", "person", "act_dicaprio", "act_dicaprio.jpg"),
+  fixture("ast_act_bale_portrait", "person", "act_bale", "act_bale.jpg"),
+  fixture("ast_dir_nolan_portrait", "person", "dir_nolan", "dir_nolan.jpg"),
+];
+const assetResolver = new AssetResolver(FIXTURE_MANIFEST);
 
 function assert(condition: boolean, msg: string) {
   if (!condition) {
@@ -21,8 +42,8 @@ function assert(condition: boolean, msg: string) {
 const resolvedLeo = assetResolver.resolve("act_dicaprio", "portrait", "person");
 assert(resolvedLeo.isAvailable === true, "Doğrulanmış aktör (DiCaprio) isAvailable: true döner");
 assert(resolvedLeo.asset?.id === "ast_act_dicaprio_portrait", "Doğru manifest ID eşleşir");
-assert(resolvedLeo.asset?.license === "CC BY 4.0", "Doğru lisans bilgisi eşleşir");
-assert(resolvedLeo.asset?.author === "Raph_PH", "Doğru yazar bilgisi eşleşir");
+assert(resolvedLeo.asset?.license === "CC0", "Doğru lisans bilgisi eşleşir");
+assert(resolvedLeo.asset?.author === "Fixture Author", "Doğru yazar bilgisi eşleşir");
 assert(Boolean(resolvedLeo.src), "Yerel görsel yolu (src) mevcuttur");
 
 // 2. Asset bulunamadığında fallback dönüyor (5 Pilot Film dahil)
@@ -100,17 +121,10 @@ const invalidItemMissingAuthor: AssetManifestItem = {
 };
 assert(!isValidAssetManifestItem(invalidItemMissingAuthor), "Yazarı boş olan kayıt validator tarafından reddedilir");
 
-// 7. Aktif ASSET_MANIFEST içindeki 11 pilot öğenin fiziksel dosya ve lisans doğrulaması
-assert(ASSET_MANIFEST.length === 11, "Pilot manifest tam 11 doğrulanmış portre içerir (10 Aktör + 1 Yönetmen)");
-
-ASSET_MANIFEST.forEach((item) => {
-  assert(isValidAssetManifestItem(item), `Manifest öğesi (${item.id}) lisans, yazar ve atıf kurallarını eksiksiz sağlar`);
-  
-  if (item.localPath) {
-    const fullDiskPath = path.join(process.cwd(), "public", item.localPath.replace(/^\//, ""));
-    assert(fs.existsSync(fullDiskPath), `Fiziksel dosya diskte mevcuttur: ${item.localPath}`);
-  }
-});
+// 7. Sürüm 1.0 paketi: hiçbir portre dosyası ve atıf kaydı yok
+assert(ASSET_MANIFEST.length === 0, "Paket manifesti bilerek boş: sürüm 1.0 portre paketlemez");
+assert(!fs.existsSync(path.join(process.cwd(), "public", "assets", "portraits")), "public/assets/portraits klasörü pakette yok");
+assert(auditAssetManifest(FIXTURE_MANIFEST).length === 0, "Doğrulayıcı geçerli kurgusal kayıtları kabul eder");
 
 // 8. Phase 4: Data-Driven Resolution Tests (Scale & General Entity Resolution)
 console.log("\n--- Phase 4: Data-Driven UI Resolution Tests ---");
@@ -157,7 +171,7 @@ assert(!critAwardRes.isAvailable, "Görseli olmayan kriter (AWARD) fail-silent f
 
 // E. 1.000+ Ölçeklenebilirlik Testi: UI kodu değişmeden yeni manifest kaydını otomatik çözme
 const dynamicCatalogManifest: AssetManifestItem[] = [
-  ...ASSET_MANIFEST,
+  ...FIXTURE_MANIFEST,
   {
     id: "ast_m_future_1001_poster",
     entityType: "movie",
@@ -210,16 +224,6 @@ const remoteOnly = new AssetResolver([
   },
 ]);
 assert(!remoteOnly.resolve("act_remote", "portrait", "person").isAvailable, "Uzak URL paket görseli sayılmaz");
-
-ASSET_MANIFEST.forEach((item) => {
-  const fullDiskPath = path.join(process.cwd(), "public", item.localPath!.replace(/^\//, ""));
-  const bytes = fs.readFileSync(fullDiskPath);
-  assert(bytes[0] === 0xff && bytes[1] === 0xd8, `${item.id} jpeg başlığı sağlam`);
-  assert(bytes.length < 100_000, `${item.id} küçük portre (${bytes.length} bayt)`);
-  const sum = crypto.createHash("sha256").update(bytes).digest("hex").slice(0, 12);
-  assert(sum === item.checksum, `${item.id} checksum dosyayla eşleşir`);
-  assert(item.width === 160 && item.height === 160 && item.format === "jpeg", `${item.id} 160 jpeg`);
-});
 
 console.log("=================================================");
 console.log("ASSET INFRASTRUCTURE SUMMARY: ALL TESTS PASSED!");

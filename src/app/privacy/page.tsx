@@ -102,9 +102,6 @@ export default function PrivacyPage() {
               <p>
                 <strong>Telifli Afişler:</strong> Crosscut içerisinde hiçbir stüdyo film afişi veya telifli tanıtım görseli barındırılmaz. Tüm filmler tipografik ve vektörel gösterimlerle sunulur.
               </p>
-              <p className="mt-2 text-xs text-zinc-400">
-                <strong>Creative Commons Portreler:</strong> Uygulama paketinde yer alan 11 aktör ve yönetmen portresi Wikimedia Commons üzerinden CC BY ve CC BY-SA açık lisanslarıyla temin edilmiştir. Her görsel 160×160 kare formatında kırpılmış olup, yazar ve lisans detayları Ayarlar menüsündeki &quot;Lisanslar &amp; Görsel Atıfları&quot; alanında tam olarak listelenmektedir.
-              </p>
             </section>
           </>
         ) : (
@@ -151,9 +148,6 @@ export default function PrivacyPage() {
               </h2>
               <p>
                 <strong>Zero Copyrighted Posters:</strong> Crosscut hosts 0 copyrighted studio posters or promotional stills. All movie titles use typographic representations and icons.
-              </p>
-              <p className="mt-2 text-xs text-zinc-400">
-                <strong>Creative Commons Portraits:</strong> The 11 actor and director portraits packaged locally are sourced from Wikimedia Commons under CC BY and CC BY-SA open licenses. All items are cropped to 160×160 pixels. Full author, license, and provenance attribution is publicly accessible in the Settings &gt; &quot;Licenses &amp; Attributions&quot; panel.
               </p>
             </section>
           </>

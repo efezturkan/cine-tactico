@@ -62,7 +62,7 @@ Game UI Database, Interface In Game, Sensor Tower, AppMagic, Deconstructor of Fu
 | P2 | Cihaz saatiyle Günlük Kadraj'ı yeniden oynama | Tek oyunculu, yerel, ödülsüz; kabul edildi |
 | P2 | `next` 14.2.15 için `npm audit` bulgusu | Sunucu özellikleri; statik export'ta yok. 1.0.1'de yükseltilir |
 | P2 | Dynamic Type ve VoiceOver desteği yok | 1.0.1 |
-| P2 | Portreler: 11 Wikimedia Commons görseli (CC BY / CC BY-SA), atıf Ayarlar > Lisanslar'da, 11'i de manifestte | Uygun; SA koşulu görsellere sınırlı, uygulama kodunu etkilemez. Hukuki bağımsız doğrulama yok |
+| Kapandı | 11 Wikimedia portresi gösterilmiyordu; dosyalar, atıf paneli ve gizlilik paragrafları kaldırıldı. Pakette fotoğraf yok | `public/assets/` yok, `asset-system.test.ts` manifestin boş olduğunu doğrular |
 | P3 | Sessiz kipte Web Audio davranışı doğrulanmadı | Gerçek cihaz |
 
 ### Sürüm 1.1 backend kapıları (şimdiki pakette devre dışı; canlı veritabanı incelenmedi)

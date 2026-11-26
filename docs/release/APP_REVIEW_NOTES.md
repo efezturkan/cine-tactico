@@ -17,7 +17,7 @@ Crosscut is an original cinematic tactical board game combining 3×3 intersectio
 
 To help you experience the core game value in the shortest possible time, this guide is divided into:
 - **Part 1:** Quick Core Loop (Playable in under 1 minute, no sign-up required)
-- **Part 2:** Additional Feature Verification (Offline Mode, Daily Reel, Data, Licenses & Attributions, Language Switch)
+- **Part 2:** Additional Feature Verification (Offline Mode, Daily Reel, Data, Language Switch)
 - **Part 3:** Asset, Licensing & Privacy Verification (Guidelines 5.1.1(v) & 5.2)
 
 ---
@@ -58,12 +58,7 @@ To help you experience the core game value in the shortest possible time, this g
 ### Flow 3: Data (Guideline 5.1.1)
 Crosscut has **no accounts, no sign-in, and no server communication**. All data (nickname, avatar, bot match history) stays on the device. Profile > "Reset Local Data" erases it; uninstalling removes everything.
 
-### Flow 4: In-App Creative Commons Licenses & Attributions (Guideline 5.2)
-1. On the home lobby, tap the **Settings (Gear icon)** at the top right.
-2. Tap **"Lisanslar & Görsel Atıfları" / "Licenses & Attributions"**.
-3. **Behavior:** Expands the full attribution list for the 11 Wikimedia Commons portrait files bundled with the app, displaying each work's title, author, clickable Wikimedia Commons source URL, clickable Creative Commons license URL (`CC BY 2.0`, `CC BY-SA 2.0`, `CC BY-SA 3.0`, `CC BY 4.0`, `CC BY-SA 4.0`), and the modification notice (*cropped and resized to 160×160 pixels*).
-
-### Flow 5: Language Switching (TR / EN)
+### Flow 4: Language Switching (TR / EN)
 1. Open **Settings (Gear icon)** at the top right of the lobby.
 2. Next to **"Dil / Language"**, tap **TR** or **EN**.
 3. **Behavior:** All UI menus, board titles, criteria labels, bot rank titles, Settings panels, and Reset Local Data dialogs switch immediately between Turkish and English.
@@ -72,8 +67,7 @@ Crosscut has **no accounts, no sign-in, and no server communication**. All data 
 
 ## PART 3: ASSET & INTELLECTUAL PROPERTY SUMMARY (GUIDELINE 5.2)
 
-- **Zero Copyrighted Posters:** Crosscut bundles **0 movie posters** or studio promotional stills, and connects to **0 external image CDNs** (no IMDb/TMDb poster URLs). All movies are rendered using typographic cards and vector icons.
-- **11 Open-Licensed Portraits:** The 11 actor/director portrait files in `/assets/portraits/` (not shown on any game screen) are verified open-licensed works from **Wikimedia Commons** (`CC BY 2.0`, `CC BY-SA 2.0`, `CC BY-SA 3.0`, `CC BY 4.0`, `CC BY-SA 4.0`), attributed both in `public/assets/portraits/pilot_manifest.json` and in-app under **Settings → Licenses & Attributions**.
+- **Zero Copyrighted Posters:** Crosscut bundles **0 movie posters, 0 photographs of people** and no studio promotional stills, and connects to **0 external image CDNs** (no IMDb/TMDb poster URLs). All movies are rendered using typographic cards and vector icons.
 - **Factual Trivia Metadata:** Film titles, release years, directors, and cast intersections are factual historical metadata cross-referenced with public Wikidata Q-IDs.
 
 ---
