@@ -17,7 +17,7 @@ Crosscut is an original cinematic tactical board game combining 3×3 intersectio
 
 To help you experience the core game value in the shortest possible time, this guide is divided into:
 - **Part 1:** Quick Core Loop (Playable in under 1 minute, no sign-up required)
-- **Part 2:** Additional Feature Verification (Offline Mode, Daily XOX, Account Deletion, Licenses & Attributions, Multiplayer Room, Language Switch)
+- **Part 2:** Additional Feature Verification (Offline Mode, Daily Reel, Data, Licenses & Attributions, Language Switch)
 - **Part 3:** Asset, Licensing & Privacy Verification (Guidelines 5.1.1(v) & 5.2)
 
 ---
@@ -26,7 +26,7 @@ To help you experience the core game value in the shortest possible time, this g
 
 ### Instant Play vs Autonomous AI Bot (No Sign-Up Required)
 1. Launch **Crosscut**.
-2. The app operates immediately with a local/anonymous guest session. **No registration, email address, phone number, or password is required to play.**
+2. The app starts playing immediately. Crosscut is a fully offline single-player game: **it has no accounts, no network connection, no tracking and no in-app purchases.**
 3. On the home lobby (**"Gişe"**), tap the primary gold button: **"DÜELLOYA GİR" / "ENTER DUEL"** (or open the **"Vizyondakiler" / "Now Showing"** tab and pick a mode).
 4. A **"Rakibini Seç" / "Choose Your Opponent"** sheet lists three offline AI opponents (Easy, Medium, Hard) with rating and play style. Tap any one; the match starts after a short countdown. These are on-device bots, not other users.
 5. **How to play a move:**
@@ -55,28 +55,25 @@ To help you experience the core game value in the shortest possible time, this g
 3. After the ninth square the result card shows your rank by squares won (9/9 "Kusursuz Kadraj" / "Perfect Reel" down to 0-2 "Bu çekim olmadı" / "Not this take"). The card has **Share** (native iOS share sheet) and **Copy to clipboard**.
 4. One attempt per UTC day: reopening the ticket shows today's result instead of a new game. Leaving a live Daily ends it with the squares earned. Consecutive days are counted as a local daily streak (flame icon, top bar).
 
-### Flow 3: Data & Account (Guideline 5.1.1)
-Version 1.0 has **no accounts, no sign-in, and no server communication**. All data (nickname, avatar, bot match history) stays on the device. Profile > "Reset Local Data" erases it; uninstalling removes everything.
+### Flow 3: Data (Guideline 5.1.1)
+Crosscut has **no accounts, no sign-in, and no server communication**. All data (nickname, avatar, bot match history) stays on the device. Profile > "Reset Local Data" erases it; uninstalling removes everything.
 
 ### Flow 4: In-App Creative Commons Licenses & Attributions (Guideline 5.2)
 1. On the home lobby, tap the **Settings (Gear icon)** at the top right.
 2. Tap **"Lisanslar & Görsel Atıfları" / "Licenses & Attributions"**.
-3. **Behavior:** Expands the full attribution list for all 11 Wikimedia Commons portraits bundled in the app, displaying each work's title, author, clickable Wikimedia Commons source URL, clickable Creative Commons license URL (`CC BY 2.0`, `CC BY-SA 2.0`, `CC BY-SA 3.0`, `CC BY 4.0`, `CC BY-SA 4.0`), and the modification notice (*cropped and resized to 160×160 pixels*).
+3. **Behavior:** Expands the full attribution list for the 11 Wikimedia Commons portrait files bundled with the app, displaying each work's title, author, clickable Wikimedia Commons source URL, clickable Creative Commons license URL (`CC BY 2.0`, `CC BY-SA 2.0`, `CC BY-SA 3.0`, `CC BY 4.0`, `CC BY-SA 4.0`), and the modification notice (*cropped and resized to 160×160 pixels*).
 
 ### Flow 5: Language Switching (TR / EN)
 1. Open **Settings (Gear icon)** at the top right of the lobby.
 2. Next to **"Dil / Language"**, tap **TR** or **EN**.
 3. **Behavior:** All UI menus, board titles, criteria labels, bot rank titles, Settings panels, and Reset Local Data dialogs switch immediately between Turkish and English.
 
-### Flow 6: Online Multiplayer
-Not included in version 1.0. It is disabled behind a feature flag and will be announced in a future update.
-
 ---
 
 ## PART 3: ASSET & INTELLECTUAL PROPERTY SUMMARY (GUIDELINE 5.2)
 
 - **Zero Copyrighted Posters:** Crosscut bundles **0 movie posters** or studio promotional stills, and connects to **0 external image CDNs** (no IMDb/TMDb poster URLs). All movies are rendered using typographic cards and vector icons.
-- **11 Open-Licensed Portraits:** All 11 actor/director portraits in `/assets/portraits/` are verified open-licensed works from **Wikimedia Commons** (`CC BY 2.0`, `CC BY-SA 2.0`, `CC BY-SA 3.0`, `CC BY 4.0`, `CC BY-SA 4.0`), attributed both in `public/assets/portraits/pilot_manifest.json` and in-app under **Settings → Licenses & Attributions**.
+- **11 Open-Licensed Portraits:** The 11 actor/director portrait files in `/assets/portraits/` (not shown on any game screen) are verified open-licensed works from **Wikimedia Commons** (`CC BY 2.0`, `CC BY-SA 2.0`, `CC BY-SA 3.0`, `CC BY 4.0`, `CC BY-SA 4.0`), attributed both in `public/assets/portraits/pilot_manifest.json` and in-app under **Settings → Licenses & Attributions**.
 - **Factual Trivia Metadata:** Film titles, release years, directors, and cast intersections are factual historical metadata cross-referenced with public Wikidata Q-IDs.
 
 ---

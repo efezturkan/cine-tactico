@@ -21,7 +21,12 @@ Metin (ad, alt başlık, anahtar kelime, açıklama, sürüm notu) tek yerde dur
 | Yazı tipleri | Inter, Newsreader, Barlow Condensed: `next/font` ile derlemede paketlenir (`out/_next/static/media/*.woff2`), çalışma anında Google isteği yok. Üçü de SIL OFL; uygulamaya gömmeye izin verir. Lisans metni 1.0.1 ayar listesine eklenecek | `out/index.html` içinde `fonts.googleapis` 0 |
 | Ses | Web Audio ile üretim, ses dosyası yok | kod |
 | URL'ler | `/`, `/privacy`, `/support`: HTTP 200. `/terms` yok (abonelik/IAP olmadığı için gerekmez) | `curl` |
-| Testler | `tsc` temiz, `npm test` exit 0, FAIL yok | günlük |
+| Çevrimiçi kod | Varsayılan derlemede Supabase istemcisi, oda, hamle RPC'si ve ağ kodu pakete girmez (`NEXT_PUBLIC_ENABLE_ONLINE` ≠ 1). Mağaza, görevler ve liderlik tablosu bileşenleri hiçbir ekrandan içe aktarılmadığı için zaten paketlenmiyor | `src/tests/release-bundle.test.ts` (7/7), `out/` taraması |
+| Release arşivi | `xcodebuild archive` (generic iOS, imzasız): ARCHIVE SUCCEEDED, 15 MB arşiv, `MinimumOSVersion 15.0`, SDK `iphoneos27.2` | arşiv günlüğü |
+| dSYM | `App`, `Capacitor`, `Cordova` dSYM'leri arşivde; `dwarfdump --uuid` ile ikili dosyayla UUID eşleşti (App: B1B4F1B9-6123-34B4-BE03-4221E2C45037) | `dwarfdump` |
+| JS hata kurtarma | `ErrorBoundary` (render hataları) ve `window.onerror` / `unhandledrejection` kaydı; "yeniden başlat" artık veriyi silmez, yalnızca aynı oturumda 3. hatada son çare olarak siler | `src/tests/error-recovery.test.tsx` (4/4) |
+| WebView hissi | `-webkit-tap-highlight-color`, `-webkit-touch-callout`, `touch-action: manipulation`, `overscroll-behavior: none`, gövdede `env(safe-area-inset-*)`, `user-select: none` (girdi alanları hariç) | `src/app/globals.css:40-56,163` |
+| Testler | `tsc` temiz; `npm test` 41 dosya zincirde, hepsi başarısızlıkta süreci sonlandırıyor (`process.exit(1)`/`throw`), zincir dışı yalnızca yardımcı `sim-helpers.ts` | `package.json`, tarama |
 
 ## 2. Varlık ölçüleri
 
@@ -50,13 +55,23 @@ Game UI Database, Interface In Game, Sensor Tower, AppMagic, Deconstructor of Fu
 
 | Önem | Konu | Karar |
 |---|---|---|
-| P2 | Kilitli ve uykuda kod: çevrimiçi oda, mağaza, görevler, liderlik tablosu kodu pakette. Kural 2.5.19 uzaktan açılan özellik arar; burada bayraklar derleme sabiti, ağdan açılamıyor | Yorumcuya Review Notes'ta açıkça yazılı. Sürüm 1.1'de ya açılır ya paketten çıkarılır |
-| P2 | Çökme raporu ve analitik yok | Bilinçli: "veri toplanmıyor" etiketi korunuyor. Çökme verisi Xcode Organizer'dan (kullanıcı izin verirse) gelir. Sentry eklemek etiketi ve manifesti değiştirir; 1.0 sonrası karar |
-| P2 | Cihaz saatini geri alarak Günlük Kadraj'ı yeniden oynama | Tek oyunculu, yerel; tablo ve ödül yok. Kabul edilen risk, sürüm 1.1 sunucusuz değilse kalır |
-| P2 | `next` 14.2.15 için `npm audit` kritik bulgusu | Bulgular sunucu özellikleri (Server Actions, middleware, görsel optimizasyonu); statik export'ta yok. 1.0.1'de yükseltilecek |
-| P2 | Sistem yazı boyutu ve VoiceOver desteği yok | Sürüm 1.0.1 |
-| P3 | Sessiz kipte Web Audio davranışı doğrulanmadı | Gerçek cihaz testi |
-| P3 | Eski Android derlemesinde `anon` anahtarı (gitignore'lu) | Android'e geçerken temizle |
+| Kapandı | Kilitli çevrimiçi kod pakette duruyordu (Guideline 2.5.19) | Derleme zamanı kapısı: varsayılan pakette yok, Review Notes bununla birebir |
+| Kapandı | Hata ekranındaki "yeniden başlat" tüm yerel veriyi (seri, Günlük Kadraj sonucu) siliyordu | Düzeltildi, testli |
+| Kapandı | Eski Android derlemesinde `anon` anahtarı (`android/.../assets/public`, gitignore'lu, 3 Kasım) | Silindi; Android'e geçilirken `cap sync` temiz üretir |
+| P2 | Çökme raporu ve analitik yok | Bilinçli (etiket "Data Not Collected"). İzleme planı bölüm 9 |
+| P2 | Cihaz saatiyle Günlük Kadraj'ı yeniden oynama | Tek oyunculu, yerel, ödülsüz; kabul edildi |
+| P2 | `next` 14.2.15 için `npm audit` bulgusu | Sunucu özellikleri; statik export'ta yok. 1.0.1'de yükseltilir |
+| P2 | Dynamic Type ve VoiceOver desteği yok | 1.0.1 |
+| P2 | Portreler: 11 Wikimedia Commons görseli (CC BY / CC BY-SA), atıf Ayarlar > Lisanslar'da, 11'i de manifestte | Uygun; SA koşulu görsellere sınırlı, uygulama kodunu etkilemez. Hukuki bağımsız doğrulama yok |
+| P3 | Sessiz kipte Web Audio davranışı doğrulanmadı | Gerçek cihaz |
+
+### Sürüm 1.1 backend kapıları (şimdiki pakette devre dışı; canlı veritabanı incelenmedi)
+`supabase/migrations` okundu; `service_role` hiçbir yerde yok, istemci yalnızca `anon` anahtarını kullanır. Çevrimiçi açılmadan önce:
+1. `profiles_update_own`: kullanıcı kendi `wins`, `reels_balance` gibi alanlarını değiştirebilir; liderlik tablosu bu haliyle hileye açık. Skor alanlarını sunucu RPC'sine taşı.
+2. `game_rooms_update_participants`: `guest_id is null and status = 'WAITING'` koşulu, giriş yapmış herkese bekleyen odayı güncelleme izni verir; katılma yalnızca katılma RPC'siyle olmalı.
+3. `submit_move` RPC'si `p_is_stealing` parametresini hâlâ taşıyor; anayasa hücre çalmayı kaldırdı, parametre silinmeli.
+4. `profiles_select_public`: tüm profil sütunları herkese açık; liderlik için gereken sütunlara daralt.
+5. Canlı Supabase projesinde RLS'in gerçekten açık ve migrasyonların uygulanmış olduğu panelden doğrulanmalı.
 
 ## 7. İNSAN KAPISI: ONAY BEKLİYOR (ajan sertifikalayamaz)
 
@@ -69,22 +84,32 @@ Game UI Database, Interface In Game, Sensor Tower, AppMagic, Deconstructor of Fu
 - [ ] Ana ekranda rakiplerin yanında simge kontrolü
 - [ ] VoiceOver, büyük yazı boyutu, Türkçe klavye, gece yarısı UTC
 
-## 8. SKORKART
+## 8. Çökme izleme planı (SDK eklenmeden)
+
+- **Native çökmeler:** Xcode Organizer > Crashes ve TestFlight geri bildirimi. Yalnızca "Uygulama Analizlerini Paylaş" açan kullanıcılardan gelir. Her yükleme için bu arşivin dSYM'leri (`App.xcarchive/dSYMs`) arşivle; App Store Connect'e yükleyince semboller otomatik gelir.
+- **JS çalışma hataları** (WebView içinde, native çökme sayılmaz): `ErrorBoundary` son hatayı yalnızca cihazda `sessionStorage` ("crosscut_last_error") ve konsolda tutar, hiçbir yere göndermez. Testçi sorun bildirirse Safari Web Inspector ile aynı kayıt okunur. TestFlight'ta "Send Beta Feedback" ekran görüntüsüyle birlikte gelir.
+- **Eşik:** TestFlight'ta ilk 50-100 kullanıcıda Organizer'daki çökmesiz oturum oranı ≥ 99,5 % değilse yayına çıkma.
+- **Sonraki karar:** TestFlight verisi yetersiz kalırsa 1.0.1'de gizlilik etiketini güncelleyerek bir çökme SDK'sı değerlendirilir.
+
+## 9. SKORKART (kod ile doğrulanabilenin tavanı)
 
 ```text
 ================================================================
-iOS COMMERCIAL RELEASE READINESS SCORECARD  (26 Kasım 2026)
+iOS COMMERCIAL RELEASE READINESS SCORECARD  (26 Kasım 2026, düzeltmeler sonrası)
 ================================================================
-1. Core Loop, FTUE & Retention Strength     : 7/10 - Günlük Kadraj ve 1 dokunuşluk rövanş iyi; ilk maç ~4 sn bekleme (kuyruk 1,4 sn + rakip karşılaşma 2,7 sn + klaket)
-2. Visual Identity & Anti-AI-Slop Polish    : 7/10 - tutarlı 35mm kimlik; hâlâ monoton kart yapısı, aynı ikonu kullanan iki bot
-3. Game Feel (Haptics, Audio, Curves, UX)   : 6/10 - Haptics ve ayar var; sessiz kip ve ses gerçek cihazda doğrulanmadı
-4. Code Hygiene & Zero-Shortcut Integrity   : 8/10 - boş catch gerekçelendirildi, any yok, eslint-disable 3 (bilinen)
-5. Chaos Resilience, Perf & Observability   : 5/10 - testler ve simülatör var; gerçek cihaz, batarya ölçümü, çökme raporu yok
-6. Security & OWASP MASVS Baseline          : 8/10 - çevrimdışı, sır yok, ATS temiz; next audit bulgusu 1.0.1'de
-7. 2026 Apple App Store Compliance          : 7/10 - kodla doğrulanabilenler tamam; hesap, form, yükleme insan kapısında
+1. Core Loop, FTUE & Retention Strength     : 8/10 - rövanş 1 dokunuş, oyun sonu ekranı tek net CTA, ilk maç beklemesi ~4 sn
+2. Visual Identity & Anti-AI-Slop Polish    : 8/10 - taşma, hizasızlık, emoji, yinelenen etiket temizlendi; tam ekran taramaları yapıldı
+3. Game Feel (Haptics, Audio, Curves, UX)   : 7/10 - haptics tek yardımcıya toplandı, ayarlı; ses ve titreşim gerçek cihazda doğrulanamaz (tavan)
+4. Code Hygiene & Zero-Shortcut Integrity   : 9/10 - kilitli kod paketten çıktı, boş catch'ler gerçek kontrole çevrildi, test zinciri doğrulandı
+5. Chaos Resilience, Perf & Observability   : 7/10 - hata kurtarma veri kaybetmiyor, testli; gerçek cihaz, batarya, çökme verisi yok (tavan)
+6. Security & OWASP MASVS Baseline          : 9/10 - pakette ağ, anahtar, hesap yok; 1.1 backend kapıları yazılı
+7. 2026 Apple App Store Compliance          : 8/10 - Release arşivi, dSYM, gizlilik manifesti, Review Notes = gerçek davranış; hesap ve formlar insan kapısında
 ----------------------------------------------------------------
 OPEN P0 BLOCKERS     : 0
-OPEN P1 REJECT RISKS : 0 (kodla bilinen yok; Apple kararı doğrulanamaz)
-RELEASE VERDICT      : NO-GO (kural: 8 altı kategori var). Gerçek cihaz turu ve insan kapısı tamamlanınca TESTFLIGHT'A HAZIR olarak yeniden puanlanır.
+OPEN P1 REJECT RISKS : 0
+RELEASE VERDICT      : NO-GO kuralı tetikleniyor (3 ve 5 numaralı kategoriler 8 altında) ama kalan eksik YALNIZCA fiziksel cihaz kanıtı.
+                       Kod tarafında yapılabilecek her şey kapandı: Master Release Execution Plan'a geçmeye hazır.
 ================================================================
 ```
+
+Kategori 3 ve 5, 3-4 yaşında bir iPhone'da 20-30 dakikalık Release/TestFlight oturumu ve TestFlight çökme verisi olmadan 8'e çıkarılamaz; puanı kanıtsız yükseltmedim.
