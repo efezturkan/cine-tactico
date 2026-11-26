@@ -1,6 +1,6 @@
 "use client";
 
-export type SalonPresetId = "kadife" | "analog" | "gumus" | "gece_mavisi";
+export type SalonPresetId = "kadife" | "perde" | "analog" | "gumus" | "gece_mavisi";
 export type SalonGrainOption = "off" | "light" | "film";
 
 export interface SalonPreset {
@@ -11,7 +11,19 @@ export interface SalonPreset {
   beam: string;
   /** Tüm ekranların üstüne binen, salonun ışık rengi (rgba, düşük opaklık) */
   tint: string;
+  /**
+   * İsteğe bağlı doku: ışık rengi katmanının üzerine çizilen statik CSS gradyanları (perde pilileri gibi).
+   * Ayrı bir katman açmaz, mevcut ışık rengi katmanına biner; animasyon yoktur.
+   */
+  folds?: string;
+  /** Ayar ekranındaki renk noktası; verilmezse huzma ve zeminden türetilir */
+  swatch?: string;
 }
+
+/** Perde pilileri: 100px'lik tekrar eden koyu-bordo-koyu dalga ve üstte hafif perde sarkması (valans) gölgesi. */
+const CURTAIN_FOLDS =
+  "linear-gradient(to bottom, rgba(0,0,0,0.40) 0%, rgba(0,0,0,0) 22%), " +
+  "repeating-linear-gradient(90deg, rgba(0,0,0,0.28) 0px, rgba(0,0,0,0) 26px, rgba(150,22,40,0.10) 52px, rgba(0,0,0,0) 74px, rgba(0,0,0,0.28) 100px)";
 
 export const SALON_PRESETS: Record<SalonPresetId, SalonPreset> = {
   kadife: {
@@ -20,6 +32,16 @@ export const SALON_PRESETS: Record<SalonPresetId, SalonPreset> = {
     bg: "#0B0D12",
     beam: "#F2D9A0",
     tint: "rgba(150, 30, 45, 0.07)",
+  },
+  perde: {
+    id: "perde",
+    label: { tr: "Perde", en: "Curtain" },
+    // Zemin kırmızıya çalan siyah; ışık rengi katmanı bordoyu verir. Metin ve altın vurgu kontrastı testte korunur.
+    bg: "#10070A",
+    beam: "#F0B98A",
+    tint: "rgba(158, 24, 42, 0.16)",
+    folds: CURTAIN_FOLDS,
+    swatch: "radial-gradient(circle at 35% 30%, #B3243A, #4A0D19 60%, #10070A)",
   },
   analog: {
     id: "analog",
@@ -111,6 +133,7 @@ export function computeSalonVars(cfg: SalonConfig) {
     bg: p.bg,
     beam: p.beam,
     tint: p.tint,
+    folds: p.folds ?? "none",
     beamOpacity: ((cfg.projection / 100) * 0.14).toFixed(4),
     dimFlat: (dim * 0.45).toFixed(4),
     dimVignette: Math.min(0.75, dim * 1.25).toFixed(4),
@@ -126,6 +149,7 @@ export function applySalonConfigToDom(cfg: SalonConfig) {
   root.style.setProperty("--salon-bg", v.bg);
   root.style.setProperty("--salon-beam", v.beam);
   root.style.setProperty("--salon-tint", v.tint);
+  root.style.setProperty("--salon-folds", v.folds);
   root.style.setProperty("--salon-beam-opacity", v.beamOpacity);
   root.style.setProperty("--salon-dim-flat", v.dimFlat);
   root.style.setProperty("--salon-dim-vignette", v.dimVignette);

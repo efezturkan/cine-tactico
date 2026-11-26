@@ -149,7 +149,7 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
           {compareButton}
         </div>
       ) : (
-        <div className="absolute inset-x-0 bottom-0 w-full max-w-lg mx-auto bg-[#10131A]/92 border-t border-x border-white/10 rounded-t-[20px] px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col gap-2.5 shadow-2xl animate-in slide-in-from-bottom-3 duration-150">
+        <div className="absolute inset-x-0 bottom-0 w-full max-w-lg mx-auto bg-[#10131A]/95 border-t border-x border-white/10 rounded-t-[20px] px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col gap-2.5 shadow-2xl animate-in slide-in-from-bottom-3 duration-150">
           {/* Başlık + karşılaştır */}
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
@@ -160,7 +160,7 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
           </div>
 
           {/* Hazır ayarlar */}
-          <div className="grid grid-cols-4 gap-1.5" role="radiogroup" aria-label={dict.salon.preset}>
+          <div className="grid grid-cols-5 gap-1.5" role="radiogroup" aria-label={dict.salon.preset}>
             {(Object.keys(SALON_PRESETS) as SalonPresetId[]).map((pid) => {
               const preset = SALON_PRESETS[pid];
               const isSelected = config.preset === pid;
@@ -175,17 +175,17 @@ export const SalonLightSheet: React.FC<SalonLightSheetProps> = ({ isOpen, onClos
                     haptic.light();
                     update({ preset: pid });
                   }}
-                  className={`min-h-[44px] rounded-xl border flex items-center justify-center gap-1 px-0.5 transition active:scale-95 ${
+                  className={`min-h-[56px] rounded-xl border flex flex-col items-center justify-center gap-1 px-0.5 py-1 transition active:scale-95 ${
                     isSelected
                       ? "bg-[#181B22] border-[#D9A441] text-[#D9A441]"
                       : "bg-[#0B0D12]/80 border-white/10 text-[#8A8F9A]"
                   }`}
                 >
                   <span
-                    className="w-3.5 h-3.5 rounded-full border border-white/25 shrink-0"
-                    style={{ background: `radial-gradient(circle at 35% 30%, ${preset.beam}, ${preset.bg} 85%)` }}
+                    className="w-4 h-4 rounded-full border border-white/25 shrink-0"
+                    style={{ background: preset.swatch ?? `radial-gradient(circle at 35% 30%, ${preset.beam}, ${preset.bg} 85%)` }}
                   />
-                  <span className="text-[11px] font-bold leading-tight truncate">
+                  <span className="text-[11px] font-bold leading-tight text-center">
                     {preset.label[locale === "en" ? "en" : "tr"]}
                   </span>
                 </button>

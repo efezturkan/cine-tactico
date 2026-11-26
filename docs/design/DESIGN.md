@@ -100,4 +100,4 @@ Sabit inline renk yok, tek kaynak tokenlardır:
 - **Sinefil Kartı**: Tam ekran sayfa, avatar seçici alt sheet, tek satır favori yönetmen, galibiyet/mağlubiyet/oran dökümü, Arşiv açılış satırı.
 - **Kadraj (Oyun)**: REC + timecode, tek satır serif başlık, 44px 'X' butonu, SEN (X) vs RAKİP (O) şeridi, ortalanmış kadraj, 12s sayaç çubuğu (son 3s kırmızı), durum metni.
 - **Sonuç**: "Sahne senin!" veya "Bu çekim olmadı.", ortalanmış 3x3 `MiniKadrajPreview`, SEN / RAKİP / NADİRLİK özeti, "Yeni çekim" ve "Gişe'ye dön".
-- **Ayarlar & Salon Işığı**: Ses, titreşim, Salon ışığı (Kadife, Analog, Gümüş, Gece mavisi), Nasıl oynanır, Gizlilik politikası, Kullanım koşulları.
+- **Ayarlar & Salon Işığı**: Ses, titreşim, Salon ışığı (Kadife, Perde, Analog, Gümüş, Gece mavisi), Nasıl oynanır, Gizlilik politikası, Kullanım koşulları.
