@@ -77,10 +77,15 @@ function pilotMovies(): Movie[] {
         ...(production.originalTitle ? { originalTitle: production.originalTitle } : {}),
         year: production.year,
         director: director ? people.get(director.personId) ?? "" : "",
-        cast: credits
-          .filter((credit) => credit.role === "ACTOR")
-          .map((credit) => people.get(credit.personId) ?? "")
-          .filter((name) => name.length > 0),
+        // Kaynak veride aynı oyuncu iki kez geçebilir; tahtada ve cevap ekranında tek görünmeli.
+        cast: Array.from(
+          new Set(
+            credits
+              .filter((credit) => credit.role === "ACTOR")
+              .map((credit) => people.get(credit.personId) ?? "")
+              .filter((name) => name.length > 0)
+          )
+        ),
         genres: production.genreIds.map((genreId) => GAME_GENRE_LABEL[genreId]),
         hasOscar: oscarWinner(production.id),
         ...(names.length > 0 ? { aliases: names } : {}),
