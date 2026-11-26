@@ -380,6 +380,39 @@ export class AudioService {
       osc.stop(now + index * 0.07 + 0.5);
     });
   }
+
+  // Sakin, düşük tonlu yenilgi / çekim kesme tonu (haptic.error ile tutarlı)
+  public playDefeat(): void {
+    if (this.muted) return;
+    this.initializeContext();
+    if (!this.context) return;
+
+    const now = this.context.currentTime;
+    const pv = pitchVariation(0.03);
+    const notes = [220, 164.81]; // A3 -> E3 sakin iniş
+
+    notes.forEach((freq, idx) => {
+      if (!this.context) return;
+      const osc = this.context.createOscillator();
+      const gain = this.context.createGain();
+      const start = now + idx * 0.12;
+      const dur = idx === 0 ? 0.16 : 0.32;
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq * pv, start);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.96 * pv, start + dur);
+
+      gain.gain.setValueAtTime(0.18, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
+
+      osc.connect(gain);
+      gain.connect(this.out());
+
+      this.registerOscillator(osc);
+      osc.start(start);
+      osc.stop(start + dur + 0.02);
+    });
+  }
 }
 
 export const audio = new AudioService();

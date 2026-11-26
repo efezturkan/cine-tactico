@@ -154,7 +154,7 @@ export function useGameSession(
       burstConfetti(100);
     } else if (winningPlayer === "O") {
       setScoreO(s => s + 1);
-      audio.playVictory();
+      audio.playDefeat();
       haptic.error();
     } else {
       audio.playSelect();

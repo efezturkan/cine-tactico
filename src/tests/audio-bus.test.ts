@@ -50,7 +50,7 @@ assert(pitchVariation(0.05, () => 0.5) === 1, "orta zar = değişiklik yok");
 
 // Ana kanal grafiği
 const a = new AudioService();
-a.playSelect(); a.playChessMove(); a.playTick(900); a.playError(); a.playClapperSnap(); a.playVictory(); a.playPowerup(); a.playSuccess(); a.playCombo(3);
+a.playSelect(); a.playChessMove(); a.playTick(900); a.playError(); a.playClapperSnap(); a.playVictory(); a.playDefeat(); a.playPowerup(); a.playSuccess(); a.playCombo(3);
 const direct = created.filter(n => n.to.includes(dest));
 assert(direct.length === 1 && direct[0].name === "limiter", "destination'a yalnızca limiter bağlı (tek çıkış)");
 const masters = created.filter(n => n.name === "gain" && n.to.some(t => t.name === "limiter"));
