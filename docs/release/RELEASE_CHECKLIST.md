@@ -141,3 +141,49 @@ Planın `com.cinetactico.game` bundle kimliği, Pass & Play ve çevrimiçi oda v
 | Kapandı | 11 portre dosyası pakette gösterilmeden duruyordu; dosyalar, Ayarlar > Lisanslar paneli ve gizlilik paragrafları kaldırıldı | `src/tests/asset-system.test.ts` (manifest boş, klasör yok) |
 | USER ACTION | Gerçek iPhone'da yazarak arama (klavye gecikmesi, 12 sn saat), sessiz kip, arka plan, uçak modu, 30 dk ısınma; Apple hesabı, formlar, imzalı arşiv, TestFlight, 5-10 kişilik kör test | `APP_STORE_LAUNCH_KIT.md` bölüm 7 |
 | LOW | iOS klavyesinin form aksesuar çubuğu (^ v ✓) görünüyor; gizlemek için Capacitor Keyboard eklentisi gerekir, 1.0 için eklenmedi | simülatör |
+
+## Master plan kapanışı (26 Kasım 2026)
+
+**Release state: `READY FOR APPLE ENROLLMENT`.** Kod, paket, metadata ve belgeler hazır; sıradaki adımlar yalnızca hesap sahibine ve fiziksel cihaza bağlı. Hesap, imza ve yükleme adımlarının sırası ve bağlantıları `APP_STORE_SUBMISSION.md` bölüm 0 ve A'dadır (tekrar yazılmadı).
+
+### Plan kapsamı
+| Plan bölümü | Durum |
+|---|---|
+| 1-2 keşif, öncelik | Yapıldı (git, deploy, `main` = `origin/main` = canlı) |
+| 3.1 marka | Karar: Crosscut (WIPO taraması A, `APP_STORE_SUBMISSION.md` bölüm H). Planın "Cine-Tactico" ve `com.cinetactico.game` ifadeleri eski; gerçek kimlik `com.crosscutgame.app`. Kalan: USPTO/EUIPO/TÜRKPATENT elle kontrol (USER ACTION) |
+| 3.2-3.3 oyun ve oyuncu testi | Simülatörde modlar oynandı. 8+ bağımsız kişiyle test: USER ACTION (aşağıda protokol) |
+| 4, 5 görsel, hareket, ses | Ekran taramaları, piksel ve AI-slop temizliği yapıldı. Ses Web Audio ile üretilir (lisans sorunu yok); gerçek cihazda dinleme USER ACTION |
+| 6 katalog ve veri hakkı | 1.040 kayıt programatik tarandı. Kaynak Wikidata CC0; afiş, fotoğraf, TMDB, IMDb verisi yok. Yazılı hukuki teyit yok (EXTERNAL, risk kabul edildi) |
+| 7 temiz kod, bağımlılık | Yapıldı. `npm audit` `next` bulgusu statik export'ta uygulanmıyor; 1.0.1'de yükseltilir. Bekleyen 10 dependabot PR'ı donma gerekçesiyle kapatıldı |
+| 8 Capacitor ve Apple 4.2 | `server.url` yok, oyun yerel `public/` içinden açılıyor. Offline oyun, günlük mod, kalıcı kayıt ve yerel mantık Review Notes'ta |
+| 9 performans ve batarya | Kod incelemesi yapıldı; Instruments ölçümü yok (gerçek cihaz) |
+| 10 güvenlik, gizlilik | 1.0 pakette ağ, hesap, anahtar yok. Supabase RLS zayıflıkları ve 1.1 kapıları `APP_STORE_LAUNCH_KIT.md`'de |
+| 11 erişilebilirlik | Dialog rolleri, 44 pt hedefler, adsız kontrol yok. Dinamik Tür ve VoiceOver turu yok (1.0.1) |
+| 12 App Store paketi | Metin TR/EN, 1320×2868 görseller, yaş 4+, gizlilik, ihracat, Review Notes hazır |
+| 13 Android | **Bilinçli ertelendi** (sahibin kararı). Durum: `targetSdkVersion 36`, `minSdkVersion 24`; temiz derleme, AAB, Data Safety, Play Console hesabı ve 12 test kullanıcısı/14 gün kapalı test (kişisel hesaplarda) yapılmadı. Android'e geçildiğinde `cap sync android` ile sıfırdan üretilecek |
+| 14, 15 yaş, ASO, rakip | Yaş 4+, anahtar kelimeler ve rakip analizi `docs/strategy/` ve `APP_STORE_SUBMISSION.md`'de |
+| 16 yayın sonrası | Aşağıda |
+| 17 skill | Arandı ve değerlendirildi; üçüncü taraf skill kurulmadı |
+| 18 uçtan uca senaryolar | Otomatik: motor, günlük, kayıt kurtarma, paket kontrolü (`npm test`). Pass & Play ve çevrimiçi oda 1.0'da yok; yükseltme ve yeniden kurulum gerçek cihazda |
+
+### Artifact provenance (imzasız Release arşivi)
+- Commit: `e82e1b5` (`main`), etiket `v1.0.0-rc1`
+- Araçlar: Xcode 27.2 (iphoneos27.2 SDK), Node 26.13.1; `MARKETING_VERSION 1.0`, `CURRENT_PROJECT_VERSION 1`, `MinimumOSVersion 15.0`
+- `package-lock.json` SHA-256: `e14ba8c1ae3efbbd5b4c699dba7fe6464762c739f82546be3b16bb73404fe689`
+- Arşiv ikilisi (`App`) SHA-256: `8c8a8765f22edd3fde6eec45bfbb8e429ac02c66dc241f378a19b472215f2229`; dSYM UUID eşleşti (`8D546853-C329-3FAC-BF44-CE72BE516FC2`)
+- Komut: `npm run ios:sim` (web derlemesi + sync), `xcodebuild archive -configuration Release -destination generic/platform=iOS CODE_SIGNING_ALLOWED=NO`
+- Test: `npm test` exit 0, FAIL yok. İmzalı arşiv ve `.ipa` karması Team seçildikten sonra çıkar (USER ACTION)
+
+### Satıcı adı kararı (tek soru)
+Bireysel kayıtta App Store'da görünen satıcı adı **yasal kişi adındır**. Şirket adı (ör. bir LLC) görünsün istiyorsan tüzel kişilik ve D-U-N-S gerekir; bu günler sürer. Bireysel hesabı seç ve kodu bekletme; satıcı adını sonradan şirkete geçirmek ayrı bir süreçtir.
+
+### Oyuncu testi protokolü (8-12 kişi, sen yürütürsün)
+Oyunu anlatma, sadece görev ver, sessizce izle: 1) uygulamayı aç ve ilk oyunu oyna, 2) maçı bitir, 3) tekrar oyna, 4) Günlük Kadraj'ı bul ve oyna, 5) dili değiştir, 6) uçak modunda aç. Not et: tereddüt edilen yer, yanlış okunan metin, terk edilen ekran, kendiliğinden tekrar oynama. "Beğendin mi?" sorusuna güvenme. İlk üç kişiyi yanında izle; blocker çıkarsa düzelt, kısa ikinci tur yap.
+
+### Yayın sonrası işletme (analitik SDK'sız)
+- Çökme: Xcode Organizer ve TestFlight geri bildirimi; sembol için her yüklemenin dSYM'ini sakla.
+- Erişilebilirlik izleme: `.github/workflows/uptime.yml` ana sayfa, `/privacy` ve `/support` adreslerini 6 saatte bir dener; hata GitHub bildirimi olarak gelir.
+- Destek: `/support` sayfasındaki e-posta. Yorumlar: App Store Connect > Ratings and Reviews haftalık.
+- Geri alma: istemci tamamen yerel olduğu için sunucu geri alması yok; kötü bir sürümde App Store Connect'te yeni sürüm çıkar (önceki sürüme dönüş yok), Vercel'de önceki dağıtım "Promote" ile geri alınır.
+- Sürüm notu şablonu: "Düzeltmeler: <ne>. Veri: hiçbir şey toplanmaz."
+- Retention (D1/D7/D30) ve oturum ölçümü: veri toplanmadığı için yok. Ölçüm gerekirse 1.0.1'de gizlilik etiketi güncellenerek karar verilir.

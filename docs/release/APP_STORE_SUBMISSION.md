@@ -53,7 +53,7 @@ Ek: gizlilik/destek adresi şu an `cine-tactico.vercel.app` (eski ad). Alan adı
 - **Export compliance**: `ITSAppUsesNonExemptEncryption = false`.
 - **Tamamen çevrimdışı**: ağ isteği yok, hesap yok, reklam/analitik yok. Yazı tipleri uygulamanın içine gömülü.
 - Gizlilik URL'si ve destek URL'si canlı (Vercel).
-- Atıflı görseller: oyuncu portreleri Wikimedia Commons (CC BY / CC BY-SA), uygulama içinde *Ayarlar → Lisanslar* bölümünde listeli.
+- **Görsel yok**: pakette afiş, portre veya fotoğraf bulunmaz (kullanılmayan 11 Wikimedia portresi çıkarıldı). Veri Wikidata (CC0), yazı tipleri SIL OFL.
 - Testler: motor, anti-cheat, saldırgan oyuncu/fuzz, bot kalibrasyonu, üretilen tahtalar, yerelleştirme (hepsi `npm test`).
 
 ---
