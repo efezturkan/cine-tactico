@@ -65,7 +65,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return (
-    <div
+    <div role="dialog" aria-modal="true"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}

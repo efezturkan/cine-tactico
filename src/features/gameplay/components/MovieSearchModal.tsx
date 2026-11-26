@@ -96,7 +96,7 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div
+    <div role="dialog" aria-modal="true"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();

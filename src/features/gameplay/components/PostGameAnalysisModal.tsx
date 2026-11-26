@@ -126,7 +126,7 @@ export const PostGameAnalysisModal: React.FC<PostGameAnalysisModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 animate-in fade-in duration-200 select-none">
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 animate-in fade-in duration-200 select-none">
       <div
         className="w-full max-w-sm rounded-2xl p-6 flex flex-col relative text-[#E8E6E1] bg-[#14171D] border border-white/10 shadow-2xl overflow-hidden"
       >

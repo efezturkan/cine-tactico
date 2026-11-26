@@ -308,7 +308,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           <button
             type="button"
             onClick={() => setShowDirectorPicker(true)}
-            className="flex items-center gap-1 text-xs text-[#8A8F9A] hover:text-[#E8E6E1] transition-colors py-0.5"
+            className="flex items-center gap-1 text-xs text-[#8A8F9A] hover:text-[#E8E6E1] transition-colors min-h-[44px] -my-3"
           >
             <span>{isEn ? "Favorite director:" : "Favori yönetmen:"}</span>
             <span className="font-semibold text-[#E8E6E1] ml-0.5">{favoriteDirector}</span>
@@ -485,7 +485,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           </div>
           <a
             href="/privacy"
-            className="text-xs font-sans font-semibold text-[#D9A441] hover:underline"
+            className="inline-flex items-center min-h-[44px] -my-3 pl-3 text-xs font-sans font-semibold text-[#D9A441] hover:underline"
           >
             {dict.profile.readPolicy}
           </a>
@@ -771,7 +771,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 animate-in fade-in duration-200 select-none">
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 animate-in fade-in duration-200 select-none">
       <div className="w-full max-w-sm rounded-2xl bg-[#0B0D12] border border-white/10 shadow-2xl overflow-hidden relative">
         {onClose && (
           <Button

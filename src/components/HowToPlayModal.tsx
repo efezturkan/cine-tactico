@@ -27,7 +27,7 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({
   };
 
   return (
-    <div
+    <div role="dialog" aria-modal="true"
       onClick={(e) => {
         if (e.target === e.currentTarget) handleDismiss();
       }}

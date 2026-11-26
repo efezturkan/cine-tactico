@@ -492,7 +492,7 @@ export function GameView(props: GameViewProps) {
 
       {/* 1.3 & 6C.6 Düelloyu Bırakma Onayı (Orta Kart) */}
       {props.showSurrenderConfirm && (
-        <div
+        <div role="dialog" aria-modal="true"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               props.onCancelSurrender();

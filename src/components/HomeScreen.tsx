@@ -79,6 +79,7 @@ const SprocketStrip = () => (
         />
         {i % 9 === 4 && (
           <span
+            aria-hidden="true"
             className="text-[5px] font-mono font-bold text-[#D9A441]/55 tracking-tighter uppercase -rotate-90 py-1 select-none shrink-0"
             style={{ transformOrigin: "center center" }}
           >
@@ -242,7 +243,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 {profile.username}
               </span>
               <span className="text-[11px] text-[#8A8F9A] truncate leading-tight mt-0.5">
-                {dict.nav.profile} &rarr;
+                {dict.nav.profile}
               </span>
             </div>
           </button>
