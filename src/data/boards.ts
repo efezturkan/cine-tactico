@@ -507,8 +507,8 @@ export const PRESET_BOARDS: GameBoard[] = [
       {
         id: "cr_3",
         type: "MOVIE_INTERSECTION",
-        label: "Batman Begins (Batman Başlıyor)",
-        value: "Batman Begins (Batman Başlıyor)",
+        label: "Batman Begins",
+        value: "Batman Begins",
       },
     ],
     validCounts: {},
@@ -554,8 +554,8 @@ export const PRESET_BOARDS: GameBoard[] = [
       {
         id: "cr_6",
         type: "MOVIE_INTERSECTION",
-        label: "The Godfather Part II (Baba 2)",
-        value: "The Godfather Part II (Baba 2)",
+        label: "The Godfather Part II",
+        value: "The Godfather Part II",
       },
     ],
     validCounts: {},
@@ -981,6 +981,18 @@ export function createRandomizedBoard(baseBoard: GameBoard): GameBoard {
 /**
  * Mod türüne göre ("CLASSIC", "REVERSE_CAST", "CINE_CONCEPT" veya "SINEFIL") uygun tahtayı getirir.
  */
+/** Taze tahta için en fazla bu kadar farklı tohum denenir (ölçüm: 1000 Klasik tohumda 0, 1000 Reverse tohumda 5 denemede 0 başarısızlık). */
+const FRESH_BOARD_ATTEMPTS = 5;
+
+/** Taze tahta üretir; hepsi başarısızsa null döner ve çağıran elle seçilmiş tahtaya son çare olarak düşer. */
+function freshBoard(make: (seed: number) => GameBoard | null): GameBoard | null {
+  for (let k = 0; k < FRESH_BOARD_ATTEMPTS; k++) {
+    const board = make(Math.floor(Math.random() * 1_000_000_000));
+    if (board) return board;
+  }
+  return null;
+}
+
 export function getBoardForMode(
   mode: "CLASSIC" | "REVERSE_CAST" | "CINE_CONCEPT" | "SINEFIL",
   excludeIndex?: number
@@ -988,13 +1000,11 @@ export function getBoardForMode(
   let matchingIndices: number[] = [];
 
   if (mode === "REVERSE_CAST") {
-    // Çoğunlukla katalogtan taze tahta; ara sıra elle seçilmiş tahta
-    if (Math.random() < 0.9) {
-      const generated = generateReverseBoard(Math.floor(Math.random() * 1_000_000_000));
-      if (generated) {
-        const anchor = PRESET_BOARDS.findIndex(b => b.boardMode === "REVERSE_CAST");
-        return { board: generated, index: anchor === -1 ? 0 : anchor };
-      }
+    // Her zaman katalogdan taze tahta; elle seçilmiş tahta yalnızca tüm denemeler başarısızsa kullanılır
+    const generated = freshBoard(seed => generateReverseBoard(seed));
+    if (generated) {
+      const anchor = PRESET_BOARDS.findIndex(b => b.boardMode === "REVERSE_CAST");
+      return { board: generated, index: anchor === -1 ? 0 : anchor };
     }
     matchingIndices = PRESET_BOARDS.map((b, idx) => ({ b, idx }))
       .filter(item => item.b.boardMode === "REVERSE_CAST")
@@ -1009,13 +1019,11 @@ export function getBoardForMode(
       .filter(item => sinefilIds.includes(item.b.id) || item.b.boardMode === "CINE_CONCEPT")
       .map(item => item.idx);
   } else {
-    // CLASSIC: çoğunlukla katalogdan üretilen, her hücresi ≥3 cevaplı taze tahta; ara sıra elle seçilmiş tahta
-    if (Math.random() < 0.75) {
-      const generated = generateSolvableBoard(Math.floor(Math.random() * 1_000_000_000));
-      if (generated) {
-        const anchor = PRESET_BOARDS.findIndex(b => b.id === "board_daily_today");
-        return { board: generated, index: anchor === -1 ? 0 : anchor };
-      }
+    // CLASSIC: her hücresi ≥3 cevaplı katalog tahtası. Elle seçilmiş tahta yalnızca üretici tüm denemelerde boş kalırsa kullanılır.
+    const generated = freshBoard(seed => generateSolvableBoard(seed));
+    if (generated) {
+      const anchor = PRESET_BOARDS.findIndex(b => b.id === "board_daily_today");
+      return { board: generated, index: anchor === -1 ? 0 : anchor };
     }
     matchingIndices = getSolvableClassicIndices();
   }

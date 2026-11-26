@@ -309,6 +309,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           )}
 
+          {/* 7. Lisanslar: yalnızca paketteki yazı tipleri ve veri kaynağı. Görsel/portre atfı yoktur. */}
+          <div className="p-3.5 rounded-xl bg-[#0B0D12] border border-white/5 space-y-1.5">
+            <span className="text-[11px] font-bold text-[#E8E6E1] block">
+              {locale === "tr" ? "Lisanslar" : "Licenses"}
+            </span>
+            <p className="text-[11px] text-[#8A8F9A] leading-relaxed">
+              {locale === "tr"
+                ? "Yazı tipleri: Inter, Newsreader, Barlow Condensed (SIL Open Font License 1.1)."
+                : "Fonts: Inter, Newsreader, Barlow Condensed (SIL Open Font License 1.1)."}
+            </p>
+            <p className="text-[11px] text-[#8A8F9A] leading-relaxed">
+              {locale === "tr" ? "Film ve kişi verisi: Wikidata (CC0 1.0)." : "Film and person data: Wikidata (CC0 1.0)."}
+            </p>
+          </div>
+
           {/* 8. Hakkında */}
           <div className="p-3.5 rounded-xl bg-[#0B0D12] border border-white/5">
             <div className="flex items-center gap-2 mb-1">

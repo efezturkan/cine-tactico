@@ -144,7 +144,7 @@ assert(
   Boolean(duneOne && formatMovieDisplayTitle(duneOne, "en") === "Dune: Part One"),
   "Dune: Part One displays 'Dune: Part One' (does not collide with 1984 'Dune')"
 );
-const godfather = MOVIES_DATABASE.find((m) => m.title.startsWith("The Godfather ("));
+const godfather = MOVIES_DATABASE.find((m) => m.title === "The Godfather");
 assert(
   Boolean(godfather && formatMovieDisplayTitle(godfather, "en") === "The Godfather"),
   "Legacy Turkish parenthetical '(Baba)' is cleanly stripped in English display"

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { PlayerSymbol, Movie } from "@/core";
 import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
-import { movieMatchesTitleQuery } from "@/content/search/movieTitle";
+import { rankMoviesForQuery } from "@/content/search/movieTitle";
 import { audio } from "@/utils/audio";
 import { haptic } from "@/utils/haptics";
 import { useTranslation } from "@/i18n";
@@ -81,7 +81,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
   const filteredMovies = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (q.length < 2) return [];
-    return MOVIES_DATABASE.filter((movie) => movieMatchesTitleQuery(movie, q)).slice(0, 5);
+    return rankMoviesForQuery(MOVIES_DATABASE, q).slice(0, 5);
   }, [query]);
 
   const handleSelectMovie = (movie: Movie) => {

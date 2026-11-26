@@ -49,9 +49,11 @@ function oscarWinner(productionId: string): boolean {
 }
 
 function withSearchFields(movie: Movie): Movie {
-  const aliases = aliasesByProduction.get(movie.id) ?? [];
+  // Kayıttaki aliaslar (ör. Türkçe ad) ile kanonik alias tablosu birleştirilir; biri diğerini silmez.
+  const legacyAliases = movie.aliases ?? [];
+  const aliases = Array.from(new Set([...legacyAliases, ...(aliasesByProduction.get(movie.id) ?? [])]));
   const hasOscar = oscarWinner(movie.id);
-  if (aliases.length === 0 && movie.hasOscar === hasOscar) return movie;
+  if (aliases.length === legacyAliases.length && movie.hasOscar === hasOscar) return movie;
   return {
     ...movie,
     hasOscar,

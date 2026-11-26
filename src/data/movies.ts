@@ -719,7 +719,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
   // Christopher Nolan (Genişletilmiş)
   {
     id: "m_memento",
-    title: "Memento (Akıl Defteri)",
+    title: "Memento",
+    aliases: ["Akıl Defteri"],
     originalTitle: "Memento",
     year: 2000,
     director: "Christopher Nolan",
@@ -734,7 +735,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_batman_begins",
-    title: "Batman Begins (Batman Başlıyor)",
+    title: "Batman Begins",
+    aliases: ["Batman Başlıyor"],
     originalTitle: "Batman Begins",
     year: 2005,
     director: "Christopher Nolan",
@@ -767,7 +769,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_raging_bull",
-    title: "Raging Bull (Kızgın Boğa)",
+    title: "Raging Bull",
+    aliases: ["Kızgın Boğa"],
     originalTitle: "Raging Bull",
     year: 1980,
     director: "Martin Scorsese",
@@ -782,7 +785,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_the_aviator",
-    title: "The Aviator (Göklerin Hakimi)",
+    title: "The Aviator",
+    aliases: ["Göklerin Hakimi"],
     originalTitle: "The Aviator",
     year: 2004,
     director: "Martin Scorsese",
@@ -829,7 +833,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_reservoir_dogs",
-    title: "Reservoir Dogs (Rezervuar Köpekleri)",
+    title: "Reservoir Dogs",
+    aliases: ["Rezervuar Köpekleri"],
     originalTitle: "Reservoir Dogs",
     year: 1992,
     director: "Quentin Tarantino",
@@ -861,7 +866,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_dragon_tattoo",
-    title: "The Girl with the Dragon Tattoo (Ejderha Dövmeli Kız)",
+    title: "The Girl with the Dragon Tattoo",
+    aliases: ["Ejderha Dövmeli Kız"],
     originalTitle: "The Girl with the Dragon Tattoo",
     year: 2011,
     director: "David Fincher",
@@ -893,7 +899,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_incendies",
-    title: "Incendies (İçimdeki Yangın)",
+    title: "Incendies",
+    aliases: ["İçimdeki Yangın"],
     originalTitle: "Incendies",
     year: 2010,
     director: "Denis Villeneuve",
@@ -910,7 +917,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
   // Sinema Tarihi Başyapıtları & Yönetmen Devleri
   {
     id: "m_godfather_1",
-    title: "The Godfather (Baba)",
+    title: "The Godfather",
+    aliases: ["Baba"],
     originalTitle: "The Godfather",
     year: 1972,
     director: "Francis Ford Coppola",
@@ -925,7 +933,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_godfather_2",
-    title: "The Godfather Part II (Baba 2)",
+    title: "The Godfather Part II",
+    aliases: ["Baba 2"],
     originalTitle: "The Godfather Part II",
     year: 1974,
     director: "Francis Ford Coppola",
@@ -940,7 +949,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_alien",
-    title: "Alien (Yaratık)",
+    title: "Alien",
+    aliases: ["Yaratık"],
     originalTitle: "Alien",
     year: 1979,
     director: "Ridley Scott",
@@ -985,7 +995,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_terminator_2",
-    title: "Terminator 2: Judgment Day (Kıyamet Günü)",
+    title: "Terminator 2: Judgment Day",
+    aliases: ["Kıyamet Günü"],
     originalTitle: "Terminator 2: Judgment Day",
     year: 1991,
     director: "James Cameron",
@@ -1000,7 +1011,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_the_matrix",
-    title: "The Matrix (Matriks)",
+    title: "The Matrix",
+    aliases: ["Matriks"],
     originalTitle: "The Matrix",
     year: 1999,
     director: "Lana Wachowski",
@@ -1030,7 +1042,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_la_la_land",
-    title: "La La Land (Aşıklar Şehri)",
+    title: "La La Land",
+    aliases: ["Aşıklar Şehri"],
     originalTitle: "La La Land",
     year: 2016,
     director: "Damien Chazelle",
@@ -1044,7 +1057,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_no_country",
-    title: "No Country for Old Men (İhtiyarlara Yer Yok)",
+    title: "No Country for Old Men",
+    aliases: ["İhtiyarlara Yer Yok"],
     originalTitle: "No Country for Old Men",
     year: 2007,
     director: "Joel Coen",
@@ -1059,7 +1073,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_the_shining",
-    title: "The Shining (Cinnet)",
+    title: "The Shining",
+    aliases: ["Cinnet"],
     originalTitle: "The Shining",
     year: 1980,
     director: "Stanley Kubrick",
@@ -1074,7 +1089,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_clockwork_orange",
-    title: "A Clockwork Orange (Otomatik Portakal)",
+    title: "A Clockwork Orange",
+    aliases: ["Otomatik Portakal"],
     originalTitle: "A Clockwork Orange",
     year: 1971,
     director: "Stanley Kubrick",
@@ -1339,7 +1355,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_saving_private_ryan",
-    title: "Saving Private Ryan (Er Ryan'ı Kurtarmak)",
+    title: "Saving Private Ryan",
+    aliases: ["Er Ryan'ı Kurtarmak"],
     year: 1998,
     director: "Steven Spielberg",
     cast: ["Tom Hanks", "Matt Damon", "Tom Sizemore", "Edward Burns"],
@@ -1352,7 +1369,8 @@ export const LEGACY_MOVIE_RECORDS: Movie[] = [
     provenance: { wikidata: { verified: true, verifiedAt: "2026-10-31" } }},
   {
     id: "m_cast_away",
-    title: "Cast Away (Yeni Hayat)",
+    title: "Cast Away",
+    aliases: ["Yeni Hayat"],
     year: 2000,
     director: "Robert Zemeckis",
     cast: ["Tom Hanks", "Helen Hunt", "Paul Sanchez"],

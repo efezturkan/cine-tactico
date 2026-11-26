@@ -49,14 +49,18 @@ function keyOf(c: Criterion): string {
   return `${c.type}:${c.value}`;
 }
 
+/** Satır kriteri eşikleri: en az bu kadar yapımı olan yönetmen/oyuncu satır olabilir. */
+export const DIRECTOR_ROW_MIN_FILMS = 5;
+export const ACTOR_ROW_MIN_FILMS = 7;
+
 function buildPools(): CriteriaPools {
   const count = (xs: string[]) => {
     const m = new Map<string, number>();
     for (const x of xs) if (x) m.set(x, (m.get(x) ?? 0) + 1);
     return m;
   };
-  const directors = Array.from(count(MOVIES_DATABASE.map(m => m.director)).entries()).filter(([, n]) => n >= 5);
-  const actors = Array.from(count(MOVIES_DATABASE.flatMap(m => m.cast)).entries()).filter(([, n]) => n >= 8);
+  const directors = Array.from(count(MOVIES_DATABASE.map(m => m.director)).entries()).filter(([, n]) => n >= DIRECTOR_ROW_MIN_FILMS);
+  const actors = Array.from(count(MOVIES_DATABASE.flatMap(m => m.cast)).entries()).filter(([, n]) => n >= ACTOR_ROW_MIN_FILMS);
 
   const rows: Criterion[] = [
     ...directors.map(([name]): Criterion => ({ type: "DIRECTOR", label: name, value: name })),

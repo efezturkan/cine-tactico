@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Criterion, Movie, ContentPoolType, CellAnswer } from "@/core";
 import { MOVIES_DATABASE } from "@/content/adapters/gameCatalog";
-import { movieMatchesTitleQuery, formatMovieDisplayTitle } from "@/content/search/movieTitle";
+import { formatMovieDisplayTitle, rankMoviesForQuery } from "@/content/search/movieTitle";
 import { Search, X, AlertTriangle } from "lucide-react";
 import { haptic } from "@/utils/haptics";
 import { Button } from "@/components/ui/Button";
@@ -85,13 +85,25 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
   const filteredMovies = useMemo(() => {
     const trimmed = query.trim();
     if (trimmed.length < 2) return [];
-    return basePool.filter((movie) => movieMatchesTitleQuery(movie, trimmed));
+    // Tam eşleşme > başlangıç > alt-metin; aynı derecede veri sırası korunur.
+    return rankMoviesForQuery(basePool, trimmed);
   }, [query, basePool]);
 
   const visibleMovies = useMemo(
     () => filteredMovies.slice(0, 40),
     [filteredMovies]
   );
+
+  // Yıl yalnızca aynı görünen adı taşıyan yapımları ayırmak için gösterilir (ör. King Kong 1933 / 2005).
+  // Tüm satırlarda yıl göstermek CRITICAL ANTI-CHEAT testini (modal-render) bozar: yıl bir ipucudur.
+  const ambiguousTitles = useMemo(() => {
+    const counts = new Map<string, number>();
+    visibleMovies.forEach((movie) => {
+      const t = formatMovieDisplayTitle(movie, locale);
+      counts.set(t, (counts.get(t) ?? 0) + 1);
+    });
+    return new Set(Array.from(counts).filter(([, n]) => n > 1).map(([t]) => t));
+  }, [visibleMovies, locale]);
 
   if (!isOpen) return null;
 
@@ -232,6 +244,11 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
                     <span className="font-sans font-bold text-sm text-[#E8E6E1] truncate">
                       {displayTitle}
                     </span>
+                    {movie.year > 0 && ambiguousTitles.has(displayTitle) && (
+                      <span className="font-sans text-xs text-[#8A8F9A] shrink-0 tabular-nums">
+                        {movie.year}
+                      </span>
+                    )}
                     {movie.mediaType === "SERIES" && (
                       <span className="text-[11px] font-sans font-semibold text-[#4FA3C7] bg-[#4FA3C7]/15 px-1.5 py-0.5 rounded border border-[#4FA3C7]/30 shrink-0">
                         {isEn ? "SERIES" : "DİZİ"}
