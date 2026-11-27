@@ -134,7 +134,8 @@ export const ShopModal: React.FC<ShopModalProps> = ({
               >
                 {/* Avatar İkonu */}
                 <div
-                  className={`w-14 h-14 rounded-2xl bg-gradient-to-tr ${a.iconBg} flex items-center justify-center text-2xl shadow-md mb-2 border border-white/20 relative`}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-md mb-2 border border-white/20 relative"
+                style={{ backgroundColor: a.iconBg }}
                 >
                   {a.emoji}
                   {!isUnlocked && (

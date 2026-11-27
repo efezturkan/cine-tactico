@@ -87,9 +87,10 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({ isOpen
                 style={{ borderLeft: `3px solid ${tier.color}` }}
               >
                 <div
-                  className={`w-12 h-12 shrink-0 rounded-xl bg-gradient-to-tr ${avatar.iconBg} flex items-center justify-center text-2xl border border-white/15`}
+                  className="w-12 h-12 shrink-0 rounded-xl flex items-center justify-center text-2xl border border-[#D9A441]/25"
+                  style={{ backgroundColor: avatar.iconBg }}
                 >
-                  <AvatarIcon id={bot.avatarId} className="w-6 h-6 text-white/90" />
+                  <AvatarIcon id={bot.avatarId} className="w-6 h-6 text-[#D9A441]" />
                 </div>
 
                 <div className="min-w-0 flex-1">

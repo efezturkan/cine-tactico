@@ -72,19 +72,19 @@ export interface AvatarOption {
   iconName: "Clapperboard" | "Star" | "Eye" | "Rocket" | "Search" | "Film" | "Camera" | "Trophy" | "Popcorn";
   cost: number;
   emoji?: string;
-  iconBg?: string;
+  iconBg?: string; // mat yüzey rengi (hex), gradyan değil: style={{ backgroundColor }} ile kullanılır
   description?: string;
 }
 
 export const AVATAR_OPTIONS: AvatarOption[] = [
-  { id: "avatar_director", label: "Klaket", labelEn: "Clapper", iconName: "Clapperboard", cost: 0, emoji: "🎬", iconBg: "from-amber-600 to-amber-900", description: "Klasik yönetmen klaketi" },
-  { id: "avatar_actor", label: "Yıldız", labelEn: "Star", iconName: "Star", cost: 0, emoji: "⭐", iconBg: "from-yellow-500 to-yellow-800", description: "Hollywood yıldızı" },
-  { id: "avatar_lens", label: "Mercek", labelEn: "Lens", iconName: "Eye", cost: 0, emoji: "👁️", iconBg: "from-blue-600 to-indigo-900", description: "Sinematik bakış" },
-  { id: "avatar_scifi", label: "Roket", labelEn: "Rocket", iconName: "Rocket", cost: 0, emoji: "🚀", iconBg: "from-cyan-600 to-blue-900", description: "Bilimkurgu vizyoneri" },
-  { id: "avatar_noir", label: "Dedektif", labelEn: "Detective", iconName: "Search", cost: 0, emoji: "🔍", iconBg: "from-zinc-600 to-zinc-900", description: "Film-noir dedektifi" },
-  { id: "avatar_popcorn", label: "Mısır", labelEn: "Popcorn", iconName: "Popcorn", cost: 0, emoji: "🍿", iconBg: "from-red-600 to-amber-900", description: "Sinema salonu ruhu" },
-  { id: "avatar_camera", label: "Kamera", labelEn: "Camera", iconName: "Camera", cost: 0, emoji: "🎥", iconBg: "from-purple-600 to-indigo-950", description: "35mm kamera" },
-  { id: "avatar_oscar", label: "Kupa", labelEn: "Trophy", iconName: "Trophy", cost: 0, emoji: "🏆", iconBg: "from-amber-500 to-yellow-900", description: "Akademi ödülü" },
+  { id: "avatar_director", label: "Klaket", labelEn: "Clapper", iconName: "Clapperboard", cost: 0, emoji: "🎬", iconBg: "#2B2418", description: "Klasik yönetmen klaketi" },
+  { id: "avatar_actor", label: "Yıldız", labelEn: "Star", iconName: "Star", cost: 0, emoji: "⭐", iconBg: "#34291A", description: "Hollywood yıldızı" },
+  { id: "avatar_lens", label: "Mercek", labelEn: "Lens", iconName: "Eye", cost: 0, emoji: "👁️", iconBg: "#1F2831", description: "Sinematik bakış" },
+  { id: "avatar_scifi", label: "Roket", labelEn: "Rocket", iconName: "Rocket", cost: 0, emoji: "🚀", iconBg: "#1C2A2F", description: "Bilimkurgu vizyoneri" },
+  { id: "avatar_noir", label: "Dedektif", labelEn: "Detective", iconName: "Search", cost: 0, emoji: "🔍", iconBg: "#23262C", description: "Film-noir dedektifi" },
+  { id: "avatar_popcorn", label: "Mısır", labelEn: "Popcorn", iconName: "Popcorn", cost: 0, emoji: "🍿", iconBg: "#35201C", description: "Sinema salonu ruhu" },
+  { id: "avatar_camera", label: "Kamera", labelEn: "Camera", iconName: "Camera", cost: 0, emoji: "🎥", iconBg: "#27232B", description: "35mm kamera" },
+  { id: "avatar_oscar", label: "Kupa", labelEn: "Trophy", iconName: "Trophy", cost: 0, emoji: "🏆", iconBg: "#33291A", description: "Akademi ödülü" },
 ];
 
 export function calculateRank(wins: number): { title: string; level: number; nextWins: number } {

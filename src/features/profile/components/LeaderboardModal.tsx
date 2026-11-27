@@ -312,7 +312,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                 {currentUser.totalMatches < 10 ? "--" : "#42"}
               </span>
               <div
-                className={`w-9 h-9 rounded-xl bg-gradient-to-tr ${currentAvatar.iconBg} flex items-center justify-center text-lg border-2 border-[#00D5E8] shadow`}
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-lg border-2 border-[#00D5E8] shadow"
+              style={{ backgroundColor: currentAvatar.iconBg }}
               >
                 {currentAvatar.emoji}
               </div>
