@@ -8,6 +8,7 @@ import { Search, X, AlertTriangle } from "lucide-react";
 import { haptic } from "@/utils/haptics";
 import { Button } from "@/components/ui/Button";
 import { useTranslation } from "@/i18n";
+import { SearchClock } from "./SearchClock";
 
 interface MovieSearchModalProps {
   isOpen: boolean;
@@ -20,6 +21,8 @@ interface MovieSearchModalProps {
   errorMessage?: string | null;
   targetOccupant?: CellAnswer | null;
   initialQuery?: string;
+  secondsRemaining?: number;
+  shotClock?: number;
 }
 
 export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
@@ -32,6 +35,8 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
   contentPool = "HYBRID",
   errorMessage,
   initialQuery = "",
+  secondsRemaining,
+  shotClock,
 }) => {
   const { dict, locale, tCriterion } = useTranslation();
   const isEn = locale === "en";
@@ -130,6 +135,8 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               : "92dvh",
         }}
       >
+        <SearchClock secondsRemaining={secondsRemaining} shotClock={shotClock} />
+
         {/* Tutamaç Çizgisi (Handle Line) */}
         <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
 
@@ -181,11 +188,6 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
               </button>
             )}
           </div>
-          <div className="flex items-center justify-between mt-1.5 px-1">
-            <span className="text-[11px] text-[#8A8F9A]">
-              {isEn ? "Search by title only." : "Yalnızca yapım adına göre aranır."}
-            </span>
-          </div>
         </div>
 
         {/* Hata Bildirimi */}
@@ -200,14 +202,8 @@ export const MovieSearchModal: React.FC<MovieSearchModalProps> = ({
         <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-1.5 pr-1 custom-scrollbar">
           {query.trim().length < 2 ? (
             <div className="py-8 px-4 text-center flex flex-col items-center justify-center">
-              <p className="font-serif text-base font-bold text-[#E8E6E1]">
-                {isEn ? "Type Movie or Series Title" : "Film veya Dizi Adını Yaz"}
-              </p>
-              <p className="text-xs text-[#8A8F9A] mt-1 leading-relaxed">
-                {isEn ? "Enter at least 2 characters to list results." : "Sonuçları listelemek için en az 2 harf girilmelidir."}
-              </p>
-              <p className="text-[11px] text-[#8A8F9A]/80 mt-2 font-medium">
-                {isEn ? "No genre or year hints, to keep it fair" : "Adil oyun için tür ve yıl ipucu gösterilmez"}
+              <p className="text-sm text-[#8A8F9A]">
+                {isEn ? "Type at least 2 letters of the title." : "Başlığın en az 2 harfini yaz."}
               </p>
             </div>
           ) : visibleMovies.length === 0 ? (

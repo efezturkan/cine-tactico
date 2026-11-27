@@ -87,7 +87,7 @@ export const ReviewAnswersSheet: React.FC<ReviewAnswersSheetProps> = ({
     <>
       {/* Hafif arka plan tülü */}
       <div
-        className="fixed inset-0 z-30 bg-black/45-[1px] animate-in fade-in duration-150"
+        className="fixed inset-0 z-30 bg-black/45 backdrop-blur-[1px] animate-in fade-in duration-150"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -96,7 +96,7 @@ export const ReviewAnswersSheet: React.FC<ReviewAnswersSheetProps> = ({
       <div
         className="fixed inset-x-0 bottom-0 z-40 max-w-lg mx-auto bg-[#14171D] border-t border-x border-[#D9A441]/30 rounded-t-2xl shadow-[0_-12px_40px_rgba(0,0,0,0.9)] p-4 pb-6 sm:pb-5 animate-in slide-in-from-bottom duration-200 select-none flex flex-col max-h-[46vh]"
         role="dialog"
-        aria-label="Review Answers Sheet"
+        aria-label={t("game.validAlternativesTitle")}
       >
         {/* Sürükleme / Tutamaç Çizgisi */}
         <div className="w-10 h-1 bg-white/20 rounded-full mx-auto mb-2.5 shrink-0" />
@@ -115,8 +115,9 @@ export const ReviewAnswersSheet: React.FC<ReviewAnswersSheetProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 active:scale-95 text-[#8A8F9A] hover:text-[#E8E6E1] flex items-center justify-center shrink-0 transition-colors"
-            title="Kapat"
+            className="w-11 h-11 -mt-1 -mr-1 rounded-lg bg-white/5 hover:bg-white/10 active:scale-95 text-[#8A8F9A] hover:text-[#E8E6E1] flex items-center justify-center shrink-0 transition-colors"
+            title={t("common.close")}
+            aria-label={t("common.close")}
           >
             <X className="w-4 h-4" />
           </button>
@@ -154,7 +155,7 @@ export const ReviewAnswersSheet: React.FC<ReviewAnswersSheetProps> = ({
                       {formatMovieDisplayTitle(movie, locale)}
                     </span>
                     {movie.hasOscar && (
-                      <span title="Oscar" className="shrink-0 mt-0.5">
+                      <span title={locale === "en" ? "Won an Oscar" : "Oscar'lü"} className="shrink-0 mt-0.5">
                         <Award className="w-3 h-3 text-[#D9A441]" />
                       </span>
                     )}

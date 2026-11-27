@@ -107,7 +107,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   // 7D.4: Yeni kullanıcıda 0 / 0 / "—" (oran %0 değil)
   const winRateDisplay =
     profile.totalMatches > 0
-      ? `%${Math.round((profile.wins / profile.totalMatches) * 100)}`
+      ? (isEn ? `${Math.round((profile.wins / profile.totalMatches) * 100)}%` : `%${Math.round((profile.wins / profile.totalMatches) * 100)}`)
       : "—";
 
   const recent = (profile.lastFiveMatches ?? []).slice(-5);
@@ -544,12 +544,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
             <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
               <h2 className="font-serif text-base font-bold text-[#E8E6E1]">
-                Avatar Seç
+                {dict.profile.avatarPicker}
               </h2>
               <Button
                 variant="icon"
                 onClick={() => setShowAvatarPicker(false)}
-                title="Kapat"
+                title={dict.common.close}
+                aria-label={dict.common.close}
               >
                 <X className="w-4 h-4" />
               </Button>
@@ -572,7 +573,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   >
                     <AvatarIcon id={a.id} className="w-6 h-6" />
                     <span className="text-[11px] font-sans font-bold truncate max-w-full">
-                      {a.label}
+                      {isEn ? a.labelEn : a.label}
                     </span>
                   </button>
                 );
@@ -594,12 +595,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
             <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
               <h2 className="font-serif text-base font-bold text-[#E8E6E1]">
-                Favori Yönetmen
+                {isEn ? "Favorite Director" : "Favori Yönetmen"}
               </h2>
               <Button
                 variant="icon"
                 onClick={() => setShowDirectorPicker(false)}
-                title="Kapat"
+                title={dict.common.close}
+                aria-label={dict.common.close}
               >
                 <X className="w-4 h-4" />
               </Button>
@@ -648,13 +650,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <p className="text-xs text-[#8A8F9A] leading-relaxed">
               {isEn
                 ? "This clears offline bot match records, auditorium ambience preferences, and UI onboarding flags stored on this device."
-                : "Bu işlem cihazınızda kayıtlı çevrimdışı bot maç geçmişini, salon ambiyans tercihlerinizi ve arayüz ipuçlarını sıfırlar."}
+                : "Bu işlem cihazında kayıtlı çevrimdışı bot maç geçmişini, salon ambiyans tercihlerini ve arayüz ipuçlarını sıfırlar."}
             </p>
             {isSupabaseConfigured && (
             <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-400">
               {isEn
                 ? "Your online rating, titles, and server profile are KEPT SAFE on the server."
-                : "Çevrimiçi lig dereceniz, unvanınız ve profiliniz sunucuda KORUNUR."}
+                : "Çevrimiçi lig derecen, unvanın ve profilin sunucuda KORUNUR."}
             </div>
             )}
 
@@ -718,7 +720,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 </>
               ) : (
                 <>
-                  Bu işlem <strong className="text-[#E5484D]">GERİ ALINAMAZ</strong>. Supabase üzerindeki anonim oyuncu hesabınız, unvanınız, lig dereceniz, makara bakiyeniz ve tüm istatistikleriniz <strong>KALICI OLARAK YOK EDİLECEKTİR</strong>.
+                  Bu işlem <strong className="text-[#E5484D]">GERİ ALINAMAZ</strong>. Supabase üzerindeki anonim oyuncu hesabın, unvanın, lig derecen, makara bakiyen ve tüm istatistiklerin <strong>KALICI OLARAK YOK EDİLECEKTİR</strong>.
                 </>
               )
               )}
@@ -728,7 +730,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <div className="p-2.5 rounded-lg bg-[#E5484D]/10 border border-[#E5484D]/25 text-[11px] text-[#E5484D] leading-tight">
               {isEn
                 ? "Your user references in multiplayer match records will be unlinked (set to null), while your personal profile is completely deleted."
-                : "Çok oyunculu maç kayıtlarındaki kullanıcı bağlantınız kaldırılacak (oyuncu kimliği sıfırlanacak), kişisel profiliniz tamamen silinecektir."}
+                : "Çok oyunculu maç kayıtlarındaki kullanıcı bağlantın kaldırılacak (oyuncu kimliği sıfırlanacak), kişisel profilin tamamen silinecek."}
             </div>
             )}
 
@@ -778,7 +780,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             variant="icon"
             onClick={onClose}
             className="absolute top-3 right-3 z-10"
-            title="Kapat"
+            title={dict.common.close}
+                aria-label={dict.common.close}
           >
             <X className="w-4 h-4" />
           </Button>

@@ -350,24 +350,24 @@ export function GameView(props: GameViewProps) {
               <span className="text-[11px] text-[#8A8F9A] font-sans">
                 {t("game.reviewTapBlankCellHint")}
               </span>
-              <div className="flex items-center gap-2 w-full max-w-xs justify-center">
+              <div className="flex items-stretch gap-2 w-full max-w-sm justify-center">
                 <Button
                   variant="secondary"
                   data-testid="review-mode-back-to-result-btn"
                   onClick={handleReturnToResult}
-                  className="flex-1 border border-[#D9A441]/40 text-[#D9A441] hover:bg-[#D9A441]/10 text-xs py-1.5"
+                  className="flex-1 min-w-0 !h-auto min-h-[44px] !px-2 border border-[#D9A441]/40 text-[#D9A441] hover:bg-[#D9A441]/10 text-xs py-1.5 leading-tight"
                 >
-                  <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-                  <span>{t("game.backToResult")}</span>
+                  <ArrowLeft className="w-3.5 h-3.5 mr-1 shrink-0" />
+                  <span className="min-w-0 text-center">{t("game.backToResult")}</span>
                 </Button>
                 <Button
                   variant="secondary"
                   data-testid="review-mode-back-to-home-btn"
                   onClick={props.onBackToHome}
-                  className="flex-1 border border-white/10 text-[#E8E6E1] text-xs py-1.5"
+                  className="flex-1 min-w-0 !h-auto min-h-[44px] !px-2 border border-white/10 text-[#E8E6E1] text-xs py-1.5 leading-tight"
                 >
-                  <X className="w-3.5 h-3.5 mr-1 text-[#8A8F9A]" />
-                  <span>{t("game.backToHome")}</span>
+                  <X className="w-3.5 h-3.5 mr-1 shrink-0 text-[#8A8F9A]" />
+                  <span className="min-w-0 text-center">{t("game.backToHome")}</span>
                 </Button>
               </div>
             </div>
@@ -440,6 +440,8 @@ export function GameView(props: GameViewProps) {
           rowCrit={props.board.rows[Math.floor(props.activeCellIndex / 3)]}
           colCrit={props.board.cols[props.activeCellIndex % 3]}
           onSelectActor={props.onActorChosen}
+          secondsRemaining={props.secondsRemaining}
+          shotClock={props.customShotClock || 12}
           errorMessage={props.movieSearchError}
         />
       ) : !isReviewMode && props.activeCellIndex !== null ? (
@@ -453,6 +455,8 @@ export function GameView(props: GameViewProps) {
           contentPool={props.contentPool}
           errorMessage={props.movieSearchError}
           targetOccupant={props.cells[props.activeCellIndex]}
+          secondsRemaining={props.secondsRemaining}
+          shotClock={props.customShotClock || 12}
         />
       ) : null}
 

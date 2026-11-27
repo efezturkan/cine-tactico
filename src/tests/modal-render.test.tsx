@@ -43,11 +43,7 @@ const emptyHtml = renderToString(
 );
 
 assert(
-  emptyHtml.includes("Adil oyun için tür ve yıl ipucu gösterilmez"),
-  "Empty search modal displays fair-play notice"
-);
-assert(
-  emptyHtml.includes("en az 2 harf girilmelidir"),
+  emptyHtml.includes("en az 2 harfini yaz"),
   "Empty search modal indicates minimum 2 character input requirement"
 );
 assert(

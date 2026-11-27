@@ -97,7 +97,7 @@ export const GoldenReelModal: React.FC<GoldenReelModalProps> = ({
 
   return (
     <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-night/95 select-none">
-      <div className="relative w-full max-w-md animate-card-in bg-panel border-2 border-gold rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center overflow-hidden text-ink">
+      <div className="relative w-full max-w-md animate-card-in bg-panel border-2 border-gold rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center max-h-[90dvh] overflow-y-auto overflow-x-hidden text-ink">
         {/* Dönen Altın Makara Simgesi */}
         <div className="relative my-3 flex items-center justify-center">
           <div

@@ -1,5 +1,5 @@
 import React from "react";
-import { Clapperboard, Star, Eye, Rocket, Search, Film, Camera, Trophy, Glasses } from "lucide-react";
+import { Clapperboard, Star, Eye, Rocket, Search, Camera, Trophy, Popcorn } from "lucide-react";
 
 export function AvatarIcon({
   id,
@@ -20,11 +20,9 @@ export function AvatarIcon({
     case "avatar_noir":
       return <Search className={className} />;
     case "avatar_popcorn":
-      return <Film className={className} />;
+      return <Popcorn className={className} />;
     case "avatar_camera":
       return <Camera className={className} />;
-    case "avatar_critics":
-      return <Glasses className={className} />;
     case "avatar_oscar":
       return <Trophy className={className} />;
     default:

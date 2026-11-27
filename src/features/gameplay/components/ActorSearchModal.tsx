@@ -8,6 +8,7 @@ import { haptic } from "@/utils/haptics";
 import { ACTORS_DATABASE } from "@/content/adapters/gameCatalog";
 import { Button } from "@/components/ui/Button";
 import { useTranslation } from "@/i18n";
+import { SearchClock } from "./SearchClock";
 
 interface ActorSearchModalProps {
   isOpen: boolean;
@@ -16,6 +17,8 @@ interface ActorSearchModalProps {
   colCrit: Criterion;
   onSelectActor: (actorName: string) => void;
   errorMessage?: string | null;
+  secondsRemaining?: number;
+  shotClock?: number;
 }
 
 export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
@@ -25,6 +28,8 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
   colCrit,
   onSelectActor,
   errorMessage,
+  secondsRemaining,
+  shotClock,
 }) => {
   const { dict, locale, tCriterion } = useTranslation();
   const isEn = locale === "en";
@@ -118,6 +123,8 @@ export const ActorSearchModal: React.FC<ActorSearchModalProps> = ({
               : "92dvh",
         }}
       >
+        <SearchClock secondsRemaining={secondsRemaining} shotClock={shotClock} />
+
         {/* Tutamaç Çizgisi */}
         <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-3 shrink-0" />
 

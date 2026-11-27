@@ -17,7 +17,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onSelectTab,
 }) => {
-  const { dict } = useTranslation();
+  const { dict, locale } = useTranslation();
 
   const tabs = [
     {
@@ -44,7 +44,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
 
   return (
     <nav
-      aria-label="Ana gezinme çubuğu"
+      aria-label={locale === "en" ? "Main navigation" : "Ana gezinme çubuğu"}
       className="fixed bottom-0 left-0 right-0 flex items-center justify-around px-2 sm:px-3 z-40 max-w-[430px] mx-auto w-full"
       style={{
         background: "rgba(11, 13, 18, 0.96)",

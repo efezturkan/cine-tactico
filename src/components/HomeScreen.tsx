@@ -178,7 +178,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
     <div
-      className="w-full max-w-full sm:max-w-[430px] mx-auto h-[100dvh] sm:h-auto sm:min-h-[860px] text-[#E8E6E1] flex flex-col justify-between relative select-none antialiased overflow-hidden transition-colors duration-500 sm:my-4 sm:rounded-[36px] sm:border-2 sm:border-[#181B22] sm:shadow-2xl"
+      className="w-full max-w-full sm:max-w-[430px] mx-auto h-[100dvh] sm:h-auto sm:min-h-[860px] text-[#E8E6E1] flex flex-col justify-between relative select-none antialiased overflow-x-hidden overflow-y-auto transition-colors duration-500 sm:my-4 sm:rounded-[36px] sm:border-2 sm:border-[#181B22] sm:shadow-2xl"
       style={{
         backgroundColor: "var(--salon-bg, #0B0D12)",
       }}
@@ -267,7 +267,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   haptic.light();
                   onToggleMute();
                 }}
-                title="Sesi Aç / Kapat"
+                title={isEn ? "Sound on / off" : "Sesi Aç / Kapat"}
+                aria-label={isEn ? "Sound on / off" : "Sesi Aç / Kapat"}
               >
                 {muted ? (
                   <VolumeX className="w-4 h-4 text-[#8A8F9A]" />
@@ -285,7 +286,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 haptic.light();
                 setShowSettings(true);
               }}
-              title="Ayarlar"
+              title={dict.settings.title}
+              aria-label={dict.settings.title}
             >
               <Settings className="w-4 h-4 text-[#8A8F9A]" />
             </Button>
