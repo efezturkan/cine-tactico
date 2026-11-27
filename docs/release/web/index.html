@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crosscut: Movie Trivia Duel for iPhone</title>
+  <meta name="description" content="Not a quiz. A twelve-second duel over nine squares. Free iPhone movie game. No ads, no account, plays offline." />
+  <meta name="theme-color" content="#0B0D12" />
+  <style>
+    :root {
+      --bg: #0B0D12;
+      --surface: #14171D;
+      --surface-2: #181B22;
+      --fg: #E8E6E1;
+      --muted: #8A8F9A;
+      --gold: #D9A441;
+      --cyan: #4FA3C7;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, 'SF Pro Text', BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle 35mm sprocket margins on desktop */
+    .sprocket-edge {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 14px;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='22' viewBox='0 0 10 22' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1.5' y='4' width='7' height='11' rx='1.5' fill='%23FFFFFF'/%3E%3C/svg%3E");
+      background-repeat: repeat-y;
+      background-position: center top;
+    }
+    .sprocket-edge.left { left: 6px; }
+    .sprocket-edge.right { right: 6px; }
+
+    .container {
+      width: 100%;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 28px 24px 48px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 44px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .wordmark {
+      font-family: Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: var(--fg);
+      text-decoration: none;
+    }
+    .wordmark span { color: var(--gold); font-style: italic; }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .nav-link {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .nav-link:hover { color: var(--fg); }
+
+    .lang-toggle {
+      display: inline-flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2px;
+    }
+    .lang-toggle button {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .lang-toggle button.active {
+      background: var(--gold);
+      color: #0B0D12;
+    }
+
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 44px 32px;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Viewfinder brackets */
+    .bracket {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-color: rgba(217, 164, 65, 0.55);
+      border-style: solid;
+      pointer-events: none;
+    }
+    .bracket.tl { top: 14px; left: 14px; border-width: 2px 0 0 2px; }
+    .bracket.tr { top: 14px; right: 14px; border-width: 2px 2px 0 0; }
+    .bracket.bl { bottom: 14px; left: 14px; border-width: 0 0 2px 2px; }
+    .bracket.br { bottom: 14px; right: 14px; border-width: 0 2px 2px 0; }
+
+    .eyebrow {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: Georgia, serif;
+      font-size: clamp(36px, 6vw, 54px);
+      line-height: 1.08;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+    }
+
+    .lead {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto 28px;
+    }
+
+    .cta-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .appstore-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      height: 52px;
+      padding: 0 26px;
+      border-radius: 12px;
+      background: var(--gold);
+      color: #0B0D12;
+      border-bottom: 3px solid #8E651B;
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+    }
+    .appstore-btn:hover { filter: brightness(1.04); }
+
+    .meta-note {
+      margin-top: 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    @media (max-width: 680px) {
+      .pillars { grid-template-columns: 1fr; }
+      .hero { padding: 34px 20px; }
+    }
+
+    .pillar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .pillar-num {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .pillar h2 {
+      font-family: Georgia, serif;
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .pillar p {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .app-icon { width: 84px; height: 84px; border-radius: 19px; margin: 0 auto 20px; display: block; }
+    .soon { display:inline-flex; align-items:center; height:52px; padding:0 26px; border-radius:12px; border:1px solid rgba(217,164,65,.5); color:var(--gold); font-size:13px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+    .shots { display:flex; gap:12px; overflow-x:auto; padding:4px 2px 10px; scroll-snap-type:x mandatory; }
+    .shots img { flex:none; width:210px; border-radius:22px; border:1px solid var(--border); scroll-snap-align:start; display:block; }
+    footer {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+    .footer-links {
+      display: flex;
+      gap: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sprocket-edge left" aria-hidden="true"></div>
+  <div class="sprocket-edge right" aria-hidden="true"></div>
+
+  <div class="container">
+    <header>
+      <a class="wordmark" href="index.html">CROSS<span>·</span>CUT</a>
+      <div class="nav-right">
+        <a class="nav-link" href="support.html" data-i18n="navSupport">Support</a>
+        <a class="nav-link" href="privacy.html" data-i18n="navPrivacy">Privacy</a>
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button type="button" id="lang-en" class="active">EN</button>
+          <button type="button" id="lang-tr">TR</button>
+        </div>
+      </div>
+    </header>
+
+    <main style="display:flex;flex-direction:column;gap:22px;">
+      <section class="hero">
+        <div class="bracket tl"></div>
+        <div class="bracket tr"></div>
+        <div class="bracket bl"></div>
+        <div class="bracket br"></div>
+
+        <img class="app-icon" src="icon.png" alt="Crosscut app icon" width="84" height="84" />
+        <p class="eyebrow" data-i18n="eyebrow">CROSSCUT · MOVIE TRIVIA DUEL</p>
+        <h1 data-i18n="headline">Not a quiz.<br />A twelve-second duel.</h1>
+        <p class="lead" data-i18n="lead">
+          Every square is two clues. Name the film that fits both before the clock runs out and the bot blocks your line.
+        </p>
+
+        <div class="cta-row">
+          <span class="soon" data-i18n="cta">Coming soon to the App Store</span>
+        </div>
+        <p class="meta-note" data-i18n="metaNote">iOS · FREE · OFFLINE · NO ADS · NO ACCOUNT</p>
+      </section>
+
+      <section class="shots" aria-label="Screenshots" id="shots">
+        <img src="../store/en/01-twelve-seconds.png" alt="Classic duel with the clock in the last seconds" loading="lazy" />
+        <img src="../store/en/02-reverse-frame.png" alt="Reverse Frame: name the shared star" loading="lazy" />
+        <img src="../store/en/03-daily-reel.png" alt="Daily Reel result and share card" loading="lazy" />
+        <img src="../store/en/04-instant-search.png" alt="Instant title search" loading="lazy" />
+        <img src="../store/en/05-offline.png" alt="Home screen, offline" loading="lazy" />
+      </section>
+
+      <section class="pillars" aria-label="Key features">
+        <article class="pillar">
+          <div class="pillar-num">TWELVE SECONDS</div>
+          <h2 data-i18n="p1Title">The clock decides.</h2>
+          <p data-i18n="p1Body">Nine squares, three in a row wins. A wrong answer burns your try. Easy, Medium and Hard bots, each with its own style.</p>
+        </article>
+        <article class="pillar">
+          <div class="pillar-num">THREE MODES</div>
+          <h2 data-i18n="p2Title">One board a day.</h2>
+          <p data-i18n="p2Body">Daily Reel: the same nine squares for everyone and a result card that spoils nothing. Reverse Frame: two films meet, name the actor in both.</p>
+        </article>
+        <article class="pillar">
+          <div class="pillar-num">NOTHING ELSE</div>
+          <h2 data-i18n="p3Title">No ads. No login.</h2>
+          <p data-i18n="p3Body">1,000+ films and series. Instant search in English and Turkish. No tracking, no sign-up, fully offline.</p>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <span data-i18n="footerCopy">© 2026 Crosscut · Film metadata via Wikidata (CC0)</span>
+      <div class="footer-links">
+        <a href="support.html" data-i18n="navSupport">Support</a>
+        <a href="privacy.html" data-i18n="navPrivacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const COPY = {
+      en: {
+        navSupport: "Support", navPrivacy: "Privacy",
+        eyebrow: "CROSSCUT · MOVIE TRIVIA DUEL",
+        headline: "Not a quiz.<br />A twelve-second duel.",
+        lead: "Every square is two clues. Name the film that fits both before the clock runs out and the bot blocks your line.",
+        cta: "Coming soon to the App Store",
+        metaNote: "iOS · FREE · OFFLINE · NO ADS · NO ACCOUNT",
+        p1Title: "The clock decides.",
+        p1Body: "Nine squares, three in a row wins. A wrong answer burns your try. Easy, Medium and Hard bots, each with its own style.",
+        p2Title: "One board a day.",
+        p2Body: "Daily Reel: the same nine squares for everyone and a result card that spoils nothing. Reverse Frame: two films meet, name the actor in both.",
+        p3Title: "No ads. No login.",
+        p3Body: "1,000+ films and series. Instant search in English and Turkish. No tracking, no sign-up, fully offline.",
+        footerCopy: "© 2026 Crosscut · Film metadata via Wikidata (CC0)"
+      },
+      tr: {
+        navSupport: "Destek", navPrivacy: "Gizlilik",
+        eyebrow: "CROSSCUT · FİLM BİLGİ DÜELLOSU",
+        headline: "Quiz değil.<br />On iki saniyelik düello.",
+        lead: "Her kare iki ipucu. Süre dolmadan ve bot hattını kesmeden, ikisine de uyan filmi bul.",
+        cta: "Yakında App Store'da",
+        metaNote: "iOS · ÜCRETSİZ · ÇEVRİMDIŞI · REKLAMSIZ · HESAPSIZ",
+        p1Title: "Kararı sayaç verir.",
+        p1Body: "Dokuz kare, üç kare yan yana gelen kazanır. Yanlış cevap hakkını yakar. Kolay, Orta ve Zor botların her birinin kendi tarzı var.",
+        p2Title: "Günde bir tahta.",
+        p2Body: "Günün Kadrası: herkese aynı dokuz kare ve hiçbir şey sızdırmayan sonuç kartı. Ters Kadraj: iki film buluşur, ikisindeki oyuncuyu bul.",
+        p3Title: "Reklam yok. Hesap yok.",
+        p3Body: "1.000+ film ve dizi. Türkçe ve İngilizce anında arama. Takip yok, kayıt yok, tamamen çevrimdışı.",
+        footerCopy: "© 2026 Crosscut · Film verileri Wikidata (CC0)"
+      }
+    };
+
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      document.getElementById("lang-en").classList.toggle("active", lang === "en");
+      document.getElementById("lang-tr").classList.toggle("active", lang === "tr");
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (COPY[lang][key]) el.innerHTML = COPY[lang][key];
+      });
+      const names = lang === "tr" ? ["tr/01-on-iki-saniye","tr/02-ters-kadraj","tr/03-gunun-kadraji","tr/04-aninda-arama","tr/05-cevrimdisi"] : ["en/01-twelve-seconds","en/02-reverse-frame","en/03-daily-reel","en/04-instant-search","en/05-offline"];
+      document.querySelectorAll("#shots img").forEach((im, i) => { im.src = "../store/" + names[i] + ".png"; });
+    }
+
+    document.getElementById("lang-en").addEventListener("click", () => setLang("en"));
+    document.getElementById("lang-tr").addEventListener("click", () => setLang("tr"));
+  </script>
+</body>
+</html>

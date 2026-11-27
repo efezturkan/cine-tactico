@@ -18,12 +18,12 @@ Kod kapısı kapalı: `tsc` temiz, `npm test` 0 hata (26 Kasım), gizlilik/deste
 | 5 | Bana "Team seçildi" yaz. Ben: `npm run build:ios`, sürüm/build numarası kontrolü, `xcodebuild archive` (imzalı), doğrulama | Ben | Arşiv hatasız |
 | 6 | Xcode Organizer → Distribute App → App Store Connect → Upload (parola/uygulama özel parolası yazmam gerekmez, Xcode'da oturumun açık) | Sen | Derleme "İşleniyor" → "Hazır" |
 | 7 | **TestFlight** iç test: gerçek iPhone'da `YAYIN_ICIN_KALANLAR.md` bölüm 2 listesi (paylaş, uçak modu, ses, arka plan, Türkçe klavye, gece yarısı) | Sen | 6 maddenin hepsi geçti |
-| 8 | Metinler (bölüm C), görseller (`docs/release/store/en` ve `tr`, 6'şar, 1320×2868), kategori Games > Trivia + Strategy, fiyat Ücretsiz, Gizlilik "Veri toplanmıyor", Yaş sınırı anketi (şiddet/kumar yok → 4+), Export compliance "Hayır" (`ITSAppUsesNonExemptEncryption=false`), inceleme notları (`APP_REVIEW_NOTES.md`) | Sen (ben metni hazırladım) | Tüm zorunlu alanlar yeşil |
+| 8 | Metinler (bölüm C), görseller (`docs/release/store/en` ve `store/tr`, her dilde 5 adet `1320×2868` PNG), kategori Games > Trivia + Puzzle, fiyat Ücretsiz, Gizlilik "Veri toplanmıyor", Yaş sınırı anketi (şiddet/kumar yok → 4+), Export compliance "Hayır" (`ITSAppUsesNonExemptEncryption=false`), inceleme notları (`APP_REVIEW_NOTES.md`) | Sen (ben metni hazırladım) | Tüm zorunlu alanlar yeşil |
 | 9 | Add for Review → Submit. Apple yanıtı genelde 24-48 saat | Sen | "Waiting for Review" |
 
 **%100 hazır tanımı (hepsi doğru olmalı):** (a) ad kararı yazılı, (b) 7. adım 6/6, (c) TR ve EN metin ve görseller ASC'de, (d) gizlilik/destek adresleri çalışıyor, (e) katalog dondurulmuş, (f) `main`'e alma/etiket kararın.
 
-Ek: gizlilik/destek adresi şu an `cine-tactico.vercel.app` (eski ad). Alan adı alırsan `SITE_URL` (`src/config/brand.ts`) ve ASC adreslerini birlikte güncelle; zorunlu değil, yayını engellemez.
+Ek: gizlilik/destek adresi şu an `cine-tactico.vercel.app` (eski ad). Alan adı alırsan `SITE_URL` (`src/config/brand.ts`) ve ASC adreslerini birlikte güncelle; zorunlu değil, yayını engellemez. `docs/release/web/` yalnızca isteğe bağlı bir açılış sayfası taslağıdır (ekran görüntüsü yok, `Reverse Cast` gibi yanlış mod adları var, dış yazı tipi yüklüyor, ikinci bir gizlilik metni içeriyor): sürüm adresleri olarak kullanma.
 
 ---
 
@@ -36,7 +36,7 @@ Ek: gizlilik/destek adresi şu an `cine-tactico.vercel.app` (eski ad). Alan adı
 | 3 | Xcode → `ios/App/App.xcodeproj` → target **App** → *Signing & Capabilities* → **Team** seç ("Automatically manage signing" açık kalsın) | Xcode | 2 dk |
 | 4 | App Store Connect → *Apps → +* → **New App**: iOS, ad `Crosscut: Movie Trivia Game`, dil İngilizce (ABD), ikinci dil Türkçe, Bundle ID `com.crosscutgame.app` (Xcode ilk imzada kaydeder), SKU `crosscut-ios-1` | App Store Connect | 5 dk |
 | 5 | Aşağıdaki **metinleri** yapıştır (bölüm C) | App Store Connect | 15 dk |
-| 6 | **Ekran görüntülerini** yükle (`docs/release/screenshots/`) | App Store Connect | 5 dk |
+| 6 | **Ekran görüntülerini** yükle (`docs/release/store/en` ve `store/tr`) | App Store Connect | 5 dk |
 | 7 | Terminalde `npm run build:ios` (env’siz derleme + sync), sonra Xcode: cihaz olarak **Any iOS Device (arm64)** → *Product → Archive* → *Distribute App → App Store Connect → Upload* | Xcode | 10 dk |
 | 8 | **TestFlight**: derleme işlendikten sonra (10-30 dk) iç test grubuna ekle, kendi telefonunda dene | App Store Connect | — |
 | 9 | Her şey iyiyse **Add for Review → Submit** (Export compliance: bölüm D) | App Store Connect | 5 dk |
@@ -61,87 +61,100 @@ Ek: gizlilik/destek adresi şu an `cine-tactico.vercel.app` (eski ad). Alan adı
 ## C. App Store Connect metinleri
 
 ### URL'ler
-- **Gizlilik Politikası URL'si:** `https://cine-tactico.vercel.app/privacy`
+- **Gizlilik Politikası URL'si:** `https://cine-tactico.vercel.app/privacy` (uygulamadaki bağlantıyla aynı sayfa, testle doğrulanır)
 - **Destek URL'si:** `https://cine-tactico.vercel.app/support`
 - **Pazarlama URL'si:** (boş bırak)
 
 ### Kategori ve fiyat
-- **Birincil kategori:** Games → **Trivia** · İkincil: Games → **Strategy** (veya Board)
+- **Birincil kategori:** Games → **Trivia** · **İkincil:** Games → **Puzzle**
 - **Fiyat:** Ücretsiz · **Uygulama içi satın alma:** yok · **Reklam:** yok
 
-### Türkçe (birincil dil)
-- **Ad (30):** `Crosscut: Film Bilgi Yarışması` (30)
-- **Alt başlık (30):** `Günlük film düellosu` (20)
-- **Tanıtım metni (170):** `Her kare iki ipucunun kesişimi. Doğru filmi bul, üçlü hattı kur, botları yen. Günün Kadrası her gün yeni bir tahta getirir.`
-- **Anahtar kelimeler (100 bayt, addaki ve alt başlıktaki kelimeleri tekrarlama):** `film,sinema,quiz,bilgi,oyun,tahmin,günlük,yönetmen,oyuncu,bulmaca,çevrimdışı,xox` (bayt sayısını App Store Connect doğrular)
-- **Açıklama:**
+### İmza slogan (yatırımcıya, X biyografisine, tek nefeste)
+- **EN:** Not a quiz. A twelve-second duel over nine squares.
+- **TR:** Quiz değil, düello: dokuz kare, on iki saniye.
+
+Konumlandırma: rakip adı yok, günah var. Düşman; her hamlede reklam gösteren, dört şıklı, hesap isteyen quiz yığını. Bizim fark cümlemiz **sayaç**: on iki saniye baskı altında iki ipucuna da uyan filmi bulmak. "Reklamsız" destek kanıttır, ana vaat değil (reklamsız rakip de var; `docs/strategy/00`).
+
+### English (Primary Locale — U.S./Global)
+- **App Name (27/30):** `Crosscut: Movie Trivia Duel`
+- **Subtitle (30/30):** `12 seconds. 9 squares. 1 film.`
+- **Promotional Text (163/170):** `Quiz apps hand you four options and an ad. Crosscut hands you a clock. Name the film that fits both clues before twelve seconds run out. Works offline. No account.`
+- **Keywords (100/100 karakter, 100/100 bayt, boşluksuz, ad ve alt başlıkla çakışmaz, marka yok):** `cinema,actor,director,daily,puzzle,offline,3x3,tic,tac,toe,cast,bot,reel,cinephile,versus,guess,grid`
+- **What's New (1.0):** `First release. Duels against Easy, Medium and Hard bots, Reverse Frame, Daily Reel, Auditorium Ambience.`
+- **Description (1146/4000; ilk 3 satır "more"a basmadan görünür):**
 
 ```
-Crosscut, her karesi iki film ipucunun kesişimi olan ücretsiz bir film bilgi yarışması oyunudur (iOS).
+Not a quiz. A duel.
+Every square is two clues. Name the film that fits both, in twelve seconds, before the bot blocks your line.
+No ads. No account. No signal needed.
 
-Filmleri bilmek yetmez. Rakibini de yenmelisin.
+THE RULES
+Nine squares. Three in a row wins. A wrong answer burns your try on that square. The clock does not wait.
 
-Crosscut, sinema bilgisini taktikle birleştiren bir XOX düellosudur. Tahtadaki her kare iki ipucunun kesişimidir: bir yönetmen ile bir tür, bir oyuncu ile bir dönem... Kesişime uyan filmi bul, kareyi mühürle, üçlü hattı kur.
+THREE WAYS TO PLAY
+• Classic Duel: directors, actors, decades, genres and awards cross on a 3x3 board. Easy, Medium and Hard bots, each with its own style.
+• Reverse Frame: two films meet at a square. Name the actor who is in both.
+• Cinephile Concept: cult themes against genres and awards.
 
-NASIL OYNANIR
-• 3×3 tahtada sırayla oynarsın. Her hamle için 12 saniyen var.
-• Doğru film kareyi senin yapar. Yanlış cevapta sıra rakibe geçer ve o karedeki hakkın biter.
-• Yatay, dikey ya da çapraz üç kareyi ilk dolduran kazanır.
-• Tahta dolup hat çıkmazsa Altın Makara devreye girer: tek soru, tek şans.
+ONE BOARD A DAY
+Daily Reel: the same nine squares for everyone, one attempt, and a result card that shows your score and spoils nothing.
 
-RAKİPLERİNİ SEÇ
-Satranç botlarındaki gibi Kolay, Orta ve Zor rakipler seni bekler. Her birinin kendi adı, rating'i, oyun stili ve repliği var: temkinli, saldırgan, kült filmlerin avcısı. Seninle olan skorunu tutarlar, rövanş her zaman açık.
+THE CATALOG
+1,000+ films and series. Instant title search in English and Turkish, with alternate titles. Two films, one title? The year tells them apart.
 
-ÜÇ MOD + GÜNÜN KADRASI
-• Klasik Düello: yönetmen, oyuncu, tür ve dönem kesişimleri.
-• Ters Kadraj: iki filmin ortak oyuncusunu kendin yaz.
-• Sinefil Konsept: kült temalar, akımlar ve anlatı kalıpları.
-• Günün Kadrası: herkese aynı tahta, her gün yeni. Rakip yok: 9 kareyi tek başına doldur, kare sayına göre derecelen (Kusursuz Kadraj'a kadar). Günde tek hak.
+THE ROOM
+Dim the house lights. Aim the projector beam. Add 35mm grain, or paint the room red.
 
-SADE VE ÇEVRİMDIŞI
-Hesap yok, reklam yok, internet gerekmez. Salon Işığı ile sinema salonunun atmosferini kendin ayarla: loşluk, projeksiyon, 35mm gren.
-
-Sinefilsen, buradasın.
+THE FINE PRINT
+Free. No ads. No in-app purchases. No tracking. Plays fully offline.
+Not affiliated with or endorsed by any studio, film database or the people named in the puzzles.
 ```
 
-### English (ikinci dil)
-- **Name:** `Crosscut: Movie Trivia Game` (27)
-- **Subtitle:** `Daily movie duel. No ads.` (25)
-- **Promotional text:** `Every square is the crossing of two clues. Find the film, build the line, beat the bots. A new Daily Reel arrives every day.`
-- **Keywords (100 bytes):** `film,quiz,cinema,guess,grid,puzzle,versus,bot,offline,cinephile,actor,director,tic tac toe,streak` (97 bytes; adda ve alt başlıkta geçen movie, trivia, game, daily, duel, ads tekrarlanmaz; "Oscar", stüdyo, oyuncu adı, rakip adı yok)
-- **Description:**
+### Türkçe (İkinci Dil)
+- **Ad (29/30):** `Crosscut: Film Bilgi Düellosu`
+- **Alt başlık (26/30):** `12 saniye. 9 kare. 1 film.`
+- **Tanıtım metni (159/170):** `Quiz uygulamaları sana dört şık ve bir reklam verir. Crosscut bir saat verir. İki ipucuna da uyan filmi 12 saniye dolmadan bul. İnternetsiz çalışır. Hesap yok.`
+- **Anahtar kelimeler (87/100 karakter, 94/100 bayt, boşluksuz, ad ve alt başlıkla çakışmaz, marka yok):** `sinema,oyuncu,yönetmen,günlük,bulmaca,çevrimdışı,internetsiz,xox,3x3,bot,kadraj,sinefil`
+- **Sürüm notu (1.0):** `İlk sürüm. Kolay, Orta ve Zor botlarla düello, Ters Kadraj, Günün Kadrası, Salon Işığı.`
+- **Açıklama (1134/4000; ilk 3 satır "devamı"na basmadan görünür):**
 
 ```
-Crosscut is a free iOS movie trivia game where each square of a 3x3 grid is the crossing of two film clues.
+Quiz değil, düello.
+Her kare iki ipucu. İkisine de uyan filmi 12 saniyede bul, bot hattını kesmeden üçlüyü kur.
+Reklam yok. Hesap yok. İnternet gerekmez.
 
-Knowing movies isn't enough. You have to beat your opponent too.
+KURALLAR
+Dokuz kare. Üç kare yan yana gelen kazanır. Yanlış cevap o karedeki hakkını yakar. Sayaç beklemez.
 
-Crosscut is tic-tac-toe played with cinema knowledge. Every square is the crossing of two clues: a director and a genre, an actor and a decade... Find the film that fits, seal the square, build the line.
+ÜÇ OYUN BİÇİMİ
+• Klasik Düello: yönetmen, oyuncu, dönem, tür ve ödül 3x3 tahtada kesişir. Kolay, Orta ve Zor botların her birinin kendi tarzı var.
+• Ters Kadraj: iki film bir karede buluşur. İkisinde de oynayan oyuncuyu bul.
+• Sinefil Konsept: kült temalar, türler ve ödüllerle karşı karşıya.
 
-HOW IT PLAYS
-• Take turns on a 3×3 board. You get 12 seconds per move.
-• A correct film claims the square. A wrong answer passes the turn and burns your try on that square.
-• First to fill three squares in a row, column or diagonal wins.
-• If the board fills with no line, the Golden Reel decides it: one question, one chance.
+GÜNDE BİR TAHTA
+Günün Kadrası: herkese aynı dokuz kare, tek hak, skorunu gösteren ve hiçbir şey sızdırmayan sonuç kartı.
 
-CHOOSE YOUR OPPONENT
-Easy, Medium and Hard opponents, chess-bot style. Each has a name, a rating, a play style and a line of trash talk: cautious, aggressive, a hunter of cult classics. They keep score against you, and a rematch is always one tap away.
+KATALOG
+1.000'den fazla film ve dizi. Türkçe ve İngilizce anında başlık araması, alternatif adlarla. Aynı adlı iki film mi var? Yıl ayırır.
 
-THREE MODES + DAILY FRAME
-• Classic Duel: director, actor, genre and decade crossings.
-• Reverse Frame: type the actor two films share.
-• Cinephile Concept: cult themes, movements and storytelling patterns.
-• Daily Reel: the same board for everyone, new every day. No opponent: fill all nine frames yourself and earn a rank up to Perfect Reel. One attempt a day.
+SALON
+Salon ışıklarını kıs. Projeksiyon huzmesini ayarla. 35mm gren ekle ya da salonu kırmızıya boya.
 
-SIMPLE AND OFFLINE
-No account, no ads, no internet needed. Set the mood with Auditorium Ambience: dimness, projection beam, 35mm grain.
-
-If you love cinema, you're home.
+KÜÇÜK PUNTO
+Ücretsiz. Reklam yok. Uygulama içi satın alma yok. Takip yok. Tamamen çevrimdışı çalışır.
+Herhangi bir stüdyo, film veritabanı veya bulmacalarda adı geçen kişilerle bağlantılı ya da onaylı değildir.
 ```
 
-### "Sürüm Notları" (What's New, 1.0)
-- TR: `İlk sürüm. Kolay, Orta ve Zor botlarla düello, Günün Kadrası, üç mod, Salon Işığı.`
-- EN: `First release. Duels against Easy, Medium and Hard bots, Daily Reel, three modes, Auditorium Ambience.`
+### Vitrin kareleri (5 adet, sıra dönüşüm sırasıdır)
+| # | EN başlık | TR başlık | Ekran |
+|---|---|---|---|
+| 1 | Twelve seconds. No excuses. | On iki saniye. Bahane yok. | Klasik düello, sayaç son saniyede |
+| 2 | Name the shared star. | Ortak yıldızı bul. | Ters Kadraj |
+| 3 | Today's board. Same for all. | Bugünün tahtası. Herkese aynı. | Günlük Kadraj ve paylaşım kartı |
+| 4 | 1,000+ films. Instant search. | 1.000+ yapım. Anında arama. | Hızlı arama |
+| 5 | No ads. No login. Offline. | Reklamsız. Hesapsız. Çevrimdışı. | Ana ekran |
+
+Her başlık en fazla 5 kelime. Başlıklar özellik değil gerilim ve fark satar.
 
 ### Telif / İletişim
 - **Telif hakkı:** `2026 Efe Öztürkan`
@@ -163,7 +176,7 @@ Tüm sorulara **None / Hayır**: şiddet, cinsellik, küfür, korku, kumar, alko
 - "Does your app use encryption?" → uygulama yalnızca işletim sisteminin standart şifrelemesini kullanır / hiçbirini kullanmaz → **Exempt**. `Info.plist` zaten `ITSAppUsesNonExemptEncryption = false` içerir, soru çıkmaz.
 
 ### İçerik hakları
-- "Does your app contain, show, or access third-party content?" → **Evet**, film/oyuncu adları ve CC lisanslı portreler. Haklar: Wikimedia Commons (CC BY / CC BY-SA), uygulama içi atıf mevcut. Film afişi veya stüdyo görseli **yok**.
+- "Does your app contain, show, or access third-party content?" → **No** *(0 telifli film afişi, 0 portre/fotoğraf; tüm film metaverileri Wikidata CC0 kamu malı, yazı tipleri SIL OFL açık lisanslıdır).*
 
 ### Reklam Tanımlayıcı (IDFA)
 - Kullanmıyoruz → **Hayır**.
@@ -172,16 +185,10 @@ Tüm sorulara **None / Hayır**: şiddet, cinsellik, küfür, korku, kumar, alko
 
 ## E. Ekran görüntüleri
 
-Hazır: `docs/release/store/tr/` ve `docs/release/store/en/` (her biri 6 görsel, **1320×2868**, RGB, alfa yok, iPhone 6.9"). Gerçek simülatör ekranları (iPhone 17 Pro Max) + başlık; olmayan özellik gösterilmiyor (Online Oda, Mağaza, Makara bakiyesi yok). Yükleme sırası:
-
-1. Gişe (ana ekran)
-2. Klasik Düello
-3. Ters Kadraj
-4. Sinefil Konsept
-5. Günün Kadrası
-6. Sonuç ve paylaşım kartı (Kusursuz Kadraj)
-
-Türkçe mağaza dili için `tr/`, İngilizce için `en/` klasörünü kullan. Eski `docs/release/screenshots/` klasörü tasarım öncesidir, yüklenmemeli. Yeniden üretme adımları `docs/release/store/README.md` içinde.
+- **Yüklenecek set:** `docs/release/store/en/` ve `docs/release/store/tr/` (her dilde 5 adet, `1320×2868`, RGB, alfa yok; 6,9" iPhone). Sıra dönüşüm sırasıdır: 12 saniye gerilimi, Ters Kadraj, Günlük Kadraj + paylaşım, hızlı arama, çevrimdışı/reklamsız.
+- **Kaynak:** iPhone 17 Pro Max simülatöründeki gerçek oyun, ham ekranlar `docs/release/launch-pack/raw-screens/{en,tr}/`. Üzerine yalnızca başlık ve yuvarlak köşe eklendi (`store/compose_v3.py`; çerçeve, 3D, neon yok). Çekim notu: oyunun 12 saniyelik sayacı çekim sırasında donduruldu (depoya girmeyen geçici derleme; ilk karede 3 sn, kırmızı, diğerlerinde 12 sn), arayüz birebir aynı. İstersen TestFlight sürümüyle bir kez daha çekip değiştirebilirsin.
+- **Videolar (opsiyonel app preview / sosyal):** `docs/release/launch-pack/videos/` (dikey 1080×1920, sessiz). Ek metinler ve yayın planı: `launch-pack/LAUNCH_PLAYBOOK.md`.
+- **Canlı sayfa önizlemesi:** `docs/release/store/store-page-preview.html` (arama sonucu + ürün sayfası, EN/TR, koyu/açık). Yatırımcıya göstermek içindir, yayında değildir.
 
 ---
 
@@ -189,10 +196,10 @@ Türkçe mağaza dili için `tr/`, İngilizce için `en/` klasörünü kullan. E
 
 | Risk (Guideline) | Durum |
 |---|---|
-| 4.2 Minimum işlev (web sarmalayıcı) | Yerel motor, bot AI, haptik (Capacitor Haptics, gerçek cihazda henüz doğrulanmadı), çevrimdışı oyun, özgün tasarım. Notlarda belirtildi. |
+| 4.2 Minimum işlev (web sarmalayıcı) | Yerel motor, bot AI, haptik (Capacitor Haptics, gerçek cihazda doğrulanacak), çevrimdışı oyun, özgün tasarım. Notlarda belirtildi. |
 | 5.1.1(v) Hesap silme | Hesap yok → silinecek veri yok. Yerel veriler Profil'den silinir. |
 | 5.1.2 Veri kullanımı | Hiç veri toplanmıyor, ağ isteği yok. Etiket ve politika tutarlı. |
-| 4.1 Taklit / marka | IMDb/TMDb adı, logosu ve verisi yok. Afiş yok. Wikidata (CC0) + Wikimedia Commons. |
+| 4.1 Taklit / marka | IMDb/TMDb adı, logosu ve verisi yok. Afiş veya portre yok. Yalnızca Wikidata (CC0). |
 | 2.3.7 Ekran görüntüleri | Gerçek uygulama ekranları, yanıltıcı öğe yok. |
 | 1.2 Kullanıcı içeriği | Kullanıcı üretimli içerik yok (yalnızca kendi takma adı, cihazda). |
 | Çevrimiçi/sahte oyuncu | Rakipler açıkça "Sinefil Botu" olarak etiketli. Çevrimiçi mod v1.0'da kapalı. |

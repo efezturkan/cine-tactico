@@ -1,4 +1,4 @@
-# Cine-Tactico (CineXOX) Gizlilik Politikası
+# Crosscut Gizlilik Politikası
 
 **Son Güncelleme:** 31 Ekim 2026  
 **Geliştirici / Veri Sorumlusu:** Efe Öztürkan  
@@ -8,15 +8,15 @@
 
 ## 1. Genel Bakış
 
-Cine-Tactico ("biz", "uygulama"), Efe Öztürkan tarafından geliştirilmiş, çevrimdışı çalışabilen 3x3 sinema temalı taktik bulmaca oyunudur. Kullanıcılarımızın gizliliğine ve kişisel verilerinin korunmasına en üst düzeyde önem veriyoruz.
+Crosscut ("biz", "uygulama"), Efe Öztürkan tarafından geliştirilmiş, çevrimdışı çalışabilen 3x3 sinema temalı taktik bulmaca oyunudur. Kullanıcılarımızın gizliliğine ve kişisel verilerinin korunmasına en üst düzeyde önem veriyoruz.
 
-**Özetle: Cine-Tactico, kullanıcılarından HİÇBİR kişisel veri toplamaz, saklamaz, işlemez ve üçüncü taraflarla paylaşmaz.**
+**Özetle: Crosscut, kullanıcılarından HİÇBİR kişisel veri toplamaz, saklamaz, işlemez ve üçüncü taraflarla paylaşmaz.**
 
 ---
 
 ## 2. Toplanmayan Bilgiler
 
-Cine-Tactico'yu indirip kullanırken:
+Crosscut'yu indirip kullanırken:
 - **Kullanıcı Hesabı Yoktur:** Uygulama üyelik, kayıt, giriş, e-posta, telefon numarası veya şifre talep etmez.
 - **Kişisel Kimlik Verisi Toplanmaz:** Ad, soyad, T.C. kimlik numarası, cihaz reklam kimlikleri (IDFA, GAID) veya IP adresiniz kaydedilmez.
 - **Konum Bilgisi Alınmaz:** GPS veya ağ tabanlı konumunuza erişilmez.
@@ -28,7 +28,7 @@ Cine-Tactico'yu indirip kullanırken:
 
 ## 3. Cihazınızda Tutulan Yerel Veriler
 
-Cine-Tactico tamamen cihazınızın üzerinde yerel olarak çalışır. Ayarladığınız tercihler yalnızca cihazınızın tarayıcı / WebView yerel hafızasında (`localStorage`) saklanır:
+Crosscut tamamen cihazınızın üzerinde yerel olarak çalışır. Ayarladığınız tercihler yalnızca cihazınızın tarayıcı / WebView yerel hafızasında (`localStorage`) saklanır:
 - **Salon Ambiyans Ayarları (`cinexox_ambience`):** Seçtiğiniz sinema salonu teması, ekran loşluğu, film greni ve vizör rengi tercihleri.
 - **Oturum İçi Oyun Durumu:** Oyun oynanırken tahtadaki hamleler ve bot zorluk seviyesi yalnızca geçici cihaz belleğinde tutulur.
 
@@ -46,7 +46,7 @@ Cine-Tactico tamamen cihazınızın üzerinde yerel olarak çalışır. Ayarlad�
 
 ## 5. Çocukların Gizliliği
 
-Cine-Tactico genel izleyici kitlesi ve sinemaseverler için tasarlanmıştır. Hiçbir kullanıcıdan kişisel veri toplamadığımız için, 13 yaşından küçük çocuklardan da bilerek veya bilmeyerek hiçbir veri toplanmamaktadır.
+Crosscut genel izleyici kitlesi ve sinemaseverler için tasarlanmıştır. Hiçbir kullanıcıdan kişisel veri toplamadığımız için, 13 yaşından küçük çocuklardan da bilerek veya bilmeyerek hiçbir veri toplanmamaktadır.
 
 ---
 
@@ -60,7 +60,7 @@ Cine-Tactico genel izleyici kitlesi ve sinemaseverler için tasarlanmıştır. H
 
 ## 7. İletişim
 
-Bu Gizlilik Politikası veya Cine-Tactico ile ilgili her türlü soru ve geri bildiriminiz için bizimle iletişime geçebilirsiniz:
+Bu Gizlilik Politikası veya Crosscut ile ilgili her türlü soru ve geri bildiriminiz için bizimle iletişime geçebilirsiniz:
 
 **Geliştirici:** Efe Öztürkan  
 **E-posta:** [efezturkan@gmail.com](mailto:efezturkan@gmail.com)

@@ -1,4 +1,4 @@
-# Privacy Policy for Cine-Tactico (CineXOX)
+# Privacy Policy for Crosscut
 
 **Last Updated:** October 31, 2026  
 **Developer / Data Controller:** Efe Öztürkan  
@@ -8,15 +8,15 @@
 
 ## 1. Overview
 
-Cine-Tactico ("we", "our", or "the App") is an offline-capable 3x3 cinematic strategy puzzle game developed by Efe Öztürkan. We are deeply committed to respecting and protecting the privacy of our users.
+Crosscut ("we", "our", or "the App") is an offline-capable 3x3 cinematic strategy puzzle game developed by Efe Öztürkan. We are deeply committed to respecting and protecting the privacy of our users.
 
-**In brief: Cine-Tactico does NOT collect, store, transmit, or share any personal data.**
+**In brief: Crosscut does NOT collect, store, transmit, or share any personal data.**
 
 ---
 
 ## 2. Information We Do NOT Collect
 
-When you download, install, and use Cine-Tactico:
+When you download, install, and use Crosscut:
 - **No User Accounts:** The App does not require registration, login, email addresses, phone numbers, or passwords.
 - **No Personal Identifiers:** We do not collect names, government IDs, device identifiers (IDFA, GAID), or IP addresses.
 - **No Location Data:** We do not access, track, or store your GPS or network location.
@@ -28,7 +28,7 @@ When you download, install, and use Cine-Tactico:
 
 ## 3. Local Data Storage on Your Device
 
-Cine-Tactico operates entirely on your device. Any game preferences you set are stored locally in your device's browser/WebView local storage (`localStorage`):
+Crosscut operates entirely on your device. Any game preferences you set are stored locally in your device's browser/WebView local storage (`localStorage`):
 - **Ambience & Theme Settings (`cinexox_ambience`):** Stores your selected theatre background theme, screen dimness level, film grain preference, and viewfinder colors.
 - **In-Memory Game State:** Match progress, bot difficulty, and active scores are maintained in temporary memory during your play session.
 
@@ -46,7 +46,7 @@ Cine-Tactico operates entirely on your device. Any game preferences you set are 
 
 ## 5. Children's Privacy (COPPA & GDPR-K Compliance)
 
-Cine-Tactico is designed for general audiences and film enthusiasts. Because we do not collect any personal data from any user, we do not knowingly collect personal information from children under the age of 13 (or under 16 in the European Economic Area).
+Crosscut is designed for general audiences and film enthusiasts. Because we do not collect any personal data from any user, we do not knowingly collect personal information from children under the age of 13 (or under 16 in the European Economic Area).
 
 ---
 
@@ -66,7 +66,7 @@ We may update this Privacy Policy from time to time to reflect future feature re
 
 ## 8. Contact Us
 
-If you have any questions, suggestions, or concerns regarding this Privacy Policy or Cine-Tactico, please contact us at:
+If you have any questions, suggestions, or concerns regarding this Privacy Policy or Crosscut, please contact us at:
 
 **Developer:** Efe Öztürkan  
 **Email:** [efezturkan@gmail.com](mailto:efezturkan@gmail.com)

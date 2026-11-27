@@ -1,7 +1,7 @@
 # CINE-XOX — RELEASE VALIDATION GAP CLOSURE RAPORU
 
 **Tarih:** 3 Kasım 2026  
-**Uygulama Adı:** Cine-XOX  
+**Uygulama Adı:** Crosscut  
 **Paket Kimliği (Bundle ID):** `com.cinetactico.game`  
 **Sürüm:** 1.0.0 (Build 1)  
 **Değerlendirme Standardı:** Apple App Store Review Guidelines, US EAR Export Compliance, Supabase Security Model  

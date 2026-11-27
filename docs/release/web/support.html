@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support — Crosscut</title>
+  <meta name="description" content="Crosscut Support & FAQ — offline iOS movie trivia grid duel." />
+  <meta name="theme-color" content="#0B0D12" />
+  <style>
+    :root {
+      --bg: #0B0D12;
+      --surface: #14171D;
+      --surface-2: #181B22;
+      --fg: #E8E6E1;
+      --muted: #8A8F9A;
+      --gold: #D9A441;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      padding: 32px 20px 64px;
+    }
+    .wrap { max-width: 660px; margin: 0 auto; }
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .back { color: var(--gold); text-decoration: none; font-size: 13px; font-weight: 600; }
+    .lang {
+      display: inline-flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2px;
+    }
+    .lang button {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .lang button.active { background: var(--gold); color: #0B0D12; }
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 34px;
+      margin-bottom: 6px;
+    }
+    .sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+    .contact {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px;
+      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid rgba(217, 164, 65, 0.35);
+      text-decoration: none;
+      color: var(--fg);
+      margin-bottom: 26px;
+    }
+    .contact:hover { border-color: var(--gold); }
+    .contact strong { display: block; font-size: 15px; margin-bottom: 2px; }
+    .contact span { font-size: 13px; color: var(--muted); }
+    .arrow { color: var(--gold); font-weight: 700; font-size: 18px; }
+    .faq-list { display: flex; flex-direction: column; gap: 12px; }
+    .faq {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+    }
+    .faq h2 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .faq p { font-size: 13px; line-height: 1.6; color: var(--muted); }
+    .foot {
+      margin-top: 28px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .foot a { color: var(--gold); text-decoration: none; }
+    .foot a:hover { text-decoration: underline; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="back" href="index.html" id="back-link">← Back to Crosscut</a>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" id="btn-en" class="active">EN</button>
+        <button type="button" id="btn-tr">TR</button>
+      </div>
+    </div>
+
+    <div id="content-en">
+      <h1>Support</h1>
+      <p class="sub">Crosscut · 12-Second Movie Grid Duel</p>
+
+      <!-- Replace email below if you switch to a custom domain support address -->
+      <a class="contact" href="mailto:efezturkan@gmail.com?subject=Crosscut%20Support">
+        <div>
+          <strong>Email Support</strong>
+          <span>efezturkan@gmail.com</span>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+
+      <div class="faq-list">
+        <article class="faq">
+          <h2>Does Crosscut require an internet connection?</h2>
+          <p>No. Every mode in Crosscut v1.0 (Classic Duel, Reverse Frame, Cinephile Concept, and Daily Reel) runs 100% offline with no account or sign-in.</p>
+        </article>
+        <article class="faq">
+          <h2>Where is my progress and streak stored?</h2>
+          <p>Only on your iPhone. Open Profile → Reset Local Data to clear everything, or uninstall the app to remove all local data permanently.</p>
+        </article>
+        <article class="faq">
+          <h2>A film, actor, or director entry looks wrong or missing.</h2>
+          <p>Email us the title and correction using the link above. We review catalog fixes for upcoming updates.</p>
+        </article>
+        <article class="faq">
+          <h2>How do I switch between English and Turkish?</h2>
+          <p>Tap the gear icon on the home screen (Settings → Language) to switch between English and Türkçe anytime.</p>
+        </article>
+      </div>
+
+      <p class="foot"><a href="privacy.html">Privacy Policy</a></p>
+    </div>
+
+    <div id="content-tr" class="hidden">
+      <h1>Destek</h1>
+      <p class="sub">Crosscut · 12 Saniyelik Sinema Düellosu</p>
+
+      <a class="contact" href="mailto:efezturkan@gmail.com?subject=Crosscut%20Destek">
+        <div>
+          <strong>Bize Yaz</strong>
+          <span>efezturkan@gmail.com</span>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+
+      <div class="faq-list">
+        <article class="faq">
+          <h2>Uygulama internet gerektiriyor mu?</h2>
+          <p>Hayır. Crosscut v1.0 sürümündeki tüm modlar (Klasik Düello, Ters Kadraj, Sinefil Konsept ve Günün Kadrası) tamamen çevrimdışı ve hesapsız çalışır.</p>
+        </article>
+        <article class="faq">
+          <h2>İlerlemem ve günlük serim nerede saklanıyor?</h2>
+          <p>Yalnızca kendi telefonunda. Sinefil Kartı → Yerel Verileri Sıfırla ile silebilir veya uygulamayı kaldırarak her şeyi kalıcı olarak yok edebilirsin.</p>
+        </article>
+        <article class="faq">
+          <h2>Bir film, oyuncu veya yönetmen bilgisi eksik ya da hatalı.</h2>
+          <p>Yukarıdaki e-posta adresine yapım adını ve düzeltmeyi yaz; sonraki katalog güncellemesinde değerlendirelim.</p>
+        </article>
+        <article class="faq">
+          <h2>Dili nasıl değiştiririm?</h2>
+          <p>Ana ekrandaki Ayarlar simgesinden (Ayarlar → Dil) istediğin zaman Türkçe ve English arasında geçiş yapabilirsin.</p>
+        </article>
+      </div>
+
+      <p class="foot"><a href="privacy.html">Gizlilik Politikası</a></p>
+    </div>
+  </div>
+
+  <script>
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      document.getElementById("btn-en").classList.toggle("active", lang === "en");
+      document.getElementById("btn-tr").classList.toggle("active", lang === "tr");
+      document.getElementById("content-en").classList.toggle("hidden", lang !== "en");
+      document.getElementById("content-tr").classList.toggle("hidden", lang !== "tr");
+      document.getElementById("back-link").textContent = lang === "en" ? "← Back to Crosscut" : "← Crosscut'a Dön";
+    }
+    document.getElementById("btn-en").addEventListener("click", () => setLang("en"));
+    document.getElementById("btn-tr").addEventListener("click", () => setLang("tr"));
+  </script>
+</body>
+</html>

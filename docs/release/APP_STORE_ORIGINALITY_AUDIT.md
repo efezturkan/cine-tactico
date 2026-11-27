@@ -1,6 +1,6 @@
 # CINE-XOX — APP STORE ÖZGÜNLÜK VE İNCELEME RİSK DENETİMİ (ORIGINALITY & REVIEW RISK AUDIT)
 
-**Uygulama Adı:** Cine-XOX  
+**Uygulama Adı:** Crosscut  
 **Paket Kimliği (Bundle ID):** `com.cinetactico.game`  
 **Platform:** Apple iOS (yalnızca iPhone, dikey)  
 **Sürüm / Build:** 1.0.0 (Build 1)  

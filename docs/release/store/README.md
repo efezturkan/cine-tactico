@@ -1,18 +1,25 @@
 # Mağaza görselleri (1.0)
 
-- `tr/` ve `en/`: 6'şar App Store ekran görüntüsü, 1320×2868, RGB, alfa yok.
-- 26 Kasım: yeniden üretildi (rakip denetimi, `docs/strategy/05_*`): amber zemin, büyük başlık (150 px), ikinci satır koyu, telefon alttan taşıyor ve tahta büyük görünüyor. Mantık `compose.py` içinde (ham ekranlar `/private/tmp/claude-501/shots/*.png` yolunu bekler; yeniden üretirken yolu düzelt).
-- Kaynak: iPhone 17 Pro Max simülatöründe `npm run ios:sim` ile alınmış gerçek ekranlar. Üzerine yalnızca başlık ve çerçeve eklendi.
-- App Icon: `ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png` (1024×1024, alfa yok), değiştirilmedi.
+## Yüklenecek set
+- `en/` ve `tr/`: her dilde 5 App Store ekran görüntüsü, 1320×2868, RGB, alfa yok (6,9" iPhone). Sıra dönüşüm sırasıdır; ilk üçü arama sonucunda görünür:
+  1. 12 saniye gerilimi (klasik düello, kırmızı sayaç)
+  2. Ters Kadraj
+  3. Günlük Kadraj + paylaşım kartı
+  4. Hızlı arama (yıl ayrımı / Türkçe takma ad)
+  5. Çevrimdışı, reklamsız, hesapsız (ana ekran)
+- Kaynak: iPhone 17 Pro Max simülatöründeki gerçek oyun, ham ekranlar `../launch-pack/raw-screens/{en,tr}/01..05.png`. Üzerine yalnızca başlık ve yuvarlak köşe eklenir (`compose_v3.py`): çerçeve, 3D, neon yok (Apple 2.3.7).
+- Çekim notu: 12 saniyelik sayaç çekim sırasında donduruldu (depoya girmeyen, `src/` kopyası üzerinde geçici derleme). İlk karede sayaç 3 sn (kırmızı), diğerlerinde 12 sn. Arayüz birebir aynı. İstersen imzalı sürümle bir kez daha çekip ham klasörünü değiştir.
+
+## Canlı sayfa önizlemesi (yatırımcıya göstermek için)
+- `store-page-preview.html`: tek dosya, internet gerektirmez. Arama sonucu + ürün sayfası, EN/TR, koyu/açık. Metinler `APP_STORE_SUBMISSION.md` ile aynı. Değerlendirme alanı bilerek boş (yorum yok). Yayında değildir.
+- `preview/*.png`: hazır görüntüler. Adrese `#lang=tr&theme=light&scroll=1100` eklenebilir.
+- Yeniden üretmek: `python build_store_preview.py` (Pillow). Şablon: `store_preview_template.html`.
 
 ## Yeniden üretmek
-1. `SIM_NAME="iPhone 17 Pro Max" npm run ios:sim`
-2. Ekranları `xcrun simctl io <udid> screenshot x.png` ile yakala (Türkçe için uygulama dilini Ayarlar'dan değiştir).
-3. Başlık ve çerçeve: `compose.py` (Pillow, 1180 px telefon, Georgia Bold başlık).
-4. Not: oyun ekranı ham görüntüleri sahne ışığı maçta gizlenmeden önce alındı; huzme hafifçe görünüyor. Bir sonraki çekimde yeni derlemeyle yenile.
+1. Ham ekranlar: `xcrun simctl io <udid> screenshot x.png`, saat için `xcrun simctl status_bar <udid> override --time 9:41`.
+2. `python compose_v3.py` (Pillow, Georgia Bold).
+3. `python build_store_preview.py`.
 
-## Gemini ile alternatif görsel istersen
-Gemini CLI kurulu (`gemini`), ama oturum yok. Kendi terminalinde bir kez `gemini` yazıp "Login with Google" yap (ya da `GEMINI_API_KEY` ortam değişkeni ver). Görsel üretimi için Gemini API'nin görsel modeli ve CLI eklentisi gerekir; CLI tek başına metin üretir.
-Önerilen istem (arka plan sanatı, uygulama ekranı dahil değil):
-> "Dark neo-noir cinema poster background for a mobile trivia game: black and deep charcoal, a single warm amber projector beam from the top, subtle 35mm film perforations at the edges, soft film grain, no text, no logos, no people, vertical 1320x2868."
-Gelen görseli `compose.py` yerine arka plan olarak kullanabilirsin; ekran görüntüleri her zaman gerçek uygulamadan kalmalı (Apple 2.3.7).
+## Kurallar
+- Ekran görüntüleri her zaman gerçek uygulamadan kalır; film afişi, stüdyo logosu, gerçek kişi fotoğrafı yok.
+- App Icon: `ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png` (1024×1024, alfa yok), değiştirilmedi.

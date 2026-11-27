@@ -4,7 +4,7 @@
 **Bundle ID:** `com.crosscutgame.app`  
 **Version:** 1.0.0 (Build 1)  
 **Platform:** iPhone (iOS 15.0+), portrait  
-**Primary Category:** Games (Subcategories: Trivia / Strategy)  
+**Primary Category:** Games → Trivia (Secondary: Games → Puzzle)  
 **Recommended Age Rating:** 4+ (All Questionnaire Items: "No" / "None" — factual film trivia only, no violence, no profanity, no gambling, no unrestricted web browser, no free-form user chat)
 
 ---
