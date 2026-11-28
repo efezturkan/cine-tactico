@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { ChevronRight } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { X } from "lucide-react";
 import { BOT_OPPONENTS, BotOpponentProfile, BotStyle } from "@/data/boards";
-import { AVATAR_OPTIONS } from "@/types/profile";
 import { AvatarIcon } from "@/components/ui/AvatarIcon";
+import { Button } from "@/components/ui/Button";
 import { BotDifficulty } from "@/core";
 import { BotRecordBook } from "@/utils/botRecord";
 import { audio } from "@/utils/audio";
@@ -19,10 +19,12 @@ interface OpponentPickerSheetProps {
 }
 
 const TIERS: { id: BotDifficulty; color: string }[] = [
-  { id: "EASY", color: "#8EBB70" },
-  { id: "MEDIUM", color: "#D9A441" },
-  { id: "HARD", color: "#E5484D" },
+  { id: "EASY", color: "#9AA0AC" },
+  { id: "MEDIUM", color: "#C9A27A" },
+  { id: "HARD", color: "#D9A441" },
 ];
+
+let lastSelectedTier: BotDifficulty = "MEDIUM";
 
 /** Her seviyeden bir rakip: sayfa her açıldığında farklı kişiler çıkar. */
 function drawOpponents(): BotOpponentProfile[] {
@@ -33,15 +35,27 @@ function drawOpponents(): BotOpponentProfile[] {
 }
 
 /**
- * Rakip seçimi: satranç botlarındaki gibi seviye, rating, oyun stili ve aranızdaki skor görünür.
- * Oyuncu "kolay / orta / zor" kararını burada, rakibin kimliğini görerek verir.
+ * Rakip seçimi (Yaklaşım B): 3 yan yana karakter portresi + seçili rakibin unvanı/repliği + tek KARŞILAŞ butonu.
+ * Varsayılan rakip ön-seçili gelir; oyuncu tek dokunuşla düelloya girebilir.
  */
-export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({ isOpen, records, onPick, onClose }) => {
-  const { dict, locale, tBotName } = useTranslation();
+export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({
+  isOpen,
+  records,
+  onPick,
+  onClose,
+}) => {
+  const { dict, locale, tBotName, tBot } = useTranslation();
   const isEn = locale === "en";
   const opponents = useMemo(() => (isOpen ? drawOpponents() : []), [isOpen]);
+  const [selectedTier, setSelectedTier] = useState<BotDifficulty>(lastSelectedTier);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedTier(lastSelectedTier);
+    }
+  }, [isOpen]);
+
+  if (!isOpen || opponents.length === 0) return null;
 
   const tierLabel: Record<BotDifficulty, string> = {
     EASY: dict.opponent.easy,
@@ -55,83 +69,130 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({ isOpen
     CULT: dict.opponent.styleCult,
   };
 
+  const activeBot =
+    opponents.find((b) => b.difficulty === selectedTier) || opponents[1] || opponents[0];
+  const activeRec = records[activeBot.name];
+  const activePlayed = Boolean(activeRec && activeRec.w + activeRec.l + activeRec.d > 0);
+
+  const launchBot = (bot: BotOpponentProfile) => {
+    lastSelectedTier = bot.difficulty;
+    audio.playSelect();
+    haptic.medium();
+    onPick(bot);
+  };
+
   return (
-    <div role="dialog" aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] bg-black/70 select-none animate-in fade-in duration-150"
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={dict.opponent.title}
+      className="fixed inset-0 z-50 flex items-center justify-center px-3.5 py-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] bg-black/72 select-none animate-in fade-in duration-150"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full max-w-sm max-h-full overflow-y-auto bg-[#14171D] border border-white/10 rounded-[24px] px-4 pt-5 pb-4 shadow-2xl animate-in zoom-in-95 fade-in duration-200">
-        <h2 className="font-serif text-xl font-bold text-[#F1EEE7] text-center">{dict.opponent.title}</h2>
-        <p className="text-xs text-[#8A8F9A] text-center mt-0.5 mb-3">{dict.opponent.sub}</p>
+      <div className="w-full max-w-sm max-h-full overflow-y-auto bg-[#14171D] border border-white/10 rounded-[24px] p-4 shadow-2xl animate-in zoom-in-95 fade-in duration-200">
+        {/* Başlık + Kapat */}
+        <div className="flex items-center justify-between pl-1 pb-3">
+          <h2 className="font-serif text-xl font-bold text-[#F1EEE7]">
+            {dict.opponent.title}
+          </h2>
+          <Button
+            variant="icon"
+            onClick={onClose}
+            title={dict.opponent.cancel}
+            aria-label={dict.opponent.cancel}
+          >
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
 
-        <div className="flex flex-col gap-2.5" role="list">
+        {/* 3 Yan Yana Karakter Portresi */}
+        <div
+          className="grid grid-cols-3 gap-2.5"
+          role="radiogroup"
+          aria-label={dict.opponent.title}
+        >
           {opponents.map((bot, i) => {
             const tier = TIERS[i];
-            const avatar = AVATAR_OPTIONS.find((a) => a.id === bot.avatarId) || AVATAR_OPTIONS[0];
-            const rec = records[bot.name];
-            const played = rec && rec.w + rec.l + rec.d > 0;
+            const isSelected = bot.difficulty === activeBot.difficulty;
+
             return (
               <button
                 key={bot.name}
                 type="button"
-                role="listitem"
+                role="radio"
+                aria-checked={isSelected}
                 data-testid={`opponent-${bot.difficulty}`}
                 onClick={() => {
+                  if (isSelected) {
+                    launchBot(bot);
+                    return;
+                  }
                   audio.playSelect();
                   haptic.light();
-                  onPick(bot);
+                  lastSelectedTier = bot.difficulty;
+                  setSelectedTier(bot.difficulty);
                 }}
-                className="w-full p-3 rounded-2xl bg-[#0F1218] border border-white/10 hover:border-white/25 active:scale-[0.98] transition text-left flex items-center gap-3"
-                style={{ borderLeft: `3px solid ${tier.color}` }}
+                className={`rounded-2xl p-2 sm:p-2.5 flex flex-col items-center text-center transition active:scale-[0.97] ${
+                  isSelected
+                    ? "bg-[#181B22] border-[1.5px] border-[#D9A441]"
+                    : "bg-[#0F1218] border border-white/[0.08] opacity-75 hover:opacity-100 hover:border-white/20"
+                }`}
               >
-                <div
-                  className="w-12 h-12 shrink-0 rounded-xl flex items-center justify-center text-2xl border border-[#D9A441]/25"
-                  style={{ backgroundColor: avatar.iconBg }}
+                <span
+                  className="text-xs font-semibold leading-none mb-2"
+                  style={{ color: tier.color }}
                 >
-                  <AvatarIcon id={bot.avatarId} className="w-6 h-6 text-[#D9A441]" />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-serif font-bold text-[15px] text-[#F1EEE7] truncate">{tBotName(bot.name)}</span>
-                    <span
-                      className="shrink-0 px-1.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wide"
-                      style={{ color: tier.color, backgroundColor: `${tier.color}22` }}
-                    >
-                      {tierLabel[bot.difficulty]}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-x-2 text-[11px] text-[#8A8F9A] mt-0.5 whitespace-nowrap">
-                    <span className="font-mono font-bold text-[#D9A441]">
-                      {dict.opponent.rating} {bot.rating}
-                    </span>
-                    <span aria-hidden="true">·</span>
-                    <span>{styleLabel[bot.style]}</span>
-                  </div>
-                  <div className="text-[11px] text-[#8A8F9A] mt-0.5 truncate">
-                    {played
-                      ? `${dict.opponent.record} ${rec.w}${dict.opponent.wins} ${rec.l}${dict.opponent.losses}${rec.d ? ` ${rec.d}${dict.opponent.draws}` : ""}`
-                      : dict.opponent.firstMeeting}
-                  </div>
-                  <p className="text-[11px] italic text-[#A5A8B0] mt-1 leading-snug line-clamp-1">
-                    “{isEn ? bot.quote.en : bot.quote.tr}”
-                  </p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#D9A441] shrink-0" />
+                  {tierLabel[bot.difficulty]}
+                </span>
+                <AvatarIcon
+                  id={bot.avatarId}
+                  className={`w-16 h-16 sm:w-[74px] sm:h-[74px] rounded-xl ${
+                    isSelected ? "ring-1 ring-[#D9A441]/50" : "ring-1 ring-white/10"
+                  }`}
+                />
+                <span className="font-mono text-xs text-[#E8E6E1] mt-2 leading-none tabular-nums">
+                  {bot.rating}
+                </span>
               </button>
             );
           })}
         </div>
 
-        <button
-          type="button"
-          onClick={onClose}
-          className="w-full min-h-[44px] mt-3 rounded-xl bg-[#181B22] border border-white/10 text-[#8A8F9A] text-xs font-bold uppercase tracking-wide active:scale-95"
+        {/* Seçili Rakip Özeti ve Repliği */}
+        <div className="mt-3 px-3.5 py-2.5 rounded-xl bg-[#0F1218] border border-white/[0.06]">
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="font-serif font-bold text-base text-[#F1EEE7] truncate">
+              {tBotName(activeBot.name)}
+            </span>
+            {activePlayed && activeRec && (
+              <span className="shrink-0 font-mono text-[11px] text-[#8A8F9A] tabular-nums">
+                {dict.opponent.record} {activeRec.w}
+                {dict.opponent.wins}–{activeRec.l}
+                {dict.opponent.losses}
+                {activeRec.d ? `–${activeRec.d}${dict.opponent.draws}` : ""}
+              </span>
+            )}
+          </div>
+          <div className="text-xs text-[#8A8F9A] mt-0.5 truncate">
+            {tBot(activeBot.rankTitle)} · {styleLabel[activeBot.style]}
+          </div>
+          <p className="text-xs italic text-[#B5B2A8] mt-1 leading-snug">
+            “{isEn ? activeBot.quote.en : activeBot.quote.tr}”
+          </p>
+        </div>
+
+        {/* Tek Birincil Aksiyon */}
+        <Button
+          variant="primary"
+          fullWidth
+          className="mt-3"
+          data-testid="opponent-confirm-play"
+          onClick={() => launchBot(activeBot)}
         >
-          {dict.opponent.cancel}
-        </button>
+          {dict.opponent.play}
+        </Button>
       </div>
     </div>
   );

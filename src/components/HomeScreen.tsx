@@ -229,13 +229,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             title={dict.nav.profile}
           >
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"
-              style={{
-                background: "#14171D",
-                border: "1px solid rgba(255,255,255,0.1)",
-              }}
+              className="w-9 h-9 rounded-xl overflow-hidden shrink-0 transition-transform group-hover:scale-105 border border-white/15 bg-[#14171D]"
             >
-              <AvatarIcon id={profile.avatarId} className="w-4 h-4 text-[#D9A441]" />
+              <AvatarIcon id={profile.avatarId} className="w-full h-full rounded-xl" />
             </div>
 
             <div className="min-w-0 flex flex-col">

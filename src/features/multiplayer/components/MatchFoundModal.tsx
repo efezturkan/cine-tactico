@@ -101,10 +101,10 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
           <div className="flex flex-col items-center flex-1">
             <div className="relative">
               <div
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl border border-[#D9A441]"
-              style={{ backgroundColor: userAvatar.iconBg }}
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden flex items-center justify-center border border-[#D9A441]"
+                style={{ backgroundColor: userAvatar.iconBg }}
               >
-                <AvatarIcon id={userAvatar.id} className="w-8 h-8 text-[#D9A441]" />
+                <AvatarIcon id={userAvatar.id} className="w-full h-full rounded-2xl" />
               </div>
               <span className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-lg bg-[#D9A441] text-[#0F1115] font-mono font-bold text-xs flex items-center justify-center border border-[#0F1115]">
                 X
@@ -131,10 +131,10 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
           <div className="flex flex-col items-center flex-1">
             <div className="relative">
               <div
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl border border-white/20"
-              style={{ backgroundColor: opponentAvatar.iconBg }}
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden flex items-center justify-center border border-white/20"
+                style={{ backgroundColor: opponentAvatar.iconBg }}
               >
-                <AvatarIcon id={opponentAvatarId} className="w-8 h-8 text-[#D9A441]" />
+                <AvatarIcon id={opponentAvatarId} className="w-full h-full rounded-2xl" />
               </div>
               <span className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-lg bg-white/20 text-[#F1EEE7] font-mono font-bold text-xs flex items-center justify-center border border-[#0F1115]">
                 O

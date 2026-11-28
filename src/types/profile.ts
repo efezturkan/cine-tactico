@@ -69,7 +69,19 @@ export interface AvatarOption {
   id: string;
   label: string;
   labelEn: string;
-  iconName: "Clapperboard" | "Star" | "Eye" | "Rocket" | "Search" | "Film" | "Camera" | "Trophy" | "Popcorn";
+  iconName:
+    | "Clapperboard"
+    | "Star"
+    | "Eye"
+    | "Rocket"
+    | "Search"
+    | "Film"
+    | "Camera"
+    | "Trophy"
+    | "Popcorn"
+    | "Ticket"
+    | "Glasses"
+    | "Compass";
   cost: number;
   emoji?: string;
   iconBg?: string; // mat yüzey rengi (hex), gradyan değil: style={{ backgroundColor }} ile kullanılır
@@ -77,14 +89,18 @@ export interface AvatarOption {
 }
 
 export const AVATAR_OPTIONS: AvatarOption[] = [
-  { id: "avatar_director", label: "Klaket", labelEn: "Clapper", iconName: "Clapperboard", cost: 0, emoji: "🎬", iconBg: "#2B2418", description: "Klasik yönetmen klaketi" },
-  { id: "avatar_actor", label: "Yıldız", labelEn: "Star", iconName: "Star", cost: 0, emoji: "⭐", iconBg: "#34291A", description: "Hollywood yıldızı" },
-  { id: "avatar_lens", label: "Mercek", labelEn: "Lens", iconName: "Eye", cost: 0, emoji: "👁️", iconBg: "#1F2831", description: "Sinematik bakış" },
-  { id: "avatar_scifi", label: "Roket", labelEn: "Rocket", iconName: "Rocket", cost: 0, emoji: "🚀", iconBg: "#1C2A2F", description: "Bilimkurgu vizyoneri" },
-  { id: "avatar_noir", label: "Dedektif", labelEn: "Detective", iconName: "Search", cost: 0, emoji: "🔍", iconBg: "#23262C", description: "Film-noir dedektifi" },
-  { id: "avatar_popcorn", label: "Mısır", labelEn: "Popcorn", iconName: "Popcorn", cost: 0, emoji: "🍿", iconBg: "#35201C", description: "Sinema salonu ruhu" },
-  { id: "avatar_camera", label: "Kamera", labelEn: "Camera", iconName: "Camera", cost: 0, emoji: "🎥", iconBg: "#27232B", description: "35mm kamera" },
-  { id: "avatar_oscar", label: "Kupa", labelEn: "Trophy", iconName: "Trophy", cost: 0, emoji: "🏆", iconBg: "#33291A", description: "Akademi ödülü" },
+  { id: "avatar_director", label: "Klaketçi", labelEn: "Archivist", iconName: "Clapperboard", cost: 0, emoji: "🎬", iconBg: "#4A2B21", description: "Klasik sinema tarihçisi" },
+  { id: "avatar_actor", label: "Jüri", labelEn: "Juror", iconName: "Star", cost: 0, emoji: "⭐", iconBg: "#5B2C3C", description: "Festival jürisi" },
+  { id: "avatar_lens", label: "Auteur", labelEn: "Auteur", iconName: "Eye", cost: 0, emoji: "👁️", iconBg: "#282038", description: "Uykusuz yönetmen" },
+  { id: "avatar_scifi", label: "Seyyah", labelEn: "Wanderer", iconName: "Rocket", cost: 0, emoji: "🚀", iconBg: "#7E3D24", description: "Çöl ve bilimkurgu bilgesi" },
+  { id: "avatar_noir", label: "Dedektif", labelEn: "Detective", iconName: "Search", cost: 0, emoji: "🔍", iconBg: "#1C3B43", description: "Film-noir dedektifi" },
+  { id: "avatar_popcorn", label: "Biletçi", labelEn: "Usher", iconName: "Popcorn", cost: 0, emoji: "🍿", iconBg: "#8F6328", description: "Sinema salonu ruhu" },
+  { id: "avatar_camera", label: "Makinist", labelEn: "Projectionist", iconName: "Camera", cost: 0, emoji: "🎥", iconBg: "#203245", description: "35mm projeksiyon ustası" },
+  { id: "avatar_oscar", label: "Tahminci", labelEn: "Pundit", iconName: "Trophy", cost: 0, emoji: "🏆", iconBg: "#6A5129", description: "Ödül gecesi uzmanı" },
+  { id: "avatar_ticket", label: "Gezgin", labelEn: "Regular", iconName: "Ticket", cost: 0, emoji: "🎟️", iconBg: "#284637", description: "Hafta sonu seans müdavimi" },
+  { id: "avatar_3dglasses", label: "Matineci", labelEn: "Matinee", iconName: "Glasses", cost: 0, emoji: "🕶️", iconBg: "#5E1D28", description: "3D matine tutkunu" },
+  { id: "avatar_totem", label: "Stratejist", labelEn: "Strategist", iconName: "Compass", cost: 0, emoji: "🧭", iconBg: "#243244", description: "Zaman büken sinefil" },
+  { id: "avatar_vhs", label: "Kasetçi", labelEn: "Clerk", iconName: "Film", cost: 0, emoji: "📼", iconBg: "#524B22", description: "90'lar video kulübü gurusu" },
 ];
 
 export function calculateRank(wins: number): { title: string; level: number; nextWins: number } {

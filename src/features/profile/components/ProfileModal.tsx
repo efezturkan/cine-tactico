@@ -253,7 +253,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             onClick={() => setShowAvatarPicker(true)}
             className="w-20 h-20 rounded-2xl bg-[#181B22] border border-white/15 flex items-center justify-center shadow-md relative active:scale-95 transition-transform"
           >
-            <AvatarIcon id={selectedAvatar} className="w-8 h-8 text-[#D9A441]" />
+            <AvatarIcon id={selectedAvatar} className="w-full h-full rounded-2xl" />
             <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#14171D] text-[#D9A441] border border-white/20 flex items-center justify-center shadow">
               <Camera className="w-3 h-3" />
             </div>
@@ -556,8 +556,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </Button>
             </div>
 
-            {/* 8 Tek Renk Çizgi İkon, Tek Kelime Etiketler, Kesilmez */}
-            <div className="grid grid-cols-4 gap-2.5 py-4">
+            {/* 12 Sinema Karakter Portresi (Netflix Profil Seçici Düzeni) */}
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 py-4 overflow-y-auto custom-scrollbar">
               {AVATAR_OPTIONS.map((a) => {
                 const isSelected = selectedAvatar === a.id;
                 return (
@@ -565,14 +565,25 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     key={a.id}
                     type="button"
                     onClick={() => handleSelectAvatar(a.id)}
-                    className={`p-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition border active:scale-95 ${
-                      isSelected
-                        ? "bg-[#181B22] border-[#D9A441] text-[#D9A441]"
-                        : "bg-[#0B0D12] border-white/5 text-[#8A8F9A] hover:text-[#E8E6E1] hover:border-white/15"
-                    }`}
+                    className="flex flex-col items-center justify-center gap-1.5 transition active:scale-95 group"
                   >
-                    <AvatarIcon id={a.id} className="w-6 h-6" />
-                    <span className="text-[11px] font-sans font-bold truncate max-w-full">
+                    <div
+                      className={`rounded-2xl p-0.5 transition ${
+                        isSelected
+                          ? "ring-2 ring-[#D9A441]"
+                          : "opacity-80 hover:opacity-100 ring-1 ring-white/10"
+                      }`}
+                    >
+                      <AvatarIcon
+                        id={a.id}
+                        className="w-[74px] h-[74px] sm:w-[80px] sm:h-[80px] rounded-[14px]"
+                      />
+                    </div>
+                    <span
+                      className={`text-xs font-sans truncate max-w-full ${
+                        isSelected ? "font-bold text-[#F1EEE7]" : "font-medium text-[#8A8F9A]"
+                      }`}
+                    >
                       {isEn ? a.labelEn : a.label}
                     </span>
                   </button>
