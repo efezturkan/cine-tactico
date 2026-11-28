@@ -23,7 +23,7 @@ Kod kapısı kapalı: `tsc` temiz, `npm test` 0 hata (26 Kasım), gizlilik/deste
 
 **%100 hazır tanımı (hepsi doğru olmalı):** (a) ad kararı yazılı, (b) 7. adım 6/6, (c) TR ve EN metin ve görseller ASC'de, (d) gizlilik/destek adresleri çalışıyor, (e) katalog dondurulmuş, (f) `main`'e alma/etiket kararın.
 
-Ek: gizlilik/destek adresi şu an `cine-tactico.vercel.app` (eski ad). Alan adı alırsan `SITE_URL` (`src/config/brand.ts`) ve ASC adreslerini birlikte güncelle; zorunlu değil, yayını engellemez. `docs/release/web/` yalnızca isteğe bağlı bir açılış sayfası taslağıdır (ekran görüntüsü yok, `Reverse Cast` gibi yanlış mod adları var, dış yazı tipi yüklüyor, ikinci bir gizlilik metni içeriyor): sürüm adresleri olarak kullanma.
+Ek: gizlilik/destek adresi artık `crosscutgame.vercel.app` (eski `cine-tactico.vercel.app` yönlendirilir). Özel alan adı alırsan `SITE_URL` (`src/config/brand.ts`) ve ASC adreslerini birlikte güncelle. `docs/release/web/` yalnızca isteğe bağlı bir açılış sayfası taslağıdır: sürüm adresleri olarak kullanma.
 
 ---
 
@@ -61,8 +61,8 @@ Ek: gizlilik/destek adresi şu an `cine-tactico.vercel.app` (eski ad). Alan adı
 ## C. App Store Connect metinleri
 
 ### URL'ler
-- **Gizlilik Politikası URL'si:** `https://cine-tactico.vercel.app/privacy` (uygulamadaki bağlantıyla aynı sayfa, testle doğrulanır)
-- **Destek URL'si:** `https://cine-tactico.vercel.app/support`
+- **Gizlilik Politikası URL'si:** `https://crosscutgame.vercel.app/privacy` (uygulamadaki bağlantıyla aynı sayfa, testle doğrulanır)
+- **Destek URL'si:** `https://crosscutgame.vercel.app/support`
 - **Pazarlama URL'si:** (boş bırak)
 
 ### Kategori ve fiyat

@@ -56,12 +56,12 @@ function assert(c: boolean, m: string) { if (c) { passed++; console.log(`  ✓ P
     opponentName: "TarantinoCult",
     rarityScore: 15,
     locale: "en",
-    siteUrl: "https://cine-tactico.vercel.app",
+    siteUrl: "https://crosscutgame.vercel.app",
   });
   assert(
     duelEn.text.includes("3–1 vs TarantinoCult") &&
       duelEn.text.includes("Scene's yours!") &&
-      duelEn.text.includes("https://cine-tactico.vercel.app") &&
+      duelEn.text.includes("https://crosscutgame.vercel.app") &&
       !duelEn.text.includes("Secret Answer Film"),
     "Duel share payload (EN) formats 3x3 grid, score, opponent, URL, and leaks zero movie titles"
   );
@@ -73,7 +73,7 @@ function assert(c: boolean, m: string) { if (c) { passed++; console.log(`  ✓ P
     opponentName: "TarantinoKult",
     rarityScore: 12,
     locale: "tr",
-    siteUrl: "https://cine-tactico.vercel.app",
+    siteUrl: "https://crosscutgame.vercel.app",
   });
   assert(
     duelTr.text.includes("3–1 vs TarantinoKult") &&

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cine-tactico.vercel.app/sitemap.xml
+Sitemap: https://crosscutgame.vercel.app/sitemap.xml

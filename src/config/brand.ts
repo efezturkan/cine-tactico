@@ -9,7 +9,7 @@ export const BRAND_WORDMARK: [string, string] = ["CROSS", "CUT"];
  * Genel site adresi. Kendi alan adı alınınca (örn. crosscutgame.com) yalnızca burası ve
  * public/robots.txt, sitemap.xml, llms.txt güncellenir.
  */
-export const SITE_URL = "https://cine-tactico.vercel.app";
+export const SITE_URL = "https://crosscutgame.vercel.app";
 
 /** Varlık tanımı cümlesi: site, mağaza, sosyal profiller ve yapılandırılmış veride AYNEN kullanılır (GEO tutarlılığı). */
 export const ENTITY_SENTENCE =

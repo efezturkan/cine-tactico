@@ -12,7 +12,7 @@ jobs:
       - name: Public pages answer 200
         run: |
           for path in "" "privacy" "support"; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" -L "https://cine-tactico.vercel.app/$path")
+            code=$(curl -s -o /dev/null -w "%{http_code}" -L "https://crosscutgame.vercel.app/$path")
             echo "/$path -> $code"
             [ "$code" = "200" ] || exit 1
           done

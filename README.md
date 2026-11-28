@@ -5,7 +5,7 @@
 
 Crosscut, 3×3 tahtada oynanan, tamamen çevrimdışı bir sinema bilgi ve strateji oyunudur. Her kare bir satır ve bir sütun ipucunun kesişimidir; 12 saniye içinde iki ipucuna da uyan filmi bul, kareyi mühürle, üç kareyi bir hatta diz. Botlara karşı oyna ya da her gün herkes için aynı olan Günlük Kadraj'ı çöz.
 
-- Canlı site, gizlilik ve destek: <https://cine-tactico.vercel.app>
+- Canlı site, gizlilik ve destek: <https://crosscutgame.vercel.app>
 - Sürüm: 1.0 (iOS). Android bu sürümün kapsamında değil.
 - Bundle kimliği: `com.crosscutgame.app`
 
