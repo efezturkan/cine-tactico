@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { BOT_OPPONENTS, BotOpponentProfile, BotStyle } from "@/data/boards";
 import { AvatarIcon } from "@/components/ui/AvatarIcon";
@@ -19,7 +19,7 @@ interface OpponentPickerSheetProps {
 }
 
 const TIERS: { id: BotDifficulty; color: string }[] = [
-  { id: "EASY", color: "#9AA0AC" },
+  { id: "EASY", color: "#8A8F9A" },
   { id: "MEDIUM", color: "#C9A27A" },
   { id: "HARD", color: "#D9A441" },
 ];
@@ -48,12 +48,25 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({
   const isEn = locale === "en";
   const opponents = useMemo(() => (isOpen ? drawOpponents() : []), [isOpen]);
   const [selectedTier, setSelectedTier] = useState<BotDifficulty>(lastSelectedTier);
+  const radioRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     if (isOpen) {
       setSelectedTier(lastSelectedTier);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isOpen, onClose]);
 
   if (!isOpen || opponents.length === 0) return null;
 
@@ -81,20 +94,31 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({
     onPick(bot);
   };
 
+  const stepRadio = (currentIndex: number, delta: number) => {
+    const nextIndex = (currentIndex + delta + opponents.length) % opponents.length;
+    const nextBot = opponents[nextIndex];
+    if (!nextBot) return;
+    audio.playSelect();
+    haptic.light();
+    lastSelectedTier = nextBot.difficulty;
+    setSelectedTier(nextBot.difficulty);
+    radioRefs.current[nextIndex]?.focus();
+  };
+
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-label={dict.opponent.title}
-      className="fixed inset-0 z-50 flex items-center justify-center px-3.5 py-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] bg-black/72 select-none animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center px-3.5 py-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] bg-black/72 select-none animate-in fade-in duration-150 motion-reduce:animate-none"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full max-w-sm max-h-full overflow-y-auto bg-[#14171D] border border-white/10 rounded-[24px] p-4 shadow-2xl animate-in zoom-in-95 fade-in duration-200">
+      <div className="w-full max-w-sm max-h-full overflow-y-auto overscroll-contain bg-[#14171D] border border-white/10 rounded-[24px] p-4 shadow-2xl animate-in zoom-in-95 fade-in duration-200 motion-reduce:animate-none">
         {/* Başlık + Kapat */}
         <div className="flex items-center justify-between pl-1 pb-3">
-          <h2 className="font-serif text-xl font-bold text-[#F1EEE7]">
+          <h2 className="font-serif text-xl font-bold text-[#E8E6E1] text-balance">
             {dict.opponent.title}
           </h2>
           <Button
@@ -103,7 +127,7 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({
             title={dict.opponent.cancel}
             aria-label={dict.opponent.cancel}
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" aria-hidden="true" />
           </Button>
         </div>
 
@@ -120,10 +144,23 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({
             return (
               <button
                 key={bot.name}
+                ref={(el) => {
+                  radioRefs.current[i] = el;
+                }}
                 type="button"
                 role="radio"
                 aria-checked={isSelected}
+                tabIndex={isSelected ? 0 : -1}
                 data-testid={`opponent-${bot.difficulty}`}
+                onKeyDown={(e) => {
+                  if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                    e.preventDefault();
+                    stepRadio(i, 1);
+                  } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                    e.preventDefault();
+                    stepRadio(i, -1);
+                  }
+                }}
                 onClick={() => {
                   if (isSelected) {
                     launchBot(bot);
@@ -134,10 +171,10 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({
                   lastSelectedTier = bot.difficulty;
                   setSelectedTier(bot.difficulty);
                 }}
-                className={`rounded-2xl p-2 sm:p-2.5 flex flex-col items-center text-center transition active:scale-[0.97] ${
+                className={`rounded-2xl p-2 sm:p-2.5 flex flex-col items-center text-center touch-manipulation transition-[transform,opacity,border-color,background-color] duration-150 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A441] ${
                   isSelected
                     ? "bg-[#181B22] border-[1.5px] border-[#D9A441]"
-                    : "bg-[#0F1218] border border-white/[0.08] opacity-75 hover:opacity-100 hover:border-white/20"
+                    : "bg-[#0B0D12] border border-white/[0.08] opacity-75 hover:opacity-100 hover:border-white/20"
                 }`}
               >
                 <span
@@ -161,9 +198,12 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({
         </div>
 
         {/* Seçili Rakip Özeti ve Repliği */}
-        <div className="mt-3 px-3.5 py-2.5 rounded-xl bg-[#0F1218] border border-white/[0.06]">
-          <div className="flex items-baseline justify-between gap-2">
-            <span className="font-serif font-bold text-base text-[#F1EEE7] truncate">
+        <div
+          aria-live="polite"
+          className="mt-3 px-3.5 py-2.5 rounded-xl bg-[#0B0D12] border border-white/[0.07]"
+        >
+          <div className="flex items-baseline justify-between gap-2 min-w-0">
+            <span className="font-serif font-bold text-base text-[#E8E6E1] truncate">
               {tBotName(activeBot.name)}
             </span>
             {activePlayed && activeRec && (
@@ -178,7 +218,7 @@ export const OpponentPickerSheet: React.FC<OpponentPickerSheetProps> = ({
           <div className="text-xs text-[#8A8F9A] mt-0.5 truncate">
             {tBot(activeBot.rankTitle)} · {styleLabel[activeBot.style]}
           </div>
-          <p className="text-xs italic text-[#B5B2A8] mt-1 leading-snug">
+          <p className="text-xs italic text-[#E8E6E1]/80 mt-1 leading-snug line-clamp-2">
             “{isEn ? activeBot.quote.en : activeBot.quote.tr}”
           </p>
         </div>

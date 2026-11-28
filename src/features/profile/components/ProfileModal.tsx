@@ -557,18 +557,19 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </div>
 
             {/* 12 Sinema Karakter Portresi (Netflix Profil Seçici Düzeni) */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 py-4 overflow-y-auto custom-scrollbar">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 py-4 overflow-y-auto overscroll-contain custom-scrollbar">
               {AVATAR_OPTIONS.map((a) => {
                 const isSelected = selectedAvatar === a.id;
                 return (
                   <button
                     key={a.id}
                     type="button"
+                    aria-pressed={isSelected}
                     onClick={() => handleSelectAvatar(a.id)}
-                    className="flex flex-col items-center justify-center gap-1.5 transition active:scale-95 group"
+                    className="flex flex-col items-center justify-center gap-1.5 touch-manipulation transition-transform duration-150 active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A441] rounded-2xl group"
                   >
                     <div
-                      className={`rounded-2xl p-0.5 transition ${
+                      className={`rounded-2xl overflow-hidden transition-[opacity,box-shadow] duration-150 motion-reduce:transition-none ${
                         isSelected
                           ? "ring-2 ring-[#D9A441]"
                           : "opacity-80 hover:opacity-100 ring-1 ring-white/10"
@@ -576,12 +577,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     >
                       <AvatarIcon
                         id={a.id}
-                        className="w-[74px] h-[74px] sm:w-[80px] sm:h-[80px] rounded-[14px]"
+                        className="w-[74px] h-[74px] sm:w-[80px] sm:h-[80px] rounded-2xl"
                       />
                     </div>
                     <span
                       className={`text-xs font-sans truncate max-w-full ${
-                        isSelected ? "font-bold text-[#F1EEE7]" : "font-medium text-[#8A8F9A]"
+                        isSelected ? "font-bold text-[#E8E6E1]" : "font-medium text-[#8A8F9A]"
                       }`}
                     >
                       {isEn ? a.labelEn : a.label}
