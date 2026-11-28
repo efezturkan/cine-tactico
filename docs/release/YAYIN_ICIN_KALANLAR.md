@@ -1,4 +1,4 @@
-# Yayın için kalanlar (24 Kasım 2026, dal: `release/round-2`, `main` = `00c7aec`)
+# Yayın için kalanlar (24 Kasım 2026, dal: `release/round-2`, `main` = `ed4e43d`, etiket `v1.0.0`)
 
 ## Karar: KOD HAZIR, YAYIN SENİN ADIMLARINA BAĞLI
 
@@ -46,7 +46,7 @@ Testler: `tsc` temiz, `npm test` 0 hata.
 1. Apple Developer üyeliği (99 USD/yıl) ve sözleşmeler.
 2. Xcode: `ios/App/App.xcodeproj` → target App → Signing & Capabilities → **Team** (`DEVELOPMENT_TEAM` boş).
 3. `npm run build:ios`, Xcode'da Any iOS Device → Archive → Upload.
-4. App Store Connect: yeni uygulama, metinler `APP_STORE_SUBMISSION.md`'den, ekran görüntüleri `docs/release/screenshots/` (son tasarımla yenile).
+4. App Store Connect: yeni uygulama, metinler `APP_STORE_SUBMISSION.md`'den, ekran görüntüleri `docs/release/store/en` ve `store/tr` (5'er adet, güncel).
 5. Yaş derecelendirmesi anketi, gizlilik "beslenme etiketi" (veri toplanmıyor, `PrivacyInfo.xcprivacy` ve `/privacy` hazır).
 6. TestFlight iç testi, sonra Add for Review (`APP_REVIEW_NOTES.md` hazır).
 
@@ -115,7 +115,7 @@ Hazır olanlar: gizlilik manifesti, gizlilik sayfası, inceleme notları, sürü
 - **Doğrulandı:** canlı `/`, `/privacy`, `/support` adresleri 200 dönüyor; imzasız Release derlemesi (`generic/platform=iOS`) başarılı; cihaz ailesi yalnızca iPhone, yalnızca dikey.
 - **Ad: Crosscut** (kullanıcı kararı). Kodda, Info.plist'te, manifestte, mağaza metinlerinde ve ekran görüntülerinde güncellendi; Bundle ID `com.crosscutgame.app`. Tek kaynak: `src/config/brand.ts`.
 - **Marka (26 Kasım, WIPO resmî kayıtları): oyun/yazılım için çakışma bulunmadı;** en yakın canlı kayıt ABD CROSSCUT 3368825 (Crosscut LLC), kapsamı yalnızca haber hizmeti. Karar: Crosscut ile devam. Ayrıntı: `APP_STORE_SUBMISSION.md` bölüm H. USPTO/TÜRKPATENT elle teyidi isteğe bağlı; hukuki görüş değildir. Dönüş planı (gerekirse): `brand.ts` + `Info.plist` + `capacitor.config.ts` + mağaza metni, yedek ad Nitrate.
-- **Alan adı alınmadı:** site şu an `cine-tactico.vercel.app`. Alınca `brand.ts` `SITE_URL`, `public/robots.txt`, `sitemap.xml`, `llms.txt` güncellenecek (privacy/support URL'leri de yeni alan adına taşınmalı).
+- **Alan adı:** site `crosscutgame.vercel.app` (Vercel alias; eski `cine-tactico.vercel.app` 308 ile yönlendirilir). Özel alan adı alınırsa `brand.ts` `SITE_URL`, `public/robots.txt`, `sitemap.xml`, `llms.txt` güncellenecek (privacy/support URL'leri de yeni alan adına taşınmalı).
 - **Hâlâ senin:** Team seçimi, Archive, App Store Connect, gerçek iPhone testi, 9/9 kartı gerçek oyunla da bir kez görmek.
 
 ## 4f. Paralel oturumun raporu (devralındı, 25 Kasım)

@@ -25,7 +25,7 @@ Kapsam: `main` @ bu commit. Etiketler: **[ÖLÇÜLDÜ]** bu oturumda çalıştı
 ## Senin yapman gerekenler (kimlik/ödeme gerektirir)
 
 1. Apple Developer üyeliği, sözleşmeler, **Team** seçimi (`DEVELOPMENT_TEAM` boş, imza otomatik).
-2. App Store Connect'te uygulamayı oluştur, metinleri `APP_STORE_SUBMISSION.md`'den yapıştır, `docs/release/screenshots/` yükle.
+2. App Store Connect'te uygulamayı oluştur, metinleri `APP_STORE_SUBMISSION.md`'den yapıştır, `docs/release/store/en` ve `store/tr` yükle.
 3. Arşivden önce: `npm run build:ios`, sonra Xcode'da Any iOS Device → Archive → Upload.
 4. **Gerçek iPhone'da** Uçak Modu denemesi ve TestFlight turu.
 5. Yaş derecelendirme anketi (notlarda 4+ öneriliyor). Fiyat: ücretsiz, satın alma yok.

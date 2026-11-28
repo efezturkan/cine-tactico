@@ -8,7 +8,7 @@ Sıralı yol ve sahipler: `APP_STORE_SUBMISSION.md` bölüm 0. Metinler, görsel
 |---|---|---|
 | Developer Program üyeliği (bireysel/Organization kararı) | 👤 | Bireysel hesapta mağazada yasal adın görünür; Organization için D-U-N-S gerekir |
 | 2FA, kurtarma, Account Holder, vergi/banka | 👤 | Ücretli uygulama/IAP yok → Paid Apps sözleşmesi ve vergi formu şart değil (ileride IAP gelirse gerekir) |
-| Sahiplik tek kişide toplanmasın (Apple, GitHub, domain, Vercel) | 👤 | GitHub: efezturkan/cine-tactico, Vercel: cine-tactico; alan adı alınmadı |
+| Sahiplik tek kişide toplanmasın (Apple, GitHub, domain, Vercel) | 👤 | GitHub: efezturkan/cine-tactico, Vercel: cine-tactico (adres `crosscutgame.vercel.app`); özel alan adı alınmadı |
 
 ## 2. Teknik hazırlık
 | Madde | Durum | Kanıt |
@@ -77,7 +77,7 @@ Sunucu, RLS, API anahtarı, rate limit: ➖ bu sürümde sunucu yok (RLS ve sunu
 | Madde | Durum | Not |
 |---|---|---|
 | Ad, alt başlık, anahtar kelime, açıklama TR/EN | ✅ | Bölüm C; EN anahtar 97 bayt |
-| Kategori, fiyat, yaş (4+) | ✅/👤 | Trivia + Strategy, ücretsiz; yaş anketini ASC'de sen doldur |
+| Kategori, fiyat, yaş (4+) | ✅/👤 | Trivia + Puzzle, ücretsiz; yaş anketini ASC'de sen doldur |
 | İkon | ✅ | 1024, alfa yok |
 | Ekran görüntüleri | ✅ | TR/EN 6'şar, 1320×2868 (6,9"), gerçek ekranlar; iPad yok, gerekmez. Oyun ekranı ham çekimleri yeni derlemeyle yenilenebilir (huzme izi) |
 | App Preview videosu | ➖ | Zorunlu değil; `promo/` içinde taslak var, mağazaya yüklenmedi |
@@ -107,7 +107,7 @@ Sunucu, RLS, API anahtarı, rate limit: ➖ bu sürümde sunucu yok (RLS ve sunu
 ## 13. Yayın planı
 | Madde | Durum | Not |
 |---|---|---|
-| Sürüm etiketi ve commit | 👤/ben | `main` = `release/round-2` (26 Kasım). Gönderim öncesi `git tag v1.0.0` benim işim; onayınla |
+| Sürüm etiketi ve commit | 👤/ben | ✅ `main` = `ed4e43d`, etiket `v1.0.0` push edildi. Archive sonrası SHA'yı satır 111'e yaz |
 | Arşiv saklama | 👤 | Xcode Organizer arşivi + commit SHA'sını bu dosyaya yaz |
 | Yayın tercihi | Öneri | **Manually Release**: onaydan sonra mağaza sayfası, destek ve Vercel'i son kez kontrol edip kendin yayınla; Phased Release gerekmez (ücretsiz, sunucusuz) |
 | Ülkeler | 👤 | İlk yayında tüm ülkeler uygun; EN öncelikli. İstemediğin pazar varsa ASC'de çıkar |
